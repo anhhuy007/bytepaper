@@ -1,12 +1,25 @@
-import express from 'express';
-import dotenv from 'dotenv';
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import { engine } from "express-handlebars";
+
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-app.get('/', (req, res) => { 
-    res.send('Hello World');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", path.join("views"));
+
+app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+    res.render("home");
 });
 
 app.listen(PORT, () => {

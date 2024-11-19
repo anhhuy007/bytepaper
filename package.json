@@ -1,20 +1,28 @@
 {
-  "name": "paperly",
-  "type": "module",
-  "version": "1.0.0",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "express-handlebars": "^8.0.1",
-    "nodemon": "^3.1.7"
-  }
+    "name": "paperly",
+    "type": "module",
+    "version": "1.0.0",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon app.js -e handlebars,js,css",
+        "css": "npx tailwindcss -i ./input.css -o ./public/output.css --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "express": "^4.21.1",
+        "express-handlebars": "^8.0.1",
+        "nodemon": "^3.1.7",
+        "postcss-cli": "^11.0.0"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.20",
+        "daisyui": "^4.12.14",
+        "postcss": "^8.4.49",
+        "tailwindcss": "^3.4.15"
+    }
 }
