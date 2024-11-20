@@ -437,6 +437,24 @@ class ArticleService {
     // Delegate the request to the article model to increase the view count
     return await articleModel.increaseViewCount(id);
   }
+
+  /**
+   * Downloads an article by the specified ID.
+   *
+   * This method retrieves the article content for the specified article ID and
+   * returns the content as a Buffer.
+   *
+   * @param {number} id - The ID of the article to download.
+   * @returns {Promise<Buffer>} The content of the article as a Buffer.
+   * @throws {Error} If the article ID is invalid or the download fails.
+   * @example
+   * const articleContent = await articleService.downloadArticle(1);
+   * console.log(articleContent);
+   * <Buffer 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a>
+   */
+  async downloadArticle(id) {
+    // TODO: Implement the download article functionality
+  }
 }
 
 export default new ArticleService();

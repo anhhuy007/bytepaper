@@ -275,10 +275,79 @@ const increaseArticleViewCount = async (req, res, next) => {
   }
 };
 
+/**
+ * Downloads an article as a file.
+ *
+ * This function handles the request to download an article by its ID. It uses
+ * the article service to retrieve the article and check if it is published and
+ * not premium. If the article is found and meets the criteria, it downloads the
+ * file associated with the article.
+ *
+ * @param {Object} req - The Express request object containing the article ID in
+ *   params.
+ * @param {Object} res - The Express response object used to send the file.
+ * @param {Function} next - The next middleware function in the stack.
+ *
+ * @returns {Promise<void>} A promise that resolves when the file has been
+ *   downloaded and the response is sent.
+ *
+ * @throws {Error} If there is an error retrieving the article or downloading
+ *   the file.
+ *
+ * @example
+ * // Download an article with ID 1
+ * await articleController.downloadArticle({ params: { id: 1 } }, {}, () => {});
+ */
+const downloadArticle = async (req, res, next) => {
+  try {
+    // Retrieve the article ID from the request parameters
+    const { id } = req.params;
+
+    // Retrieve the article from the database
+    const article = await articleService.getArticleById(id);
+
+    // Check if the article is found
+    if (!article) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Article not found" });
+    }
+
+    // Check if the article is premium
+    if (article.is_premium) {
+      return res.status(403).json({ success: false, message: "Unauthorized" });
+    }
+
+    // Check if the article is published
+    if (article.status !== "published") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Article not published" });
+    }
+
+    // Download the file associated with the article
+    const file = await articleService.downloadArticle(id);
+
+    // Check if the file is found
+    if (!file) {
+      return res
+        .status(404)
+        .json({ success: false, message: "File not found" });
+    }
+
+    // Send the file as a response
+    res.download(file.path);
+  } catch (error) {
+    // Pass any errors to the next middleware
+    next(error);
+  }
+};
+
 export default {
   getAllArticles,
   getArticleById,
   searchArticles,
   getArticlesByCategory,
   increaseArticleViewCount,
+  downloadArticle,
 };

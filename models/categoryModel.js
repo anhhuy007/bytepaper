@@ -1,6 +1,6 @@
 // models/categoryModel.js
 import BaseModel from "./BaseModel.js";
-import db from "../utils/db.js";
+import db from "../utils/Database.js";
 // CREATE TABLE categories (
 //   id SERIAL PRIMARY KEY,
 //   name VARCHAR(100) NOT NULL,
