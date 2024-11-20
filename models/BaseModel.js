@@ -1,4 +1,4 @@
-// src/models/BaseModel.js
+// models/BaseModel.js
 import db from "../utils/Database.js";
 import {
   buildSelectQuery,

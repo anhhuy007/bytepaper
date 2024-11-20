@@ -1,5 +1,7 @@
 // models/userModel.js
 import BaseModel from "./BaseModel.js";
+import db from "../utils/Database.js";
+import bcrypt from "bcrypt";
 
 // CREATE TYPE user_role AS ENUM ('guest', 'subscriber', 'writer', 'editor', 'admin');
 // CREATE TABLE users (
@@ -263,7 +265,6 @@ class UserModel extends BaseModel {
     return this.update(userId, dataToUpdate);
   }
 
-
   /**
    * Counts the number of users by role.
    *
@@ -320,7 +321,6 @@ class UserModel extends BaseModel {
     return rows;
   }
 
-
   /**
    * Generates a reset token for the user with the given ID.
    *
@@ -349,7 +349,6 @@ class UserModel extends BaseModel {
     });
   }
 
-
   /**
    * Validates the reset token for the user with the given ID.
    *
@@ -377,7 +376,6 @@ class UserModel extends BaseModel {
     }
     return true;
   }
-
 }
 
 const userModel = new UserModel();
