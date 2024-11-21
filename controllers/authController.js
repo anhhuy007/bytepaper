@@ -102,6 +102,13 @@ const forgotPassword = async (req, res, next) => {
     // Extract the email address from the request body
     const { email } = req.body;
 
+    // Check if email is provided
+    if (!email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email is required." });
+    }
+
     // Send the OTP to the user
     await userService.sendPasswordResetOtp(email);
 
@@ -132,6 +139,15 @@ const resetPassword = async (req, res, next) => {
     // Extract the email address, OTP code, and new password from the request body
     const { email, otpCode, newPassword } = req.body;
 
+    // Check if email, OTP code, and new password are provided
+    if (!email || !otpCode || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Email, OTP code, and new password are required.",
+      });
+    }
+
+    
     // Reset the user's password using the service
     await userService.resetPassword(email, otpCode, newPassword);
 
