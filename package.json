@@ -5,7 +5,7 @@
     "main": "app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon app.js -e handlebars,js,css",
+        "dev": "nodemon app.js -e js,html,css,hbs,hbs --watch ./views --watch ./public --watch ./routes --watch ./models --watch app.js",
         "css": "npx tailwindcss -i ./input.css -o ./public/output.css --watch"
     },
     "keywords": [],
@@ -20,6 +20,8 @@
         "postcss-cli": "^11.0.0"
     },
     "devDependencies": {
+        "connect-livereload": "^0.6.1",
+        "livereload": "^0.9.3",
         "autoprefixer": "^10.4.20",
         "daisyui": "^4.12.14",
         "postcss": "^8.4.49",
