@@ -155,6 +155,28 @@ class AdminService {
    * ]
    */
   async assignCategoriesToEditor(editorId, categoryIds) {
+    // Check if the editor exists
+    const editor = await userModel.findById(editorId);
+    if (!editor) {
+      throw new Error("Editor not found");
+    }
+
+    if (!categoryIds || categoryIds.length === 0) {
+      throw new Error("Category IDs are required");
+    }
+
+    if (categoryIds.some((id) => typeof id !== "number")) {
+      throw new Error("Category IDs must be numbers");
+    }
+
+    if (categoryIds.length !== new Set(categoryIds).size) {
+      throw new Error("Category IDs must be unique");
+    }
+
+    if (editor.role !== "editor") {
+      throw new Error("Only editors can be assigned categories");
+    }
+
     return await editorCategoryModel.assignCategories(editorId, categoryIds);
   }
 
