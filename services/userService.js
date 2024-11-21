@@ -6,7 +6,7 @@ import otpModel from "../models/otpModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/mailer.js";
-
+import { decorateSendMail } from "../utils/mailDecorator.js";
 class UserService {
   /**
    * Registers a new user.
@@ -110,7 +110,7 @@ class UserService {
     }
 
     // Validate the password
-    const isValidPassword = await bcrypt.compare(password, user.password_hash);
+    const isValidPassword = await userModel.validatePassword(user.id, password);
     if (!isValidPassword) {
       throw new Error("Invalid credentials");
     }
@@ -118,8 +118,8 @@ class UserService {
     // Generate JWT token with user id and role
     const token = jwt.sign(
       { id: user.id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET || "your_jwt_secret",
+      { expiresIn: process.env.JWT_EXPIRY || "168h" }
     );
 
     return { user, token };
@@ -232,6 +232,7 @@ class UserService {
 
     // Retrieve the OTP record for the user
     const otpRecord = await otpModel.findByUserId(user.id);
+    console.log(otpRecord.otp, otpCode);
     if (!otpRecord || otpRecord.otp !== otpCode) {
       throw new Error("Invalid OTP");
     }
@@ -268,6 +269,9 @@ class UserService {
    * // true
    */
   async sendPasswordResetOtp(email) {
+    if (!email || typeof email !== "string" || email.trim() === "") {
+      throw new Error("Invalid email address.");
+    }
     // Retrieve the user by email
     const user = await userModel.findByEmail(email);
     if (!user) {
@@ -279,12 +283,12 @@ class UserService {
 
     // Store the OTP code in the user's OTP record
     await otpModel.createOrUpdate(user.id, otpCode);
-
+    console.log("User email", email);
     // Send the OTP code via email
     await sendEmail({
       to: email,
       subject: "Password Reset OTP",
-      text: `Your OTP code is ${otpCode}`,
+      html: decorateSendMail(otpCode),
     });
 
     return true;

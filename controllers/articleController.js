@@ -135,6 +135,8 @@ const searchArticles = async (req, res, next) => {
     // Extract the search keyword from the query parameters
     const keyword = req.query.q;
 
+    console.log("==================> keyword", keyword);
+
     // Define search options for pagination
     const options = {
       limit: parseInt(req.query.limit) || 10,

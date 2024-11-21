@@ -1,4 +1,4 @@
-// utils/db.js
+// utils/Database.js
 import pkg from "pg";
 const { Pool } = pkg;
 import dotenv from "dotenv";
@@ -53,27 +53,21 @@ class Database {
    * console.log(res.rows[0].result); // Output: 2
    */
   async query(text, params) {
-    // Record the start time of the query execution
-    const start = Date.now();
-
-    // Execute the SQL query with the provided parameters
-    const res = await this.pool.query(text, params);
-
-    // Calculate the duration of the query execution
-    const duration = Date.now() - start;
-
-    // Log the executed query details
-    console.log("Executed query", {
-      // The SQL query that was executed
-      text,
-      // The duration of the query execution in milliseconds
-      duration,
-      // The number of rows returned by the query
-      rows: res.rowCount,
-    });
-
-    // Return the query result
-    return res;
+    try {
+      console.log("Executing Query:", text);
+      console.log("With Parameters:", params);
+      const start = Date.now();
+      const res = await this.pool.query(text, params);
+      const duration = Date.now() - start;
+      console.log("Query executed successfully:", {
+        duration,
+        rows: res.rowCount,
+      });
+      return res;
+    } catch (err) {
+      console.error("Query failed:", { text, params });
+      throw err;
+    }
   }
   /**
    * Retrieves a client from the pool, or creates a new one if the pool is empty.

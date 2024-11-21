@@ -115,7 +115,8 @@ const createTag = async (req, res, next) => {
 const updateTag = async (req, res, next) => {
   try {
     const data = req.body;
-    const tag = await tagService.updateTag(req.params.id, data);
+    const { tagId: id } = req.params;
+    const tag = await tagService.updateTag(id, data);
     res.status(200).json({ success: true, data: tag });
   } catch (error) {
     next(error);
@@ -143,7 +144,8 @@ const updateTag = async (req, res, next) => {
  */
 const deleteTag = async (req, res, next) => {
   try {
-    await tagService.deleteTag(req.params.id);
+    const { tagId: id } = req.params;
+    await tagService.deleteTag(id);
     res
       .status(200)
       .json({ success: true, message: "Tag deleted successfully" });
