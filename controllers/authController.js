@@ -29,6 +29,14 @@ const register = async (req, res, next) => {
     // Extract the user data from the request body
     const { username, email, password, full_name } = req.body;
 
+    if (!username || !email || !password || !full_name) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please provide all required fields (username, email, password, full_name)",
+      });
+    }
+
     // Register the user with the service
     const user = await userService.registerUser({
       username,

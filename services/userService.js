@@ -110,7 +110,7 @@ class UserService {
     }
 
     // Validate the password
-    const isValidPassword = await bcrypt.compare(password, user.password_hash);
+    const isValidPassword = userModel.validatePassword(user.id, password);
     if (!isValidPassword) {
       throw new Error("Invalid credentials");
     }
@@ -118,8 +118,8 @@ class UserService {
     // Generate JWT token with user id and role
     const token = jwt.sign(
       { id: user.id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET || "your_jwt_secret",
+      { expiresIn: process.env.JWT_EXPIRY || "168h" }
     );
 
     return { user, token };
