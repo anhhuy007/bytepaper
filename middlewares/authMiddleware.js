@@ -42,7 +42,12 @@ const authMiddleware = (roles = []) => {
 
       // Role-based access control
       if (roles.length && !roles.includes(user.role)) {
-        return res.status(403).json({ success: false, message: "Forbidden" });
+        return res
+          .status(403)
+          .json({
+            success: false,
+            message: `Forbidden, you must be ${roles[0]} to access`,
+          });
       }
 
       next();

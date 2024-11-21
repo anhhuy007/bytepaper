@@ -8,7 +8,7 @@ import roleMiddleware from "../middlewares/roleMiddleware.js";
 const router = express.Router();
 
 // Protected Routes for Admins
-router.use(authMiddleware, roleMiddleware("admin"));
+router.use(authMiddleware(["admin"]), roleMiddleware("admin"));
 
 // User Management
 

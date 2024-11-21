@@ -49,6 +49,10 @@ class AdminService {
    * // { id: 1, username: "johnDoe", email: "johndoe@example.com", role: "writer", ... }
    */
   async assignUserRole(userId, role) {
+    if (!role) {
+      throw new Error("Role is required.");
+    }
+
     return await userModel.assignRole(userId, role);
   }
 
