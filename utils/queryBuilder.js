@@ -144,21 +144,26 @@ export const buildWhereClause = (filters, startingIndex = 1) => {
   let index = startingIndex;
 
   for (const [key, value] of Object.entries(filters)) {
-    // If the value is an array, use the ANY operator to build the condition
-    if (Array.isArray(value)) {
-      conditions.push(`${key} = ANY($${index}::${typeof value[0]}[])`);
+    if (key === "$or") {
+      // Handle OR conditions
+      const orConditions = value.map((condition) => {
+        const subConditions = [];
+        for (const [subKey, subValue] of Object.entries(condition)) {
+          subConditions.push(`${subKey} = $${index}`);
+          values.push(subValue);
+          index++;
+        }
+        return `(${subConditions.join(" AND ")})`;
+      });
+      conditions.push(`(${orConditions.join(" OR ")})`);
     } else {
-      // Otherwise, use the = operator to build the condition
+      // Handle standard conditions
       conditions.push(`${key} = $${index}`);
+      values.push(value);
+      index++;
     }
-    // Add the value to the values array
-    values.push(value);
-    // Increment the index to the next parameter index
-    index++;
   }
 
-  // Build the WHERE clause by joining the conditions with AND
-  const whereClause = conditions.length ? conditions.join(" AND ") : "";
-  // Return the built WHERE clause and its values
+  const whereClause = conditions.length ? conditions.join(" AND ") : "1=1";
   return { whereClause, values };
 };
