@@ -10,6 +10,10 @@ const router = express.Router();
 // @desc    Get all published articles
 router.get("/", articleController.getAllArticles);
 
+// @route   GET /api/v1/articles/search?q=<query>
+// @desc    Search articles
+router.get("/search", articleController.searchArticles);
+
 // @route   GET /api/v1/articles/:id
 // @desc    Get article by ID
 router.get("/:id", articleController.getArticleById);
@@ -18,7 +22,7 @@ router.get("/:id", articleController.getArticleById);
 // @desc    Download article PDF (Protected for subscribers)
 router.get(
   "/:id/download",
-  authMiddleware,
+  authMiddleware(["subscriber"]),
   checkSubscription,
   articleController.downloadArticle
 );
@@ -26,10 +30,6 @@ router.get(
 // @route   GET /api/v1/articles/category/:categoryId
 // @desc    Get articles by category
 router.get("/category/:categoryId", articleController.getArticlesByCategory);
-
-// @route   GET /api/v1/articles/search
-// @desc    Search articles
-router.get("/search", articleController.searchArticles);
 
 // @route   POST /api/v1/articles/:id/views
 // @desc    Increase article view count

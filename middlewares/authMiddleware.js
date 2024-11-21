@@ -14,7 +14,7 @@ import passport from "passport";
  * @param {string[]} [roles] - The roles allowed to access the route
  * @returns {Function} - The middleware function
  */
-const authMiddleware = (roles = []) => {
+const authMiddleware = (roles = ["guest"]) => {
   /**
    * Checks if the request is authenticated and the user has the required role
    *
@@ -42,12 +42,10 @@ const authMiddleware = (roles = []) => {
 
       // Role-based access control
       if (roles.length && !roles.includes(user.role)) {
-        return res
-          .status(403)
-          .json({
-            success: false,
-            message: `Forbidden, you must be ${roles[0]} to access`,
-          });
+        return res.status(403).json({
+          success: false,
+          message: `Forbidden, you must be ${roles[0]} to access`,
+        });
       }
 
       next();
