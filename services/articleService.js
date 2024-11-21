@@ -359,7 +359,11 @@ class ArticleService {
    * ]
    */
   async searchArticles(keyword, options = {}) {
-    return await articleModel.searchArticles(keyword, options);
+    // Chuẩn hóa từ khóa để sử dụng trong to_tsquery
+    const formattedKeyword = keyword
+      .trim() // Loại bỏ khoảng trắng ở đầu/cuối
+      .replace(/\s+/g, " & "); // Thay khoảng trắng bằng & để dùng trong to_tsquery
+    return await articleModel.searchArticles(formattedKeyword, options);
   }
 
   /**
