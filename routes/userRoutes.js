@@ -21,4 +21,10 @@ router.put("/profile", userController.updateUserProfile);
 // @desc    Change user password
 router.put("/change-password", userController.changePassword);
 
+// route CRUD user
+router.get("/user/:id", userController.getUser);
+router.post("/user", userController.createUser);
+router.put("/user/:id", userController.updateUser);
+router.delete("/user/:id", userController.deleteUser);
+
 export default router;
