@@ -393,6 +393,107 @@ class UserService {
     // Retrieve users with the specified filters and options
     return await userModel.find(filters, options);
   }
+
+  /**
+   * Retrieves the user details by their user ID.
+   *
+   * @param {string|number} user_id - The ID of the user to retrieve.
+   *
+   * @returns {Promise<Object>} A promise that resolves to the user data if found, or null if not found.
+   * @throws {Error} If any error occurs while retrieving the user.
+   */
+  async getUser(user_id) {
+    return await userModel.getUser(user_id);
+  }
+
+  /**
+   * Creates a new user with the provided details.
+   *
+   * @param {string} username - The username of the new user.
+   * @param {string} password - The password of the new user.
+   * @param {string} full_name - The full name of the new user.
+   * @param {string} pen_name - The pen name of the new user.
+   * @param {string} email - The email address of the new user.
+   * @param {string} dob - The date of birth of the new user.
+   * @param {string} role - The role of the new user.
+   * @param {string} subscription_expiration - The subscription expiration date for the new user.
+   *
+   * @returns {Promise<Object>} A promise that resolves to the created user data.
+   * @throws {Error} If any error occurs while creating the user.
+   */
+  async createUser(
+    username,
+    password,
+    full_name,
+    pen_name,
+    email,
+    dob,
+    role,
+    subscription_expiration
+  ) {
+    return await userModel.createUser(
+      username,
+      password,
+      full_name,
+      pen_name,
+      email,
+      dob,
+      role,
+      subscription_expiration
+    );
+  }
+
+  /**
+   * Updates the user details for a specific user ID.
+   *
+   * @param {string|number} user_id - The ID of the user to update.
+   * @param {string} username - The updated username of the user.
+   * @param {string} password - The updated password of the user.
+   * @param {string} full_name - The updated full name of the user.
+   * @param {string} pen_name - The updated pen name of the user.
+   * @param {string} email - The updated email of the user.
+   * @param {string} dob - The updated date of birth of the user.
+   * @param {string} role - The updated role of the user.
+   * @param {string} subscription_expiration - The updated subscription expiration date of the user.
+   *
+   * @returns {Promise<Object>} A promise that resolves to the updated user data.
+   * @throws {Error} If any error occurs while updating the user.
+   */
+  async updateUser(
+    user_id,
+    username,
+    password,
+    full_name,
+    pen_name,
+    email,
+    dob,
+    role,
+    subscription_expiration
+  ) {
+    return await userModel.updateUser(
+      user_id,
+      username,
+      password,
+      full_name,
+      pen_name,
+      email,
+      dob,
+      role,
+      subscription_expiration
+    );
+  }
+
+  /**
+   * Deletes the user with the specified user ID.
+   *
+   * @param {string|number} user_id - The ID of the user to delete.
+   *
+   * @returns {Promise<Object>} A promise that resolves to the deleted user data.
+   * @throws {Error} If any error occurs while deleting the user.
+   */
+  async deleteUser(user_id) {
+    return await userModel.deleteUser(user_id);
+  }
 }
 
 export default new UserService();
