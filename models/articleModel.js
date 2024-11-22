@@ -427,6 +427,21 @@ class ArticleModel extends BaseModel {
     ]);
     return rows;
   }
+
+  /**
+   * Deletes articles associated with a given user ID from the database.
+   *
+   * @param {string|number} user_id - The ID of the user whose articles will be deleted.
+   *
+   * @returns {Promise<void>} The promise that resolves when the articles are deleted.
+   * @throws {Error} If any error occurs while deleting the articles.
+   */
+  async deleteArticleByUserID(user_id) {
+    const text = "DELETE FROM article WHERE userId = $1 RETURNING *;";
+    const values = [user_id];
+
+    await db.query(text, values);
+  }
 }
 
 const articleModel = new ArticleModel();
