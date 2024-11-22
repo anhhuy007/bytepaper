@@ -80,8 +80,6 @@ class CommentModel extends BaseModel {
     return rows;
   }
 
-
-
   /**
    * Creates a new comment in the database.
    *
@@ -142,6 +140,21 @@ class CommentModel extends BaseModel {
     return await this.delete(id);
   }
   // Another methods related to comments...
+
+  /**
+   * Deletes comments associated with a given user ID from the database.
+   *
+   * @param {string|number} user_id - The ID of the user whose comments will be deleted.
+   *
+   * @returns {Promise<void>} The promise that resolves when the comments are deleted.
+   * @throws {Error} If any error occurs while deleting the comments.
+   */
+  async deleteCommentByUserID(user_id) {
+    const text = "DELETE FROM comment WHERE userId = $1 RETURNING *;";
+    const values = [user_id];
+
+    await db.query(text, values);
+  }
 }
 
 const commentModel = new CommentModel();
