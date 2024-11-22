@@ -4,6 +4,7 @@ import articleModel from "../models/articleModel.js";
 import articleTagModel from "../models/articleTagModel.js";
 import tagModel from "../models/tagModel.js";
 import categoryModel from "../models/categoryModel.js";
+import commentModel from "../models/commentModel.js";
 
 class ArticleService {
   /**
@@ -458,6 +459,18 @@ class ArticleService {
    */
   async downloadArticle(id) {
     // TODO: Implement the download article functionality
+  }
+
+  /**
+   * Deletes articles associated with a given user ID.
+   *
+   * @param {string|number} user_id - The ID of the user whose articles will be deleted.
+   *
+   * @returns {Promise<void>} The promise that resolves when the articles are deleted.
+   * @throws {Error} If any error occurs while deleting the articles.
+   */
+  async deleteArticleByUserID(user_id) {
+    await articleModel.deleteArticleByUserID(user_id);
   }
 }
 

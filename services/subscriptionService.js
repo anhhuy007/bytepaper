@@ -80,6 +80,18 @@ class SubscriptionService {
   async cancelSubscription(userId) {
     return await subscriptionModel.deleteSubscription(userId);
   }
+
+  /**
+   * Deletes subscriptions associated with a given user ID.
+   *
+   * @param {string|number} user_id - The ID of the user whose subscriptions will be deleted.
+   *
+   * @returns {Promise<void>} The promise that resolves when the subscriptions are deleted.
+   * @throws {Error} If any error occurs while deleting the subscriptions.
+   */
+  async deleteSubscriptionsByUserID(user_id) {
+    await subscriptionModel.deleteSubscriptionsByUserID(user_id);
+  }
 }
 
 export default new SubscriptionService();

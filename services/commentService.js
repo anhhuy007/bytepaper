@@ -136,6 +136,18 @@ class CommentService {
     // Delete the comment from the database
     await commentModel.deleteComment(commentId);
   }
+
+  /**
+   * Deletes comments associated with a given user ID.
+   *
+   * @param {string|number} user_id - The ID of the user whose comments will be deleted.
+   *
+   * @returns {Promise<void>} The promise that resolves when the comments are deleted.
+   * @throws {Error} If any error occurs while deleting the comments.
+   */
+  async deleteCommentByUserID(user_id) {
+    await commentModel.deleteCommentByUserID(user_id);
+  }
 }
 
 export default new CommentService();
