@@ -25,16 +25,34 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(helmet());
+
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: [
+                    "'self'",
+                    "'unsafe-inline'", // Allow inline scripts (use sparingly for production)
+                    "https://cdn.jsdelivr.net", // Allow Quill.js from its CDN
+                    "http://localhost:35729", // Allow live-reload scripts during development
+                ],
+                styleSrc: ["'self'", "https://cdn.jsdelivr.net"], // Allow Quill.js styles
+                connectSrc: ["'self'", "ws://localhost:35729"], // Allow WebSocket connections for live reload
+            },
+        },
+    })
+);
+
 app.use(morgan("dev"));
 
 // Session setup (if needed for strategies like OAuth)
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "your_session_secret",
-    resave: false,
-    saveUninitialized: false,
-  })
+    session({
+        secret: process.env.SESSION_SECRET || "your_session_secret",
+        resave: false,
+        saveUninitialized: false,
+    })
 );
 
 // Initialize Passport and restore authentication state, if any, from the session
@@ -50,10 +68,18 @@ app.use("/api/v1", routes);
 // Error Handler Middleware
 app.use(errorHandler);
 
-// Start Server
 const PORT = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Front end stuff
+app.engine(
+    "hbs",
+    engine({
+        extname: "hbs",
+        partialsDir: path.join(__dirname, "views", "partials"),
+    })
+);
 
 // By default hot reload for views isn't supported, so using this instead
 if (process.env.NODE_ENV === "dev") {
@@ -70,13 +96,6 @@ if (process.env.NODE_ENV === "dev") {
     });
 }
 
-app.engine(
-    "hbs",
-    engine({
-        extname: "hbs",
-        partialsDir: path.join(__dirname, "views", "partials"),
-    })
-);
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -87,7 +106,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
 
 app.get("/news/:id", (req, res) => {
@@ -99,4 +118,8 @@ app.get("/news/:id", (req, res) => {
     } else {
         res.status(404).send("News not found");
     }
+});
+
+app.get("/create-article", (req, res) => {
+    res.render("create-article");
 });
