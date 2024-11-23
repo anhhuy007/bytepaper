@@ -3,10 +3,11 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { engine } from "express-handlebars";
+import categories from "./data/categories.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,9 +18,10 @@ app.set("view engine", ".hbs");
 app.set("views", path.join("views"));
 
 app.use(express.static("public"));
+app.use(express.static("views/partials"));
 
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render("home", { categories });
 });
 
 app.listen(PORT, () => {
