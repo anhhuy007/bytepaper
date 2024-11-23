@@ -1,0 +1,76 @@
+<div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
+    <h1 class="text-4xl font-bold mb-6 text-gray-800">Create Article</h1>
+    <form action="/articles" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <!-- Title -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-lg font-semibold">Title</span>
+            </label>
+            <input type="text" name="title" class="input input-bordered w-full" placeholder="Enter the article title" required>
+        </div>
+
+        <!-- Abstract -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-lg font-semibold">Abstract</span>
+            </label>
+            <textarea name="abstract" class="textarea textarea-bordered w-full" placeholder="Provide a brief summary" required></textarea>
+        </div>
+
+        <!-- Content -->
+        {{>editor}}
+
+        <!-- Thumbnail -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-lg font-semibold">Thumbnail</span>
+            </label>
+            <input type="file" name="thumbnail" class="file-input file-input-bordered w-full">
+        </div>
+
+        <!-- Author -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-lg font-semibold">Author</span>
+            </label>
+            <input type="text" name="author_name" class="input input-bordered w-full" placeholder="Author name" required>
+        </div>
+
+        <!-- Category -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-lg font-semibold">Category</span>
+            </label>
+            <select name="category_name" class="select select-bordered w-full">
+                <option value="" disabled selected>Select a category</option>
+                <option value="Technology">Technology</option>
+                <option value="Health">Health</option>
+                <option value="Lifestyle">Lifestyle</option>
+            </select>
+        </div>
+
+        <!-- Status -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-lg font-semibold">Status</span>
+            </label>
+            <select name="status" class="select select-bordered w-full" required>
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+            </select>
+        </div>
+
+        <!-- Is Premium -->
+        <div class="form-control">
+            <label class="label cursor-pointer">
+                <span class="label-text text-lg font-semibold">Is Premium</span>
+                <input type="checkbox" name="is_premium" class="checkbox checkbox-primary">
+            </label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-control">
+            <button type="submit" class="btn btn-primary w-full">Create Article</button>
+        </div>
+    </form>
+</div>
