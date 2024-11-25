@@ -6,7 +6,8 @@
             <label class="label">
                 <span class="label-text text-lg font-semibold">Title</span>
             </label>
-            <input type="text" name="title" class="input input-bordered w-full" placeholder="Enter the article title" required>
+            <input type="text" name="title" class="input input-bordered w-full" placeholder="Enter the article title"
+                required>
         </div>
 
         <!-- Abstract -->
@@ -14,18 +15,24 @@
             <label class="label">
                 <span class="label-text text-lg font-semibold">Abstract</span>
             </label>
-            <textarea name="abstract" class="textarea textarea-bordered w-full" placeholder="Provide a brief summary" required></textarea>
+            <textarea name="abstract" class="textarea textarea-bordered w-full" placeholder="Provide a brief summary"
+                required></textarea>
         </div>
 
         <!-- Content -->
-        {{>editor}}
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-lg font-semibold">Content</span>
+            </label>
+            {{>editor}}
+        </div>
 
         <!-- Thumbnail -->
         <div class="form-control">
             <label class="label">
                 <span class="label-text text-lg font-semibold">Thumbnail</span>
             </label>
-            <input type="file" name="thumbnail" class="file-input file-input-bordered w-full">
+            <input type="file" name="thumbnail" class="file-input file-input-bordered w-full" accept="image/*">
         </div>
 
         <!-- Author -->
@@ -33,7 +40,8 @@
             <label class="label">
                 <span class="label-text text-lg font-semibold">Author</span>
             </label>
-            <input type="text" name="author_name" class="input input-bordered w-full" placeholder="Author name" required>
+            <input type="text" name="author_name" class="input input-bordered w-full" placeholder="Author name"
+                required>
         </div>
 
         <!-- Category -->
@@ -49,7 +57,6 @@
             </select>
         </div>
 
-        <!-- Status -->
         <div class="form-control">
             <label class="label">
                 <span class="label-text text-lg font-semibold">Status</span>
@@ -74,3 +81,27 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        try {
+            const response = await fetch('/articles', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Article created successfully!');
+            } else {
+                alert('Failed to create article.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while creating the article.');
+        }
+    });
+</script>
