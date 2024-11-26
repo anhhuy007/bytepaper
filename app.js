@@ -3,50 +3,48 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
-import routes from "./routes/index.js";
-import errorHandler from "./middlewares/errorHandler.js";
-import passport from "./config/passport.js";
 import session from "express-session";
-
+import passport from "./config/passport.js"; // Passport setup
+import routes from "./routes/index.js"; // API routes
+import errorHandler from "./middlewares/errorHandler.js"; // Custom error handler
 import path from "path";
 import { fileURLToPath } from "url";
 import { engine } from "express-handlebars";
 import livereload from "livereload";
 import connectLivereload from "connect-livereload";
-import { newsData } from "./lib/dummy.js";
-
-// Temporary data, remove later
+import { newsData } from "./lib/dummy.js"; // Dummy news data for development
 
 dotenv.config();
 
+// Application Constants
+const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const isDev = process.env.NODE_ENV === "dev";
+
+// Initialize Express app
 const app = express();
 
-// Middleware
+/* ---------- Middleware ---------- */
+
+// Parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Enable CORS
 app.use(cors());
 
+// Helmet for security (CSP disabled for development)
 app.use(
     helmet({
-        contentSecurityPolicy: {
-            directives: {
-                defaultSrc: ["'self'"],
-                scriptSrc: [
-                    "'self'",
-                    "'unsafe-inline'", // Allow inline scripts (use sparingly for production)
-                    "https://cdn.jsdelivr.net", // Allow Quill.js from its CDN
-                    "http://localhost:35729", // Allow live-reload scripts during development
-                ],
-                styleSrc: ["'self'", "https://cdn.jsdelivr.net"], // Allow Quill.js styles
-                connectSrc: ["'self'", "ws://localhost:35729"], // Allow WebSocket connections for live reload
-            },
-        },
+        contentSecurityPolicy: isDev ? false : undefined, // Disable CSP in dev for convenience
     })
 );
 
-app.use(morgan("dev"));
+// Morgan for request logging
+app.use(morgan(isDev ? "dev" : "combined"));
 
-// Session setup (if needed for strategies like OAuth)
+// Session setup (if needed for Passport or other strategies)
 app.use(
     session({
         secret: process.env.SESSION_SECRET || "your_session_secret",
@@ -55,24 +53,15 @@ app.use(
     })
 );
 
-// Initialize Passport and restore authentication state, if any, from the session
+// Passport initialization
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Static files (if needed)
-app.use("/uploads", express.static("uploads")); // Serve uploaded files
+// Serve static files
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static("uploads")); // Uploaded files
 
-// Use routes
-app.use("/api/v1", routes);
-
-// Error Handler Middleware
-app.use(errorHandler);
-
-const PORT = process.env.PORT || 3000;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Front end stuff
+/* ---------- Handlebars Setup ---------- */
 app.engine(
     "hbs",
     engine({
@@ -80,13 +69,15 @@ app.engine(
         partialsDir: path.join(__dirname, "views", "partials"),
     })
 );
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "views"));
 
-// By default hot reload for views isn't supported, so using this instead
-if (process.env.NODE_ENV === "dev") {
+/* ---------- Live Reload for Development ---------- */
+if (isDev) {
     const liveReloadServer = livereload.createServer();
-    liveReloadServer.watch(path.join(__dirname, "views"));
+    liveReloadServer.watch(path.join(__dirname, "views")); // Watch for changes in views
 
-    app.use(connectLivereload());
+    app.use(connectLivereload()); // Inject livereload script into responses
 
     // Timeout to prevent premature reloads
     liveReloadServer.server.once("connection", () => {
@@ -96,30 +87,39 @@ if (process.env.NODE_ENV === "dev") {
     });
 }
 
-app.set("view engine", "hbs");
-app.set("views", path.join(__dirname, "views"));
+/* ---------- Routes ---------- */
 
-app.use(express.static(path.join(__dirname, "public")));
-
+// Home Route - Render the list of news
 app.get("/", (req, res) => {
     res.render("home", { news: newsData });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
+// News Detail Route
 app.get("/news/:id", (req, res) => {
     const newsId = parseInt(req.params.id, 10); // Convert id to a number
     const newsItem = newsData.find((item) => item.id === newsId);
 
+    console.log(newsItem);
+
     if (newsItem) {
-        res.render("news-detail", { news: newsItem });
+        res.render("news-detail", { ...newsItem });
     } else {
         res.status(404).send("News not found");
     }
 });
 
+// Create Article Route
 app.get("/create-article", (req, res) => {
     res.render("create-article");
+});
+
+// API Routes
+app.use("/api/v1", routes);
+
+// Error Handler Middleware
+app.use(errorHandler);
+
+/* ---------- Start Server ---------- */
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
