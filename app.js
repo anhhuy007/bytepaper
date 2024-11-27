@@ -10,6 +10,7 @@ import errorHandler from "./middlewares/errorHandler.js"; // Custom error handle
 import path from "path";
 import { fileURLToPath } from "url";
 import { engine } from "express-handlebars";
+
 import livereload from "livereload";
 import connectLivereload from "connect-livereload";
 import { newsData } from "./lib/dummy.js"; // Dummy news data for development
@@ -67,6 +68,9 @@ app.engine(
     engine({
         extname: "hbs",
         partialsDir: path.join(__dirname, "views", "partials"),
+        helpers: {
+            eq: (a, b) => a === b,
+        },
     })
 );
 app.set("view engine", "hbs");
@@ -111,6 +115,18 @@ app.get("/news/:id", (req, res) => {
 // Create Article Route
 app.get("/create-article", (req, res) => {
     res.render("create-article");
+});
+
+// Edit Article Route
+app.get("/edit-article/:id", (req, res) => {
+    const newsId = parseInt(req.params.id, 10); // Convert id to a number
+    const newsItem = newsData.find((item) => item.id === newsId);
+
+    if (newsItem) {
+        res.render("edit-article", { ...newsItem });
+    } else {
+        res.status(404).send("News not found");
+    }
 });
 
 // API Routes
