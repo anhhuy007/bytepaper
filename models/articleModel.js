@@ -437,7 +437,7 @@ class ArticleModel extends BaseModel {
    * @throws {Error} If any error occurs while deleting the articles.
    */
   async deleteArticleByUserID(user_id) {
-    const text = "DELETE FROM article WHERE userId = $1 RETURNING *;";
+    const text = "DELETE FROM articles WHERE author_id = $1 RETURNING *;";
     const values = [user_id];
 
     await db.query(text, values);

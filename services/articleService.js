@@ -146,21 +146,17 @@ class ArticleService {
    * }
    */
   async createArticle(articleData, authorId) {
-    const { title, content, category_id, tag_ids = [] } = articleData;
+    //const { title, content, category_id, tag_ids = [] } = articleData;
+    const { title, content } = articleData;
 
     const newArticle = {
       title,
       content,
-      category_id,
       author_id: authorId,
       status: "draft",
     };
 
     const createdArticle = await articleModel.createArticle(newArticle);
-
-    if (tag_ids.length > 0) {
-      await articleTagModel.addTagsToArticle(createdArticle.id, tag_ids);
-    }
 
     return createdArticle;
   }
@@ -272,7 +268,7 @@ class ArticleService {
    *
    * @returns {Promise<Object>} The updated article with the new status.
    */
-  async approveArticle(id, editorId) {
+  async approveArticle(id, editorId, categoryId, tagIds) {
     // Retrieve the article from the database
     const article = await articleModel.findById(id);
     if (!article) {
@@ -284,6 +280,10 @@ class ArticleService {
       throw new Error("Article is not pending approval");
     }
 
+    if (tagIds.length > 0) {
+      await articleTagModel.addTagsToArticle(id, tagIds);
+    }
+
     // Allow the editor to approve the article only if they have the rights to do so
     // TODO: Implement the logic to check if the editor has the rights to approve the article
 
@@ -292,6 +292,7 @@ class ArticleService {
       status: "published",
       published_at: new Date(),
       editor_id: editorId,
+      category_id: categoryId,
     });
   }
 
