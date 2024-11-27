@@ -33,7 +33,7 @@ import articleService from "../services/articleService.js";
  *     content: "<p>This is the article content.</p>",
  *     thumbnail: null,
  *     author_id: 1,
- *     category_id: null,
+ *     category_id: null,s
  *     status: "published",
  *     published_at: "2021-01-01T00:00:00.000Z",
  *     views: 0,

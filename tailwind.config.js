@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./views/**/*.{html,js,handlebars,hbs}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["'Times New Roman'", "serif"],
+      },
+    },
   },
   daisyui: {
     themes: ["lofi", "wireframe", "emerald"],

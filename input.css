@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "Uni Sans Thin";
-  src: url("./public/Uni Sans Thin.otf") format("opentype");
-  font-style: normal;
-}
-
 * {
-  font-family: "Uni Sans Thin";
+  font-family: "Times New Roman", "Times", "serif" !important;
 }
