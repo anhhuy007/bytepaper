@@ -96,7 +96,7 @@ class SubscriptionModel extends BaseModel {
    * @throws {Error} If any error occurs while deleting the subscriptions.
    */
   async deleteSubscriptionsByUserID(user_id) {
-    const text = "DELETE FROM subscriptions WHERE userId = $1 RETURNING *;";
+    const text = "DELETE FROM subscriptions WHERE user_id = $1 RETURNING *;";
     const values = [user_id];
 
     await db.query(text, values);

@@ -150,7 +150,7 @@ class CommentModel extends BaseModel {
    * @throws {Error} If any error occurs while deleting the comments.
    */
   async deleteCommentByUserID(user_id) {
-    const text = "DELETE FROM comment WHERE userId = $1 RETURNING *;";
+    const text = "DELETE FROM comments WHERE user_id = $1 RETURNING *;";
     const values = [user_id];
 
     await db.query(text, values);

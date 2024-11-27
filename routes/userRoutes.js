@@ -7,7 +7,9 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 // Protected Routes
-router.use(authMiddleware);
+router.use(
+  authMiddleware(["guest", "subscriber", "writer", "editor", "admin"])
+);
 
 // @route   GET /api/v1/user/profile
 // @desc    Get user profile
@@ -22,9 +24,9 @@ router.put("/profile", userController.updateUserProfile);
 router.put("/change-password", userController.changePassword);
 
 // route CRUD user
-router.get("/user/:id", userController.getUser);
-router.post("/user", userController.createUser);
-router.put("/user/:id", userController.updateUser);
-router.delete("/user/:id", userController.deleteUser);
+//router.get("/user/:id", userController.getUser);
+//router.post("/user", userController.createUser);
+//router.put("/user/:id", userController.updateUser);
+router.delete("/delete", userController.deleteUser);
 
 export default router;

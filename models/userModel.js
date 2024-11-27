@@ -496,7 +496,7 @@ class UserModel extends BaseModel {
    * @throws {Error} If an error occurs during the database query.
    */
   async deleteUser(user_id) {
-    const text = "DELETE FROM user WHERE userId = $1 RETURNING *;";
+    const text = "DELETE FROM users WHERE id = $1 RETURNING *;";
     const values = [user_id];
 
     const res = await db.query(text, values);
