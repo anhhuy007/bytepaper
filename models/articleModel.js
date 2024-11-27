@@ -3,6 +3,7 @@ import BaseModel from "./BaseModel.js";
 import db from "../utils/Database.js";
 import { buildSelectQuery, buildWhereClause } from "../utils/queryBuilder.js";
 
+// CREATE TYPE article_status AS ENUM ('draft', 'pending', 'approved', 'published', 'rejected');
 // CREATE TABLE articles (
 //   id SERIAL PRIMARY KEY,
 //   title VARCHAR(200) NOT NULL,
