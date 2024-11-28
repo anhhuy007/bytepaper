@@ -13,6 +13,11 @@ router.use(authMiddleware, roleMiddleware("writer"));
 // @route   GET /api/v1/writer/articles
 // @desc    Get all articles by writer
 router.get("/articles", writerController.getMyArticles);
+router.get("/articles/rejected", writerController.getMyRejectArticles);
+router.get("/articles/published", writerController.getMyPublishedArticles);
+router.get("/articles/approved", writerController.getMyApprovedArticles);
+router.get("/articles/pending", writerController.getMyPendingArticles);
+router.get("/articles/draft", writerController.getMyDraftArticles);
 
 // @route   POST /api/v1/writer/articles
 // @desc    Create a new article
@@ -21,6 +26,7 @@ router.post("/articles", writerController.createArticle);
 // @route   PUT /api/v1/writer/articles/:articleId
 // @desc    Update an article
 router.put("/articles/:articleId", writerController.updateArticle);
+router.delete("/articles/:articleId", writerController.deleteArticle);
 
 // @route   PUT /api/v1/writer/articles/:articleId/submit
 // @desc    Submit article for approval

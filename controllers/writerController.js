@@ -38,6 +38,146 @@ const getMyArticles = async (req, res, next) => {
   }
 };
 
+const getMyRejectArticles = async (req, res, next) => {
+  try {
+    // Extract the author ID from the request object
+    const authorId = req.user.id;
+
+    // Define filters to retrieve articles by author ID
+    const filters = {
+      author_id: authorId,
+      status: "rejected",
+    };
+
+    // Define pagination options from the request query
+    const options = {
+      limit: parseInt(req.query.limit) || 10,
+      offset: parseInt(req.query.offset) || 0,
+    };
+
+    // Retrieve the articles using the article service
+    const articles = await articleService.getAllArticles(filters, options);
+
+    // Send the retrieved articles as a JSON response
+    res.status(200).json({ success: true, data: articles });
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error);
+  }
+};
+
+const getMyPublishedArticles = async (req, res, next) => {
+  try {
+    // Extract the author ID from the request object
+    const authorId = req.user.id;
+
+    // Define filters to retrieve articles by author ID
+    const filters = {
+      author_id: authorId,
+      status: "published",
+    };
+
+    // Define pagination options from the request query
+    const options = {
+      limit: parseInt(req.query.limit) || 10,
+      offset: parseInt(req.query.offset) || 0,
+    };
+
+    // Retrieve the articles using the article service
+    const articles = await articleService.getAllArticles(filters, options);
+
+    // Send the retrieved articles as a JSON response
+    res.status(200).json({ success: true, data: articles });
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error);
+  }
+};
+
+const getMyApprovedArticles = async (req, res, next) => {
+  try {
+    // Extract the author ID from the request object
+    const authorId = req.user.id;
+
+    // Define filters to retrieve articles by author ID
+    const filters = {
+      author_id: authorId,
+      status: "approved",
+    };
+
+    // Define pagination options from the request query
+    const options = {
+      limit: parseInt(req.query.limit) || 10,
+      offset: parseInt(req.query.offset) || 0,
+    };
+
+    // Retrieve the articles using the article service
+    const articles = await articleService.getAllArticles(filters, options);
+
+    // Send the retrieved articles as a JSON response
+    res.status(200).json({ success: true, data: articles });
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error);
+  }
+};
+
+const getMyPendingArticles = async (req, res, next) => {
+  try {
+    // Extract the author ID from the request object
+    const authorId = req.user.id;
+
+    // Define filters to retrieve articles by author ID
+    const filters = {
+      author_id: authorId,
+      status: "pending",
+    };
+
+    // Define pagination options from the request query
+    const options = {
+      limit: parseInt(req.query.limit) || 10,
+      offset: parseInt(req.query.offset) || 0,
+    };
+
+    // Retrieve the articles using the article service
+    const articles = await articleService.getAllArticles(filters, options);
+
+    // Send the retrieved articles as a JSON response
+    res.status(200).json({ success: true, data: articles });
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error);
+  }
+};
+
+const getMyDraftArticles = async (req, res, next) => {
+  try {
+    // Extract the author ID from the request object
+    const authorId = req.user.id;
+
+    // Define filters to retrieve articles by author ID
+    const filters = {
+      author_id: authorId,
+      status: "draft",
+    };
+
+    // Define pagination options from the request query
+    const options = {
+      limit: parseInt(req.query.limit) || 10,
+      offset: parseInt(req.query.offset) || 0,
+    };
+
+    // Retrieve the articles using the article service
+    const articles = await articleService.getAllArticles(filters, options);
+
+    // Send the retrieved articles as a JSON response
+    res.status(200).json({ success: true, data: articles });
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error);
+  }
+};
+
 /**
  * Creates a new article in the database.
  *
@@ -178,9 +318,26 @@ const submitArticleForApproval = async (req, res, next) => {
   }
 };
 
+const deleteArticle = async (req, res, next) => {
+  try {
+    const authorId = req.user.id;
+    const articleID = req.req.params.articleId;
+    const article = await articleService.deleteArticle(authorId, articleID);
+    res.status(200).json({ success: true, data: article });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getMyArticles,
+  getMyApprovedArticles,
+  getMyDraftArticles,
+  getMyPendingArticles,
+  getMyPublishedArticles,
+  getMyRejectArticles,
   createArticle,
+  deleteArticle,
   updateArticle,
   submitArticleForApproval,
 };
