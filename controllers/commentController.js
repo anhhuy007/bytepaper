@@ -110,6 +110,7 @@ const addCommentToArticle = async (req, res, next) => {
   const articleId = req.params.articleId;
   const { content } = req.body;
 
+
   try {
     // Add the comment to the database
     const comment = await commentService.addCommentToArticle(

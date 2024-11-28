@@ -4,6 +4,7 @@ import articleModel from "../models/articleModel.js";
 import articleTagModel from "../models/articleTagModel.js";
 import tagModel from "../models/tagModel.js";
 import categoryModel from "../models/categoryModel.js";
+import commentModel from "../models/commentModel.js";
 
 class ArticleService {
   /**
@@ -145,21 +146,17 @@ class ArticleService {
    * }
    */
   async createArticle(articleData, authorId) {
-    const { title, content, category_id, tag_ids = [] } = articleData;
+    //const { title, content, category_id, tag_ids = [] } = articleData;
+    const { title, content } = articleData;
 
     const newArticle = {
       title,
       content,
-      category_id,
       author_id: authorId,
       status: "draft",
     };
 
     const createdArticle = await articleModel.createArticle(newArticle);
-
-    if (tag_ids.length > 0) {
-      await articleTagModel.addTagsToArticle(createdArticle.id, tag_ids);
-    }
 
     return createdArticle;
   }
@@ -271,7 +268,7 @@ class ArticleService {
    *
    * @returns {Promise<Object>} The updated article with the new status.
    */
-  async approveArticle(id, editorId) {
+  async approveArticle(id, editorId, categoryId, tagIds) {
     // Retrieve the article from the database
     const article = await articleModel.findById(id);
     if (!article) {
@@ -283,6 +280,10 @@ class ArticleService {
       throw new Error("Article is not pending approval");
     }
 
+    if (tagIds.length > 0) {
+      await articleTagModel.addTagsToArticle(id, tagIds);
+    }
+
     // Allow the editor to approve the article only if they have the rights to do so
     // TODO: Implement the logic to check if the editor has the rights to approve the article
 
@@ -291,6 +292,7 @@ class ArticleService {
       status: "published",
       published_at: new Date(),
       editor_id: editorId,
+      category_id: categoryId,
     });
   }
 
@@ -359,7 +361,11 @@ class ArticleService {
    * ]
    */
   async searchArticles(keyword, options = {}) {
-    return await articleModel.searchArticles(keyword, options);
+    // Chuẩn hóa từ khóa để sử dụng trong to_tsquery
+    const formattedKeyword = keyword
+      .trim() // Loại bỏ khoảng trắng ở đầu/cuối
+      .replace(/\s+/g, " & "); // Thay khoảng trắng bằng & để dùng trong to_tsquery
+    return await articleModel.searchArticles(formattedKeyword, options);
   }
 
   /**
@@ -454,6 +460,18 @@ class ArticleService {
    */
   async downloadArticle(id) {
     // TODO: Implement the download article functionality
+  }
+
+  /**
+   * Deletes articles associated with a given user ID.
+   *
+   * @param {string|number} user_id - The ID of the user whose articles will be deleted.
+   *
+   * @returns {Promise<void>} The promise that resolves when the articles are deleted.
+   * @throws {Error} If any error occurs while deleting the articles.
+   */
+  async deleteArticleByUserID(user_id) {
+    await articleModel.deleteArticleByUserID(user_id);
   }
 }
 

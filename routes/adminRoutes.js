@@ -2,13 +2,14 @@
 
 import express from "express";
 import adminController from "../controllers/adminController.js";
+import tagController from "../controllers/tagController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import roleMiddleware from "../middlewares/roleMiddleware.js";
 
 const router = express.Router();
 
 // Protected Routes for Admins
-router.use(authMiddleware, roleMiddleware("admin"));
+router.use(authMiddleware(["admin"]), roleMiddleware("admin"));
 
 // User Management
 
@@ -39,6 +40,18 @@ router.put("/categories/:categoryId", adminController.updateCategory);
 router.delete("/categories/:categoryId", adminController.deleteCategory);
 
 // Tag Management (Similar to categories)
+
+// @route   POST /api/v1/admin/tags
+// @desc    Create a new tag
+router.post("/tags", tagController.createTag);
+
+// @route   PUT /api/v1/admin/tags/:tagId
+// @desc    Update a tag
+router.put("/tags/:tagId", tagController.updateTag);
+
+// @route   DELETE /api/v1/admin/tags/:tagId
+// @desc    Delete a tag
+router.delete("/tags/:tagId", tagController.deleteTag);
 
 // Editor Management
 

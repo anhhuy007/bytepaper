@@ -5,6 +5,7 @@ import {
   buildInsertQuery,
   buildUpdateQuery,
   buildDeleteQuery,
+  buildWhereClause,
 } from "../utils/queryBuilder.js";
 
 class BaseModel {

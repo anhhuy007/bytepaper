@@ -376,6 +376,132 @@ class UserModel extends BaseModel {
     }
     return true;
   }
+
+  /**
+   * Retrieves user details by their user ID.
+   *
+   * @param {string|number} user_id - The ID of the user to retrieve.
+   *
+   * @returns {Promise<Object|null>} The user object if found, or null if no user exists with the provided ID.
+   * @throws {Error} If an error occurs during the database query.
+   */
+  async getUser(user_id) {
+    const text = "SELECT * FROM user WHERE user_id = $1";
+    const values = [user_id];
+
+    const res = await db.query(text, values);
+    return res.rows[0];
+  }
+
+  /**
+   * Creates a new user in the database.
+   *
+   * @param {string} username - The username of the new user.
+   * @param {string} password - The password of the new user.
+   * @param {string} full_name - The full name of the new user.
+   * @param {string} pen_name - The pen name of the new user.
+   * @param {string} email - The email address of the new user.
+   * @param {string} dob - The date of birth of the new user.
+   * @param {string} role - The role of the new user (e.g., "admin", "writer").
+   * @param {string} subscription_expiration - The expiration date of the user's subscription.
+   *
+   * @returns {Promise<Object>} The newly created user object.
+   * @throws {Error} If an error occurs during the database query.
+   */
+  async createUser(
+    username,
+    password,
+    full_name,
+    pen_name,
+    email,
+    dob,
+    role,
+    subscription_expiration
+  ) {
+    const text = `
+    INSERT INTO user (username, password, full_name, pen_name, email, dob, role, subscription_expiration)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING *;
+  `;
+    const values = [
+      username,
+      password,
+      full_name,
+      pen_name,
+      email,
+      dob,
+      role,
+      subscription_expiration,
+    ].map((value) => (value === undefined ? null : value));
+
+    const res = await db.query(text, values);
+    return res.rows[0];
+  }
+
+  /**
+   * Updates an existing user's details.
+   *
+   * @param {string|number} user_id - The ID of the user to update.
+   * @param {string} username - The new username of the user.
+   * @param {string} password - The new password of the user.
+   * @param {string} full_name - The new full name of the user.
+   * @param {string} pen_name - The new pen name of the user.
+   * @param {string} email - The new email address of the user.
+   * @param {string} dob - The new date of birth of the user.
+   * @param {string} role - The new role of the user.
+   * @param {string} subscription_expiration - The new subscription expiration date of the user.
+   *
+   * @returns {Promise<Object>} The updated user object.
+   * @throws {Error} If an error occurs during the database query.
+   */
+  async updateUser(
+    user_id,
+    username,
+    password,
+    full_name,
+    pen_name,
+    email,
+    dob,
+    role,
+    subscription_expiration
+  ) {
+    const text = `
+    UPDATE user
+    SET username = $1, password = $2, full_name = $3, pen_name = $4, email = $5, dob = $6, role = $7, subscription_expiration = $8
+    WHERE user_id = $9
+    RETURNING *;
+  `;
+    const values = [
+      username,
+      password,
+      full_name,
+      pen_name,
+      email,
+      dob,
+      role,
+      subscription_expiration,
+      user_id,
+    ].map((value) => (value === undefined ? null : value));
+
+    const res = await db.query(text, values);
+    return res.rows[0];
+  }
+
+  /**
+   * Deletes a user from the database by their user ID.
+   *
+   * @param {string|number} user_id - The ID of the user to delete.
+   *
+   * @returns {Promise<Object>} The deleted user object.
+   * @throws {Error} If an error occurs during the database query.
+   */
+  async deleteUser(user_id) {
+    const text = "DELETE FROM users WHERE id = $1 RETURNING *;";
+    const values = [user_id];
+
+    const res = await db.query(text, values);
+    return res.rows[0];
+  }
 }
 
 const userModel = new UserModel();

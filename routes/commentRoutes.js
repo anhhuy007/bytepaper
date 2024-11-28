@@ -11,7 +11,7 @@ const router = express.Router();
 router.get("/article/:articleId", commentController.getCommentsByArticleId);
 
 // Protected Routes
-router.use(authMiddleware);
+router.use(authMiddleware(["guest", "subscriber", "admin"]));
 
 // @route   POST /api/v1/comments/article/:articleId
 // @desc    Add a comment to an article

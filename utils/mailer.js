@@ -30,7 +30,11 @@ const transporter = nodemailer.createTransport({
  *   `<p>Hello!</p><p>This is a message sent from Node.js.</p>`
  * );
  */
-const sendMail = async (to, subject, html) => {
+const sendMail = async ({ to, subject, html }) => {
+  if (!to || typeof to !== "string" || to.trim() === "") {
+    throw new Error("Recipient email address is missing or invalid.");
+  }
+
   // Define the email options, including sender, recipient, subject, and HTML content
   const mailOptions = {
     from: process.env.EMAIL_USERNAME, // Sender's email address from environment variables
@@ -40,7 +44,7 @@ const sendMail = async (to, subject, html) => {
   };
 
   // Send the email using the transporter and the defined options
-  await transporter.sendMail(mailOptions);
+  const info = await transporter.sendMail(mailOptions);
 };
 
 export default sendMail;

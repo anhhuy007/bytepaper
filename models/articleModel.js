@@ -3,6 +3,7 @@ import BaseModel from "./BaseModel.js";
 import db from "../utils/Database.js";
 import { buildSelectQuery, buildWhereClause } from "../utils/queryBuilder.js";
 
+// CREATE TYPE article_status AS ENUM ('draft', 'pending', 'approved', 'published', 'rejected');
 // CREATE TABLE articles (
 //   id SERIAL PRIMARY KEY,
 //   title VARCHAR(200) NOT NULL,
@@ -426,6 +427,21 @@ class ArticleModel extends BaseModel {
       limit,
     ]);
     return rows;
+  }
+
+  /**
+   * Deletes articles associated with a given user ID from the database.
+   *
+   * @param {string|number} user_id - The ID of the user whose articles will be deleted.
+   *
+   * @returns {Promise<void>} The promise that resolves when the articles are deleted.
+   * @throws {Error} If any error occurs while deleting the articles.
+   */
+  async deleteArticleByUserID(user_id) {
+    const text = "DELETE FROM articles WHERE author_id = $1 RETURNING *;";
+    const values = [user_id];
+
+    await db.query(text, values);
   }
 }
 
