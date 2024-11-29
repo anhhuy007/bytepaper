@@ -158,15 +158,18 @@ class ArticleModel extends BaseModel {
       FROM articles a
       LEFT JOIN users u ON a.author_id = u.id
       LEFT JOIN categories c ON a.category_id = c.id
-      ${whereClause ? `WHERE ${whereClause}` : ""}
-      ORDER BY ${options.orderBy || "a.published_at DESC"}
-      LIMIT $${values.length + 1}
-      OFFSET $${values.length + 2}
+      WHERE category_id = ANY($1::int[])
+        AND status = $2
+      ORDER BY a.published_at DESC
+      LIMIT $3
+      OFFSET $4
     `;
-    // Add the limit and offset to the values array
-    values.push(options.limit || 10, options.offset || 0);
-    // Execute the query and return the results
-    const { rows } = await db.query(query, values);
+    const { rows } = await db.query(query, [
+      filters.category_id,
+      filters.status,
+      options.limit,
+      options.offset,
+    ]);
     return rows;
   }
 

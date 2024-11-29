@@ -84,17 +84,30 @@ const getMyArticles = async (req, res, next) => {
   try {
     const editorId = req.user.id;
     const categories = await adminService.getCategoriesByEditor(editorId);
-    const categoryIds = categories.map((category) => category.id);
+    const categoryIds = categories.map((category) => parseInt(category.id, 10));
+    if (!categoryIds.length) {
+      return [];
+    }
     const filters = {
       category_id: categoryIds,
     };
 
-    if (req.query.status !== "all") {
-      filters = {
-        category_id: categoryIds,
-        status: req.query.status,
-      };
+    const status = req.query.status;
+
+    if (!status) {
+      filters.status = "pending";
     }
+
+    if (
+      !["draft", "pending", "published", "rejected", "approved"].includes(
+        status
+      )
+    ) {
+      throw new Error("Invalid status");
+    }
+
+    filters.status = status;
+
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
