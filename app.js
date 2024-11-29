@@ -1,3 +1,4 @@
+// app.js
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -31,6 +32,7 @@ app.use(
     secret: process.env.SESSION_SECRET || "your_session_secret",
     resave: false,
     saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === "production" }, // Use secure cookies in production
   })
 );
 
