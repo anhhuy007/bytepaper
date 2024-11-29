@@ -1,4 +1,4 @@
-// models/subscriptionsModel.js
+// models/subscription.model.js
 
 import BaseModel from "./Base.model.js";
 import db from "../utils/Database.js";
@@ -86,21 +86,6 @@ class SubscriptionModel extends BaseModel {
   }
 
   // Another methods related to subscriptions...
-
-  /**
-   * Deletes subscriptions associated with a given user ID from the database.
-   *
-   * @param {string|number} user_id - The ID of the user whose subscriptions will be deleted.
-   *
-   * @returns {Promise<void>} The promise that resolves when the subscriptions are deleted.
-   * @throws {Error} If any error occurs while deleting the subscriptions.
-   */
-  async deleteSubscriptionsByUserID(user_id) {
-    const text = "DELETE FROM subscriptions WHERE user_id = $1 RETURNING *;";
-    const values = [user_id];
-
-    await db.query(text, values);
-  }
 }
 
 const subscriptionModel = new SubscriptionModel();
