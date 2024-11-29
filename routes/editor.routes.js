@@ -9,7 +9,7 @@ const router = express.Router();
 // Protected Routes for Editors
 router.use(authMiddleware(["editor"]));
 
-// @route   GET /api/v1/editor/articles
+// @route   GET /api/v1/editor/articles?status=pending
 // @desc    Get pending articles for editor's categories
 router.get("/articles/", editorController.getMyArticles);
 

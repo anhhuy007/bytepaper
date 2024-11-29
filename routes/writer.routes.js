@@ -9,7 +9,7 @@ const router = express.Router();
 // Protected Routes for Writers
 router.use(authMiddleware(["writer"]));
 
-// @route   GET /api/v1/writer/articles
+// @route   GET /api/v1/writer/articles?status=(draft|pending|approved|rejected|published)
 // @desc    Get all articles by writer
 router.get("/articles", writerController.getMyArticles);
 
