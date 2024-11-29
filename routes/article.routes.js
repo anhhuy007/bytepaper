@@ -10,6 +10,10 @@ const router = express.Router();
 // @desc    Get all published articles
 router.get("/", articleController.getAllArticles);
 
+// @route   GET /api/v1/articles/home
+// @desc    Fetch homepage articles (featured, most-viewed, newest, top-categories)
+router.get("/home", articleController.getHomepageArticles);
+
 // @route   GET /api/v1/articles/search?q=<query>
 // @desc    Search articles
 router.get("/search", articleController.searchArticles);
@@ -34,7 +38,5 @@ router.get("/category/:categoryId", articleController.getArticlesByCategory);
 // @route   POST /api/v1/articles/:id/views
 // @desc    Increase article view count
 router.post("/:id/views", articleController.increaseArticleViewCount);
-
-
 
 export default router;

@@ -1,4 +1,4 @@
-// controllers/articleController.js
+// controllers/article.controller.js
 
 import articleService from "../services/article.service.js";
 
@@ -345,6 +345,23 @@ const downloadArticle = async (req, res, next) => {
   }
 };
 
+// GET /api/v1/articles/home?type=(featured|most-viewed|newest|top-categories)
+const getHomepageArticles = async (req, res, next) => {
+  try {
+    const type = req.query.type;
+    if (!type) {
+      type = "all";
+    }
+    const homepageData = await articleService.getHomepageArticles(type);
+    res.status(200).json({
+      success: true,
+      data: homepageData,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getAllArticles,
   getArticleById,
@@ -352,4 +369,5 @@ export default {
   getArticlesByCategory,
   increaseArticleViewCount,
   downloadArticle,
+  getHomepageArticles,
 };

@@ -1,8 +1,8 @@
-// services/articleService.js
+// services/article.service.js
 
 import articleModel from "../models/article.model.js";
 import articleTagModel from "../models/articleTag.model.js";
-
+import redisClient from "../utils/redisClient.js";
 class ArticleService {
   /**
    * Retrieves a list of articles from the database based on the provided filters
@@ -469,6 +469,39 @@ class ArticleService {
    */
   async deleteArticleByUserID(user_id) {
     await articleModel.deleteArticleByUserID(user_id);
+  }
+
+  async getHomepageArticles(type) {
+    const cacheKey = `homepage:articles:${type}`;
+    const cachedData = await redisClient.get(cacheKey);
+
+    if (cachedData) {
+      console.log("Cache hit");
+      return JSON.parse(cachedData);
+    }
+
+    console.log("Cache miss");
+    let result;
+
+    switch (type) {
+      case "featured":
+        result = await articleModel.getFeaturedArticles();
+        break;
+      case "most-viewed":
+        result = await articleModel.getMostViewedArticles();
+        break;
+      case "newest":
+        result = await articleModel.getNewestArticles();
+        break;
+      case "top-categories":
+        result = await articleModel.getTopCategoryArticles();
+        break;
+      default:
+        result = await articleModel.getHomepageArticles();
+    }
+
+    await redisClient.set(cacheKey, JSON.stringify(result), { EX: 300 });
+    return result;
   }
 }
 
