@@ -6,6 +6,8 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
+router.use(authMiddleware());
+
 // @route   GET /api/v1/user/profile
 // @desc    Get user profile
 router.get("/profile", userController.getUserProfile);
