@@ -12,12 +12,7 @@ router.use(authMiddleware, roleMiddleware("editor"));
 
 // @route   GET /api/v1/editor/articles
 // @desc    Get pending articles for editor's categories
-router.get("/articles/rejected", editorController.getRejectedArticles);
-router.get("/articles/published", editorController.getPublishedArticles);
-router.get("/articles/approved", editorController.getApprovedArticles);
-router.get("/articles/pending", editorController.getPendingArticles);
-router.get("/articles/draft", editorController.getDraftArticles);
-router.get("/articles/all", editorController.getAllArticles);
+router.get("/articles/", editorController.getMyArticles);
 
 // @route   PUT /api/v1/editor/articles/:articleId/approve
 // @desc    Approve an article

@@ -80,94 +80,21 @@ const getPendingArticles = async (req, res, next) => {
   }
 };
 
-const getRejectedArticles = async (req, res, next) => {
+const getMyArticles = async (req, res, next) => {
   try {
     const editorId = req.user.id;
     const categories = await adminService.getCategoriesByEditor(editorId);
     const categoryIds = categories.map((category) => category.id);
     const filters = {
-      status: "rejected",
       category_id: categoryIds,
     };
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-    };
-    const articles = await articleService.getAllArticles(filters, options);
-    res.status(200).json({ success: true, data: articles });
-  } catch (error) {
-    next(error);
-  }
-};
 
-const getPublishedArticles = async (req, res, next) => {
-  try {
-    const editorId = req.user.id;
-    const categories = await adminService.getCategoriesByEditor(editorId);
-    const categoryIds = categories.map((category) => category.id);
-    const filters = {
-      status: "published",
-      category_id: categoryIds,
-    };
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-    };
-    const articles = await articleService.getAllArticles(filters, options);
-    res.status(200).json({ success: true, data: articles });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getApprovedArticles = async (req, res, next) => {
-  try {
-    const editorId = req.user.id;
-    const categories = await adminService.getCategoriesByEditor(editorId);
-    const categoryIds = categories.map((category) => category.id);
-    const filters = {
-      status: "approved",
-      category_id: categoryIds,
-    };
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-    };
-    const articles = await articleService.getAllArticles(filters, options);
-    res.status(200).json({ success: true, data: articles });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getDraftArticles = async (req, res, next) => {
-  try {
-    const editorId = req.user.id;
-    const categories = await adminService.getCategoriesByEditor(editorId);
-    const categoryIds = categories.map((category) => category.id);
-    const filters = {
-      status: "draft",
-      category_id: categoryIds,
-    };
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-    };
-    const articles = await articleService.getAllArticles(filters, options);
-    res.status(200).json({ success: true, data: articles });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getAllArticles = async (req, res, next) => {
-  try {
-    const editorId = req.user.id;
-    const categories = await adminService.getCategoriesByEditor(editorId);
-    const categoryIds = categories.map((category) => category.id);
-    const filters = {
-      category_id: categoryIds,
-    };
+    if (req.query.status !== "all") {
+      filters = {
+        category_id: categoryIds,
+        status: req.query.status,
+      };
+    }
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
@@ -255,11 +182,7 @@ const rejectArticle = async (req, res, next) => {
 
 export default {
   getPendingArticles,
-  getAllArticles,
-  getApprovedArticles,
-  getRejectedArticles,
-  getDraftArticles,
-  getPublishedArticles,
+  getMyArticles,
   approveArticle,
   rejectArticle,
 };
