@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
-import routes from "./routes/index.js";
+import routes from "./routes/index.routes.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import passport from "./config/passport.js";
 import session from "express-session";
@@ -56,17 +56,17 @@ console.log(process.env.NODE_ENV);
 
 // By default hot reload for views isn't supported, so using this instead
 if (process.env.NODE_ENV === "dev") {
-    const liveReloadServer = livereload.createServer();
-    liveReloadServer.watch(path.join(__dirname, "views"));
+  const liveReloadServer = livereload.createServer();
+  liveReloadServer.watch(path.join(__dirname, "views"));
 
-    app.use(connectLivereload());
+  app.use(connectLivereload());
 
-    // Timeout to prevent premature reloads
-    liveReloadServer.server.once("connection", () => {
-        setTimeout(() => {
-            liveReloadServer.refresh("/");
-        }, 100);
-    });
+  // Timeout to prevent premature reloads
+  liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+      liveReloadServer.refresh("/");
+    }, 100);
+  });
 }
 
 app.engine("hbs", engine({ extname: "hbs" }));
@@ -76,7 +76,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
-    res.render("home");
+  res.render("home");
 });
 
 app.listen(PORT, () => {
