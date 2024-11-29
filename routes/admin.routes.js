@@ -16,6 +16,10 @@ router.use(authMiddleware(["admin"]));
 // @desc    Get all users
 router.get("/users", adminController.getAllUsers);
 
+// @route   GET /api/v1/admin/users/:userId
+// @desc    Get user by ID
+router.get("/users/:userId", adminController.getUserById);
+
 // @route   PUT /api/v1/admin/users/:userId/role
 // @desc    Assign role to a user
 router.put("/users/:userId/role", adminController.assignUserRole);

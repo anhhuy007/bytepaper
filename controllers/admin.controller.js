@@ -1,6 +1,7 @@
 // controllers/adminController.js
 
 import adminService from "../services/admin.service.js";
+import userService from "../services/user.service.js";
 
 /**
  * Retrieves a list of users from the database based on the provided filters and
@@ -45,6 +46,16 @@ const getAllUsers = async (req, res, next) => {
     };
     const users = await adminService.getAllUsers(filters, options);
     res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserById = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const user = await userService.getUserById(userId);
+    res.status(200).json({ success: true, data: user });
   } catch (error) {
     next(error);
   }
@@ -237,6 +248,7 @@ const assignCategoriesToEditor = async (req, res, next) => {
 
 export default {
   getAllUsers,
+  getUserById,
   assignUserRole,
   deleteUser,
   createCategory,
