@@ -1,4 +1,4 @@
-// routes/tagRoutes.js
+// routes/tag.routes.js
 
 import express from "express";
 import tagController from "../controllers/tag.controller.js";

@@ -1,4 +1,4 @@
-// routes/articleRoutes.js
+// routes/article.routes.js
 import express from "express";
 import articleController from "../controllers/article.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
@@ -34,5 +34,7 @@ router.get("/category/:categoryId", articleController.getArticlesByCategory);
 // @route   POST /api/v1/articles/:id/views
 // @desc    Increase article view count
 router.post("/:id/views", articleController.increaseArticleViewCount);
+
+
 
 export default router;

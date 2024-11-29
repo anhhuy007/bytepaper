@@ -1,4 +1,4 @@
-// routes/categoryRoutes.js
+// routes/category.routes.js
 
 import express from "express";
 import categoryController from "../controllers/category.controller.js";

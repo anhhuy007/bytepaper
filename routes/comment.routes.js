@@ -1,4 +1,4 @@
-// routes/commentRoutes.js
+// routes/comment.routes.js
 
 import express from "express";
 import commentController from "../controllers/comment.controller.js";

@@ -1,15 +1,10 @@
-// routes/userRoutes.js
+// routes/user.routes.js
 
 import express from "express";
 import userController from "../controllers/user.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
-
-// Protected Routes
-router.use(
-  authMiddleware(["guest", "subscriber", "writer", "editor", "admin"])
-);
 
 // @route   GET /api/v1/user/profile
 // @desc    Get user profile
@@ -23,10 +18,8 @@ router.put("/profile", userController.updateUserProfile);
 // @desc    Change user password
 router.put("/change-password", userController.changePassword);
 
-// route CRUD user
-//router.get("/user/:id", userController.getUser);
-//router.post("/user", userController.createUser);
-//router.put("/user/:id", userController.updateUser);
+// @route   DELETE /api/v1/user/delete
+// @desc    Delete user account
 router.delete("/delete", userController.deleteUser);
 
 export default router;

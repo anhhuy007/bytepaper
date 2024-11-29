@@ -1,15 +1,14 @@
-// routes/adminRoutes.js
+// routes/admin.routes.js
 
 import express from "express";
 import adminController from "../controllers/admin.controller.js";
 import tagController from "../controllers/tag.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-import roleMiddleware from "../middlewares/roleMiddleware.js";
 
 const router = express.Router();
 
 // Protected Routes for Admins
-router.use(authMiddleware(["admin"]), roleMiddleware("admin"));
+router.use(authMiddleware(["admin"]));
 
 // User Management
 

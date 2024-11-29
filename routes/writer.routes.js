@@ -3,12 +3,11 @@
 import express from "express";
 import writerController from "../controllers/writer.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-import roleMiddleware from "../middlewares/roleMiddleware.js";
 
 const router = express.Router();
 
 // Protected Routes for Writers
-router.use(authMiddleware, roleMiddleware("writer"));
+router.use(authMiddleware(["writer"]));
 
 // @route   GET /api/v1/writer/articles
 // @desc    Get all articles by writer
