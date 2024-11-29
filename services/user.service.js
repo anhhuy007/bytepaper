@@ -397,6 +397,27 @@ class UserService {
   async deleteUser(user_id) {
     return await userModel.delete(user_id);
   }
+
+  async findOrCreateByGoogle(profile) {
+    const email = profile.emails[0]?.value;
+    const fullName = profile.displayName;
+
+    // Check if user exists by email
+    let user = await userModel.findByEmail(email);
+    if (!user) {
+      // Create a new user if not found
+      const hashedPassword = await bcrypt.hash("oauth_user", 10);
+      user = await userModel.create({
+        email,
+        full_name: fullName,
+        username: profile.id, // Use Google ID as username
+        role: "guest", // Default role
+        password_hash: hashedPassword, // Not needed for OAuth users
+      });
+    }
+
+    return user;
+  }
 }
 
 export default new UserService();
