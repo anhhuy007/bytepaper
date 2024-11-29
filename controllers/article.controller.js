@@ -349,9 +349,6 @@ const downloadArticle = async (req, res, next) => {
 const getHomepageArticles = async (req, res, next) => {
   try {
     const type = req.query.type;
-    if (!type) {
-      type = "all";
-    }
     const homepageData = await articleService.getHomepageArticles(type);
     res.status(200).json({
       success: true,

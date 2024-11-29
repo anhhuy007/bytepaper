@@ -1,4 +1,4 @@
-// controllers/userController.js
+// controllers/user.controller.js
 
 import articleService from "../services/article.service.js";
 import commentService from "../services/comment.service.js";
@@ -93,11 +93,6 @@ const deleteUser = async (req, res, next) => {
     const user_id = req.params.id;
 
     const userData = await userService.deleteUser(user_id);
-    await subscriptionService.deleteSubscriptionsByUserID(user_id);
-    await commentService.deleteCommentByUserID(user_id);
-    if (userData.role == "writer") {
-      await articleService.deleteArticleByUserID(user_id);
-    }
 
     res.status(200).json({ success: true, data: userData });
   } catch (error) {
