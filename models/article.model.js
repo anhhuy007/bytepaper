@@ -1,4 +1,4 @@
-// models/articleModel.js
+// models/article.model.js
 import BaseModel from "./Base.model.js";
 import db from "../utils/Database.js";
 import { buildSelectQuery, buildWhereClause } from "../utils/queryBuilder.js";
@@ -442,6 +442,68 @@ class ArticleModel extends BaseModel {
     const values = [user_id];
 
     await db.query(text, values);
+  }
+
+  async getHomepageArticles() {
+    const featuredArticles = await this.getFeaturedArticles();
+    const mostViewedArticles = await this.getMostViewedArticles();
+    const newestArticles = await this.getNewestArticles();
+    const topCategoryArticles = await this.getTopCategoryArticles();
+
+    return {
+      featuredArticles,
+      mostViewedArticles,
+      newestArticles,
+      topCategoryArticles,
+    };
+  }
+
+  async getFeaturedArticles() {
+    const query = `
+      SELECT * 
+      FROM articles 
+      WHERE status = 'published' 
+        AND published_at >= NOW() - INTERVAL '7 days' 
+      ORDER BY views DESC 
+      LIMIT 4
+    `;
+    const { rows } = await db.query(query);
+    return rows;
+  }
+
+  async getMostViewedArticles() {
+    const query = `
+      SELECT * 
+      FROM articles 
+      WHERE status = 'published' 
+      ORDER BY views DESC 
+      LIMIT 10
+    `;
+    const { rows } = await db.query(query);
+    return rows;
+  }
+
+  async getNewestArticles() {
+    const query = `
+      SELECT * 
+      FROM articles 
+      WHERE status = 'published' 
+      ORDER BY published_at DESC 
+      LIMIT 10
+    `;
+    const { rows } = await db.query(query);
+    return rows;
+  }
+
+  async getTopCategoryArticles() {
+    const query = `
+      SELECT DISTINCT ON (category_id) * 
+      FROM articles 
+      WHERE status = 'published' 
+      ORDER BY category_id, published_at DESC
+    `;
+    const { rows } = await db.query(query);
+    return rows;
   }
 }
 

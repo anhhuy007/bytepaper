@@ -1,4 +1,4 @@
-// models/articleTagModel.js
+// models/articleTag.model.js
 
 import BaseModel from "./Base.model.js";
 import db from "../utils/Database.js";
