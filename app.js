@@ -14,7 +14,8 @@ import { fileURLToPath } from "url";
 import { engine } from "express-handlebars";
 import livereload from "livereload";
 import connectLivereload from "connect-livereload";
-
+import redisClient from "./utils/redisClient.js";
+import { RedisStore } from "connect-redis";
 dotenv.config();
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(morgan("dev"));
 // Session setup (if needed for strategies like OAuth)
 app.use(
   session({
+    store: new RedisStore({ client: redisClient }), // Use Redis to store session data
     secret: process.env.SESSION_SECRET || "your_session_secret",
     resave: false,
     saveUninitialized: false,
