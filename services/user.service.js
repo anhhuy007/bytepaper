@@ -1,4 +1,4 @@
-// services/userService.js
+// services/user.service.js
 
 import userModel from "../models/user.model.js";
 import subscriptionModel from "../models/subscription.model.js";

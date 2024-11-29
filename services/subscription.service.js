@@ -36,9 +36,16 @@ class SubscriptionService {
    * // { user_id: 1, expiry_date: "...", created_at: "...", updated_at: "..." }
    */
   async createOrUpdateSubscription(userId, days) {
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + days);
-    return await subscriptionModel.upsert(userId, expiryDate);
+    const existingSubscription = await subscriptionModel.findByUserId(userId);
+
+    const newExpiryDate = existingSubscription
+      ? new Date(existingSubscription.expiry_date)
+      : new Date();
+
+    // Extend expiry date by the specified days
+    newExpiryDate.setDate(newExpiryDate.getDate() + days);
+
+    return await subscriptionModel.upsert(userId, newExpiryDate);
   }
 
   /**
@@ -80,7 +87,6 @@ class SubscriptionService {
   async cancelSubscription(userId) {
     return await subscriptionModel.deleteSubscription(userId);
   }
-
 }
 
 export default new SubscriptionService();

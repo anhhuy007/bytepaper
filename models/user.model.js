@@ -1,4 +1,4 @@
-// models/userModel.js
+// models/user.model.js
 import BaseModel from "./Base.model.js";
 import db from "../utils/Database.js";
 import bcrypt from "bcrypt";
@@ -376,7 +376,6 @@ class UserModel extends BaseModel {
     }
     return true;
   }
-
 }
 
 const userModel = new UserModel();
