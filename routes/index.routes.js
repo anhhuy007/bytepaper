@@ -10,6 +10,7 @@ import userRoutes from "./user.routes.js";
 import writerRoutes from "./writer.routes.js";
 import editorRoutes from "./editor.routes.js";
 import adminRoutes from "./admin.routes.js";
+import subscriptionRoutes from "./subscription.routes.js";
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.use("/tags", tagRoutes);
 router.use("/comments", commentRoutes);
 
 // Protected Routes
+router.use("/subscription", subscriptionRoutes);
 router.use("/user", userRoutes);
 router.use("/writer", writerRoutes);
 router.use("/editor", editorRoutes);

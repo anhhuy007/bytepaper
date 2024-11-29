@@ -2,6 +2,7 @@
 
 import express from "express";
 import userController from "../controllers/user.controller.js";
+import subscriptionController from "../controllers/subscription.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -23,5 +24,7 @@ router.put("/change-password", userController.changePassword);
 // @route   DELETE /api/v1/user/delete
 // @desc    Delete user account
 router.delete("/delete", userController.deleteUser);
+
+
 
 export default router;
