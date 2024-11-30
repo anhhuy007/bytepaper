@@ -9,6 +9,12 @@
  * @param {string} viewName - The name of the Handlebars view to render.
  * @param {function|null} dataLoader - Optional asynchronous function to load data for the view.
  * @returns {function} Middleware for Express routes.
+ * @example
+ * const router = express.Router();
+ * router.get("/", viewRenderer("home"));
+ * router.get("/about", viewRenderer("about"));
+ * router.get("/admin/users", viewRenderer("admin/users", adminController.getUsers));
+ * router.get("/admin/categories", viewRenderer("admin/categories", adminController.getCategories));
  */
 export const viewRenderer =
   (viewName, dataLoader = null) =>

@@ -4,6 +4,7 @@ import express from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import authController from "../controllers/auth.controller.js";
+import viewRenderer from "../utils/viewRenderer.js";
 
 const router = express.Router();
 
@@ -49,5 +50,10 @@ router.get(
     res.json({ token });
   }
 );
+
+router.get("/login", viewRenderer("auth/login"));
+router.get("/register", viewRenderer("auth/register"));
+router.get("/forgot-password", viewRenderer("auth/forgot-password"));
+router.get("/reset-password", viewRenderer("auth/reset-password"));
 
 export default router;
