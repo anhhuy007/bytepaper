@@ -5,6 +5,42 @@ const homeCacheKeyGenerator = (req) => {
   return `home:${type}`;
 };
 
+const articlesByCategoryCacheKeyGenerator = (req) => {
+  const categoryId = req.params.categoryId;
+  const limit = req.query.limit || 10;
+  const offset = req.query.offset || 0;
+  return `articles:category:${categoryId}:limit:${limit}:offset:${offset}`;
+};
+
+const articlesByTagCacheKeyGenerator = (req) => {
+  const tagId = req.params.tagId;
+  const limit = req.query.limit || 10;
+  const offset = req.query.offset || 0;
+  return `articles:tag:${tagId}:limit:${limit}:offset:${offset}`;
+};
+
+const articleDetailCacheKeyGenerator = (req) => {
+  const articleId = req.params.id;
+  return `article:${articleId}`;
+};
+
+const searchCacheKeyGenerator = (req) => {
+  const q = req.query.q || "";
+  const limit = req.query.limit || 10;
+  const offset = req.query.offset || 0;
+  return `search:q:${q}:limit:${limit}:offset:${offset}`;
+};
+
+const categoryListCacheKeyGenerator = (req) => "categories:list";
+
+const tagListCacheKeyGenerator = (req) => "tags:list";
+
 export default {
   homeCacheKeyGenerator,
+  articlesByCategoryCacheKeyGenerator,
+  articlesByTagCacheKeyGenerator,
+  articleDetailCacheKeyGenerator,
+  searchCacheKeyGenerator,
+  categoryListCacheKeyGenerator,
+  tagListCacheKeyGenerator,
 };
