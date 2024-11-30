@@ -1,7 +1,7 @@
 // models/articleModel.js
-import BaseModel from "./BaseModel.js";
-import db from "../utils/Database.js";
-import { buildSelectQuery, buildWhereClause } from "../utils/queryBuilder.js";
+import BaseModel from './BaseModel.js'
+import db from '../utils/Database.js'
+import { buildSelectQuery, buildWhereClause } from '../utils/queryBuilder.js'
 
 // CREATE TABLE articles (
 //   id SERIAL PRIMARY KEY,
@@ -55,7 +55,7 @@ class ArticleModel extends BaseModel {
      * @param {string} tableName - The name of the table in the database that
      * this model is responsible for.
      */
-    super("articles");
+    super('articles')
   }
 
   /**
@@ -97,10 +97,10 @@ class ArticleModel extends BaseModel {
       LEFT JOIN users u ON a.author_id = u.id
       LEFT JOIN categories c ON a.category_id = c.id
       WHERE a.id = $1
-    `;
+    `
     // Execute the query and return the result
-    const { rows } = await db.query(query, [id]);
-    return rows[0];
+    const { rows } = await db.query(query, [id])
+    return rows[0]
   }
 
   /**
@@ -150,23 +150,23 @@ class ArticleModel extends BaseModel {
    */
   async getArticles(filters = {}, options = {}) {
     // Build the WHERE clause from the provided filters
-    const { whereClause, values } = buildWhereClause(filters);
+    const { whereClause, values } = buildWhereClause(filters)
     // Build the SELECT query with the provided options
     const query = `
       SELECT a.*, u.full_name AS author_name, c.name AS category_name
       FROM articles a
       LEFT JOIN users u ON a.author_id = u.id
       LEFT JOIN categories c ON a.category_id = c.id
-      ${whereClause ? `WHERE ${whereClause}` : ""}
-      ORDER BY ${options.orderBy || "a.published_at DESC"}
+      ${whereClause ? `WHERE ${whereClause}` : ''}
+      ORDER BY ${options.orderBy || 'a.published_at DESC'}
       LIMIT $${values.length + 1}
       OFFSET $${values.length + 2}
-    `;
+    `
     // Add the limit and offset to the values array
-    values.push(options.limit || 10, options.offset || 0);
+    values.push(options.limit || 10, options.offset || 0)
     // Execute the query and return the results
-    const { rows } = await db.query(query, values);
-    return rows;
+    const { rows } = await db.query(query, values)
+    return rows
   }
 
   /**
@@ -214,7 +214,7 @@ class ArticleModel extends BaseModel {
    * }
    */
   async createArticle(data) {
-    return await this.create(data);
+    return await this.create(data)
   }
 
   /**
@@ -247,7 +247,7 @@ class ArticleModel extends BaseModel {
    * }
    */
   async updateArticle(id, data) {
-    return await this.update(id, data);
+    return await this.update(id, data)
   }
 
   /**
@@ -263,7 +263,7 @@ class ArticleModel extends BaseModel {
    */
   async deleteArticle(id) {
     // Delete the article from the database
-    return await this.delete(id);
+    return await this.delete(id)
   }
 
   /**
@@ -303,10 +303,10 @@ class ArticleModel extends BaseModel {
       WHERE a.search_vector @@ query
       ORDER BY rank DESC
       LIMIT $2 OFFSET $3
-    `;
-    const values = [keyword, options.limit || 10, options.offset || 0];
-    const { rows } = await db.query(query, values);
-    return rows;
+    `
+    const values = [keyword, options.limit || 10, options.offset || 0]
+    const { rows } = await db.query(query, values)
+    return rows
   }
 
   /**
@@ -330,7 +330,7 @@ class ArticleModel extends BaseModel {
    * ]
    */
   async getArticlesByCategory(categoryId, options = {}) {
-    return await this.getArticles({ category_id: categoryId }, options);
+    return await this.getArticles({ category_id: categoryId }, options)
   }
 
   /**
@@ -354,7 +354,7 @@ class ArticleModel extends BaseModel {
    * ]
    */
   async getArticlesByAuthor(authorId, options = {}) {
-    return await this.getArticles({ author_id: authorId }, options);
+    return await this.getArticles({ author_id: authorId }, options)
   }
 
   /**
@@ -377,11 +377,11 @@ class ArticleModel extends BaseModel {
       SET views = views + 1
       WHERE id = $1
       RETURNING views
-    `;
+    `
     // Execute the query with the provided article ID
-    const { rows } = await db.query(query, [id]);
+    const { rows } = await db.query(query, [id])
     // Return the updated view count
-    return rows[0];
+    return rows[0]
   }
 
   /**
@@ -419,15 +419,11 @@ class ArticleModel extends BaseModel {
       WHERE category_id = $1 AND id != $2 AND status = 'published'
       ORDER BY RANDOM()
       LIMIT $3
-    `;
-    const { rows } = await db.query(query, [
-      categoryId,
-      excludeArticleId,
-      limit,
-    ]);
-    return rows;
+    `
+    const { rows } = await db.query(query, [categoryId, excludeArticleId, limit])
+    return rows
   }
 }
 
-const articleModel = new ArticleModel();
-export default articleModel;
+const articleModel = new ArticleModel()
+export default articleModel

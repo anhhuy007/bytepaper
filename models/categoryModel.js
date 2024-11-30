@@ -1,6 +1,6 @@
 // models/categoryModel.js
-import BaseModel from "./BaseModel.js";
-import db from "../utils/Database.js";
+import BaseModel from './BaseModel.js'
+import db from '../utils/Database.js'
 // CREATE TABLE categories (
 //   id SERIAL PRIMARY KEY,
 //   name VARCHAR(100) NOT NULL,
@@ -11,7 +11,7 @@ import db from "../utils/Database.js";
 
 class CategoryModel extends BaseModel {
   constructor() {
-    super("categories");
+    super('categories')
   }
 
   /**
@@ -30,7 +30,7 @@ class CategoryModel extends BaseModel {
    * { id: 1, name: "JavaScript", parent_id: null, created_at: "2022-01-01 12:00:00", ... }
    */
   async getCategoryById(id) {
-    return await this.findById(id);
+    return await this.findById(id)
   }
 
   /**
@@ -49,15 +49,15 @@ class CategoryModel extends BaseModel {
   async getAllCategories() {
     // SQL query to select all categories with their parent category names
     const query = `
-      SELECT c1.*, c2.name AS parent_name
-      FROM categories c1
-      LEFT JOIN categories c2 ON c1.parent_id = c2.id
-      ORDER BY c1.name ASC
-    `;
+        SELECT c1.*, c2.name AS parent_name
+        FROM categories c1
+        LEFT JOIN categories c2 ON c1.parent_id = c2.id
+        ORDER BY c1.name ASC
+      `
     // Execute the query and retrieve the results
-    const { rows } = await db.query(query);
+    const { rows } = await db.query(query)
     // Return the list of categories
-    return rows;
+    return rows
   }
 
   /**
@@ -77,7 +77,7 @@ class CategoryModel extends BaseModel {
    * // { id: 1, name: "React", created_at: "2022-01-01 12:00:00", ... }
    */
   async createCategory(data) {
-    return await this.create(data);
+    return await this.create(data)
   }
 
   /**
@@ -97,7 +97,7 @@ class CategoryModel extends BaseModel {
    * // { id: 1, name: "React Hooks", created_at: "2022-01-01 12:00:00", ... }
    */
   async updateCategory(id, data) {
-    return await this.update(id, data);
+    return await this.update(id, data)
   }
 
   /**
@@ -116,7 +116,7 @@ class CategoryModel extends BaseModel {
    * // { id: 1, name: "JavaScript", parent_id: null, created_at: "2022-01-01 12:00:00", ... }
    */
   async deleteCategory(id) {
-    return await this.delete(id);
+    return await this.delete(id)
   }
 
   /**
@@ -140,18 +140,18 @@ class CategoryModel extends BaseModel {
    */
   async getCategoriesWithArticleCount() {
     const query = `
-      SELECT c.*, COUNT(a.id) AS article_count
-      FROM categories c
-      LEFT JOIN articles a ON a.category_id = c.id
-      GROUP BY c.id
-      ORDER BY c.name ASC
-    `;
-    const { rows } = await db.query(query);
-    return rows;
+        SELECT c.*, COUNT(a.id) AS article_count
+        FROM categories c
+        LEFT JOIN articles a ON a.category_id = c.id
+        GROUP BY c.id
+        ORDER BY c.name ASC
+      `
+    const { rows } = await db.query(query)
+    return rows
   }
 
   // Add another methods related to categories...
 }
 
-const categoryModel = new CategoryModel();
-export default categoryModel;
+const categoryModel = new CategoryModel()
+export default categoryModel

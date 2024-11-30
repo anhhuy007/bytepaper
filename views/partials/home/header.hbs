@@ -1,69 +1,24 @@
 <div class="navbar bg-base-100 border-b-2 px-4 py-4">
-  <div class="navbar-start">
-    <div class="drawer">
-      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content">
-        <label for="my-drawer" class="btn btn-ghost btn-square drawer-button">
+  <div class="navbar-start gap-8 ">
+      {{> home/navbar}}
+     <div class="grow max-w-[300px] items-start">
+        <label class="input input-bordered flex items-center gap-2">
+          <input type="text" class="grow" placeholder="Search" />
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            class="h-4 w-4 opacity-70">
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h7"
-            /></svg
-        ></label>
+              fill-rule="evenodd"
+              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+              clip-rule="evenodd" />
+          </svg>
+        </label>
       </div>
-      <div class="drawer-side">
-        <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"> </label>
-        <div class="menu pt-10 bg-base-100 text-base-content min-h-full w-80">
-          {{#each categories}}
-          <div class="collapse collapse-arrow group rounded-none">
-            <input type="checkbox" class="peer" />
-            <div
-              class="rounded-none collapse-title border-b-2 group-hover:bg-primary group-hover:text-primary-content text-xl font-bold p-4 
-                
-                {{#if (eq id ../currentCategoryId)}} 
-                  border-l-8 border-l-red-600 
-                {{else if (hasSubCategorySelected subCategories ../currentCategoryId)}} 
-                  border-l-8 border-l-red-600 
-                {{/if}}"
-            >
-              {{ category }}
-            </div>
-            <div class="collapse-content p-0">
-              <div class="flex flex-col w-full">
-                <a href="/categories/{{ id }}" class="w-full">
-                  <div
-                    class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-base {{#if (eq id ../currentCategoryId)}} border-l-8 border-l-black {{/if}}"
-                  >
-                    {{ category }}
-                  </div>
-                </a>
-                {{#each subCategories}}
-                <a href="/categories/{{ subId }}" class="w-full">
-                  <div
-                    class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-base {{#if (eq subId ../../currentCategoryId)}} border-l-8 border-l-black text-lg font-bold{{/if}}"
-                  >
-                    {{ name }}
-                  </div>
-                </a>
-                {{/each}}
-              </div>
-            </div>
-          </div>
-          {{/each}}
-        </div>
-      </div>
-    </div>
   </div>
   <div class="navbar-center">
-    <a class="btn btn-ghost text-xl" href="/">Paperly</a>
+    <a class="btn btn-outline text-xl bg-black text-white" href="/">Paperly</a>
   </div>
   <div class="navbar-end">
     <div class="flex gap-6">
@@ -76,8 +31,17 @@
 <div class="navbar bg-base-100 border-b-2">
   <div class="navbar-start"></div>
   <div class="navbar-center">
-    <div class="flex flex-col">
+    <div class="">
       <div class="flex gap-4 justify-center items-center">
+        <a
+          href="/"
+          class="btn btn-ghost text-lg font-bold 
+          {{#if (eq currentCategoryId -1)}}
+            border-b-4 border-b-black
+          {{/if}}"
+        >
+        Trang chủ
+        </a>
         {{#each categories}}
         <a
           href="/categories/{{ id }}"
@@ -88,13 +52,15 @@
         {{/each}}
       </div>
 
+        {{!-- <div class="border-t-2 border-gray-200 flex-1 w-full"></div> --}}
+
       {{#each categories}}
       {{#if (or (eq id ../currentCategoryId) (hasSubCategorySelected subCategories ../currentCategoryId))}}
       <div class="flex gap-4 justify-center items-center">
         {{#each subCategories}}
         <a
           href="/categories/{{ subId }}"
-          class="btn btn-ghost text-base font-medium {{#if (eq subId ../../currentCategoryId)}} border-b-2 border-b-red-500 {{/if}}"
+          class="btn btn-ghost text-base font-medium {{#if (eq subId ../../currentCategoryId)}} border-b-4 border-b-red-500 {{/if}}"
         >
           {{ name }}
         </a>
@@ -104,6 +70,5 @@
       {{/each}}
     </div>
   </div>
-
   <div class="navbar-end"></div>
 </div>

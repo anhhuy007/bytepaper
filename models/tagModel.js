@@ -1,6 +1,6 @@
 // models/tagModel.js
-import BaseModel from "./BaseModel.js";
-import db from "../utils/Database.js";
+import BaseModel from './BaseModel.js'
+import db from '../utils/Database.js'
 // CREATE TABLE tags (
 //   id SERIAL PRIMARY KEY,
 //   name VARCHAR(50) UNIQUE NOT NULL,
@@ -10,7 +10,7 @@ import db from "../utils/Database.js";
 
 class TagModel extends BaseModel {
   constructor() {
-    super("tags");
+    super('tags')
   }
 
   /**
@@ -29,7 +29,7 @@ class TagModel extends BaseModel {
    * // { id: 1, name: "JavaScript", created_at: "2022-01-01 12:00:00", ... }
    */
   async getTagById(id) {
-    return await this.findById(id);
+    return await this.findById(id)
   }
 
   /**
@@ -46,7 +46,7 @@ class TagModel extends BaseModel {
    */
   async getAllTags() {
     // Retrieve all tags using the find method
-    return await this.find();
+    return await this.find()
   }
 
   /**
@@ -67,7 +67,7 @@ class TagModel extends BaseModel {
    */
   async createTag(data) {
     // Create the tag using the create method
-    return await this.create(data);
+    return await this.create(data)
   }
 
   /**
@@ -86,7 +86,7 @@ class TagModel extends BaseModel {
    */
   async updateTag(id, data) {
     // Update the tag using the update method
-    return await this.update(id, data);
+    return await this.update(id, data)
   }
 
   /**
@@ -103,7 +103,7 @@ class TagModel extends BaseModel {
    * await tagModel.deleteTag(1);
    */
   async deleteTag(id) {
-    return await this.delete(id);
+    return await this.delete(id)
   }
 
   /**
@@ -132,15 +132,15 @@ class TagModel extends BaseModel {
       INNER JOIN article_tags at ON t.id = at.tag_id
       WHERE at.article_id = $1
       ORDER BY t.name ASC
-    `;
+    `
 
     // Execute the query with the article ID as a parameter
-    const { rows } = await db.query(query, [articleId]);
+    const { rows } = await db.query(query, [articleId])
 
     // Return the list of retrieved tags
-    return rows;
+    return rows
   }
 }
 
-const tagModel = new TagModel();
-export default tagModel;
+const tagModel = new TagModel()
+export default tagModel
