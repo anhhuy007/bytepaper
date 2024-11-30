@@ -472,15 +472,6 @@ class ArticleService {
   }
 
   async getHomepageArticles(type) {
-    const cacheKey = `homepage:articles:${type}`;
-    const cachedData = await redisClient.get(cacheKey);
-
-    if (cachedData) {
-      console.log("Cache hit");
-      return JSON.parse(cachedData);
-    }
-
-    console.log("Cache miss");
     let result;
 
     switch (type) {
@@ -500,7 +491,6 @@ class ArticleService {
         result = await articleModel.getHomepageArticles();
     }
 
-    await redisClient.set(cacheKey, JSON.stringify(result), { EX: 300 });
     return result;
   }
 }

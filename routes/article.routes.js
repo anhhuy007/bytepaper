@@ -3,6 +3,8 @@ import express from "express";
 import articleController from "../controllers/article.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import checkSubscription from "../middlewares/checkSubscription.js";
+import cacheMiddleware from "../middlewares/cacheMiddleware.js";
+import cacheKeyGenerator from "../utils/cacheKeyGenerator.js";
 
 const router = express.Router();
 
@@ -12,7 +14,11 @@ router.get("/", articleController.getAllArticles);
 
 // @route   GET /api/v1/articles/home
 // @desc    Fetch homepage articles (featured, most-viewed, newest, top-categories)
-router.get("/home", articleController.getHomepageArticles);
+router.get(
+  "/home",
+  cacheMiddleware(cacheKeyGenerator.homeCacheKeyGenerator),
+  articleController.getHomepageArticles
+);
 
 // @route   GET /api/v1/articles/search?q=<query>
 // @desc    Search articles
