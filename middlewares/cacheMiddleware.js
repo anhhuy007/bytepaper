@@ -29,12 +29,14 @@ export default function cacheMiddleware(cacheKeyGenerator, expiration = 300) {
       const cachedData = await redisClient.get(cacheKey);
 
       if (cachedData) {
+        console.log("Cache hit:", cacheKey);
         // Return the cached data with a 200 status
         res.status(200).json({
           success: true,
           data: JSON.parse(cachedData),
         });
       } else {
+        console.log("Cache miss:", cacheKey);
         // The cache key does not exist, so we need to store the response in Redis
         const originalJson = res.json.bind(res);
         res.json = async (body) => {
