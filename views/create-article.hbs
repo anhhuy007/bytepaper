@@ -90,9 +90,42 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill-image-uploader/dist/quill.imageUploader.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" />
 
 <script>
-    const quill = new Quill('#content', { theme: 'snow' });
+    Quill.register('modules/imageUploader', window.ImageUploader);
+
+    const quill = new Quill('#content', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline'],
+                [{ 'header': [1, 2, 3, false] }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['image']
+            ],
+            imageUploader: {
+                upload: async (file) => {
+                    const formData = new FormData();
+                    formData.append('image', file);
+
+                    try {
+                        const response = await axios.post('/upload-image', formData, {
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        });
+
+                        return response.data.url; // The URL of the uploaded image returned from the server.
+                    } catch (error) {
+                        console.error('Image upload failed:', error);
+                        alert('Image upload failed. Please try again.');
+                        throw error;
+                    }
+                }
+            }
+        }
+    });
+
 </script>
 
 <script>
