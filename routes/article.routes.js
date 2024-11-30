@@ -22,11 +22,19 @@ router.get(
 
 // @route   GET /api/v1/articles/search?q=<query>
 // @desc    Search articles
-router.get("/search", articleController.searchArticles);
+router.get(
+  "/search",
+  cacheMiddleware(cacheKeyGenerator.searchCacheKeyGenerator),
+  articleController.searchArticles
+);
 
 // @route   GET /api/v1/articles/:id
 // @desc    Get article by ID
-router.get("/:id", articleController.getArticleById);
+router.get(
+  "/:id",
+  cacheMiddleware(cacheKeyGenerator.articleDetailCacheKeyGenerator),
+  articleController.getArticleById
+);
 
 // @route   GET /api/v1/articles/:id/download
 // @desc    Download article PDF (Protected for subscribers)
@@ -39,7 +47,19 @@ router.get(
 
 // @route   GET /api/v1/articles/category/:categoryId
 // @desc    Get articles by category
-router.get("/category/:categoryId", articleController.getArticlesByCategory);
+router.get(
+  "/category/:categoryId",
+  cacheMiddleware(cacheKeyGenerator.articlesByCategoryCacheKeyGenerator),
+  articleController.getArticlesByCategory
+);
+
+// @route   GET /api/v1/articles/tag/:tagId
+// @desc    Get articles by tag
+router.get(
+  "/tag/:tagId",
+  cacheMiddleware(cacheKeyGenerator.articlesByTagCacheKeyGenerator),
+  articleController.getArticlesByTag
+);
 
 // @route   POST /api/v1/articles/:id/views
 // @desc    Increase article view count

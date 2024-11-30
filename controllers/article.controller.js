@@ -1,7 +1,7 @@
 // controllers/article.controller.js
 
 import articleService from "../services/article.service.js";
-
+import tagService from "../services/tag.service.js";
 /**
  * Retrieves a list of articles from the database based on the provided filters and options.
  *
@@ -240,6 +240,20 @@ const getArticlesByCategory = async (req, res, next) => {
   }
 };
 
+const getArticlesByTag = async (req, res, next) => {
+  try {
+    const { tagId } = req.params;
+    const options = {
+      limit: parseInt(req.query.limit) || 10,
+      offset: parseInt(req.query.offset) || 0,
+    };
+    const articles = await tagService.getArticlesByTagId(tagId, options);
+    res.status(200).json({ success: true, data: articles });
+  } catch (error) {
+    next(error);
+  }
+};
+
 /**
  * Increases the view count of an article by 1.
  *
@@ -364,6 +378,7 @@ export default {
   getArticleById,
   searchArticles,
   getArticlesByCategory,
+  getArticlesByTag,
   increaseArticleViewCount,
   downloadArticle,
   getHomepageArticles,

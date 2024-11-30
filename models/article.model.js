@@ -334,7 +334,10 @@ class ArticleModel extends BaseModel {
    * ]
    */
   async getArticlesByCategory(categoryId, options = {}) {
-    return await this.getArticles({ category_id: categoryId }, options);
+    return await this.getArticles(
+      { category_id: [categoryId], status: "published" },
+      options
+    );
   }
 
   /**
