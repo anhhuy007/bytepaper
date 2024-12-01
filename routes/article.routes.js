@@ -21,7 +21,7 @@ router.get(
 router.get(
   "/home",
   cacheMiddleware(cacheKeyGenerator.homeCacheKeyGenerator),
-  viewRenderer("articles/home", articleController.getHomepageArticles)
+  viewRenderer("home", articleController.getHomepageArticles)
 );
 
 // @route   GET /api/v1/articles/search?q=<query>
@@ -29,7 +29,7 @@ router.get(
 router.get(
   "/search",
   cacheMiddleware(cacheKeyGenerator.searchCacheKeyGenerator),
-  viewRenderer("articles/search", articleController.searchArticles)
+  viewRenderer("articles/index", articleController.searchArticles)
 );
 
 // @route   GET /api/v1/articles/:id
@@ -54,7 +54,7 @@ router.get(
 router.get(
   "/category/:categoryId",
   cacheMiddleware(cacheKeyGenerator.articlesByCategoryCacheKeyGenerator),
-  viewRenderer("articles/category", articleController.getArticlesByCategory)
+  viewRenderer("articles/index", articleController.getArticlesByCategory)
 );
 
 // @route   GET /api/v1/articles/tag/:tagId
@@ -62,7 +62,7 @@ router.get(
 router.get(
   "/tag/:tagId",
   cacheMiddleware(cacheKeyGenerator.articlesByTagCacheKeyGenerator),
-  viewRenderer("articles/tag", articleController.getArticlesByTag)
+  viewRenderer("articles/index", articleController.getArticlesByTag)
 );
 
 // @route   POST /api/v1/articles/:id/views
