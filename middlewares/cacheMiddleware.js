@@ -1,5 +1,5 @@
 // middlewares/cacheMiddleware.js
-import redisClient from "../utils/redisClient.js";
+import redisClient from '../utils/redisClient.js'
 
 /**
  * A middleware that caches the response body in Redis for a specified expiration time.
@@ -25,43 +25,39 @@ export default function cacheMiddleware(cacheKeyGenerator, expiration = 300) {
    */
   return async (req, res, next) => {
     try {
-      const cacheKey = cacheKeyGenerator(req);
-      const cachedData = await redisClient.get(cacheKey);
+      const cacheKey = cacheKeyGenerator(req)
+      const cachedData = await redisClient.get(cacheKey)
 
       if (cachedData) {
-        console.log("Cache hit:", cacheKey);
+        console.log('Cache hit:', cacheKey)
         // Return the cached data with a 200 status
         res.status(200).json({
           success: true,
           data: JSON.parse(cachedData),
-        });
+        })
       } else {
-        console.log("Cache miss:", cacheKey);
+        console.log('Cache miss:', cacheKey)
         // The cache key does not exist, so we need to store the response in Redis
-        const originalJson = res.json.bind(res);
+        const originalJson = res.json.bind(res)
         res.json = async (body) => {
           try {
             // Store the response body in Redis with the specified expiration time
-            await redisClient.setEx(
-              cacheKey,
-              expiration,
-              JSON.stringify(body.data)
-            );
+            await redisClient.setEx(cacheKey, expiration, JSON.stringify(body.data))
           } catch (e) {
-            console.error("Redis setEx error:", e);
+            console.error('Redis setEx error:', e)
           }
           // Call the original res.json() function to send the response to the client
-          originalJson(body);
-        };
+          originalJson(body)
+        }
 
         // Call the next middleware in the stack
-        next();
+        next()
       }
     } catch (err) {
-      console.error("Cache middleware error:", err);
+      console.error('Cache middleware error:', err)
 
       // Call the next middleware in the stack if an error occurs
-      next();
+      next()
     }
-  };
+  }
 }

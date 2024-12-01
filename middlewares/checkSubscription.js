@@ -1,6 +1,6 @@
 // middlewares/checkSubscription.js
 
-import subscriptionService from "../services/subscription.service.js";
+import subscriptionService from '../services/subscription.service.js'
 
 /**
  * Middleware that checks if a user's subscription is valid.
@@ -18,24 +18,22 @@ import subscriptionService from "../services/subscription.service.js";
 const checkSubscription = async (req, res, next) => {
   try {
     // Extract the user ID from the request object
-    const userId = req.user.id;
+    const userId = req.user.id
 
     // Check if the user's subscription is valid
-    const isValid = await subscriptionService.checkSubscriptionValidity(userId);
+    const isValid = await subscriptionService.checkSubscriptionValidity(userId)
 
     if (!isValid) {
       // If subscription is invalid, respond with a 403 status code
-      return res
-        .status(403)
-        .json({ success: false, message: "Subscription expired" });
+      return res.status(403).json({ success: false, message: 'Subscription expired' })
     }
 
     // Proceed to the next middleware if the subscription is valid
-    next();
+    next()
   } catch (error) {
     // Pass any errors to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
-export default checkSubscription;
+export default checkSubscription
