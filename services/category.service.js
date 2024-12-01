@@ -20,7 +20,7 @@ class CategoryService {
    */
   async getAllCategories() {
     // Fetch all categories from the category model
-    return await categoryModel.getAllCategories();
+    return await categoryModel.getAllCategories()
   }
 
   /**
@@ -40,11 +40,11 @@ class CategoryService {
    * // { id: 1, name: "JavaScript", parent_id: null, created_at: "2022-01-01 12:00:00", ... }
    */
   async getCategoryById(id) {
-    const category = await categoryModel.getCategoryById(id);
+    const category = await categoryModel.getCategoryById(id)
     if (!category) {
-      throw new Error(`Category with ID ${id} not found`);
+      throw new Error(`Category with ID ${id} not found`)
     }
-    return category;
+    return category
   }
 
   /**
@@ -72,7 +72,7 @@ class CategoryService {
    * // { id: 1, name: "Example Category", parent_id: null, created_at: "2022-01-01 12:00:00", ... }
    */
   async createCategory(data) {
-    return await categoryModel.createCategory(data);
+    return await categoryModel.createCategory(data)
   }
 
   /**
@@ -100,11 +100,11 @@ class CategoryService {
    * // { id: 1, name: "Updated Category Name", parent_id: null, created_at: "2022-01-01 12:00:00", ... }
    */
   async updateCategory(id, data) {
-    const category = await categoryModel.findById(id);
+    const category = await categoryModel.findById(id)
     if (!category) {
-      throw new Error("Category not found");
+      throw new Error('Category not found')
     }
-    return await categoryModel.updateCategory(id, data);
+    return await categoryModel.updateCategory(id, data)
   }
 
   /**
@@ -124,11 +124,11 @@ class CategoryService {
    * await categoryService.deleteCategory(1);
    */
   async deleteCategory(id) {
-    const category = await categoryModel.findById(id);
+    const category = await categoryModel.findById(id)
     if (!category) {
-      throw new Error(`Category with ID ${id} not found`);
+      throw new Error(`Category with ID ${id} not found`)
     }
-    return await categoryModel.deleteCategory(id);
+    return await categoryModel.deleteCategory(id)
   }
 
   /**
@@ -151,8 +151,7 @@ class CategoryService {
    * ]
    */
   async getCategoriesWithArticleCount() {
-    return await categoryModel.getCategoriesWithArticleCount();
+    return await categoryModel.getCategoriesWithArticleCount()
   }
 }
-
-export default new CategoryService();
+export default new CategoryService()
