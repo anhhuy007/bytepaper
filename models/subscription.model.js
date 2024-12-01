@@ -1,7 +1,7 @@
 // models/subscription.model.js
 
-import BaseModel from "./Base.model.js";
-import db from "../utils/Database.js";
+import BaseModel from './Base.model.js'
+import db from '../utils/Database.js'
 // CREATE TABLE subscriptions (
 //   user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
 //   expiry_date TIMESTAMPTZ NOT NULL,
@@ -11,7 +11,7 @@ import db from "../utils/Database.js";
 
 class SubscriptionModel extends BaseModel {
   constructor() {
-    super("subscriptions");
+    super('subscriptions')
   }
   /**
    * Retrieves the subscription record for the given user ID.
@@ -28,9 +28,9 @@ class SubscriptionModel extends BaseModel {
     const query = `
       SELECT * FROM subscriptions
       WHERE user_id = $1
-    `;
-    const { rows } = await db.query(query, [userId]);
-    return rows[0];
+    `
+    const { rows } = await db.query(query, [userId])
+    return rows[0]
   }
 
   /**
@@ -55,11 +55,11 @@ class SubscriptionModel extends BaseModel {
       ON CONFLICT (user_id)
       DO UPDATE SET expiry_date = EXCLUDED.expiry_date, updated_at = NOW()
       RETURNING *
-    `;
+    `
     // Execute the query with the provided userId and expiryDate
-    const { rows } = await db.query(query, [userId, expiryDate]);
+    const { rows } = await db.query(query, [userId, expiryDate])
     // Return the newly inserted or updated subscription record
-    return rows[0];
+    return rows[0]
   }
 
   /**
@@ -80,13 +80,13 @@ class SubscriptionModel extends BaseModel {
       DELETE FROM subscriptions
       WHERE user_id = $1
       RETURNING *
-    `;
-    const { rows } = await db.query(query, [userId]);
-    return rows[0];
+    `
+    const { rows } = await db.query(query, [userId])
+    return rows[0]
   }
 
   // Another methods related to subscriptions...
 }
 
-const subscriptionModel = new SubscriptionModel();
-export default subscriptionModel;
+const subscriptionModel = new SubscriptionModel()
+export default subscriptionModel

@@ -1,7 +1,7 @@
 // models/articleTag.model.js
 
-import BaseModel from "./Base.model.js";
-import db from "../utils/Database.js";
+import BaseModel from './Base.model.js'
+import db from '../utils/Database.js'
 // CREATE TABLE article_tags (
 //   article_id INTEGER REFERENCES articles(id) ON DELETE CASCADE,
 //   tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
@@ -10,7 +10,7 @@ import db from "../utils/Database.js";
 
 class ArticleTagModel extends BaseModel {
   constructor() {
-    super("article_tags");
+    super('article_tags')
   }
   /**
    * Adds tags to an article.
@@ -35,9 +35,7 @@ class ArticleTagModel extends BaseModel {
   async addTagsToArticle(articleId, tagIds) {
     // Create the insert values as a string, with each tag ID as a separate
     // parameter
-    const insertValues = tagIds
-      .map((tagId, idx) => `($1, $${idx + 2})`)
-      .join(", ");
+    const insertValues = tagIds.map((tagId, idx) => `($1, $${idx + 2})`).join(', ')
 
     // Build the INSERT query with the ON CONFLICT DO NOTHING clause to
     // prevent duplicate tags from being inserted
@@ -46,14 +44,14 @@ class ArticleTagModel extends BaseModel {
       VALUES ${insertValues}
       ON CONFLICT DO NOTHING
       RETURNING *
-    `;
+    `
 
     // Execute the query with the article ID and tag IDs as parameters
-    const values = [articleId, ...tagIds];
-    const { rows } = await db.query(query, values);
+    const values = [articleId, ...tagIds]
+    const { rows } = await db.query(query, values)
 
     // Return the inserted tags, or an empty array if no tags were inserted
-    return rows;
+    return rows
   }
 
   /**
@@ -72,17 +70,17 @@ class ArticleTagModel extends BaseModel {
    */
   async removeTagsFromArticle(articleId, tagIds) {
     // Create a string of placeholders for the tag IDs
-    const deleteValues = tagIds.map((tagId, idx) => `$${idx + 2}`).join(", ");
+    const deleteValues = tagIds.map((tagId, idx) => `$${idx + 2}`).join(', ')
 
     // Build the DELETE query to remove the specified tags from the article
     const query = `
       DELETE FROM article_tags
       WHERE article_id = $1 AND tag_id IN (${deleteValues})
-    `;
+    `
 
     // Execute the query with the article ID and tag IDs as parameters
-    const values = [articleId, ...tagIds];
-    await db.query(query, values);
+    const values = [articleId, ...tagIds]
+    await db.query(query, values)
   }
 
   /**
@@ -118,10 +116,10 @@ class ArticleTagModel extends BaseModel {
       WHERE at.tag_id = $1
       ORDER BY a.published_at DESC
       LIMIT $2 OFFSET $3
-    `;
-    const values = [tagId, options.limit || 10, options.offset || 0];
-    const { rows } = await db.query(query, values);
-    return rows;
+    `
+    const values = [tagId, options.limit || 10, options.offset || 0]
+    const { rows } = await db.query(query, values)
+    return rows
   }
 
   /**
@@ -156,19 +154,19 @@ class ArticleTagModel extends BaseModel {
       WHERE at.article_id = $1
       ORDER BY t.name ASC
       LIMIT $2 OFFSET $3
-    `;
+    `
 
     // Define query parameter values, using defaults for limit and offset if not provided
-    const values = [articleId, options.limit || 10, options.offset || 0];
+    const values = [articleId, options.limit || 10, options.offset || 0]
 
     // Execute the query with the provided values and retrieve the rows
-    const { rows } = await db.query(query, values);
+    const { rows } = await db.query(query, values)
 
     // Return the list of retrieved tags
-    return rows;
+    return rows
   }
   // Add another methods related to article_tags...
 }
 
-const articleTagModel = new ArticleTagModel();
-export default articleTagModel;
+const articleTagModel = new ArticleTagModel()
+export default articleTagModel

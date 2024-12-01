@@ -1,7 +1,7 @@
 // models/commentModel.js
 
-import BaseModel from "./Base.model.js";
-import db from "../utils/Database.js";
+import BaseModel from './Base.model.js'
+import db from '../utils/Database.js'
 // CREATE TABLE comments (
 //   id SERIAL PRIMARY KEY,
 //   article_id INTEGER REFERENCES articles(id) ON DELETE CASCADE,
@@ -13,7 +13,7 @@ import db from "../utils/Database.js";
 
 class CommentModel extends BaseModel {
   constructor() {
-    super("comments");
+    super('comments')
   }
 
   /**
@@ -68,16 +68,16 @@ class CommentModel extends BaseModel {
       WHERE c.article_id = $1
       ORDER BY c.created_at ASC
       LIMIT $2 OFFSET $3
-    `;
+    `
 
     // Define query parameter values, using defaults for limit and offset if not provided
-    const values = [articleId, limit, offset];
+    const values = [articleId, limit, offset]
 
     // Execute the query with the provided values and retrieve the rows
-    const { rows } = await db.query(query, values);
+    const { rows } = await db.query(query, values)
 
     // Return the list of retrieved comments
-    return rows;
+    return rows
   }
 
   /**
@@ -101,7 +101,7 @@ class CommentModel extends BaseModel {
    */
   async createComment(data) {
     // Use the create method to insert a new comment into the database
-    return await this.create(data);
+    return await this.create(data)
   }
 
   /**
@@ -120,7 +120,7 @@ class CommentModel extends BaseModel {
    */
   async updateComment(id, data) {
     // Call the update method to update the comment in the database
-    return await this.update(id, data);
+    return await this.update(id, data)
   }
 
   /**
@@ -137,7 +137,7 @@ class CommentModel extends BaseModel {
    * await commentModel.deleteComment(1);
    */
   async deleteComment(id) {
-    return await this.delete(id);
+    return await this.delete(id)
   }
   // Another methods related to comments...
 
@@ -150,12 +150,12 @@ class CommentModel extends BaseModel {
    * @throws {Error} If any error occurs while deleting the comments.
    */
   async deleteCommentByUserID(user_id) {
-    const text = "DELETE FROM comments WHERE user_id = $1 RETURNING *;";
-    const values = [user_id];
+    const text = 'DELETE FROM comments WHERE user_id = $1 RETURNING *;'
+    const values = [user_id]
 
-    await db.query(text, values);
+    await db.query(text, values)
   }
 }
 
-const commentModel = new CommentModel();
-export default commentModel;
+const commentModel = new CommentModel()
+export default commentModel

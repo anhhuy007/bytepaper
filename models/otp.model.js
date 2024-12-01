@@ -1,7 +1,7 @@
 // models/otpModel.js
 
-import BaseModel from "./Base.model.js";
-import db from "../utils/Database.js";
+import BaseModel from './Base.model.js'
+import db from '../utils/Database.js'
 
 // CREATE TABLE otps (
 //   user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
@@ -13,7 +13,7 @@ import db from "../utils/Database.js";
 
 class OtpModel extends BaseModel {
   constructor() {
-    super("otps");
+    super('otps')
   }
 
   /**
@@ -34,7 +34,7 @@ class OtpModel extends BaseModel {
    */
   async createOrUpdate(userId, otp) {
     // Set expiry time to 10 minutes from now
-    const expiry = new Date(Date.now() + 10 * 60 * 1000);
+    const expiry = new Date(Date.now() + 10 * 60 * 1000)
 
     // Use a UPSERT query to insert or update the OTP record
     const query = `
@@ -43,13 +43,13 @@ class OtpModel extends BaseModel {
       ON CONFLICT (user_id)
       DO UPDATE SET otp = EXCLUDED.otp, expiry = EXCLUDED.expiry, updated_at = NOW()
       RETURNING *
-    `;
+    `
 
     // Execute the query with the provided userId, otp, and expiry
-    const { rows } = await db.query(query, [userId, otp, expiry]);
+    const { rows } = await db.query(query, [userId, otp, expiry])
 
     // Return the newly created or updated OTP record
-    return rows[0];
+    return rows[0]
   }
 
   /**
@@ -67,9 +67,9 @@ class OtpModel extends BaseModel {
     const query = `
       SELECT * FROM otps
       WHERE user_id = $1
-    `;
-    const { rows } = await db.query(query, [userId]);
-    return rows[0];
+    `
+    const { rows } = await db.query(query, [userId])
+    return rows[0]
   }
 
   /**
@@ -89,12 +89,12 @@ class OtpModel extends BaseModel {
     const query = `
       DELETE FROM otps
       WHERE user_id = $1
-    `;
+    `
 
     // Execute the query with the provided userId
-    await db.query(query, [userId]);
+    await db.query(query, [userId])
   }
 }
 
-const otpModel = new OtpModel();
-export default otpModel;
+const otpModel = new OtpModel()
+export default otpModel

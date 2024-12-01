@@ -1,7 +1,7 @@
 // models/editorCategoryModel.js
 
-import BaseModel from "./Base.model.js";
-import db from "../utils/Database.js";
+import BaseModel from './Base.model.js'
+import db from '../utils/Database.js'
 // CREATE TABLE editor_categories (
 //   editor_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
 //   category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
@@ -10,7 +10,7 @@ import db from "../utils/Database.js";
 
 class EditorCategoryModel extends BaseModel {
   constructor() {
-    super("editor_categories");
+    super('editor_categories')
   }
   /**
    * Assigns categories to an editor.
@@ -35,22 +35,20 @@ class EditorCategoryModel extends BaseModel {
     const deleteQuery = `
       DELETE FROM editor_categories
       WHERE editor_id = $1
-    `;
-    await db.query(deleteQuery, [editorId]);
+    `
+    await db.query(deleteQuery, [editorId])
 
     // Insert new assignments
-    const insertValues = categoryIds
-      .map((categoryId, idx) => `($1, $${idx + 2})`)
-      .join(", ");
+    const insertValues = categoryIds.map((categoryId, idx) => `($1, $${idx + 2})`).join(', ')
 
     const query = `
       INSERT INTO editor_categories (editor_id, category_id)
       VALUES ${insertValues}
       RETURNING *
-    `;
-    const values = [editorId, ...categoryIds];
-    const { rows } = await db.query(query, values);
-    return rows;
+    `
+    const values = [editorId, ...categoryIds]
+    const { rows } = await db.query(query, values)
+    return rows
   }
 
   /**
@@ -76,9 +74,9 @@ class EditorCategoryModel extends BaseModel {
       FROM categories c
       INNER JOIN editor_categories ec ON c.id = ec.category_id
       WHERE ec.editor_id = $1
-    `;
-    const { rows } = await db.query(query, [editorId]);
-    return rows;
+    `
+    const { rows } = await db.query(query, [editorId])
+    return rows
   }
 
   /**
@@ -104,9 +102,9 @@ class EditorCategoryModel extends BaseModel {
       FROM users u
       INNER JOIN editor_categories ec ON u.id = ec.editor_id
       WHERE ec.category_id = $1
-    `;
-    const { rows } = await db.query(query, [categoryId]);
-    return rows;
+    `
+    const { rows } = await db.query(query, [categoryId])
+    return rows
   }
 
   /**
@@ -122,12 +120,12 @@ class EditorCategoryModel extends BaseModel {
     const query = `
       DELETE FROM editor_categories
       WHERE editor_id = $1
-    `;
-    await db.query(query, [editorId]);
+    `
+    await db.query(query, [editorId])
   }
 
   // Add another methods related to editor_categories...
 }
 
-const editorCategoryModel = new EditorCategoryModel();
-export default editorCategoryModel;
+const editorCategoryModel = new EditorCategoryModel()
+export default editorCategoryModel

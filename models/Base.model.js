@@ -1,12 +1,12 @@
 // models/Base.model.js
-import db from "../utils/Database.js";
+import db from '../utils/Database.js'
 import {
   buildSelectQuery,
   buildInsertQuery,
   buildUpdateQuery,
   buildDeleteQuery,
   buildWhereClause,
-} from "../utils/queryBuilder.js";
+} from '../utils/queryBuilder.js'
 
 class BaseModel {
   /**
@@ -15,7 +15,7 @@ class BaseModel {
    */
   constructor(table) {
     // Assign the table name to the instance for use in query building
-    this.table = table;
+    this.table = table
   }
 
   /**
@@ -45,7 +45,7 @@ class BaseModel {
    */
   async find(filters = {}, options = {}) {
     // Build the WHERE clause from the provided filters
-    const { whereClause, values } = buildWhereClause(filters);
+    const { whereClause, values } = buildWhereClause(filters)
     // Build the SELECT query with the provided options
     const query = buildSelectQuery({
       table: this.table,
@@ -53,10 +53,10 @@ class BaseModel {
       orderBy: options.orderBy,
       limit: options.limit,
       offset: options.offset,
-    });
+    })
     // Execute the query and return the results
-    const { rows } = await db.query(query, values);
-    return rows;
+    const { rows } = await db.query(query, values)
+    return rows
   }
 
   /**
@@ -76,11 +76,11 @@ class BaseModel {
     // Build the SELECT query to retrieve the record with the specified ID
     const query = buildSelectQuery({
       table: this.table,
-      where: "id = $1",
-    });
+      where: 'id = $1',
+    })
     // Execute the query and return the result
-    const { rows } = await db.query(query, [id]);
-    return rows[0];
+    const { rows } = await db.query(query, [id])
+    return rows[0]
   }
 
   /**
@@ -103,10 +103,10 @@ class BaseModel {
     const { query, params } = buildInsertQuery({
       table: this.table,
       data,
-    });
+    })
     // Execute the query and return the result
-    const { rows } = await db.query(query, params);
-    return rows[0];
+    const { rows } = await db.query(query, params)
+    return rows[0]
   }
 
   /**
@@ -133,12 +133,12 @@ class BaseModel {
       // The WHERE clause is constructed by using the ID of the record
       // and the number of columns in the data object
       where: `id = $${Object.keys(data).length + 1}`,
-    });
+    })
     // Add the ID of the record to the parameters array
-    params.push(id);
+    params.push(id)
     // Execute the query and return the result
-    const { rows } = await db.query(query, params);
-    return rows[0];
+    const { rows } = await db.query(query, params)
+    return rows[0]
   }
 
   /**
@@ -157,12 +157,12 @@ class BaseModel {
     // Build the DELETE query to delete the record
     const query = buildDeleteQuery({
       table: this.table,
-      where: "id = $1",
-    });
+      where: 'id = $1',
+    })
     // Execute the query and return the result
-    const { rows } = await db.query(query, [id]);
-    return rows[0];
+    const { rows } = await db.query(query, [id])
+    return rows[0]
   }
 }
 
-export default BaseModel;
+export default BaseModel
