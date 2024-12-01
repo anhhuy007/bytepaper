@@ -1,4 +1,4 @@
-// controllers/editorController.js
+// controllers/editor.controller.js
 
 import articleService from "../services/article.service.js";
 import adminService from "../services/admin.service.js";
@@ -113,7 +113,8 @@ const getMyArticles = async (req, res, next) => {
       offset: parseInt(req.query.offset) || 0,
     };
     const articles = await articleService.getAllArticles(filters, options);
-    res.status(200).json({ success: true, data: articles });
+    // res.status(200).json({ success: true, data: articles });
+    return { articles };
   } catch (error) {
     next(error);
   }
