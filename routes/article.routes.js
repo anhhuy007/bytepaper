@@ -5,19 +5,23 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 import checkSubscription from "../middlewares/checkSubscription.js";
 import cacheMiddleware from "../middlewares/cacheMiddleware.js";
 import cacheKeyGenerator from "../utils/cacheKeyGenerator.js";
+import viewRenderer from "../utils/viewRenderer.js";
 
 const router = express.Router();
 
 // @route   GET /api/v1/articles
 // @desc    Get all published articles
-router.get("/", articleController.getAllArticles);
+router.get(
+  "/",
+  viewRenderer("articles/index", articleController.getAllArticles)
+);
 
 // @route   GET /api/v1/articles/home
 // @desc    Fetch homepage articles (featured, most-viewed, newest, top-categories)
 router.get(
   "/home",
   cacheMiddleware(cacheKeyGenerator.homeCacheKeyGenerator),
-  articleController.getHomepageArticles
+  viewRenderer("articles/home", articleController.getHomepageArticles)
 );
 
 // @route   GET /api/v1/articles/search?q=<query>
@@ -25,7 +29,7 @@ router.get(
 router.get(
   "/search",
   cacheMiddleware(cacheKeyGenerator.searchCacheKeyGenerator),
-  articleController.searchArticles
+  viewRenderer("articles/search", articleController.searchArticles)
 );
 
 // @route   GET /api/v1/articles/:id
@@ -33,7 +37,7 @@ router.get(
 router.get(
   "/:id",
   cacheMiddleware(cacheKeyGenerator.articleDetailCacheKeyGenerator),
-  articleController.getArticleById
+  viewRenderer("articles/detail", articleController.getArticleById)
 );
 
 // @route   GET /api/v1/articles/:id/download
@@ -50,7 +54,7 @@ router.get(
 router.get(
   "/category/:categoryId",
   cacheMiddleware(cacheKeyGenerator.articlesByCategoryCacheKeyGenerator),
-  articleController.getArticlesByCategory
+  viewRenderer("articles/category", articleController.getArticlesByCategory)
 );
 
 // @route   GET /api/v1/articles/tag/:tagId
@@ -58,7 +62,7 @@ router.get(
 router.get(
   "/tag/:tagId",
   cacheMiddleware(cacheKeyGenerator.articlesByTagCacheKeyGenerator),
-  articleController.getArticlesByTag
+  viewRenderer("articles/tag", articleController.getArticlesByTag)
 );
 
 // @route   POST /api/v1/articles/:id/views

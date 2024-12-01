@@ -55,7 +55,8 @@ const getAllArticles = async (req, res, next) => {
       orderBy: req.query.orderBy || "a.published_at DESC",
     };
     const articles = await articleService.getAllArticles(filters, options);
-    res.status(200).json({ success: true, data: articles });
+    // res.status(200).json({ success: true, data: articles });
+    return { articles };
   } catch (error) {
     next(error);
   }
@@ -104,7 +105,8 @@ const getArticleById = async (req, res, next) => {
     // Retrieve the article by its ID
     const article = await articleService.getArticleById(req.params.id);
     // Return the article as JSON response
-    res.status(200).json({ success: true, data: article });
+    // res.status(200).json({ success: true, data: article });
+    return { article };
   } catch (error) {
     // If any error occurs, pass it to the next middleware function
     next(error);
@@ -147,7 +149,8 @@ const searchArticles = async (req, res, next) => {
     const articles = await articleService.searchArticles(keyword, options);
 
     // Send the search results as a JSON response
-    res.status(200).json({ success: true, data: articles });
+    // res.status(200).json({ success: true, data: articles });
+    return { articles };
   } catch (error) {
     // Pass any errors to the next middleware for handling
     next(error);
@@ -234,7 +237,8 @@ const getArticlesByCategory = async (req, res, next) => {
       categoryId,
       options
     );
-    res.status(200).json({ success: true, data: articles });
+    // res.status(200).json({ success: true, data: articles });
+    return { articles };
   } catch (error) {
     next(error);
   }
@@ -248,7 +252,8 @@ const getArticlesByTag = async (req, res, next) => {
       offset: parseInt(req.query.offset) || 0,
     };
     const articles = await tagService.getArticlesByTagId(tagId, options);
-    res.status(200).json({ success: true, data: articles });
+    // res.status(200).json({ success: true, data: articles });
+    return { articles };
   } catch (error) {
     next(error);
   }
@@ -364,10 +369,11 @@ const getHomepageArticles = async (req, res, next) => {
   try {
     const type = req.query.type;
     const homepageData = await articleService.getHomepageArticles(type);
-    res.status(200).json({
-      success: true,
-      data: homepageData,
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   data: homepageData,
+    // });
+    return { homepageData };
   } catch (error) {
     next(error);
   }
