@@ -1,21 +1,24 @@
+{{!-- views/partials/home/header.hbs --}}
 <div class="navbar bg-base-100 border-b-2 px-4 py-4">
-  <div class="navbar-start gap-8 ">
-      {{> home/navbar}}
-     <div class="grow max-w-[300px] items-start">
-        <label class="input input-bordered flex items-center gap-2">
-          <input type="text" class="grow" placeholder="Search" />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            class="h-4 w-4 opacity-70">
-            <path
-              fill-rule="evenodd"
-              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-              clip-rule="evenodd" />
-          </svg>
-        </label>
-      </div>
+  <div class="navbar-start gap-8">
+    {{> home/navbar}}
+    <div class="grow max-w-[300px] items-start">
+      <label class="input input-bordered flex items-center gap-2">
+        <input type="text" class="grow" placeholder="Search" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          class="h-4 w-4 opacity-70"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </label>
+    </div>
   </div>
   <div class="navbar-center">
     <a class="btn btn-outline text-xl bg-black text-white" href="/">Paperly</a>
@@ -40,7 +43,7 @@
             border-b-4 border-b-black
           {{/if}}"
         >
-        Trang chủ
+          Trang chủ
         </a>
         {{#each categories}}
         <a
@@ -52,10 +55,10 @@
         {{/each}}
       </div>
 
-        {{!-- <div class="border-t-2 border-gray-200 flex-1 w-full"></div> --}}
-
-      {{#each categories}}
-      {{#if (or (eq id ../currentCategoryId) (hasSubCategorySelected subCategories ../currentCategoryId))}}
+      {{!--
+      <div class="border-t-2 border-gray-200 flex-1 w-full"></div>
+      --}} {{#each categories}} {{#if (or (eq id ../currentCategoryId) (hasSubCategorySelected
+      subCategories ../currentCategoryId))}}
       <div class="flex gap-4 justify-center items-center">
         {{#each subCategories}}
         <a
@@ -66,8 +69,7 @@
         </a>
         {{/each}}
       </div>
-      {{/if}}
-      {{/each}}
+      {{/if}} {{/each}}
     </div>
   </div>
   <div class="navbar-end"></div>

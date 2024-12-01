@@ -1,18 +1,15 @@
-<a href="news/{{id}}" class="card w-full bg-base-100 shadow-xl">
-    <figure>
-        <img
-            src="{{thumbnail}}"
-            alt="News Thumbnail"
-            class="w-full h-48 object-cover"
-        />
-    </figure>
-    <div class="card-body">
-        <h2 class="card-title">{{title}}</h2>
-        <div class="flex flex-wrap gap-2">
-            {{#each tags}}
-                <span class="badge badge-primary">{{this}}</span>
-            {{/each}}
-        </div>
-        <p class="text-sm text-gray-500">{{date}}</p>
+{{!-- views/partials/news-card.hbs --}}
+<a href="news/{{ id }}" class="card w-full bg-base-100 shadow-xl">
+  <figure>
+    <img src="{{ thumbnail }}" alt="News Thumbnail" class="w-full h-48 object-cover" />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">{{ title }}</h2>
+    <div class="flex flex-wrap gap-2">
+      {{#each tags}}
+      <span class="badge badge-primary">{{ this }}</span>
+      {{/each}}
     </div>
+    <p class="text-sm text-gray-500">{{ date }}</p>
+  </div>
 </a>

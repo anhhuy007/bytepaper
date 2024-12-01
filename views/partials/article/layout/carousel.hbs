@@ -1,9 +1,8 @@
+{{!-- views/partials/article/layout/carousel.hbs --}}
 <div class="carousel w-full mt-10 shadow-xl py-8 border-2 rounded-xl" id="carousel">
   {{#each articles}}
   <div id="slide{{@index}}" class="carousel-item relative w-full">
-    <div class="px-24">
-      {{> article/super-large-article article=this}}
-    </div>
+    <div class="px-24">{{> article/super-large-article article=this}}</div>
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide{{subtract @index 1}}" class="btn btn-ghost btn-circle goTo">❮</a>
       <a href="#slide{{add @index 1}}" class="btn btn-ghost btn-circle goTo">❯</a>
