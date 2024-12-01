@@ -45,7 +45,8 @@ const getAllUsers = async (req, res, next) => {
       offset: parseInt(req.query.offset) || 0,
     };
     const users = await adminService.getAllUsers(filters, options);
-    res.status(200).json({ success: true, data: users });
+    // res.status(200).json({ success: true, data: users });
+    return { users };
   } catch (error) {
     next(error);
   }

@@ -22,7 +22,8 @@ const getAllTags = async (req, res, next) => {
     // Fetch all tags using the tag service
     const tags = await tagService.getAllTags();
     // Send the retrieved tags in the response with status 200
-    res.status(200).json({ success: true, data: tags });
+    // res.status(200).json({ success: true, data: tags });
+    return { tags };
   } catch (error) {
     // Pass any errors to the next middleware
     next(error);

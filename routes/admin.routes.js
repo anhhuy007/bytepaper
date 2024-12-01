@@ -1,9 +1,11 @@
 // routes/admin.routes.js
-
 import express from "express";
 import adminController from "../controllers/admin.controller.js";
 import tagController from "../controllers/tag.controller.js";
+import articleController from "../controllers/article.controller.js";
+import categoryController from "../controllers/category.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import viewRenderer from "../utils/viewRenderer.js";
 
 const router = express.Router();
 
@@ -14,7 +16,10 @@ router.use(authMiddleware(["admin"]));
 
 // @route   GET /api/v1/admin/users
 // @desc    Get all users
-router.get("/users", adminController.getAllUsers);
+router.get(
+  "/users",
+  viewRenderer("admin/manage-users", adminController.getAllUsers)
+);
 
 // @route   GET /api/v1/admin/users/:userId
 // @desc    Get user by ID
@@ -30,6 +35,14 @@ router.delete("/users/:userId", adminController.deleteUser);
 
 // Category Management
 
+// @route   GET /api/v1/admin/categories
+// @desc    Get all categories
+
+router.get(
+  "/categories",
+  viewRenderer("admin/manage-categories", categoryController.getAllCategories)
+);
+
 // @route   POST /api/v1/admin/categories
 // @desc    Create a new category
 router.post("/categories", adminController.createCategory);
@@ -43,6 +56,13 @@ router.put("/categories/:categoryId", adminController.updateCategory);
 router.delete("/categories/:categoryId", adminController.deleteCategory);
 
 // Tag Management (Similar to categories)
+
+// @route   GET /api/v1/admin/tags
+// @desc    Get all tags
+router.get(
+  "/tags",
+  viewRenderer("admin/manage-tags", tagController.getAllTags)
+);
 
 // @route   POST /api/v1/admin/tags
 // @desc    Create a new tag

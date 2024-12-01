@@ -20,7 +20,8 @@ import categoryService from "../services/category.service.js";
 const getAllCategories = async (req, res, next) => {
   try {
     const categories = await categoryService.getAllCategories();
-    res.status(200).json({ success: true, data: categories });
+    // res.status(200).json({ success: true, data: categories });
+    return { categories };
   } catch (error) {
     next(error);
   }
