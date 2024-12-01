@@ -1,2 +1,5 @@
-<h1 class="text-3xl text-red-400">This has tailwind</h1>
-<button class="btn">Daisy button</button>
+<div class="grid grid-cols-3 gap-4 p-4">
+    {{#each news}}
+    {{> news-card}}
+    {{/each}}
+</div>
