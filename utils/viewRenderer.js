@@ -21,28 +21,28 @@ export const viewRenderer =
   async (req, res, next) => {
     try {
       // Load additional data using the dataLoader function if provided
-      const additionalData = dataLoader ? await dataLoader(req) : {};
+      const additionalData = dataLoader ? await dataLoader(req) : {}
 
       // Define default data to be included in all responses
       const defaultData = {
-        title: "Electronic Newspaper",
+        title: 'Electronic Newspaper',
         user: req.user || null, // Attach user session data if available
-      };
+      }
 
       // Merge default data with any additional data
-      const data = { ...defaultData, ...additionalData };
+      const data = { ...defaultData, ...additionalData }
 
-      if (req.method === "GET") {
+      if (req.method === 'GET') {
         // For GET requests, render the specified view with the data
-        return res.render(viewName, data);
+        return res.render(viewName, data)
       }
 
       // For non-GET requests, return a JSON response with the data
-      res.json({ success: true, data });
+      res.json({ success: true, data })
     } catch (error) {
       // If an error occurs, pass it to the next middleware for handling
-      next(error);
+      next(error)
     }
-  };
+  }
 
-export default viewRenderer;
+export default viewRenderer

@@ -1,5 +1,5 @@
 // controllers/user.controller.js
-import userService from "../services/user.service.js";
+import userService from '../services/user.service.js'
 
 /**
  * Retrieves the profile of the authenticated user.
@@ -13,19 +13,19 @@ import userService from "../services/user.service.js";
 const getUserProfile = async (req, res, next) => {
   try {
     // Get the ID of the authenticated user
-    const userId = req.user.id;
+    const userId = req.user.id
 
     // Retrieve the user record from the database
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUserById(userId)
 
     // Return the user profile as JSON
     // res.status(200).json({ success: true, data: user });
-    return { user };
+    return { user }
   } catch (error) {
     // If an error occurs, pass it to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Updates the profile of the authenticated user.
@@ -39,21 +39,21 @@ const getUserProfile = async (req, res, next) => {
 const updateUserProfile = async (req, res, next) => {
   try {
     // Get the ID of the authenticated user
-    const userId = req.user.id;
+    const userId = req.user.id
 
     // Retrieve the profile data from the request body
-    const profileData = req.body;
+    const profileData = req.body
 
     // Update the user profile in the database
-    const user = await userService.updateUserProfile(userId, profileData);
+    const user = await userService.updateUserProfile(userId, profileData)
 
     // Return the updated user profile as JSON
-    res.status(200).json({ success: true, data: user });
+    res.status(200).json({ success: true, data: user })
   } catch (error) {
     // If an error occurs, pass it to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Changes the password of the authenticated user.
@@ -67,39 +67,37 @@ const updateUserProfile = async (req, res, next) => {
 const changePassword = async (req, res, next) => {
   try {
     // Get the ID of the authenticated user
-    const userId = req.user.id;
+    const userId = req.user.id
 
     // Retrieve the current password and new password from the request body
-    const { currentPassword, newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body
 
     // Change the user's password in the database
-    await userService.changePassword(userId, currentPassword, newPassword);
+    await userService.changePassword(userId, currentPassword, newPassword)
 
     // Return a success message as JSON
-    res
-      .status(200)
-      .json({ success: true, message: "Password changed successfully" });
+    res.status(200).json({ success: true, message: 'Password changed successfully' })
   } catch (error) {
     // If an error occurs, pass it to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 const deleteUser = async (req, res, next) => {
   try {
-    const user_id = req.params.id;
+    const user_id = req.params.id
 
-    const userData = await userService.deleteUser(user_id);
+    const userData = await userService.deleteUser(user_id)
 
-    res.status(200).json({ success: true, data: userData });
+    res.status(200).json({ success: true, data: userData })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export default {
   deleteUser,
   getUserProfile,
   updateUserProfile,
   changePassword,
-};
+}

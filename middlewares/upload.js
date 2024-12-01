@@ -1,7 +1,7 @@
 // middlewares/upload.js
 
-import multer from "multer";
-import path from "path";
+import multer from 'multer'
+import path from 'path'
 
 const storage = multer.diskStorage({
   /**
@@ -12,13 +12,13 @@ const storage = multer.diskStorage({
    */
   destination: (req, file, cb) => {
     // Set your upload directory
-    cb(null, "uploads/");
+    cb(null, 'uploads/')
   },
 
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Rename the file
+    cb(null, Date.now() + path.extname(file.originalname)) // Rename the file
   },
-});
+})
 
 /**
  * File filter function for multer to validate file types
@@ -29,24 +29,24 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
   // Accept images and PDFs only
   const allowedTypes = [
-    "image/jpeg", // JPEG images
-    "image/png", // PNG images
-    "application/pdf", // PDF files
-  ];
+    'image/jpeg', // JPEG images
+    'image/png', // PNG images
+    'application/pdf', // PDF files
+  ]
 
   if (allowedTypes.includes(file.mimetype)) {
     // File type is valid, accept the file
-    cb(null, true);
+    cb(null, true)
   } else {
     // File type is invalid, reject the file
-    cb(new Error("Unsupported file format"), false);
+    cb(new Error('Unsupported file format'), false)
   }
-};
+}
 
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: { fileSize: 1024 * 1024 * 5 }, // Limit file size to 5MB
-});
+})
 
-export default upload;
+export default upload

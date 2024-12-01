@@ -1,7 +1,7 @@
 // services/tagService.js
 
-import tagModel from "../models/tag.model.js";
-import articleTagModel from "../models/articleTag.model.js";
+import tagModel from '../models/tag.model.js'
+import articleTagModel from '../models/articleTag.model.js'
 
 class TagService {
   /**
@@ -17,7 +17,7 @@ class TagService {
    * // [{ id: 1, name: "JavaScript", ... }, { id: 2, name: "Node.js", ... }, ...]
    */
   async getAllTags() {
-    return await tagModel.getAllTags();
+    return await tagModel.getAllTags()
   }
 
   /**
@@ -37,11 +37,11 @@ class TagService {
    * // { id: 1, name: "JavaScript", ... }
    */
   async getTagById(id) {
-    const tag = await tagModel.getTagById(id);
+    const tag = await tagModel.getTagById(id)
     if (!tag) {
-      throw new Error("Tag not found");
+      throw new Error('Tag not found')
     }
-    return tag;
+    return tag
   }
 
   /**
@@ -61,7 +61,7 @@ class TagService {
    * // { id: 1, name: "React", created_at: "2022-01-01 12:00:00", ... }
    */
   async createTag(data) {
-    return await tagModel.createTag(data);
+    return await tagModel.createTag(data)
   }
 
   /**
@@ -83,14 +83,14 @@ class TagService {
    */
   async updateTag(id, data) {
     // Retrieve the tag from the database
-    const tag = await tagModel.findById(id);
+    const tag = await tagModel.findById(id)
     // Check if the tag exists in the database
     if (!tag) {
-      throw new Error("Tag not found");
+      throw new Error('Tag not found')
     }
 
     // Update the tag in the database
-    return await tagModel.updateTag(id, data);
+    return await tagModel.updateTag(id, data)
   }
 
   /**
@@ -109,11 +109,11 @@ class TagService {
    * // { id: 1, name: "JavaScript", ... }
    */
   async deleteTag(id) {
-    const tag = await tagModel.findById(id);
+    const tag = await tagModel.findById(id)
     if (!tag) {
-      throw new Error("Tag not found");
+      throw new Error('Tag not found')
     }
-    return await tagModel.deleteTag(id);
+    return await tagModel.deleteTag(id)
   }
 
   /**
@@ -152,8 +152,8 @@ class TagService {
    * ]
    */
   async getArticlesByTagId(tagId, options = {}) {
-    return await articleTagModel.getArticlesByTagId(tagId, options);
+    return await articleTagModel.getArticlesByTagId(tagId, options)
   }
 }
 
-export default new TagService();
+export default new TagService()

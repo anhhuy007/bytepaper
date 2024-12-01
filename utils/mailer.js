@@ -1,16 +1,16 @@
 // utils/mailer.js
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
+import nodemailer from 'nodemailer'
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  service: 'Gmail',
   auth: {
-    user: process.env.EMAIL_USERNAME || "your_email_username",
-    pass: process.env.EMAIL_PASSWORD || "your_email_password",
+    user: process.env.EMAIL_USERNAME || 'your_email_username',
+    pass: process.env.EMAIL_PASSWORD || 'your_email_password',
   },
-});
+})
 
 /**
  * Sends an email using the configured transporter.
@@ -31,8 +31,8 @@ const transporter = nodemailer.createTransport({
  * );
  */
 const sendMail = async ({ to, subject, html }) => {
-  if (!to || typeof to !== "string" || to.trim() === "") {
-    throw new Error("Recipient email address is missing or invalid.");
+  if (!to || typeof to !== 'string' || to.trim() === '') {
+    throw new Error('Recipient email address is missing or invalid.')
   }
 
   // Define the email options, including sender, recipient, subject, and HTML content
@@ -41,10 +41,10 @@ const sendMail = async ({ to, subject, html }) => {
     to, // Recipient's email address
     subject, // Subject line of the email
     html, // HTML body content of the email
-  };
+  }
 
   // Send the email using the transporter and the defined options
-  const info = await transporter.sendMail(mailOptions);
-};
+  await transporter.sendMail(mailOptions)
+}
 
-export default sendMail;
+export default sendMail

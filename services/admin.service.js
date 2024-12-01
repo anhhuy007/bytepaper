@@ -1,8 +1,8 @@
 // services/admin.service.js
 
-import userModel from "../models/user.model.js";
-import categoryModel from "../models/category.model.js";
-import editorCategoryModel from "../models/editorCategory.model.js";
+import userModel from '../models/user.model.js'
+import categoryModel from '../models/category.model.js'
+import editorCategoryModel from '../models/editorCategory.model.js'
 
 class AdminService {
   /**
@@ -30,7 +30,7 @@ class AdminService {
    * });
    */
   async getAllUsers(filters = {}, options = {}) {
-    return await userModel.find(filters, options);
+    return await userModel.find(filters, options)
   }
 
   /**
@@ -50,10 +50,10 @@ class AdminService {
    */
   async assignUserRole(userId, role) {
     if (!role) {
-      throw new Error("Role is required.");
+      throw new Error('Role is required.')
     }
 
-    return await userModel.assignRole(userId, role);
+    return await userModel.assignRole(userId, role)
   }
 
   /**
@@ -71,7 +71,7 @@ class AdminService {
    */
   async deleteUser(userId) {
     // Delete the user with the specified ID and return the deleted record
-    return await userModel.delete(userId);
+    return await userModel.delete(userId)
   }
 
   /**
@@ -94,7 +94,7 @@ class AdminService {
    * // { id: 1, name: "React", created_at: "2022-01-01 12:00:00", ... }
    */
   async createCategory(data) {
-    return await categoryModel.createCategory(data);
+    return await categoryModel.createCategory(data)
   }
 
   /**
@@ -114,7 +114,7 @@ class AdminService {
    * // { id: 1, name: "React", created_at: "2022-01-01 12:00:00", ... }
    */
   async updateCategory(id, data) {
-    return await categoryModel.updateCategory(id, data);
+    return await categoryModel.updateCategory(id, data)
   }
 
   /**
@@ -133,7 +133,7 @@ class AdminService {
    * // { id: 1, name: "JavaScript", parent_id: null, created_at: "2022-01-01 12:00:00", ... }
    */
   async deleteCategory(id) {
-    return await categoryModel.deleteCategory(id);
+    return await categoryModel.deleteCategory(id)
   }
 
   /**
@@ -156,28 +156,28 @@ class AdminService {
    */
   async assignCategoriesToEditor(editorId, categoryIds) {
     // Check if the editor exists
-    const editor = await userModel.findById(editorId);
+    const editor = await userModel.findById(editorId)
     if (!editor) {
-      throw new Error("Editor not found");
+      throw new Error('Editor not found')
     }
 
     if (!categoryIds || categoryIds.length === 0) {
-      throw new Error("Category IDs are required");
+      throw new Error('Category IDs are required')
     }
 
-    if (categoryIds.some((id) => typeof id !== "number")) {
-      throw new Error("Category IDs must be numbers");
+    if (categoryIds.some((id) => typeof id !== 'number')) {
+      throw new Error('Category IDs must be numbers')
     }
 
     if (categoryIds.length !== new Set(categoryIds).size) {
-      throw new Error("Category IDs must be unique");
+      throw new Error('Category IDs must be unique')
     }
 
-    if (editor.role !== "editor") {
-      throw new Error("Only editors can be assigned categories");
+    if (editor.role !== 'editor') {
+      throw new Error('Only editors can be assigned categories')
     }
 
-    return await editorCategoryModel.assignCategories(editorId, categoryIds);
+    return await editorCategoryModel.assignCategories(editorId, categoryIds)
   }
 
   /**
@@ -198,7 +198,7 @@ class AdminService {
    * ]
    */
   async getCategoriesByEditor(editorId) {
-    return await editorCategoryModel.getCategoriesByEditor(editorId);
+    return await editorCategoryModel.getCategoriesByEditor(editorId)
   }
 
   /**
@@ -219,12 +219,12 @@ class AdminService {
    * ]
    */
   async getEditorsByCategory(categoryId) {
-    return await editorCategoryModel.getEditorsByCategory(categoryId);
+    return await editorCategoryModel.getEditorsByCategory(categoryId)
   }
 
   async getAllEditors() {
-    return await userModel.find({ role: "editor" });
+    return await userModel.find({ role: 'editor' })
   }
 }
 
-export default new AdminService();
+export default new AdminService()

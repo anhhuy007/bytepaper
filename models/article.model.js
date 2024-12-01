@@ -1,7 +1,6 @@
 // models/article.model.js
-import BaseModel from "./Base.model.js";
-import db from "../utils/Database.js";
-import { buildSelectQuery, buildWhereClause } from "../utils/queryBuilder.js";
+import BaseModel from './Base.model.js'
+import db from '../utils/Database.js'
 
 // CREATE TYPE article_status AS ENUM ('draft', 'pending', 'approved', 'published', 'rejected');
 // CREATE TABLE articles (
@@ -150,8 +149,6 @@ class ArticleModel extends BaseModel {
    * ]
    */
   async getArticles(filters = {}, options = {}) {
-    // Build the WHERE clause from the provided filters
-    const { whereClause, values } = buildWhereClause(filters)
     // Build the SELECT query with the provided options
     const query = `
       SELECT a.*, u.full_name AS author_name, c.name AS category_name
@@ -163,14 +160,14 @@ class ArticleModel extends BaseModel {
       ORDER BY a.published_at DESC
       LIMIT $3
       OFFSET $4
-    `;
+    `
     const { rows } = await db.query(query, [
       filters.category_id,
       filters.status,
       options.limit,
       options.offset,
-    ]);
-    return rows;
+    ])
+    return rows
   }
 
   /**
@@ -334,10 +331,7 @@ class ArticleModel extends BaseModel {
    * ]
    */
   async getArticlesByCategory(categoryId, options = {}) {
-    return await this.getArticles(
-      { category_id: [categoryId], status: "published" },
-      options
-    );
+    return await this.getArticles({ category_id: [categoryId], status: 'published' }, options)
   }
 
   /**
@@ -440,24 +434,24 @@ class ArticleModel extends BaseModel {
    * @throws {Error} If any error occurs while deleting the articles.
    */
   async deleteArticleByUserID(user_id) {
-    const text = "DELETE FROM articles WHERE author_id = $1 RETURNING *;";
-    const values = [user_id];
+    const text = 'DELETE FROM articles WHERE author_id = $1 RETURNING *;'
+    const values = [user_id]
 
-    await db.query(text, values);
+    await db.query(text, values)
   }
 
   async getHomepageArticles() {
-    const featuredArticles = await this.getFeaturedArticles();
-    const mostViewedArticles = await this.getMostViewedArticles();
-    const newestArticles = await this.getNewestArticles();
-    const topCategoryArticles = await this.getTopCategoryArticles();
+    const featuredArticles = await this.getFeaturedArticles()
+    const mostViewedArticles = await this.getMostViewedArticles()
+    const newestArticles = await this.getNewestArticles()
+    const topCategoryArticles = await this.getTopCategoryArticles()
 
     return {
       featuredArticles,
       mostViewedArticles,
       newestArticles,
       topCategoryArticles,
-    };
+    }
   }
 
   async getFeaturedArticles() {
@@ -468,9 +462,9 @@ class ArticleModel extends BaseModel {
         AND published_at >= NOW() - INTERVAL '7 days' 
       ORDER BY views DESC 
       LIMIT 4
-    `;
-    const { rows } = await db.query(query);
-    return rows;
+    `
+    const { rows } = await db.query(query)
+    return rows
   }
 
   async getMostViewedArticles() {
@@ -480,9 +474,9 @@ class ArticleModel extends BaseModel {
       WHERE status = 'published' 
       ORDER BY views DESC 
       LIMIT 10
-    `;
-    const { rows } = await db.query(query);
-    return rows;
+    `
+    const { rows } = await db.query(query)
+    return rows
   }
 
   async getNewestArticles() {
@@ -492,9 +486,9 @@ class ArticleModel extends BaseModel {
       WHERE status = 'published' 
       ORDER BY published_at DESC 
       LIMIT 10
-    `;
-    const { rows } = await db.query(query);
-    return rows;
+    `
+    const { rows } = await db.query(query)
+    return rows
   }
 
   async getTopCategoryArticles() {
@@ -503,9 +497,9 @@ class ArticleModel extends BaseModel {
       FROM articles 
       WHERE status = 'published' 
       ORDER BY category_id, published_at DESC
-    `;
-    const { rows } = await db.query(query);
-    return rows;
+    `
+    const { rows } = await db.query(query)
+    return rows
   }
 }
 

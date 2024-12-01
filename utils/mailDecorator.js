@@ -76,5 +76,5 @@ export const decorateSendMail = (otpCode) => {
         </div>
       </body>
       </html>
-      `;
-};
+      `
+}

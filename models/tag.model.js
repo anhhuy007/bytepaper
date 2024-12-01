@@ -1,6 +1,6 @@
 // models/tagModel.js
-import BaseModel from "./Base.model.js";
-import db from "../utils/Database.js";
+import BaseModel from './Base.model.js'
+import db from '../utils/Database.js'
 // CREATE TABLE tags (
 //   id SERIAL PRIMARY KEY,
 //   name VARCHAR(50) UNIQUE NOT NULL,

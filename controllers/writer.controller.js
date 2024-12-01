@@ -1,6 +1,6 @@
 // controllers/writer.controller.js
 
-import articleService from "../services/article.service.js";
+import articleService from '../services/article.service.js'
 
 /**
  * Retrieves a list of articles authored by the current user.
@@ -14,37 +14,37 @@ import articleService from "../services/article.service.js";
 const getMyArticles = async (req, res, next) => {
   try {
     // Extract the author ID from the request object
-    const authorId = req.user.id;
+    const authorId = req.user.id
 
     // Define filters to retrieve articles by author ID
     let filters = {
       author_id: authorId,
-    };
+    }
 
-    if (req.query.status !== "all") {
+    if (req.query.status !== 'all') {
       filters = {
         author_id: authorId,
         status: req.query.status,
-      };
+      }
     }
 
     // Define pagination options from the request query
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
-    };
+    }
 
     // Retrieve the articles using the article service
-    const articles = await articleService.getAllArticles(filters, options);
+    const articles = await articleService.getAllArticles(filters, options)
 
     // Send the retrieved articles as a JSON response
     // res.status(200).json({ success: true, data: articles });
-    return { articles };
+    return { articles }
   } catch (error) {
     // Pass any errors to the next middleware function
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Creates a new article in the database.
@@ -86,14 +86,14 @@ const getMyArticles = async (req, res, next) => {
  */
 const createArticle = async (req, res, next) => {
   try {
-    const authorId = req.user.id;
-    const articleData = req.body;
-    const article = await articleService.createArticle(articleData, authorId);
-    res.status(201).json({ success: true, data: article });
+    const authorId = req.user.id
+    const articleData = req.body
+    const article = await articleService.createArticle(articleData, authorId)
+    res.status(201).json({ success: true, data: article })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Updates an existing article.
@@ -136,18 +136,14 @@ const createArticle = async (req, res, next) => {
  */
 const updateArticle = async (req, res, next) => {
   try {
-    const authorId = req.user.id;
-    const articleData = req.body;
-    const article = await articleService.updateArticle(
-      req.params.articleId,
-      articleData,
-      authorId
-    );
-    res.status(200).json({ success: true, data: article });
+    const authorId = req.user.id
+    const articleData = req.body
+    const article = await articleService.updateArticle(req.params.articleId, articleData, authorId)
+    res.status(200).json({ success: true, data: article })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Submits an article for approval.
@@ -168,34 +164,29 @@ const updateArticle = async (req, res, next) => {
 const submitArticleForApproval = async (req, res, next) => {
   try {
     // Extract the author ID from the request object
-    const authorId = req.user.id;
+    const authorId = req.user.id
 
     // Submit the article for approval using the article service
-    await articleService.submitArticleForApproval(
-      req.params.articleId,
-      authorId
-    );
+    await articleService.submitArticleForApproval(req.params.articleId, authorId)
 
     // Send a success response
-    res
-      .status(200)
-      .json({ success: true, message: "Article submitted for approval" });
+    res.status(200).json({ success: true, message: 'Article submitted for approval' })
   } catch (error) {
     // Pass any errors to the next middleware function
-    next(error);
+    next(error)
   }
-};
+}
 
 const deleteArticle = async (req, res, next) => {
   try {
-    const authorId = req.user.id;
-    const articleID = req.params.articleId;
-    const article = await articleService.deleteArticle(authorId, articleID);
-    res.status(200).json({ success: true, data: article });
+    const authorId = req.user.id
+    const articleID = req.params.articleId
+    const article = await articleService.deleteArticle(authorId, articleID)
+    res.status(200).json({ success: true, data: article })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export default {
   getMyArticles,
@@ -203,4 +194,4 @@ export default {
   deleteArticle,
   updateArticle,
   submitArticleForApproval,
-};
+}

@@ -1,5 +1,5 @@
 // controllers/subscription.controller.js
-import subscriptionService from "../services/subscription.service.js";
+import subscriptionService from '../services/subscription.service.js'
 
 /**
  * Retrieves the subscription status for the authenticated user.
@@ -10,19 +10,18 @@ import subscriptionService from "../services/subscription.service.js";
  */
 const getSubscriptionStatus = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.id
 
-    const subscription =
-      await subscriptionService.getSubscriptionByUserId(userId);
+    const subscription = await subscriptionService.getSubscriptionByUserId(userId)
 
     if (!subscription) {
       return res.status(200).json({
         success: true,
-        data: { isActive: false, message: "No active subscription" },
-      });
+        data: { isActive: false, message: 'No active subscription' },
+      })
     }
 
-    const isActive = new Date(subscription.expiry_date) > new Date();
+    const isActive = new Date(subscription.expiry_date) > new Date()
 
     // res.status(200).json({
     //   success: true,
@@ -37,12 +36,12 @@ const getSubscriptionStatus = async (req, res, next) => {
     return {
       isActive,
       expiryDate: subscription.expiry_date,
-      message: isActive ? "Subscription is active" : "Subscription has expired",
-    };
+      message: isActive ? 'Subscription is active' : 'Subscription has expired',
+    }
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Renews the subscription for the authenticated user.
@@ -53,13 +52,12 @@ const getSubscriptionStatus = async (req, res, next) => {
  */
 const renewSubscription = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.id
 
     // Number of days to renew, default to 7 if not provided
-    const days = parseInt(req.body.days) || 7;
+    const days = parseInt(req.body.days) || 7
 
-    const updatedSubscription =
-      await subscriptionService.createOrUpdateSubscription(userId, days);
+    const updatedSubscription = await subscriptionService.createOrUpdateSubscription(userId, days)
 
     res.status(200).json({
       success: true,
@@ -67,10 +65,10 @@ const renewSubscription = async (req, res, next) => {
         expiryDate: updatedSubscription.expiry_date,
         message: `Subscription renewed for ${days} days.`,
       },
-    });
+    })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
-export default { getSubscriptionStatus, renewSubscription };
+export default { getSubscriptionStatus, renewSubscription }

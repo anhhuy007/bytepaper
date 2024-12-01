@@ -1,9 +1,9 @@
 // utils/Database.js
-import pkg from "pg";
-const { Pool } = pkg;
-import dotenv from "dotenv";
+import pkg from 'pg'
+const { Pool } = pkg
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
 class Database {
   /**
@@ -18,26 +18,26 @@ class Database {
      */
     this.pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-    });
+    })
 
     /**
      * Event listener for successful connection.
      * @param {Error} [err] - The error object if the connection failed.
      * @listens Pool#connect
      */
-    this.pool.on("connect", () => {
-      console.log("Connected to the PostgreSQL database");
-    });
+    this.pool.on('connect', () => {
+      console.log('Connected to the PostgreSQL database')
+    })
 
     /**
      * Event listener for errors on idle clients.
      * @param {Error} err - The error object.
      * @listens Pool#error
      */
-    this.pool.on("error", (err) => {
-      console.error("Unexpected error on idle client", err);
-      process.exit(-1);
-    });
+    this.pool.on('error', (err) => {
+      console.error('Unexpected error on idle client', err)
+      process.exit(-1)
+    })
   }
 
   /**
@@ -54,19 +54,19 @@ class Database {
    */
   async query(text, params = []) {
     try {
-      console.log("Executing Query:", text);
-      console.log("With Parameters:", params);
-      const start = Date.now();
-      const res = await this.pool.query(text, params);
-      const duration = Date.now() - start;
-      console.log("Query executed successfully:", {
+      console.log('Executing Query:', text)
+      console.log('With Parameters:', params)
+      const start = Date.now()
+      const res = await this.pool.query(text, params)
+      const duration = Date.now() - start
+      console.log('Query executed successfully:', {
         duration,
         rows: res.rowCount,
-      });
-      return res;
+      })
+      return res
     } catch (err) {
-      console.error("Query failed:", { text, params });
-      throw err;
+      console.error('Query failed:', { text, params })
+      throw err
     }
   }
   /**
@@ -84,15 +84,15 @@ class Database {
    * }
    */
   async getClient() {
-    const client = await this.pool.connect();
-    const query = client.query;
-    const release = client.release;
+    const client = await this.pool.connect()
+    const query = client.query
+    const release = client.release
 
     // Set up timeout
     const timeout = setTimeout(() => {
-      console.error("A client has been checked out for too long");
-      console.error(`Last executed query: ${client.lastQuery}`);
-    }, 5000);
+      console.error('A client has been checked out for too long')
+      console.error(`Last executed query: ${client.lastQuery}`)
+    }, 5000)
 
     /**
      * Monkey patch the query method to log the executed query.
@@ -113,11 +113,11 @@ class Database {
      */
     client.query = (...args) => {
       // Log the executed query text and parameters
-      client.lastQuery = args;
+      client.lastQuery = args
 
       // Call the original query method to execute the query
-      return query.apply(client, args);
-    };
+      return query.apply(client, args)
+    }
 
     /**
      * Monkey patch the release method to clear the timeout and restore the
@@ -132,19 +132,19 @@ class Database {
      */
     client.release = async () => {
       // Clear the timeout that was set when the client was checked out
-      clearTimeout(timeout);
+      clearTimeout(timeout)
 
       // Restore the original query and release methods to the client
-      client.query = query;
-      client.release = release;
+      client.query = query
+      client.release = release
 
       // Call the original release method to return the client to the pool
-      await release.apply(client);
-    };
+      await release.apply(client)
+    }
 
-    return client;
+    return client
   }
 }
 
-const db = new Database();
-export default db;
+const db = new Database()
+export default db

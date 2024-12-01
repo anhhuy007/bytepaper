@@ -1,6 +1,6 @@
 // services/categoryService.js
 
-import categoryModel from "../models/category.model.js";
+import categoryModel from '../models/category.model.js'
 
 class CategoryService {
   /**

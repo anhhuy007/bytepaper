@@ -1,7 +1,7 @@
 // controllers/admin.controller.js
 
-import adminService from "../services/admin.service.js";
-import userService from "../services/user.service.js";
+import adminService from '../services/admin.service.js'
+import userService from '../services/user.service.js'
 
 /**
  * Retrieves a list of users from the database based on the provided filters and
@@ -39,37 +39,37 @@ import userService from "../services/user.service.js";
  */
 const getAllUsers = async (req, res, next) => {
   try {
-    const filters = req.query;
+    const filters = req.query
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
-    };
-    const users = await adminService.getAllUsers(filters, options);
+    }
+    const users = await adminService.getAllUsers(filters, options)
     // res.status(200).json({ success: true, data: users });
-    return { users };
+    return { users }
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 const getUserById = async (req, res, next) => {
   try {
-    const userId = req.params.userId;
-    const user = await userService.getUserById(userId);
-    res.status(200).json({ success: true, data: user });
+    const userId = req.params.userId
+    const user = await userService.getUserById(userId)
+    res.status(200).json({ success: true, data: user })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 const getAllEditors = async (req, res, next) => {
   try {
-    const editors = await adminService.getAllEditors();
-    return { editors };
+    const editors = await adminService.getAllEditors()
+    return { editors }
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Assigns a role to a user.
@@ -88,14 +88,14 @@ const getAllEditors = async (req, res, next) => {
  */
 const assignUserRole = async (req, res, next) => {
   try {
-    const userId = req.params.userId;
-    const { role } = req.body;
-    const user = await adminService.assignUserRole(userId, role);
-    res.status(200).json({ success: true, data: user });
+    const userId = req.params.userId
+    const { role } = req.body
+    const user = await adminService.assignUserRole(userId, role)
+    res.status(200).json({ success: true, data: user })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Deletes a user from the database.
@@ -114,15 +114,13 @@ const assignUserRole = async (req, res, next) => {
  */
 const deleteUser = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    await adminService.deleteUser(userId);
-    res
-      .status(200)
-      .json({ success: true, message: "User deleted successfully" });
+    const { userId } = req.params
+    await adminService.deleteUser(userId)
+    res.status(200).json({ success: true, message: 'User deleted successfully' })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Creates a new category in the database.
@@ -144,13 +142,13 @@ const deleteUser = async (req, res, next) => {
  */
 const createCategory = async (req, res, next) => {
   try {
-    const data = req.body;
-    const category = await adminService.createCategory(data);
-    res.status(201).json({ success: true, data: category });
+    const data = req.body
+    const category = await adminService.createCategory(data)
+    res.status(201).json({ success: true, data: category })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Updates an existing category in the database.
@@ -172,21 +170,18 @@ const createCategory = async (req, res, next) => {
 const updateCategory = async (req, res, next) => {
   try {
     // Extract update data from the request body
-    const data = req.body;
+    const data = req.body
 
     // Call the admin service to update the category with the given ID and data
-    const category = await adminService.updateCategory(
-      req.params.categoryId,
-      data
-    );
+    const category = await adminService.updateCategory(req.params.categoryId, data)
 
     // Send a success response with the updated category data
-    res.status(200).json({ success: true, data: category });
+    res.status(200).json({ success: true, data: category })
   } catch (error) {
     // Pass any errors to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Deletes a category from the database.
@@ -208,18 +203,18 @@ const updateCategory = async (req, res, next) => {
 const deleteCategory = async (req, res, next) => {
   try {
     // Delete the category with the given ID from the database
-    await adminService.deleteCategory(req.params.categoryId);
+    await adminService.deleteCategory(req.params.categoryId)
 
     // Send a success response with a success message
     res.status(200).json({
       success: true,
-      message: "Category deleted successfully",
-    });
+      message: 'Category deleted successfully',
+    })
   } catch (error) {
     // Pass any errors to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Assigns categories to an editor.
@@ -244,17 +239,14 @@ const deleteCategory = async (req, res, next) => {
  */
 const assignCategoriesToEditor = async (req, res, next) => {
   try {
-    const editorId = req.params.editorId;
-    const { categoryIds } = req.body;
-    const assignments = await adminService.assignCategoriesToEditor(
-      editorId,
-      categoryIds
-    );
-    res.status(200).json({ success: true, data: assignments });
+    const editorId = req.params.editorId
+    const { categoryIds } = req.body
+    const assignments = await adminService.assignCategoriesToEditor(editorId, categoryIds)
+    res.status(200).json({ success: true, data: assignments })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export default {
   getAllUsers,
@@ -266,4 +258,4 @@ export default {
   updateCategory,
   deleteCategory,
   assignCategoriesToEditor,
-};
+}
