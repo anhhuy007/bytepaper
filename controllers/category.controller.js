@@ -1,6 +1,6 @@
 // controllers/categoryController.js
 
-import categoryService from "../services/category.service.js";
+import categoryService from '../services/category.service.js'
 
 /**
  * Retrieves all categories from the database.
@@ -19,13 +19,13 @@ import categoryService from "../services/category.service.js";
  */
 const getAllCategories = async (req, res, next) => {
   try {
-    const categories = await categoryService.getAllCategories();
+    const categories = await categoryService.getAllCategories()
     // res.status(200).json({ success: true, data: categories });
-    return { categories };
+    return { categories }
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Retrieves a category by its ID.
@@ -59,12 +59,12 @@ const getAllCategories = async (req, res, next) => {
  */
 const getCategoryById = async (req, res, next) => {
   try {
-    const category = await categoryService.getCategoryById(req.params.id);
-    res.status(200).json({ success: true, data: category });
+    const category = await categoryService.getCategoryById(req.params.id)
+    res.status(200).json({ success: true, data: category })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Creates a new category in the database.
@@ -98,13 +98,13 @@ const getCategoryById = async (req, res, next) => {
  */
 const createCategory = async (req, res, next) => {
   try {
-    const data = req.body;
-    const category = await categoryService.createCategory(data);
-    res.status(201).json({ success: true, data: category });
+    const data = req.body
+    const category = await categoryService.createCategory(data)
+    res.status(201).json({ success: true, data: category })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Updates an existing category in the database.
@@ -138,13 +138,13 @@ const createCategory = async (req, res, next) => {
  */
 const updateCategory = async (req, res, next) => {
   try {
-    const data = req.body;
-    const category = await categoryService.updateCategory(req.params.id, data);
-    res.status(200).json({ success: true, data: category });
+    const data = req.body
+    const category = await categoryService.updateCategory(req.params.id, data)
+    res.status(200).json({ success: true, data: category })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Deletes a category from the database.
@@ -165,14 +165,12 @@ const updateCategory = async (req, res, next) => {
  */
 const deleteCategory = async (req, res, next) => {
   try {
-    await categoryService.deleteCategory(req.params.id);
-    res
-      .status(200)
-      .json({ success: true, message: "Category deleted successfully" });
+    await categoryService.deleteCategory(req.params.id)
+    res.status(200).json({ success: true, message: 'Category deleted successfully' })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export default {
   getAllCategories,
@@ -180,4 +178,4 @@ export default {
   createCategory,
   updateCategory,
   deleteCategory,
-};
+}

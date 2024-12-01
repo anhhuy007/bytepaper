@@ -1,6 +1,6 @@
 // controllers/commentController.js
 
-import commentService from "../services/comment.service.js";
+import commentService from '../services/comment.service.js'
 
 /**
  * Retrieves a list of comments associated with the specified article ID.
@@ -49,27 +49,24 @@ import commentService from "../services/comment.service.js";
  */
 const getCommentsByArticleId = async (req, res, next) => {
   // Retrieve the article ID from the request
-  const articleId = req.params.articleId;
+  const articleId = req.params.articleId
 
   // Retrieve the options from the request query
   const options = {
     limit: parseInt(req.query.limit) || 10,
     offset: parseInt(req.query.offset) || 0,
-  };
+  }
 
   // Retrieve the comments associated with the given article ID
   try {
-    const comments = await commentService.getCommentsByArticleId(
-      articleId,
-      options
-    );
+    const comments = await commentService.getCommentsByArticleId(articleId, options)
     // Return the comments as JSON response
-    res.status(200).json({ success: true, data: comments });
+    res.status(200).json({ success: true, data: comments })
   } catch (error) {
     // If any error occurs, pass it to the next middleware function
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Adds a comment to an article.
@@ -107,25 +104,20 @@ const getCommentsByArticleId = async (req, res, next) => {
  */
 const addCommentToArticle = async (req, res, next) => {
   // Extract the article ID and comment content from the request
-  const articleId = req.params.articleId;
-  const { content } = req.body;
-
+  const articleId = req.params.articleId
+  const { content } = req.body
 
   try {
     // Add the comment to the database
-    const comment = await commentService.addCommentToArticle(
-      articleId,
-      req.user.id,
-      content
-    );
+    const comment = await commentService.addCommentToArticle(articleId, req.user.id, content)
 
     // Send the newly created comment as a JSON response
-    res.status(201).json({ success: true, data: comment });
+    res.status(201).json({ success: true, data: comment })
   } catch (error) {
     // If any error occurs, pass it to the next middleware function
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Updates a comment in the database.
@@ -158,23 +150,19 @@ const addCommentToArticle = async (req, res, next) => {
 const updateComment = async (req, res, next) => {
   try {
     // Extract the comment ID and update content from the request
-    const commentId = req.params.commentId;
-    const { content } = req.body;
+    const commentId = req.params.commentId
+    const { content } = req.body
 
     // Update the comment in the database
-    const comment = await commentService.updateComment(
-      commentId,
-      req.user.id,
-      content
-    );
+    const comment = await commentService.updateComment(commentId, req.user.id, content)
 
     // Send the updated comment as a JSON response
-    res.status(200).json({ success: true, data: comment });
+    res.status(200).json({ success: true, data: comment })
   } catch (error) {
     // If any error occurs, pass it to the next middleware function
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Deletes a comment from the database.
@@ -199,27 +187,25 @@ const updateComment = async (req, res, next) => {
 const deleteComment = async (req, res, next) => {
   try {
     // Extract the comment ID from the request parameters
-    const commentId = req.params.commentId;
+    const commentId = req.params.commentId
 
     // Extract the user ID from the authenticated request
-    const userId = req.user.id;
+    const userId = req.user.id
 
     // Delete the comment using the comment service
-    await commentService.deleteComment(commentId, userId);
+    await commentService.deleteComment(commentId, userId)
 
     // Send a success response indicating the comment was deleted
-    res
-      .status(200)
-      .json({ success: true, message: "Comment deleted successfully" });
+    res.status(200).json({ success: true, message: 'Comment deleted successfully' })
   } catch (error) {
     // Pass any errors to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 export default {
   getCommentsByArticleId,
   addCommentToArticle,
   updateComment,
   deleteComment,
-};
+}

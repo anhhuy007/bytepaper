@@ -1,6 +1,6 @@
 // controllers/authController.js
 
-import userService from "../services/user.service.js";
+import userService from '../services/user.service.js'
 
 /**
  * Registers a new user.
@@ -27,14 +27,13 @@ import userService from "../services/user.service.js";
 const register = async (req, res, next) => {
   try {
     // Extract the user data from the request body
-    const { username, email, password, full_name } = req.body;
+    const { username, email, password, full_name } = req.body
 
     if (!username || !email || !password || !full_name) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please provide all required fields (username, email, password, full_name)",
-      });
+        message: 'Please provide all required fields (username, email, password, full_name)',
+      })
     }
 
     // Register the user with the service
@@ -43,15 +42,15 @@ const register = async (req, res, next) => {
       email,
       password,
       full_name,
-    });
+    })
 
     // Return a success response with the new user data
-    res.status(201).json({ success: true, data: user });
+    res.status(201).json({ success: true, data: user })
   } catch (error) {
     // If an error occurs, pass it to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Logs in a user with the provided credentials.
@@ -68,21 +67,21 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     // Extract username and password from the request body
-    const { username, password } = req.body;
+    const { username, password } = req.body
 
     // Authenticate the user with the service
     const { user, token } = await userService.authenticateUser({
       username,
       password,
-    });
+    })
 
     // Return a success response with the user data and token
-    res.status(200).json({ success: true, data: { user, token } });
+    res.status(200).json({ success: true, data: { user, token } })
   } catch (error) {
     // If an error occurs, pass it to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Sends a password reset OTP to the user with the given email address.
@@ -100,25 +99,23 @@ const login = async (req, res, next) => {
 const forgotPassword = async (req, res, next) => {
   try {
     // Extract the email address from the request body
-    const { email } = req.body;
+    const { email } = req.body
 
     // Check if email is provided
     if (!email) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Email is required." });
+      return res.status(400).json({ success: false, message: 'Email is required.' })
     }
 
     // Send the OTP to the user
-    await userService.sendPasswordResetOtp(email);
+    await userService.sendPasswordResetOtp(email)
 
     // Return a success response with a message
-    res.status(200).json({ success: true, message: "OTP sent to email" });
+    res.status(200).json({ success: true, message: 'OTP sent to email' })
   } catch (error) {
     // If an error occurs, pass it to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Resets a user's password using the provided OTP code and new password.
@@ -137,33 +134,30 @@ const forgotPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   try {
     // Extract the email address, OTP code, and new password from the request body
-    const { email, otpCode, newPassword } = req.body;
+    const { email, otpCode, newPassword } = req.body
 
     // Check if email, OTP code, and new password are provided
     if (!email || !otpCode || !newPassword) {
       return res.status(400).json({
         success: false,
-        message: "Email, OTP code, and new password are required.",
-      });
+        message: 'Email, OTP code, and new password are required.',
+      })
     }
 
-    
     // Reset the user's password using the service
-    await userService.resetPassword(email, otpCode, newPassword);
+    await userService.resetPassword(email, otpCode, newPassword)
 
     // Return a success response with a message
-    res
-      .status(200)
-      .json({ success: true, message: "Password reset successful" });
+    res.status(200).json({ success: true, message: 'Password reset successful' })
   } catch (error) {
     // If an error occurs, pass it to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 export default {
   register,
   login,
   forgotPassword,
   resetPassword,
-};
+}

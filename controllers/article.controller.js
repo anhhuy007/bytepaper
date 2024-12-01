@@ -1,6 +1,7 @@
 // controllers/article.controller.js
 
-import articleService from "../services/article.service.js";
+import articleService from '../services/article.service.js'
+import tagService from '../services/tag.service.js'
 /**
  * Retrieves a list of articles from the database based on the provided filters and options.
  *
@@ -51,11 +52,11 @@ const getAllArticles = async (req, res, next) => {
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
-      orderBy: req.query.orderBy || "a.published_at DESC",
-    };
-    const articles = await articleService.getAllArticles(filters, options);
+      orderBy: req.query.orderBy || 'a.published_at DESC',
+    }
+    const articles = await articleService.getAllArticles(filters, options)
     // res.status(200).json({ success: true, data: articles });
-    return { articles };
+    return { articles }
   } catch (error) {
     next(error)
   }
@@ -105,7 +106,7 @@ const getArticleById = async (req, res, next) => {
     const article = await articleService.getArticleById(req.params.id)
     // Return the article as JSON response
     // res.status(200).json({ success: true, data: article });
-    return { article };
+    return { article }
   } catch (error) {
     // If any error occurs, pass it to the next middleware function
     next(error)
@@ -149,7 +150,7 @@ const searchArticles = async (req, res, next) => {
 
     // Send the search results as a JSON response
     // res.status(200).json({ success: true, data: articles });
-    return { articles };
+    return { articles }
   } catch (error) {
     // Pass any errors to the next middleware for handling
     next(error)
@@ -231,28 +232,25 @@ const getArticlesByCategory = async (req, res, next) => {
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
-    };
-    const articles = await articleService.getArticlesByCategory(
-      categoryId,
-      options
-    );
+    }
+    const articles = await articleService.getArticlesByCategory(categoryId, options)
     // res.status(200).json({ success: true, data: articles });
-    return { articles };
+    return { articles }
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 const getArticlesByTag = async (req, res, next) => {
   try {
-    const { tagId } = req.params;
+    const { tagId } = req.params
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
-    };
-    const articles = await tagService.getArticlesByTagId(tagId, options);
+    }
+    const articles = await tagService.getArticlesByTagId(tagId, options)
     // res.status(200).json({ success: true, data: articles });
-    return { articles };
+    return { articles }
   } catch (error) {
     next(error)
   }
@@ -360,17 +358,17 @@ const downloadArticle = async (req, res, next) => {
 // GET /api/v1/articles/home?type=(featured|most-viewed|newest|top-categories)
 const getHomepageArticles = async (req, res, next) => {
   try {
-    const type = req.query.type;
-    const homepageData = await articleService.getHomepageArticles(type);
+    const type = req.query.type
+    const homepageData = await articleService.getHomepageArticles(type)
     // res.status(200).json({
     //   success: true,
     //   data: homepageData,
     // });
-    return { homepageData };
+    return { homepageData }
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export default {
   getAllArticles,
@@ -381,4 +379,4 @@ export default {
   increaseArticleViewCount,
   downloadArticle,
   getHomepageArticles,
-};
+}
