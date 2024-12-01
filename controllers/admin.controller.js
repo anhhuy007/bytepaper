@@ -1,4 +1,4 @@
-// controllers/adminController.js
+// controllers/admin.controller.js
 
 import adminService from "../services/admin.service.js";
 import userService from "../services/user.service.js";
@@ -57,6 +57,15 @@ const getUserById = async (req, res, next) => {
     const userId = req.params.userId;
     const user = await userService.getUserById(userId);
     res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllEditors = async (req, res, next) => {
+  try {
+    const editors = await adminService.getAllEditors();
+    return { editors };
   } catch (error) {
     next(error);
   }
@@ -249,6 +258,7 @@ const assignCategoriesToEditor = async (req, res, next) => {
 
 export default {
   getAllUsers,
+  getAllEditors,
   getUserById,
   assignUserRole,
   deleteUser,

@@ -1,4 +1,4 @@
-// services/adminService.js
+// services/admin.service.js
 
 import userModel from "../models/user.model.js";
 import categoryModel from "../models/category.model.js";
@@ -220,6 +220,10 @@ class AdminService {
    */
   async getEditorsByCategory(categoryId) {
     return await editorCategoryModel.getEditorsByCategory(categoryId);
+  }
+
+  async getAllEditors() {
+    return await userModel.find({ role: "editor" });
   }
 }
 

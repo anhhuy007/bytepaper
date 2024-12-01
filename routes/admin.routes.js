@@ -2,7 +2,6 @@
 import express from "express";
 import adminController from "../controllers/admin.controller.js";
 import tagController from "../controllers/tag.controller.js";
-import articleController from "../controllers/article.controller.js";
 import categoryController from "../controllers/category.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import viewRenderer from "../utils/viewRenderer.js";
@@ -23,7 +22,10 @@ router.get(
 
 // @route   GET /api/v1/admin/users/:userId
 // @desc    Get user by ID
-router.get("/users/:userId", adminController.getUserById);
+router.get(
+  "/users/:userId",
+  viewRenderer("admin/user", adminController.getUserById)
+);
 
 // @route   PUT /api/v1/admin/users/:userId/role
 // @desc    Assign role to a user
@@ -41,6 +43,13 @@ router.delete("/users/:userId", adminController.deleteUser);
 router.get(
   "/categories",
   viewRenderer("admin/manage-categories", categoryController.getAllCategories)
+);
+
+// @route   GET /api/v1/admin/categories/:categoryId
+// @desc    Get category by ID
+router.get(
+  "/categories/:categoryId",
+  viewRenderer("admin/category", categoryController.getCategoryById)
 );
 
 // @route   POST /api/v1/admin/categories
@@ -64,6 +73,10 @@ router.get(
   viewRenderer("admin/manage-tags", tagController.getAllTags)
 );
 
+// @route   GET /api/v1/admin/tags/:tagId
+// @desc    Get tag by ID
+router.get("/tags/:tagId", viewRenderer("admin/tag", tagController.getTagById));
+
 // @route   POST /api/v1/admin/tags
 // @desc    Create a new tag
 router.post("/tags", tagController.createTag);
@@ -77,6 +90,22 @@ router.put("/tags/:tagId", tagController.updateTag);
 router.delete("/tags/:tagId", tagController.deleteTag);
 
 // Editor Management
+
+// @route   GET /api/v1/admin/editors
+// @desc    Get all editors
+
+router.get(
+  "/editors",
+  viewRenderer("admin/manage-editors", adminController.getAllEditors)
+);
+
+// @route   GET /api/v1/admin/editors/:editorId
+// @desc    Get editor by ID
+
+router.get(
+  "/editors/:userId",
+  viewRenderer("admin/editor", adminController.getUserById)
+);
 
 // @route   PUT /api/v1/admin/editors/:editorId/categories
 // @desc    Assign categories to an editor
