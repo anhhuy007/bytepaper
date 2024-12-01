@@ -1,3 +1,4 @@
+// controllers/subscription.controller.js
 import subscriptionService from "../services/subscription.service.js";
 
 /**
@@ -23,16 +24,21 @@ const getSubscriptionStatus = async (req, res, next) => {
 
     const isActive = new Date(subscription.expiry_date) > new Date();
 
-    res.status(200).json({
-      success: true,
-      data: {
-        isActive,
-        expiryDate: subscription.expiry_date,
-        message: isActive
-          ? "Subscription is active"
-          : "Subscription has expired",
-      },
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   data: {
+    //     isActive,
+    //     expiryDate: subscription.expiry_date,
+    //     message: isActive
+    //       ? "Subscription is active"
+    //       : "Subscription has expired",
+    //   },
+    // });
+    return {
+      isActive,
+      expiryDate: subscription.expiry_date,
+      message: isActive ? "Subscription is active" : "Subscription has expired",
+    };
   } catch (error) {
     next(error);
   }
