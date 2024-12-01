@@ -1,8 +1,4 @@
 // controllers/user.controller.js
-
-import articleService from "../services/article.service.js";
-import commentService from "../services/comment.service.js";
-import subscriptionService from "../services/subscription.service.js";
 import userService from "../services/user.service.js";
 
 /**
@@ -23,7 +19,8 @@ const getUserProfile = async (req, res, next) => {
     const user = await userService.getUserById(userId);
 
     // Return the user profile as JSON
-    res.status(200).json({ success: true, data: user });
+    // res.status(200).json({ success: true, data: user });
+    return { user };
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error);
