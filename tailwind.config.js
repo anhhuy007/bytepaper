@@ -1,15 +1,19 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./views/**/*.{html,js,handlebars,hbs}"],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ["'Times New Roman'", "serif"],
-      },
+import daisyui from 'daisyui'
+
+export const content = ['./views/**/*.{html,js,handlebars,hbs}']
+export const theme = {
+  extend: {
+    fontFamily: {
+      sans: ["'Times New Roman'", 'serif'],
     },
   },
-  daisyui: {
-    themes: ["lofi", "wireframe", "emerald"],
-  },
-  plugins: [require("daisyui")],
-};
+}
+export const plugins = [
+  [
+    daisyui,
+    {
+      themes: ['lofi', 'wireframe', 'emerald'],
+    },
+  ],
+]
