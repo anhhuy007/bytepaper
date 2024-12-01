@@ -1,22 +1,15 @@
+{{!-- views/layouts/main.hbs --}}
 <html data-theme="light">
-    <head>
-        <meta charset="utf-8" />
-        <title>Example App</title>
-        <link rel="stylesheet" href="/output.css" />
-        <link
-            href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"
-            rel="stylesheet"
-        />
+  <head>
+    <meta charset="utf-8" />
+    <title>Example App</title>
+    <link rel="stylesheet" href="/output.css" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="py-28 min-h-screen">{{{body}}}</div>
+    <div>{{> home/footer}}</div>
 
-    </head>
-    <body>
-
-    <div class="py-28 min-h-screen">
-    {{{body}}}
-    </div>
-
-    {{> home/footer}}
-
+    <script src="/script.js"></script>
   </body>
-  <script src="/script.js"></script>
 </html>

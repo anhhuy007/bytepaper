@@ -1,5 +1,5 @@
 {
-    "watch": ["./views", "./public", "./routes", "./models", "./lib", "app.js"],
-    "ext": "js,html,css,hbs",
-    "exec": "node app.js"
+  "watch": ["./views", "./public", "./routes", "./models", "./lib", "app.js"],
+  "ext": "js,html,css,hbs",
+  "exec": "node app.js"
 }
