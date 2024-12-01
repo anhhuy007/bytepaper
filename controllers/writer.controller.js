@@ -1,4 +1,4 @@
-// controllers/writerController.js
+// controllers/writer.controller.js
 
 import articleService from "../services/article.service.js";
 
@@ -38,7 +38,8 @@ const getMyArticles = async (req, res, next) => {
     const articles = await articleService.getAllArticles(filters, options);
 
     // Send the retrieved articles as a JSON response
-    res.status(200).json({ success: true, data: articles });
+    // res.status(200).json({ success: true, data: articles });
+    return { articles };
   } catch (error) {
     // Pass any errors to the next middleware function
     next(error);
