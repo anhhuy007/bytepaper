@@ -1,6 +1,6 @@
 // services/subscription.service.js
 
-import subscriptionModel from "../models/subscription.model.js";
+import subscriptionModel from '../models/subscription.model.js'
 
 class SubscriptionService {
   /**
@@ -17,7 +17,7 @@ class SubscriptionService {
    * // { user_id: 1, expiry_date: "...", created_at: "...", updated_at: "..." }
    */
   async getSubscriptionByUserId(userId) {
-    return await subscriptionModel.findByUserId(userId);
+    return await subscriptionModel.findByUserId(userId)
   }
 
   /**
@@ -36,16 +36,16 @@ class SubscriptionService {
    * // { user_id: 1, expiry_date: "...", created_at: "...", updated_at: "..." }
    */
   async createOrUpdateSubscription(userId, days) {
-    const existingSubscription = await subscriptionModel.findByUserId(userId);
+    const existingSubscription = await subscriptionModel.findByUserId(userId)
 
     const newExpiryDate = existingSubscription
       ? new Date(existingSubscription.expiry_date)
-      : new Date();
+      : new Date()
 
     // Extend expiry date by the specified days
-    newExpiryDate.setDate(newExpiryDate.getDate() + days);
+    newExpiryDate.setDate(newExpiryDate.getDate() + days)
 
-    return await subscriptionModel.upsert(userId, newExpiryDate);
+    return await subscriptionModel.upsert(userId, newExpiryDate)
   }
 
   /**
@@ -63,11 +63,11 @@ class SubscriptionService {
    * // true or false
    */
   async checkSubscriptionValidity(userId) {
-    const subscription = await subscriptionModel.findByUserId(userId);
+    const subscription = await subscriptionModel.findByUserId(userId)
     if (!subscription) {
-      return false;
+      return false
     }
-    return new Date(subscription.expiry_date) > new Date();
+    return new Date(subscription.expiry_date) > new Date()
   }
 
   /**
@@ -85,8 +85,8 @@ class SubscriptionService {
    * // { user_id: 1, expiry_date: "...", created_at: "...", updated_at: "..." }
    */
   async cancelSubscription(userId) {
-    return await subscriptionModel.deleteSubscription(userId);
+    return await subscriptionModel.deleteSubscription(userId)
   }
 }
 
-export default new SubscriptionService();
+export default new SubscriptionService()

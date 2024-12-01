@@ -1,6 +1,6 @@
 // services/commentService.js
 
-import commentModel from "../models/comment.model.js";
+import commentModel from '../models/comment.model.js'
 
 class CommentService {
   /**
@@ -42,7 +42,7 @@ class CommentService {
    * ]
    */
   async getCommentsByArticleId(articleId, options = {}) {
-    return await commentModel.getCommentsByArticleId(articleId, options);
+    return await commentModel.getCommentsByArticleId(articleId, options)
   }
 
   /**
@@ -64,7 +64,7 @@ class CommentService {
   async addCommentToArticle(articleId, userId, content) {
     // Validate the article ID, user ID, and content
     if (!articleId || !userId || !content) {
-      throw new Error("Article ID, user ID, and content are required");
+      throw new Error('Article ID, user ID, and content are required')
     }
 
     // Create the new comment
@@ -72,10 +72,10 @@ class CommentService {
       article_id: articleId,
       user_id: userId,
       content,
-    };
+    }
 
     // Call the createComment method of the commentModel
-    return await commentModel.createComment(newComment);
+    return await commentModel.createComment(newComment)
   }
 
   /**
@@ -92,20 +92,20 @@ class CommentService {
    */
   async updateComment(commentId, userId, content) {
     // Retrieve the existing comment by its ID
-    const comment = await commentModel.findById(commentId);
+    const comment = await commentModel.findById(commentId)
 
     // Check if the comment exists
     if (!comment) {
-      throw new Error("Comment not found");
+      throw new Error('Comment not found')
     }
 
     // Verify that the user is authorized to update the comment
     if (comment.user_id !== userId) {
-      throw new Error("Unauthorized");
+      throw new Error('Unauthorized')
     }
 
     // Update the comment content in the database
-    return await commentModel.updateComment(commentId, { content });
+    return await commentModel.updateComment(commentId, { content })
   }
 
   /**
@@ -121,20 +121,20 @@ class CommentService {
    */
   async deleteComment(commentId, userId) {
     // Retrieve the existing comment by its ID
-    const comment = await commentModel.findById(commentId);
+    const comment = await commentModel.findById(commentId)
 
     // Check if the comment exists
     if (!comment) {
-      throw new Error("Comment not found");
+      throw new Error('Comment not found')
     }
 
     // Verify that the user is authorized to delete the comment
     if (comment.user_id !== userId) {
-      throw new Error("Unauthorized");
+      throw new Error('Unauthorized')
     }
 
     // Delete the comment from the database
-    await commentModel.deleteComment(commentId);
+    await commentModel.deleteComment(commentId)
   }
 
   /**
@@ -146,8 +146,8 @@ class CommentService {
    * @throws {Error} If any error occurs while deleting the comments.
    */
   async deleteCommentByUserID(user_id) {
-    await commentModel.deleteCommentByUserID(user_id);
+    await commentModel.deleteCommentByUserID(user_id)
   }
 }
 
-export default new CommentService();
+export default new CommentService()

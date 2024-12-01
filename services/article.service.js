@@ -1,8 +1,7 @@
 // services/article.service.js
 
-import articleModel from "../models/article.model.js";
-import articleTagModel from "../models/articleTag.model.js";
-import redisClient from "../utils/redisClient.js";
+import articleModel from '../models/article.model.js'
+import articleTagModel from '../models/articleTag.model.js'
 class ArticleService {
   /**
    * Retrieves a list of articles from the database based on the provided filters
@@ -50,7 +49,7 @@ class ArticleService {
    * ]
    */
   async getAllArticles(filters = {}, options = {}) {
-    return await articleModel.getArticles(filters, options);
+    return await articleModel.getArticles(filters, options)
   }
 
   /**
@@ -98,13 +97,13 @@ class ArticleService {
    * }
    */
   async getArticleById(id) {
-    const article = await articleModel.getArticleById(id);
+    const article = await articleModel.getArticleById(id)
     if (!article) {
-      throw new Error("Article not found");
+      throw new Error('Article not found')
     }
-    const tags = await articleTagModel.getTagsByArticleId(id);
-    article.tags = tags;
-    return article;
+    const tags = await articleTagModel.getTagsByArticleId(id)
+    article.tags = tags
+    return article
   }
 
   /**
@@ -144,18 +143,18 @@ class ArticleService {
    */
   async createArticle(articleData, authorId) {
     //const { title, content, category_id, tag_ids = [] } = articleData;
-    const { title, content } = articleData;
+    const { title, content } = articleData
 
     const newArticle = {
       title,
       content,
       author_id: authorId,
-      status: "draft",
-    };
+      status: 'draft',
+    }
 
-    const createdArticle = await articleModel.createArticle(newArticle);
+    const createdArticle = await articleModel.createArticle(newArticle)
 
-    return createdArticle;
+    return createdArticle
   }
 
   /**
@@ -171,26 +170,26 @@ class ArticleService {
    * @returns {Promise<Object>} The updated article.
    */
   async updateArticle(id, articleData, authorId) {
-    const article = await articleModel.findById(id);
+    const article = await articleModel.findById(id)
     if (!article) {
-      throw new Error("Article not found");
+      throw new Error('Article not found')
     }
 
     if (article.author_id !== authorId) {
-      throw new Error("Unauthorized");
+      throw new Error('Unauthorized')
     }
 
     // Extract the tag IDs from the article data and update the article
-    const { tag_ids, ...updateData } = articleData;
-    const updatedArticle = await articleModel.updateArticle(id, updateData);
+    const { tag_ids, ...updateData } = articleData
+    const updatedArticle = await articleModel.updateArticle(id, updateData)
 
     // If there are tag IDs, remove them from the article and re-add them
     if (tag_ids) {
-      await articleTagModel.removeTagsFromArticle(id, tag_ids);
-      await articleTagModel.addTagsToArticle(id, tag_ids);
+      await articleTagModel.removeTagsFromArticle(id, tag_ids)
+      await articleTagModel.addTagsToArticle(id, tag_ids)
     }
 
-    return updatedArticle;
+    return updatedArticle
   }
 
   /**
@@ -207,18 +206,18 @@ class ArticleService {
    */
   async deleteArticle(id, authorId) {
     // Retrieve the article from the database
-    const article = await articleModel.findById(id);
+    const article = await articleModel.findById(id)
     if (!article) {
-      throw new Error("Article not found");
+      throw new Error('Article not found')
     }
 
     // Check if the author ID matches the article's author ID
     if (article.author_id !== authorId) {
-      throw new Error("Unauthorized");
+      throw new Error('Unauthorized')
     }
 
     // Delete the article from the database
-    return await articleModel.deleteArticle(id);
+    return await articleModel.deleteArticle(id)
   }
 
   /**
@@ -235,23 +234,23 @@ class ArticleService {
    */
   async submitArticleForApproval(id, authorId) {
     // Retrieve the article from the database
-    const article = await articleModel.findById(id);
+    const article = await articleModel.findById(id)
     if (!article) {
-      throw new Error("Article not found");
+      throw new Error('Article not found')
     }
 
     // Check if the author ID matches the article's author ID
     if (article.author_id !== authorId) {
-      throw new Error("Unauthorized");
+      throw new Error('Unauthorized')
     }
 
     // Check if the article is in draft status
-    if (article.status !== "draft") {
-      throw new Error("Article is not in draft status");
+    if (article.status !== 'draft') {
+      throw new Error('Article is not in draft status')
     }
 
     // Update the article status to "pending"
-    return await articleModel.updateArticle(id, { status: "pending" });
+    return await articleModel.updateArticle(id, { status: 'pending' })
   }
 
   /**
@@ -267,18 +266,18 @@ class ArticleService {
    */
   async approveArticle(id, editorId, categoryId, tagIds) {
     // Retrieve the article from the database
-    const article = await articleModel.findById(id);
+    const article = await articleModel.findById(id)
     if (!article) {
-      throw new Error("Article not found");
+      throw new Error('Article not found')
     }
 
     // Check if the article is in pending status
-    if (article.status !== "pending") {
-      throw new Error("Article is not pending approval");
+    if (article.status !== 'pending') {
+      throw new Error('Article is not pending approval')
     }
 
     if (tagIds.length > 0) {
-      await articleTagModel.addTagsToArticle(id, tagIds);
+      await articleTagModel.addTagsToArticle(id, tagIds)
     }
 
     // Allow the editor to approve the article only if they have the rights to do so
@@ -286,11 +285,11 @@ class ArticleService {
 
     // Update the article status to "published" and set the published_at field to the current date
     return await articleModel.updateArticle(id, {
-      status: "published",
+      status: 'published',
       published_at: new Date(),
       editor_id: editorId,
       category_id: categoryId,
-    });
+    })
   }
 
   /**
@@ -307,24 +306,24 @@ class ArticleService {
    */
   async rejectArticle(id, editorId, rejectionReason) {
     // Retrieve the article from the database
-    const article = await articleModel.findById(id);
+    const article = await articleModel.findById(id)
     if (!article) {
-      throw new Error("Article not found");
+      throw new Error('Article not found')
     }
 
     // Check if the article is in pending status
-    if (article.status !== "pending") {
-      throw new Error("Article is not pending approval");
+    if (article.status !== 'pending') {
+      throw new Error('Article is not pending approval')
     }
 
     // Additional logic to check if editor has rights to reject this article
 
     // Update the article status to "rejected" and set the rejection_reason field to the provided reason
     return await articleModel.updateArticle(id, {
-      status: "rejected",
+      status: 'rejected',
       rejection_reason: rejectionReason,
       editor_id: editorId,
-    });
+    })
   }
 
   /**
@@ -361,8 +360,8 @@ class ArticleService {
     // Chuẩn hóa từ khóa để sử dụng trong to_tsquery
     const formattedKeyword = keyword
       .trim() // Loại bỏ khoảng trắng ở đầu/cuối
-      .replace(/\s+/g, " & "); // Thay khoảng trắng bằng & để dùng trong to_tsquery
-    return await articleModel.searchArticles(formattedKeyword, options);
+      .replace(/\s+/g, ' & ') // Thay khoảng trắng bằng & để dùng trong to_tsquery
+    return await articleModel.searchArticles(formattedKeyword, options)
   }
 
   /**
@@ -385,7 +384,7 @@ class ArticleService {
    */
   async getArticlesByCategory(categoryId, options = {}) {
     // Delegate the request to the article model to get articles by the specified category ID
-    return await articleModel.getArticlesByCategory(categoryId, options);
+    return await articleModel.getArticlesByCategory(categoryId, options)
   }
 
   /**
@@ -409,18 +408,15 @@ class ArticleService {
    */
   async getRelatedArticles(articleId) {
     // Retrieve the specified article
-    const article = await articleModel.findById(articleId);
+    const article = await articleModel.findById(articleId)
 
     // If the article does not exist, throw an error
     if (!article) {
-      throw new Error("Article not found");
+      throw new Error('Article not found')
     }
 
     // Retrieve related articles using the article model
-    return await articleModel.getRelatedArticles(
-      article.category_id,
-      articleId
-    );
+    return await articleModel.getRelatedArticles(article.category_id, articleId)
   }
 
   /**
@@ -438,7 +434,7 @@ class ArticleService {
    */
   async increaseArticleViewCount(id) {
     // Delegate the request to the article model to increase the view count
-    return await articleModel.increaseViewCount(id);
+    return await articleModel.increaseViewCount(id)
   }
 
   /**
@@ -468,31 +464,31 @@ class ArticleService {
    * @throws {Error} If any error occurs while deleting the articles.
    */
   async deleteArticleByUserID(user_id) {
-    await articleModel.deleteArticleByUserID(user_id);
+    await articleModel.deleteArticleByUserID(user_id)
   }
 
   async getHomepageArticles(type) {
-    let result;
+    let result
 
     switch (type) {
-      case "featured":
-        result = await articleModel.getFeaturedArticles();
-        break;
-      case "most-viewed":
-        result = await articleModel.getMostViewedArticles();
-        break;
-      case "newest":
-        result = await articleModel.getNewestArticles();
-        break;
-      case "top-categories":
-        result = await articleModel.getTopCategoryArticles();
-        break;
+      case 'featured':
+        result = await articleModel.getFeaturedArticles()
+        break
+      case 'most-viewed':
+        result = await articleModel.getMostViewedArticles()
+        break
+      case 'newest':
+        result = await articleModel.getNewestArticles()
+        break
+      case 'top-categories':
+        result = await articleModel.getTopCategoryArticles()
+        break
       default:
-        result = await articleModel.getHomepageArticles();
+        result = await articleModel.getHomepageArticles()
     }
 
-    return result;
+    return result
   }
 }
 
-export default new ArticleService();
+export default new ArticleService()
