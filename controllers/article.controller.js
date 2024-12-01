@@ -1,7 +1,6 @@
 // controllers/article.controller.js
 
 import articleService from "../services/article.service.js";
-import tagService from "../services/tag.service.js";
 /**
  * Retrieves a list of articles from the database based on the provided filters and options.
  *
@@ -48,7 +47,7 @@ import tagService from "../services/tag.service.js";
  */
 const getAllArticles = async (req, res, next) => {
   try {
-    const filters = req.query;
+    const filters = req.query
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
@@ -58,9 +57,9 @@ const getAllArticles = async (req, res, next) => {
     // res.status(200).json({ success: true, data: articles });
     return { articles };
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Retrieves an article by its ID.
@@ -103,15 +102,15 @@ const getAllArticles = async (req, res, next) => {
 const getArticleById = async (req, res, next) => {
   try {
     // Retrieve the article by its ID
-    const article = await articleService.getArticleById(req.params.id);
+    const article = await articleService.getArticleById(req.params.id)
     // Return the article as JSON response
     // res.status(200).json({ success: true, data: article });
     return { article };
   } catch (error) {
     // If any error occurs, pass it to the next middleware function
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Searches for articles based on a keyword.
@@ -135,27 +134,27 @@ const getArticleById = async (req, res, next) => {
 const searchArticles = async (req, res, next) => {
   try {
     // Extract the search keyword from the query parameters
-    const keyword = req.query.q;
+    const keyword = req.query.q
 
-    console.log("==================> keyword", keyword);
+    console.log('==================> keyword', keyword)
 
     // Define search options for pagination
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
-    };
+    }
 
     // Perform the search using the article service
-    const articles = await articleService.searchArticles(keyword, options);
+    const articles = await articleService.searchArticles(keyword, options)
 
     // Send the search results as a JSON response
     // res.status(200).json({ success: true, data: articles });
     return { articles };
   } catch (error) {
     // Pass any errors to the next middleware for handling
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Retrieves a list of articles that belong to a specific category.
@@ -228,7 +227,7 @@ const searchArticles = async (req, res, next) => {
  */
 const getArticlesByCategory = async (req, res, next) => {
   try {
-    const categoryId = req.params.categoryId;
+    const categoryId = req.params.categoryId
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
@@ -255,9 +254,9 @@ const getArticlesByTag = async (req, res, next) => {
     // res.status(200).json({ success: true, data: articles });
     return { articles };
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Increases the view count of an article by 1.
@@ -280,21 +279,21 @@ const getArticlesByTag = async (req, res, next) => {
 const increaseArticleViewCount = async (req, res, next) => {
   try {
     // Extract the article ID from the request parameters
-    const { id } = req.params;
+    const { id } = req.params
 
     // Increase the article's view count using the article service
-    const views = await articleService.increaseArticleViewCount(id);
+    const views = await articleService.increaseArticleViewCount(id)
 
     // Send a success response with the updated view count
     res.status(200).json({
       success: true,
       data: views,
-    });
+    })
   } catch (error) {
     // Pass any errors to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 /**
  * Downloads an article as a file.
@@ -322,47 +321,41 @@ const increaseArticleViewCount = async (req, res, next) => {
 const downloadArticle = async (req, res, next) => {
   try {
     // Retrieve the article ID from the request parameters
-    const { id } = req.params;
+    const { id } = req.params
 
     // Retrieve the article from the database
-    const article = await articleService.getArticleById(id);
+    const article = await articleService.getArticleById(id)
 
     // Check if the article is found
     if (!article) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Article not found" });
+      return res.status(404).json({ success: false, message: 'Article not found' })
     }
 
     // Check if the article is premium
     if (article.is_premium) {
-      return res.status(403).json({ success: false, message: "Unauthorized" });
+      return res.status(403).json({ success: false, message: 'Unauthorized' })
     }
 
     // Check if the article is published
-    if (article.status !== "published") {
-      return res
-        .status(403)
-        .json({ success: false, message: "Article not published" });
+    if (article.status !== 'published') {
+      return res.status(403).json({ success: false, message: 'Article not published' })
     }
 
     // Download the file associated with the article
-    const file = await articleService.downloadArticle(id);
+    const file = await articleService.downloadArticle(id)
 
     // Check if the file is found
     if (!file) {
-      return res
-        .status(404)
-        .json({ success: false, message: "File not found" });
+      return res.status(404).json({ success: false, message: 'File not found' })
     }
 
     // Send the file as a response
-    res.download(file.path);
+    res.download(file.path)
   } catch (error) {
     // Pass any errors to the next middleware
-    next(error);
+    next(error)
   }
-};
+}
 
 // GET /api/v1/articles/home?type=(featured|most-viewed|newest|top-categories)
 const getHomepageArticles = async (req, res, next) => {
