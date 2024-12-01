@@ -4,7 +4,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
-import userService from "../services/userService.js";
+import userService from "../services/user.service.js";
 
 dotenv.config();
 
@@ -53,23 +53,23 @@ passport.use(
   })
 );
 
-// TODO: Google Strategy for OAuth authentication
-// passport.use(
-//   new GoogleStrategy(
-//     {
-//       clientID: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//       callbackURL: "/api/auth/google/callback",
-//     },
-//     async (accessToken, refreshToken, profile, done) => {
-//       try {
-//         const user = await userService.findOrCreateByGoogle(profile);
-//         return done(null, user);
-//       } catch (error) {
-//         return done(error, false);
-//       }
-//     }
-//   )
-// );
+// Google Strategy for OAuth authentication
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/api/v1/auth/google/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const user = await userService.findOrCreateByGoogle(profile);
+        return done(null, user);
+      } catch (error) {
+        return done(error, false);
+      }
+    }
+  )
+);
 
 export default passport;

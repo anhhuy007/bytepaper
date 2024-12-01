@@ -1,19 +1,21 @@
+// app.js
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
+import routes from "./routes/index.routes.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import passport from "./config/passport.js";
 import session from "express-session";
-import passport from "./config/passport.js"; // Passport setup
-import routes from "./routes/index.js"; // API routes
-import errorHandler from "./middlewares/errorHandler.js"; // Custom error handler
 import path from "path";
 import { fileURLToPath } from "url";
 import { engine } from "express-handlebars";
-
 import livereload from "livereload";
 import connectLivereload from "connect-livereload";
-import { newsData } from "./lib/dummy.js"; // Dummy news data for development
+import redisClient from "./utils/redisClient.js";
+import { RedisStore } from "connect-redis";
+import { newsData } from "./lib/dummy.js";
 
 dotenv.config();
 
@@ -27,40 +29,28 @@ const isDev = process.env.NODE_ENV === "dev";
 const app = express();
 
 /* ---------- Middleware ---------- */
-
-// Parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Enable CORS
 app.use(cors());
-
-// Helmet for security (CSP disabled for development)
 app.use(
     helmet({
-        contentSecurityPolicy: isDev ? false : undefined, // Disable CSP in dev for convenience
+        contentSecurityPolicy: isDev ? false : undefined,
     })
 );
-
-// Morgan for request logging
-app.use(morgan(isDev ? "dev" : "combined"));
-
-// Session setup (if needed for Passport or other strategies)
 app.use(
     session({
+        store: new RedisStore({ client: redisClient }),
         secret: process.env.SESSION_SECRET || "your_session_secret",
         resave: false,
         saveUninitialized: false,
+        cookie: { secure: process.env.NODE_ENV === "production" },
     })
 );
-
-// Passport initialization
+app.use(morgan(isDev ? "dev" : "combined"));
 app.use(passport.initialize());
 app.use(passport.session());
-
-// Serve static files
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static("uploads")); // Uploaded files
+app.use("/uploads", express.static("uploads"));
 
 /* ---------- Handlebars Setup ---------- */
 app.engine(
@@ -79,11 +69,8 @@ app.set("views", path.join(__dirname, "views"));
 /* ---------- Live Reload for Development ---------- */
 if (isDev) {
     const liveReloadServer = livereload.createServer();
-    liveReloadServer.watch(path.join(__dirname, "views")); // Watch for changes in views
-
-    app.use(connectLivereload()); // Inject livereload script into responses
-
-    // Timeout to prevent premature reloads
+    liveReloadServer.watch(path.join(__dirname, "views"));
+    app.use(connectLivereload());
     liveReloadServer.server.once("connection", () => {
         setTimeout(() => {
             liveReloadServer.refresh("/");
@@ -92,18 +79,13 @@ if (isDev) {
 }
 
 /* ---------- Routes ---------- */
-
-// Home Route - Render the list of news
 app.get("/", (req, res) => {
     res.render("home", { news: newsData });
 });
 
-// News Detail Route
 app.get("/news/:id", (req, res) => {
-    const newsId = parseInt(req.params.id, 10); // Convert id to a number
+    const newsId = parseInt(req.params.id, 10);
     const newsItem = newsData.find((item) => item.id === newsId);
-
-    console.log(newsItem);
 
     if (newsItem) {
         res.render("news-detail", { ...newsItem });
@@ -112,14 +94,12 @@ app.get("/news/:id", (req, res) => {
     }
 });
 
-// Create Article Route
 app.get("/create-article", (req, res) => {
     res.render("create-article");
 });
 
-// Edit Article Route
 app.get("/edit-article/:id", (req, res) => {
-    const newsId = parseInt(req.params.id, 10); // Convert id to a number
+    const newsId = parseInt(req.params.id, 10);
     const newsItem = newsData.find((item) => item.id === newsId);
 
     if (newsItem) {
@@ -129,10 +109,7 @@ app.get("/edit-article/:id", (req, res) => {
     }
 });
 
-// API Routes
 app.use("/api/v1", routes);
-
-// Error Handler Middleware
 app.use(errorHandler);
 
 /* ---------- Start Server ---------- */
