@@ -52,7 +52,7 @@ class Database {
    * const res = await db.query("SELECT 1 + 1 AS result", []);
    * console.log(res.rows[0].result); // Output: 2
    */
-  async query(text, params) {
+  async query(text, params = []) {
     try {
       console.log("Executing Query:", text);
       console.log("With Parameters:", params);

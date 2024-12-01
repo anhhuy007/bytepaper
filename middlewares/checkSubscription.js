@@ -1,6 +1,6 @@
 // middlewares/checkSubscription.js
 
-import subscriptionService from "../services/subscriptionService.js";
+import subscriptionService from "../services/subscription.service.js";
 
 /**
  * Middleware that checks if a user's subscription is valid.

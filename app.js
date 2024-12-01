@@ -1,145 +1,118 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import morgan from 'morgan'
-import helmet from 'helmet'
-import cors from 'cors'
-import routes from './routes/index.js'
-import errorHandler from './middlewares/errorHandler.js'
-import passport from './config/passport.js'
-import session from 'express-session'
+// app.js
+import express from "express";
+import dotenv from "dotenv";
+import morgan from "morgan";
+import helmet from "helmet";
+import cors from "cors";
+import routes from "./routes/index.routes.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import passport from "./config/passport.js";
+import session from "express-session";
+import path from "path";
+import { fileURLToPath } from "url";
+import { engine } from "express-handlebars";
+import livereload from "livereload";
+import connectLivereload from "connect-livereload";
+import redisClient from "./utils/redisClient.js";
+import { RedisStore } from "connect-redis";
+import { newsData } from "./lib/dummy.js";
 
-import path from 'path'
-import { fileURLToPath } from 'url'
-import { engine } from 'express-handlebars'
-import livereload from 'livereload'
-import connectLivereload from 'connect-livereload'
-import { newsData } from './lib/dummy.js'
-import './helpers/handlebars.js' // Import helper
+dotenv.config();
 
-// Temporary data, remove later
-import categories from './data/categories.js'
-import { articles, articlesWithTags } from './data/categories.js'
-dotenv.config()
+// Application Constants
+const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const isDev = process.env.NODE_ENV === "dev";
 
-const app = express()
+// Initialize Express app
+const app = express();
 
-// Middleware
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(cors())
-app.use(helmet())
-app.use(morgan('dev'))
-
-// Session setup (if needed for strategies like OAuth)
+/* ---------- Middleware ---------- */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'your_session_secret',
-    resave: false,
-    saveUninitialized: false,
-  }),
-)
+    helmet({
+        contentSecurityPolicy: isDev ? false : undefined,
+    })
+);
+app.use(
+    session({
+        store: new RedisStore({ client: redisClient }),
+        secret: process.env.SESSION_SECRET || "your_session_secret",
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: process.env.NODE_ENV === "production" },
+    })
+);
+app.use(morgan(isDev ? "dev" : "combined"));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static("uploads"));
 
-// Initialize Passport and restore authentication state, if any, from the session
-app.use(passport.initialize())
-app.use(passport.session())
+/* ---------- Handlebars Setup ---------- */
+app.engine(
+    "hbs",
+    engine({
+        extname: "hbs",
+        partialsDir: path.join(__dirname, "views", "partials"),
+        helpers: {
+            eq: (a, b) => a === b,
+        },
+    })
+);
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "views"));
 
-// Static files (if needed)
-app.use('/uploads', express.static('uploads')) // Serve uploaded files
-
-// Use routes
-app.use('/api/v1', routes)
-
-// Error Handler Middleware
-app.use(errorHandler)
-
-// Start Server
-const PORT = process.env.PORT || 3000
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// By default hot reload for views isn't supported, so using this instead
-if (process.env.NODE_ENV === 'dev') {
-  const liveReloadServer = livereload.createServer()
-  liveReloadServer.watch(path.join(__dirname, 'views'))
-
-  app.use(connectLivereload())
-
-  // Timeout to prevent premature reloads
-  liveReloadServer.server.once('connection', () => {
-    setTimeout(() => {
-      liveReloadServer.refresh('/')
-    }, 100)
-  })
+/* ---------- Live Reload for Development ---------- */
+if (isDev) {
+    const liveReloadServer = livereload.createServer();
+    liveReloadServer.watch(path.join(__dirname, "views"));
+    app.use(connectLivereload());
+    liveReloadServer.server.once("connection", () => {
+        setTimeout(() => {
+            liveReloadServer.refresh("/");
+        }, 100);
+    });
 }
 
-app.engine(
-  'hbs',
-  engine({
-    extname: 'hbs',
-    partialsDir: path.join(__dirname, 'views', 'partials'),
-    defaultLayout: 'main',
-  }),
-)
-app.set('view engine', 'hbs')
-app.set('views', path.join(__dirname, 'views'))
+/* ---------- Routes ---------- */
+app.get("/", (req, res) => {
+    res.render("home", { news: newsData });
+});
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.get("/news/:id", (req, res) => {
+    const newsId = parseInt(req.params.id, 10);
+    const newsItem = newsData.find((item) => item.id === newsId);
 
-// Middleware to pass categories to all views
-app.use((req, res, next) => {
-  const groupedCategories = categories.reduce((acc, category) => {
-    if (!category.parent_name) {
-      acc.push({
-        id: category.id,
-        category: category.name,
-        subCategories: [],
-      })
+    if (newsItem) {
+        res.render("news-detail", { ...newsItem });
     } else {
-      const parentCategory = acc.find((item) => item.category === category.parent_name)
-      if (parentCategory) {
-        parentCategory.subCategories.push({
-          subId: category.id,
-          name: category.name,
-        })
-      }
+        res.status(404).send("News not found");
     }
-    return acc
-  }, [])
+});
 
-  res.locals.categories = groupedCategories
+app.get("/create-article", (req, res) => {
+    res.render("create-article");
+});
 
-  next()
-})
+app.get("/edit-article/:id", (req, res) => {
+    const newsId = parseInt(req.params.id, 10);
+    const newsItem = newsData.find((item) => item.id === newsId);
 
-app.get('/', (req, res) => {
-  res.render('home', { articles: articles })
-})
+    if (newsItem) {
+        res.render("edit-article", { ...newsItem });
+    } else {
+        res.status(404).send("News not found");
+    }
+});
 
-app.get('/categories/:id', (req, res) => {
-  const categoryId = parseInt(req.params.id, 10)
-  res.render('categories', { currentCategoryId: categoryId })
-})
+app.use("/api/v1", routes);
+app.use(errorHandler);
 
-app.get('/search', (req, res) => {
-  const articlesWithTagsData = articles.map((article) => {
-    const articleTags = articlesWithTags.find((item) => item.id === article.id)?.tags || []
-    return { ...article, tags: articleTags }
-  })
-
-  res.render('search', { articles: articlesWithTagsData })
-})
-
+/* ---------- Start Server ---------- */
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-})
-
-app.get('/news/:id', (req, res) => {
-  const newsId = parseInt(req.params.id, 10) // Convert id to a number
-  const newsItem = newsData.find((item) => item.id === newsId)
-
-  if (newsItem) {
-    res.render('news-detail', { news: newsItem })
-  } else {
-    res.status(404).send('News not found')
-  }
-})
+    console.log(`Server is running on port ${PORT}`);
+});

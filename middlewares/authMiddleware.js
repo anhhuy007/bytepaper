@@ -14,7 +14,9 @@ import passport from "passport";
  * @param {string[]} [roles] - The roles allowed to access the route
  * @returns {Function} - The middleware function
  */
-const authMiddleware = (roles = ["guest"]) => {
+const authMiddleware = (
+  roles = ["guest", "subscriber", "writer", "editor", "admin"]
+) => {
   /**
    * Checks if the request is authenticated and the user has the required role
    *
