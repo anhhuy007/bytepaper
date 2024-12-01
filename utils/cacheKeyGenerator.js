@@ -1,39 +1,39 @@
 // utils/cacheKeyGenerator.js
 
 const homeCacheKeyGenerator = (req) => {
-  const type = req.query.type || "all";
-  return `home:${type}`;
-};
+  const type = req.query.type || 'all'
+  return `home:${type}`
+}
 
 const articlesByCategoryCacheKeyGenerator = (req) => {
-  const categoryId = req.params.categoryId;
-  const limit = req.query.limit || 10;
-  const offset = req.query.offset || 0;
-  return `articles:category:${categoryId}:limit:${limit}:offset:${offset}`;
-};
+  const categoryId = req.params.categoryId
+  const limit = req.query.limit || 10
+  const offset = req.query.offset || 0
+  return `articles:category:${categoryId}:limit:${limit}:offset:${offset}`
+}
 
 const articlesByTagCacheKeyGenerator = (req) => {
-  const tagId = req.params.tagId;
-  const limit = req.query.limit || 10;
-  const offset = req.query.offset || 0;
-  return `articles:tag:${tagId}:limit:${limit}:offset:${offset}`;
-};
+  const tagId = req.params.tagId
+  const limit = req.query.limit || 10
+  const offset = req.query.offset || 0
+  return `articles:tag:${tagId}:limit:${limit}:offset:${offset}`
+}
 
 const articleDetailCacheKeyGenerator = (req) => {
-  const articleId = req.params.id;
-  return `article:${articleId}`;
-};
+  const articleId = req.params.id
+  return `article:${articleId}`
+}
 
 const searchCacheKeyGenerator = (req) => {
-  const q = req.query.q || "";
-  const limit = req.query.limit || 10;
-  const offset = req.query.offset || 0;
-  return `search:q:${q}:limit:${limit}:offset:${offset}`;
-};
+  const q = req.query.q || ''
+  const limit = req.query.limit || 10
+  const offset = req.query.offset || 0
+  return `search:q:${q}:limit:${limit}:offset:${offset}`
+}
 
-const categoryListCacheKeyGenerator = (req) => "categories:list";
+const categoryListCacheKeyGenerator = () => 'categories:list'
 
-const tagListCacheKeyGenerator = (req) => "tags:list";
+const tagListCacheKeyGenerator = () => 'tags:list'
 
 export default {
   homeCacheKeyGenerator,
@@ -43,4 +43,4 @@ export default {
   searchCacheKeyGenerator,
   categoryListCacheKeyGenerator,
   tagListCacheKeyGenerator,
-};
+}
