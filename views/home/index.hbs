@@ -1,1 +1,27 @@
 {{!-- views/home/index.hbs --}}
+<div class="space-y-28 px-64">
+  <div class="">
+    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
+      Bài viết nổi bật nhất trong tuần vừa qua
+    </h1>
+    {{> article/layout/carousel articles=articles}}
+  </div>
+  <div class="space-y-10">
+    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
+      Những bài viết được xem nhiều nhất
+    </h1>
+    {{> article/layout/basic articles=articles}}
+  </div>
+  <div class="space-y-10">
+    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
+      Những bài viết mới nhất
+    </h1>
+    {{> article/layout/basic articles=articles}}
+  </div>
+  <div class="space-y-10">
+    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
+      Top 10 chuyên mục
+    </h1>
+    {{> article/layout/tab articles=articles}}
+  </div>
+</div>

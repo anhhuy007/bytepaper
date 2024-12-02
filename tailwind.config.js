@@ -1,20 +1,17 @@
 // tailwind.config.js
-/** @type {import('tailwindcss').Config} */
-import daisyui from 'daisyui'
+const daisyui = require('daisyui')
 
-export const content = ['./views/**/*.{html,js,handlebars,hbs}']
-export const theme = {
-  extend: {
-    fontFamily: {
-      sans: ["'Times New Roman'", 'serif'],
+module.exports = {
+  content: ['./views/**/*.{html,js,handlebars,hbs}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        serif: ["'Times New Roman'", 'serif'],
+      },
     },
   },
+  plugins: [daisyui],
+  daisyui: {
+    themes: ['lofi', 'wireframe', 'emerald'],
+  },
 }
-export const plugins = [
-  [
-    daisyui,
-    {
-      themes: ['lofi', 'wireframe', 'emerald'],
-    },
-  ],
-]

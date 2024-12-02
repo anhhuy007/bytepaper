@@ -1,1 +1,37 @@
 {{!-- views/layouts/writer.hbs --}}
+<!DOCTYPE html>
+<html lang="en" data-theme="emerald">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{#if title}}{{title}} | {{/if}}Writer Panel - Paperly</title>
+    <link rel="stylesheet" href="/output.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div class="drawer drawer-mobile">
+      <input id="writer-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content flex flex-col">
+        {{> header}}
+        <main class="flex-grow container mx-auto px-4 py-6">{{{body}}}</main>
+        {{> footer}}
+      </div>
+      <div class="drawer-side">
+        <label for="writer-drawer" class="drawer-overlay"></label>
+        <aside class="w-64 bg-base-200">
+          <div class="menu p-4">
+            <h2 class="text-xl font-bold mb-4">Writer Menu</h2>
+            <ul>
+              <li><a href="/writer/dashboard" class="rounded">Dashboard</a></li>
+              <li><a href="/writer/articles" class="rounded">My Articles</a></li>
+              <li><a href="/writer/create-article" class="rounded">Create Article</a></li>
+              <li><a href="/writer/profile" class="rounded">Profile</a></li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <script src="/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.min.js"></script>
+  </body>
+</html>

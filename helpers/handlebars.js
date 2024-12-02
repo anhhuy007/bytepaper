@@ -1,3 +1,4 @@
+// helpers/handlebars.js
 import Handlebars from 'handlebars'
 
 Handlebars.registerHelper('eq', function (a, b) {
