@@ -79,20 +79,19 @@
 
       try {
         const response = await axios.post('/auth/login', { username, password })
-        console.log('Login successful:', response.data)
-
+        const data = response.data.data
         // Store user data
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('username', response.data.user.username)
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('username', data.user.username)
 
         // Redirect based on role
-        if (response.data.user.role === 'admin') {
-          window.location.href = '/admin/dashboard'
+        if (data.user.role === 'admin') {
+          window.location.href = '/'
         } else {
           window.location.href = '/'
         }
       } catch (error) {
-        console.error('Error during login:')
+        console.error('Error during login:', error)
 
         if (error.response) {
           console.error('Response error:', error.response.data)
