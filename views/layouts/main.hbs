@@ -5,13 +5,38 @@
     <meta charset="utf-8" />
     <title>{{#if title}}{{title}} | {{/if}}Paperly</title>
     <link rel="stylesheet" href="/output.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {{!-- Include Alpine.js --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    {{!-- Include Heroicons --}}
+    <script src="https://unpkg.com/heroicons@2.1.5/dist/heroicons.min.js"></script>
+
+    {{!-- Optional: Include AOS for animations --}}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   </head>
   <body class="flex flex-col min-h-screen">
+    {{!-- Header Partial --}}
     {{> header}}
-    <main class="flex-grow container mx-auto px-4">{{{body}}}</main>
+
+    {{!-- Main Content --}}
+    <main class="flex-grow container mx-auto px-4">
+      {{{body}}}
+    </main>
+
+    {{!-- Footer Partial --}}
     {{> footer}}
+
+    {{!-- Include your custom script if needed --}}
     <script src="/script.js"></script>
+
+    {{!-- Initialize AOS if you're using it --}}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        AOS.init();
+      });
+    </script>
   </body>
 </html>
