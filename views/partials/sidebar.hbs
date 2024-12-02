@@ -1,0 +1,30 @@
+{{!-- views/partials/sidebar.hbs --}}
+<aside class="w-full lg:w-64">
+  {{!-- Featured Articles --}}
+  <section class="mb-6">
+    <h2 class="text-xl font-bold mb-4">Featured Articles</h2>
+    {{#each featuredArticles}} {{> article-item this}} {{/each}}
+  </section>
+
+  {{!-- Categories List --}}
+  <section class="mb-6">
+    <h2 class="text-xl font-bold mb-4">Categories</h2>
+    <ul class="menu bg-base-100 rounded-box">
+      {{#each categories}}
+      <li>
+        <a href="/categories/{{id}}">{{name}}</a>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  {{!-- Tags Cloud --}}
+  <section>
+    <h2 class="text-xl font-bold mb-4">Tags</h2>
+    <div class="flex flex-wrap gap-2">
+      {{#each tags}}
+      <a href="/tags/{{this}}" class="badge badge-outline">{{this}}</a>
+      {{/each}}
+    </div>
+  </section>
+</aside>

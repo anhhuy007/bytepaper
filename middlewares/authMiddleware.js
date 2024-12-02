@@ -1,6 +1,6 @@
 // middlewares/authMiddleware.js
 
-import passport from "passport";
+import passport from 'passport'
 
 /**
  * Authentication middleware with role-based access control
@@ -14,7 +14,7 @@ import passport from "passport";
  * @param {string[]} [roles] - The roles allowed to access the route
  * @returns {Function} - The middleware function
  */
-const authMiddleware = (roles = ["guest"]) => {
+const authMiddleware = (roles = ['guest', 'subscriber', 'writer', 'editor', 'admin']) => {
   /**
    * Checks if the request is authenticated and the user has the required role
    *
@@ -32,25 +32,23 @@ const authMiddleware = (roles = ["guest"]) => {
      * @param {Object} info - The extra information about the authentication result
      * @returns {Promise<void>} - A promise that resolves when the authentication is done
      */
-    passport.authenticate("jwt", { session: false }, (err, user, info) => {
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
       if (err || !user) {
-        return res
-          .status(401)
-          .json({ success: false, message: "Unauthorized" });
+        return res.status(401).json({ success: false, message: 'Unauthorized' })
       }
-      req.user = user;
+      req.user = user
 
       // Role-based access control
       if (roles.length && !roles.includes(user.role)) {
         return res.status(403).json({
           success: false,
           message: `Forbidden, you must be ${roles[0]} to access`,
-        });
+        })
       }
 
-      next();
-    })(req, res, next);
-  };
-};
+      next()
+    })(req, res, next)
+  }
+}
 
-export default authMiddleware;
+export default authMiddleware

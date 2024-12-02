@@ -1,0 +1,88 @@
+{{!-- views/auth/login.hbs --}}
+<div class="min-h-screen flex items-center justify-center bg-base-200">
+  <div class="w-full max-w-md">
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-center">Login to Paperly</h2>
+
+        {{!-- Alert for errors --}} {{#if errorMessage}}
+        <div class="alert alert-error shadow-lg">
+          <div>
+            {{> icons/alert}}
+            <span>{{errorMessage}}</span>
+          </div>
+        </div>
+        {{/if}}
+
+        <form action="/api/v1/auth/login" method="POST">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Username</span>
+            </label>
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              class="input input-bordered"
+              required
+            />
+          </div>
+
+          <div class="form-control mt-4">
+            <label class="label">
+              <span class="label-text">Password</span>
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              class="input input-bordered"
+              required
+            />
+          </div>
+
+          <div class="form-control mt-6">
+            <button type="submit" class="btn btn-primary w-full">Login</button>
+          </div>
+        </form>
+
+        <div class="divider">OR</div>
+
+        <div class="flex justify-center">
+          <a href="/api/v1/auth/google" class="btn btn-outline w-full">
+            {{> icons/google}} Sign in with Google
+          </a>
+        </div>
+
+        <p class="text-center mt-4">
+          Don't have an account?
+          <a href="/auth/register" class="text-primary">Register</a>
+        </p>
+        <p class="text-center">
+          <a href="/auth/forgot-password" class="text-primary">Forgot Password?</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const username = e.target.username.value
+    const password = e.target.password.value
+
+    try {
+      const response = await axios.post('/api/v1/auth/login', { username, password })
+      // Handle successful login
+      // For example, redirect to the homepage or dashboard
+      window.location.href = '/'
+    } catch (error) {
+      // Display error message
+      const alert = document.getElementById('alert')
+      const alertMessage = document.getElementById('alert-message')
+      alertMessage.textContent = error.response.data.message || 'An error occurred'
+      alert.classList.remove('hidden')
+    }
+  })
+</script>

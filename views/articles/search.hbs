@@ -1,0 +1,11 @@
+{{!-- views/articles/search.hbs --}}
+<div class="px-40">
+  <div class="space-y-10">
+    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
+      Kết quả tìm kiếm
+    </h1>
+    {{#each articles}}
+    <div class="w-full">{{> article/tag-article article=this tags=this.tags}}</div>
+    {{/each}}
+  </div>
+</div>

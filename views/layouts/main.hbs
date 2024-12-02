@@ -1,17 +1,37 @@
-<html data-theme="light">
-    <head>
-        <meta charset="utf-8" />
-        <title>Example App</title>
-        <link rel="stylesheet" href="/output.css" />
+{{!-- views/layouts/main.hbs --}}
+<!doctype html>
+<html lang="en" data-theme="emerald">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{#if title}}{{title}} | {{/if}}Paperly</title>
+    <link rel="stylesheet" href="/output.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    </head>
-    <body>
+    {{!-- Include Alpine.js --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-        {{{body}}}
+    {{!-- Include Heroicons --}}
+    <script src="https://unpkg.com/heroicons@2.1.5/dist/heroicons.min.js"></script>
 
-        <script src="https://unpkg.com/lucide@latest"></script>
-        <script>
-            lucide.createIcons();
-        </script>
-    </body>
+    {{!-- Optional: Include AOS for animations --}}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    {{!-- Include Axios for making HTTP requests --}}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    {{!-- Header Partial --}} {{> header}} {{!-- Main Content --}}
+    <main class="flex-grow container mx-auto px-4">{{{body}}}</main>
+
+    {{!-- Footer Partial --}} {{> footer}} {{!-- Include your custom script if needed --}}
+    <script src="/script.js"></script>
+
+    {{!-- Initialize AOS if you're using it --}}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        AOS.init()
+      })
+    </script>
+  </body>
 </html>

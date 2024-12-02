@@ -1,0 +1,22 @@
+{{!-- views/partials/article-item.hbs --}}
+<article class="card card-side bg-base-100 shadow-md my-4">
+  <figure>
+    <img src="{{thumbnail}}" alt="{{title}}" class="w-48 h-32 object-cover" />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">
+      <a href="/articles/{{slug}}" class="hover:underline">{{title}}</a>
+    </h2>
+    <p class="text-sm text-gray-500">
+      {{#if category}}
+      <a href="/categories/{{category.id}}" class="link">{{category.name}}</a> | {{/if}}
+      {{formatDate publishedAt}}
+    </p>
+    <p>{{abstract}}</p>
+    <div class="flex flex-wrap gap-2 mt-2">
+      {{#each tags}}
+      <a href="/tags/{{this}}" class="badge badge-outline">{{this}}</a>
+      {{/each}}
+    </div>
+  </div>
+</article>
