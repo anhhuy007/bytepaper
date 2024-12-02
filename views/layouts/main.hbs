@@ -1,16 +1,17 @@
 {{!-- views/layouts/main.hbs --}}
-<html data-theme="light">
+<!DOCTYPE html>
+<html lang="en" data-theme="emerald">
   <head>
     <meta charset="utf-8" />
-    <title>Example App</title>
+    <title>{{#if title}}{{title}} | {{/if}}Paperly</title>
     <link rel="stylesheet" href="/output.css" />
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
-  <body>
-    <div>{{> header}}</div>
-    <div class="py-28 min-h-screen">{{{body}}}</div>
-    <div>{{> footer}}</div>
-
+  <body class="flex flex-col min-h-screen">
+    {{> header}}
+    <main class="flex-grow container mx-auto px-4">{{{body}}}</main>
+    {{> footer}}
     <script src="/script.js"></script>
   </body>
 </html>
