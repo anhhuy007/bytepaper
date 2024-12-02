@@ -1,1 +1,151 @@
 {{!-- views/writer/create-article.hbs --}}
+<div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
+  <h1 class="text-4xl font-bold mb-6 text-gray-800">Create Article</h1>
+  <form action="/articles" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <!-- Title -->
+    <div class="form-control">
+      <label class="label" for="title">
+        <span class="label-text text-lg font-semibold">Title</span>
+      </label>
+      <input
+        type="text"
+        name="title"
+        id="title"
+        class="input input-bordered w-full"
+        placeholder="Enter the article title"
+        required
+      />
+    </div>
+
+    <!-- Abstract -->
+    <div class="form-control">
+      <label class="label" for="abstract">
+        <span class="label-text text-lg font-semibold">Abstract</span>
+      </label>
+      <textarea
+        name="abstract"
+        id="abstract"
+        class="textarea textarea-bordered w-full"
+        placeholder="Provide a brief summary"
+        required
+      ></textarea>
+    </div>
+
+    <!-- Content -->
+    <div class="form-control">
+      <label class="label" for="content">
+        <span class="label-text text-lg font-semibold">Content</span>
+      </label>
+      {{! Hidden input because quill content isn't registered to form directly }}
+      <input type="hidden" name="content" id="hiddenContent" />
+      <div id="content" name="content">
+        <p>Hello sss!</p>
+        <p>Some initial <strong>bold</strong> text</p>
+        <p><br /></p>
+      </div>
+    </div>
+
+    <!-- Thumbnail -->
+    <div class="form-control">
+      <label class="label" for="thumbnail">
+        <span class="label-text text-lg font-semibold">Thumbnail</span>
+      </label>
+      <input
+        type="file"
+        name="thumbnail"
+        id="thumbnail"
+        class="file-input file-input-bordered w-full"
+        accept="image/*"
+      />
+    </div>
+
+    <!-- Author -->
+    <div class="form-control">
+      <label class="label" for="author">
+        <span class="label-text text-lg font-semibold">Author</span>
+      </label>
+      <input
+        type="text"
+        name="author_name"
+        id="author"
+        class="input input-bordered w-full"
+        placeholder="Author name"
+        required
+      />
+    </div>
+
+    <!-- Category -->
+    <div class="form-control">
+      <label class="label" for="category">
+        <span class="label-text text-lg font-semibold">Category</span>
+      </label>
+      <select name="category_name" id="category" class="select select-bordered w-full">
+        <option value="" disabled selected>Select a category</option>
+        <option value="Technology">Technology</option>
+        <option value="Health">Health</option>
+        <option value="Lifestyle">Lifestyle</option>
+      </select>
+    </div>
+
+    <div class="form-control">
+      <label class="label" for="status">
+        <span class="label-text text-lg font-semibold">Status</span>
+      </label>
+      <select name="status" id="status" class="select select-bordered w-full" required>
+        <option value="draft">Draft</option>
+        <option value="published">Published</option>
+      </select>
+    </div>
+
+    <!-- Is Premium -->
+    <div class="form-control">
+      <label class="label cursor-pointer">
+        <span class="label-text text-lg font-semibold">Is Premium</span>
+        <input type="checkbox" name="is_premium" class="checkbox checkbox-primary" />
+      </label>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-control">
+      <button type="submit" class="btn btn-primary w-full">Create Article</button>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+<script>
+  const quill = new Quill('#content', { theme: 'snow' })
+</script>
+
+<script>
+  document.querySelector('form').addEventListener('submit', async function (event) {
+    event.preventDefault()
+
+    // Sync Quill editor content to the hidden input
+    document.querySelector('#hiddenContent').value = quill.root.innerHTML
+
+    const formData = new FormData(this)
+
+    console.log('Form data:')
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`)
+    }
+
+    try {
+      const response = await fetch('/articles', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok) {
+        alert('Article created successfully!')
+      } else {
+        alert('Failed to create article.')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('An error occurred while creating the article.')
+    }
+  })
+</script>
