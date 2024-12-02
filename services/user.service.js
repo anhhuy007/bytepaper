@@ -116,13 +116,13 @@ class UserService {
     }
 
     // Generate JWT token with user id and role
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_SECRET || 'your_jwt_secret',
-      { expiresIn: process.env.JWT_EXPIRY || '168h' },
-    )
+    // const token = jwt.sign(
+    //   { id: user.id, role: user.role },
+    //   process.env.JWT_SECRET || 'your_jwt_secret',
+    //   { expiresIn: process.env.JWT_EXPIRY || '168h' },
+    // )
 
-    return { user, token }
+    return user
   }
 
   /**
