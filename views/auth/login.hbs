@@ -14,7 +14,7 @@
         </div>
         {{/if}}
 
-        <form action="/api/v1/auth/login" method="POST">
+        <form id="login-form" action="/auth/login" method="POST">
           <div class="form-control">
             <label class="label">
               <span class="label-text">Username</span>
@@ -49,7 +49,7 @@
         <div class="divider">OR</div>
 
         <div class="flex justify-center">
-          <a href="/api/v1/auth/google" class="btn btn-outline w-full">
+          <a href="/auth/google" class="btn btn-outline w-full">
             {{> icons/google}} Sign in with Google
           </a>
         </div>
@@ -67,22 +67,43 @@
 </div>
 
 <script>
-  document.getElementById('login-form').addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const username = e.target.username.value
-    const password = e.target.password.value
+  const form = document.getElementById('login-form')
+  if (form) {
+    console.log('Login form found.')
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
 
-    try {
-      const response = await axios.post('/api/v1/auth/login', { username, password })
-      // Handle successful login
-      // For example, redirect to the homepage or dashboard
-      window.location.href = '/'
-    } catch (error) {
-      // Display error message
-      const alert = document.getElementById('alert')
-      const alertMessage = document.getElementById('alert-message')
-      alertMessage.textContent = error.response.data.message || 'An error occurred'
-      alert.classList.remove('hidden')
-    }
-  })
+      const username = e.target.username.value
+      const password = e.target.password.value
+      console.log('Attempting login with:', { username, password })
+
+      try {
+        const response = await axios.post('/auth/login', { username, password })
+        console.log('Login successful:', response.data)
+
+        // Store user data
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('username', response.data.user.username)
+
+        // Redirect based on role
+        if (response.data.user.role === 'admin') {
+          window.location.href = '/admin/dashboard'
+        } else {
+          window.location.href = '/'
+        }
+      } catch (error) {
+        console.error('Error during login:')
+
+        if (error.response) {
+          console.error('Response error:', error.response.data)
+        } else if (error.request) {
+          console.error('No response received:', error.request)
+        } else {
+          console.error('Unexpected error:', error.message)
+        }
+      }
+    })
+  } else {
+    console.error('Login form not found.')
+  }
 </script>
