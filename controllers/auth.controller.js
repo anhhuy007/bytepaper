@@ -1,7 +1,7 @@
-// controllers/authController.js
+// controllers/auth.controller.js
 
 import userService from '../services/user.service.js'
-
+import passport from 'passport'
 /**
  * Registers a new user.
  *
@@ -64,23 +64,36 @@ const register = async (req, res, next) => {
  *
  * @returns {Promise<void>} The promise that resolves when the login is handled.
  */
-const login = async (req, res, next) => {
-  try {
-    // Extract username and password from the request body
-    const { username, password } = req.body
+const login = (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      console.error('Error during authentication:', err)
+      return next(err)
+    }
+    if (!user) {
+      return res.status(401).render('auth/login', { error: 'Invalid credentials' })
+    }
 
-    // Authenticate the user with the service
-    const { user, token } = await userService.authenticateUser({
-      username,
-      password,
+    req.login(user, (err) => {
+      if (err) {
+        console.error('Error during login session:', err)
+        return next(err)
+      }
+
+      // Explicitly save the session
+      req.session.save((err) => {
+        if (err) {
+          console.error('Error explicitly saving session:', err)
+          return next(err)
+        } else {
+          console.log('Session saved successfully')
+        }
+
+        const redirectUrl = user.role === 'admin' ? '/admin/users' : '/'
+        res.redirect(redirectUrl)
+      })
     })
-
-    // Return a success response with the user data and token
-    res.status(200).json({ success: true, data: { user, token } })
-  } catch (error) {
-    // If an error occurs, pass it to the next middleware
-    next(error)
-  }
+  })(req, res, next)
 }
 
 /**
@@ -155,9 +168,28 @@ const resetPassword = async (req, res, next) => {
   }
 }
 
+export const logout = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      console.error('Error during logout:', err)
+      return next(err)
+    }
+    // Explicitly destroy the session
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error destroying session:', err)
+        return next(err)
+      }
+      // Redirect to login page after successful logout
+      res.redirect('/auth/login')
+    })
+  })
+}
+
 export default {
   register,
   login,
   forgotPassword,
   resetPassword,
+  logout,
 }
