@@ -5,14 +5,12 @@
       <div class="card-body">
         <h2 class="card-title text-center">Login to Paperly</h2>
 
-        {{!-- Alert for errors --}} {{#if errorMessage}}
-        <div class="alert alert-error shadow-lg">
+        <div id="alert" class="hidden alert alert-error shadow-lg mt-4">
           <div>
             {{> icons/alert}}
-            <span>{{errorMessage}}</span>
+            <span id="alert-message"></span>
           </div>
         </div>
-        {{/if}}
 
         <form id="login-form" action="/auth/login" method="POST">
           <div class="form-control">
@@ -65,44 +63,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  const form = document.getElementById('login-form')
-  if (form) {
-    console.log('Login form found.')
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault()
-
-      const username = e.target.username.value
-      const password = e.target.password.value
-      console.log('Attempting login with:', { username, password })
-
-      try {
-        const response = await axios.post('/auth/login', { username, password })
-        const data = response.data.data
-        // Store user data
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('username', data.user.username)
-
-        // Redirect based on role
-        if (data.user.role === 'admin') {
-          window.location.href = '/'
-        } else {
-          window.location.href = '/'
-        }
-      } catch (error) {
-        console.error('Error during login:', error)
-
-        if (error.response) {
-          console.error('Response error:', error.response.data)
-        } else if (error.request) {
-          console.error('No response received:', error.request)
-        } else {
-          console.error('Unexpected error:', error.message)
-        }
-      }
-    })
-  } else {
-    console.error('Login form not found.')
-  }
-</script>
