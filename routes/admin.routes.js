@@ -15,11 +15,11 @@ router.use(authMiddleware(['admin']))
 
 // @route   GET /api/v1/admin/users
 // @desc    Get all users
-router.get('/users', viewRenderer('admin/manage-users', adminController.getAllUsers))
-
+// router.get('/users', viewRenderer('admin/users', adminController.getAllUsers))
+router.get('/users', adminController.getAllUsers)
 // @route   GET /api/v1/admin/users/:userId
 // @desc    Get user by ID
-router.get('/users/:userId', viewRenderer('admin/user', adminController.getUserById))
+router.get('/users/:userId', viewRenderer('admin/users', adminController.getUserById))
 
 // @route   PUT /api/v1/admin/users/:userId/role
 // @desc    Assign role to a user
