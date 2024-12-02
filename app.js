@@ -16,7 +16,7 @@ import connectLivereload from 'connect-livereload'
 import redisClient from './utils/redisClient.js'
 import { RedisStore } from 'connect-redis'
 import { newsData } from './lib/dummy.js'
-
+import * as helpers from './helpers/handlebars.js'
 dotenv.config()
 
 // Application Constants
@@ -58,9 +58,7 @@ app.engine(
   engine({
     extname: 'hbs',
     partialsDir: path.join(__dirname, 'views', 'partials'),
-    helpers: {
-      eq: (a, b) => a === b,
-    },
+    helpers: { ...helpers },
   }),
 )
 app.set('view engine', 'hbs')
