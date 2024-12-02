@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 import authController from '../controllers/auth.controller.js'
 import viewRenderer from '../utils/viewRenderer.js'
 import { config } from 'dotenv'
-
+import redirectIfAuthenticated from '../middlewares/redirectIfAuthenticated.js'
 config()
 
 const router = express.Router()
@@ -50,9 +50,10 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
   res.json({ token })
 })
 
-router.get('/login', viewRenderer('auth/login'))
+router.get('/login', redirectIfAuthenticated(), viewRenderer('auth/login'))
 router.get('/register', viewRenderer('auth/register'))
 router.get('/forgot-password', viewRenderer('auth/forgot-password'))
 router.get('/reset-password', viewRenderer('auth/reset-password'))
+router.get('/logout', authController.logout)
 
 export default router
