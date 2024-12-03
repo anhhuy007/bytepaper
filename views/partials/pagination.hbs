@@ -1,16 +1,31 @@
 {{!-- views/partials/pagination.hbs --}}
-<div class="btn-group">
-  {{#if hasPrev}}
-  <a href="?page={{prevPage}}" class="btn">«</a>
-  {{else}}
-  <button class="btn btn-disabled">«</button>
-  {{/if}} {{#each pages}} {{#if (eq this ../currentPage)}}
-  <button class="btn btn-active">{{this}}</button>
-  {{else}}
-  <a href="?page={{this}}" class="btn">{{this}}</a>
-  {{/if}} {{/each}} {{#if hasNext}}
-  <a href="?page={{nextPage}}" class="btn">»</a>
-  {{else}}
-  <button class="btn btn-disabled">»</button>
-  {{/if}}
-</div>
+<nav class="flex justify-center mt-8">
+  <ul class="pagination">
+    {{#if (gt currentPage 1)}}
+    <li>
+      <a
+        href="?page={{subtract currentPage 1}}{{#if query}}&query={{query}}{{/if}}"
+        class="btn btn-outline"
+        >«</a
+      >
+    </li>
+    {{/if}} {{#each (paginationPages currentPage totalPages)}}
+    <li>
+      <a
+        href="?page={{this}}{{#if ../query}}&query={{../query}}{{/if}}"
+        class="btn {{#if (eq this ../currentPage)}}btn-active{{else}}btn-outline{{/if}}"
+      >
+        {{this}}
+      </a>
+    </li>
+    {{/each}} {{#if (lt currentPage totalPages)}}
+    <li>
+      <a
+        href="?page={{add currentPage 1}}{{#if query}}&query={{query}}{{/if}}"
+        class="btn btn-outline"
+        >»</a
+      >
+    </li>
+    {{/if}}
+  </ul>
+</nav>
