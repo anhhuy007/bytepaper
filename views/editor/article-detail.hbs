@@ -1,1 +1,84 @@
 {{!-- views/editor/article-detail.hbs --}}
+{{#extend "layouts/editor"}}
+
+  {{#content "title"}}Article Detail{{/content}}
+
+  {{#content "body"}}
+    <div class="container mx-auto px-4 py-8" x-data="articleReview()">
+      <article class="prose lg:prose-xl mx-auto">
+        <h1>{{article.title}}</h1>
+        <p class="text-sm text-gray-500">
+          By {{author.fullName}} | {{formatDate article.createdAt}}
+        </p>
+        {{#if article.thumbnail}}
+          <img src="{{article.thumbnail}}" alt="{{article.title}}" class="w-full h-auto my-4" />
+        {{/if}}
+        <div>
+          {{{article.content}}}
+        </div>
+      </article>
+
+      <div class="flex justify-end space-x-4 mt-8">
+        <button class="btn btn-error" @click="openRejectModal">Reject</button>
+        <button class="btn btn-success" @click="approveArticle">Approve</button>
+      </div>
+
+      {{!-- Rejection Reason Modal --}}
+      <div x-show="showRejectModal" class="modal modal-open">
+        <div class="modal-box">
+          <h3 class="font-bold text-lg">Reject Article</h3>
+          <p class="py-4">Please provide the reason for rejection:</p>
+          <textarea x-model="rejectionReason" class="textarea textarea-bordered w-full" placeholder="Rejection reason..."></textarea>
+          <div class="modal-action">
+            <button class="btn" @click="closeRejectModal">Cancel</button>
+            <button class="btn btn-error" @click="submitRejection">Submit</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Scripts --}}
+      <script>
+        function articleReview() {
+          return {
+            showRejectModal: false,
+            rejectionReason: '',
+            openRejectModal() {
+              this.showRejectModal = true;
+            },
+            closeRejectModal() {
+              this.showRejectModal = false;
+              this.rejectionReason = '';
+            },
+            async approveArticle() {
+              try {
+                await axios.post('/api/editor/articles/{{article.id}}/approve');
+                alert('Article approved successfully.');
+                window.location.href = '/editor/review-articles';
+              } catch (error) {
+                console.error(error);
+                alert('An error occurred.');
+              }
+            },
+            async submitRejection() {
+              if (!this.rejectionReason.trim()) {
+                alert('Please provide a reason for rejection.');
+                return;
+              }
+              try {
+                await axios.post('/api/editor/articles/{{article.id}}/reject', {
+                  reason: this.rejectionReason,
+                });
+                alert('Article rejected successfully.');
+                window.location.href = '/editor/review-articles';
+              } catch (error) {
+                console.error(error);
+                alert('An error occurred.');
+              }
+            },
+          };
+        }
+      </script>
+    </div>
+  {{/content}}
+
+{{/extend}}
