@@ -14,32 +14,24 @@
     <script src="https://unpkg.com/heroicons@2.1.5/dist/heroicons.min.js"></script>
 
     {{!-- Optional: Include AOS for animations --}}
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     {{!-- Include Axios for making HTTP requests --}}
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body class="flex flex-col min-h-screen">
-    {{!-- Header Partial --}}
-    {{> header}}
+    {{!-- Header Partial --}} {{> header}} {{!-- Main Content --}}
+    <main class="flex-grow container mx-auto px-4">{{{body}}}</main>
 
-    {{!-- Main Content --}}
-    <main class="flex-grow container mx-auto px-4">
-      {{{body}}}
-    </main>
-
-    {{!-- Footer Partial --}}
-    {{> footer}}
-
-    {{!-- Include your custom script if needed --}}
+    {{!-- Footer Partial --}} {{> footer}} {{!-- Include your custom script if needed --}}
     <script src="/script.js"></script>
 
     {{!-- Initialize AOS if you're using it --}}
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        AOS.init();
-      });
+        AOS.init()
+      })
     </script>
   </body>
 </html>

@@ -1,1 +1,42 @@
 {{!-- views/writer/dashboard.hbs --}}
+{{#extend "layouts/writer"}}
+
+  {{#content "title"}}Writer Dashboard{{/content}}
+
+  {{#content "body"}}
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6">Writer Dashboard</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {{!-- Bài viết nháp --}}
+        <div class="stat">
+          <div class="stat-title">Draft Articles</div>
+          <div class="stat-value">{{stats.draftArticles}}</div>
+          <div class="stat-desc">Articles in draft</div>
+        </div>
+
+        {{!-- Bài viết chờ duyệt --}}
+        <div class="stat">
+          <div class="stat-title">Pending Articles</div>
+          <div class="stat-value">{{stats.pendingArticles}}</div>
+          <div class="stat-desc">Awaiting approval</div>
+        </div>
+
+        {{!-- Bài viết được chấp thuận --}}
+        <div class="stat">
+          <div class="stat-title">Approved Articles</div>
+          <div class="stat-value">{{stats.approvedArticles}}</div>
+          <div class="stat-desc">Published articles</div>
+        </div>
+
+        {{!-- Bài viết bị từ chối --}}
+        <div class="stat">
+          <div class="stat-title">Rejected Articles</div>
+          <div class="stat-value">{{stats.rejectedArticles}}</div>
+          <div class="stat-desc">Needs revision</div>
+        </div>
+      </div>
+    </div>
+  {{/content}}
+
+{{/extend}}
