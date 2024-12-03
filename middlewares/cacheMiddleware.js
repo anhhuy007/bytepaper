@@ -17,12 +17,6 @@ import redisClient from '../utils/redisClient.js'
  * });
  */
 export default function cacheMiddleware(cacheKeyGenerator, expiration = 300) {
-  /**
-   * The middleware function that will be called during the Express request lifecycle.
-   * @param {Object} req - The Express request object.
-   * @param {Object} res - The Express response object.
-   * @param {function} next - The Express next middleware function.
-   */
   return async (req, res, next) => {
     try {
       const cacheKey = cacheKeyGenerator(req)
@@ -30,33 +24,36 @@ export default function cacheMiddleware(cacheKeyGenerator, expiration = 300) {
 
       if (cachedData) {
         console.log('Cache hit:', cacheKey)
-        // Return the cached data with a 200 status
-        res.status(200).json({
-          success: true,
-          data: JSON.parse(cachedData),
-        })
+        res.send(cachedData) // Trả về HTML từ cache
       } else {
         console.log('Cache miss:', cacheKey)
-        // The cache key does not exist, so we need to store the response in Redis
-        const originalJson = res.json.bind(res)
-        res.json = async (body) => {
+        // Ghi lại render gốc
+        const originalRender = res.render.bind(res)
+
+        res.render = async (view, options, callback) => {
           try {
-            // Store the response body in Redis with the specified expiration time
-            await redisClient.setEx(cacheKey, expiration, JSON.stringify(body.data))
+            // Render HTML
+            originalRender(view, options, (err, html) => {
+              if (!err) {
+                // Lưu HTML vào Redis
+                redisClient.setEx(cacheKey, expiration, html).catch((e) => {
+                  console.error('Redis setEx error:', e)
+                })
+              }
+              // Trả lại HTML cho client
+              if (callback) callback(err, html)
+              else res.send(html)
+            })
           } catch (e) {
-            console.error('Redis setEx error:', e)
+            console.error('Render caching error:', e)
+            next(e)
           }
-          // Call the original res.json() function to send the response to the client
-          originalJson(body)
         }
 
-        // Call the next middleware in the stack
         next()
       }
     } catch (err) {
       console.error('Cache middleware error:', err)
-
-      // Call the next middleware in the stack if an error occurs
       next()
     }
   }

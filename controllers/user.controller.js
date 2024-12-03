@@ -20,7 +20,7 @@ const getUserProfile = async (req, res, next) => {
     const subscription = await subscriptionService.getSubscriptionByUserId(userId)
     // Return the user profile as JSON
     // res.status(200).json({ success: true, data: user });
-    return { user, subscription }
+    res.render('user/profile', { user, subscription })
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
@@ -79,7 +79,8 @@ const changePassword = async (req, res, next) => {
     await userService.changePassword(userId, currentPassword, newPassword)
 
     // Return a success message as JSON
-    res.status(200).json({ success: true, message: 'Password changed successfully' })
+    // res.status(200).json({ success: true, message: 'Password changed successfully' })
+    res.redirect('/user/profile')
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
