@@ -1,19 +1,103 @@
 {{!-- views/articles/detail.hbs --}}
-<div class="container mx-auto p-4">
-  <div class="card w-full bg-base-100 shadow-xl">
-    <figure>
-      <img src="{{ news.thumbnail }}" alt="News Thumbnail" class="w-full h-64 object-cover" />
-    </figure>
-    <div class="card-body">
-      <h2 class="card-title text-3xl">{{ news.title }}</h2>
-      <p class="text-sm text-gray-500 mb-4">{{ news.date }}</p>
-      <div class="flex flex-wrap gap-2 mb-4">
-        {{#each news.tags}}
-        <span class="badge badge-primary">{{ this }}</span>
-        {{/each}}
-      </div>
-      <p>{{ news.content }}</p>
+<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    {{!-- Main Content --}}
+    <div class="lg:col-span-2 space-y-8">
+      {{!-- Article Card --}}
+      <article class="card bg-base-100 shadow-xl">
+        {{#if article.thumbnail}}
+        <figure>
+          <img
+            src="{{article.thumbnail}}"
+            alt="{{article.title}}"
+            class="w-full h-64 object-cover"
+          />
+        </figure>
+        {{/if}}
+        <div class="card-body">
+          <h1 class="card-title text-3xl font-bold">{{article.title}}</h1>
+          <p class="text-sm text-gray-500 mb-4">
+            {{#if article.category}}
+            <a href="/categories/{{article.category.id}}" class="link">{{article.category.name}}</a>
+            <span class="mx-2">|</span>
+            {{/if}} {{formatDate article.publishedAt}}
+          </p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            {{#each article.tags}}
+            <a href="/tags/{{this}}" class="badge badge-outline">{{this}}</a>
+            {{/each}}
+          </div>
+          <div class="prose max-w-none">{{{article.content}}}</div>
+        </div>
+      </article>
+
+      {{!-- Comments Section --}}
+      <section id="comments" class="space-y-6">
+        <h2 class="text-2xl font-bold">Comments</h2>
+
+        {{!-- Comment Form --}} {{#if user}}
+        <form
+          id="comment-form"
+          action="/articles/{{article.slug}}/comments"
+          method="POST"
+          class="space-y-4"
+        >
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Your Comment</span>
+            </label>
+            <textarea
+              name="content"
+              class="textarea textarea-bordered w-full"
+              placeholder="Write your comment here..."
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Comment</button>
+        </form>
+        {{else}}
+        <p>
+          <a href="/auth/login" class="link">Login</a> or
+          <a href="/auth/register" class="link">Register</a> to post a comment.
+        </p>
+        {{/if}} {{!-- Comments List --}}
+        <div class="space-y-4">{{#each comments}} {{> comment-item this}} {{/each}}</div>
+      </section>
     </div>
+
+    {{!-- Sidebar --}}
+    <aside class="space-y-8">
+      {{!-- Related Articles --}}
+      <section>
+        <h2 class="text-xl font-bold mb-4">Related Articles</h2>
+        <div class="space-y-4">{{#each relatedArticles}} {{> article-item this}} {{/each}}</div>
+      </section>
+    </aside>
   </div>
-  <a href="/" class="btn btn-primary mt-4">Back to Home</a>
 </div>
+
+<script>
+  document.getElementById('comment-form').addEventListener('submit', async function (e) {
+    e.preventDefault()
+    const form = e.target
+    const content = form.content.value
+
+    try {
+      const response = await axios.post('/api/v1/comments', {
+        articleId: '{{article.id}}',
+        content: content,
+      })
+
+      // Clear the textarea
+      form.content.value = ''
+
+      // Prepend the new comment to the comments list
+      const newCommentHtml = response.data.commentHtml
+      const commentsSection = document.querySelector('#comments .space-y-4')
+      commentsSection.insertAdjacentHTML('afterbegin', newCommentHtml)
+    } catch (error) {
+      console.error('Error submitting comment:', error)
+      alert('An error occurred while submitting your comment.')
+    }
+  })
+</script>

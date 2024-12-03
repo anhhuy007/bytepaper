@@ -4,17 +4,18 @@
   <div class="w-full max-w-md">
     <div class="card bg-base-100 shadow-xl">
       <div class="card-body">
-        <h2 class="card-title text-center">Create an Account</h2>
+        <h2 class="card-title text-center text-2xl font-bold">Create an Account</h2>
 
         {{!-- Alert for errors --}}
         <div id="alert" class="hidden alert alert-error shadow-lg mt-4">
           <div>
-            {{> icons/alert}}
-            <span id="alert-message"></span>
+            <!-- Icon: Error Alert -->
+            <span id="alert-message">Please fix the highlighted errors</span>
           </div>
         </div>
 
-        <form id="register-form">
+        <form id="register-form" action="/auth/register" method="POST">
+          {{!-- Full Name --}}
           <div class="form-control">
             <label class="label">
               <span class="label-text">Full Name</span>
@@ -29,6 +30,7 @@
             />
           </div>
 
+          {{!-- Username --}}
           <div class="form-control mt-4">
             <label class="label">
               <span class="label-text">Username</span>
@@ -43,6 +45,7 @@
             />
           </div>
 
+          {{!-- Email --}}
           <div class="form-control mt-4">
             <label class="label">
               <span class="label-text">Email</span>
@@ -57,6 +60,7 @@
             />
           </div>
 
+          {{!-- Password --}}
           <div class="form-control mt-4">
             <label class="label">
               <span class="label-text">Password</span>
@@ -71,84 +75,28 @@
             />
           </div>
 
+          {{!-- Submit Button --}}
           <div class="form-control mt-6">
             <button type="submit" class="btn btn-primary w-full">Register</button>
           </div>
         </form>
 
+        {{!-- Divider --}}
         <div class="divider">OR</div>
 
+        {{!-- Google Sign-up Button --}}
         <div class="flex justify-center">
-          <a href="/auth/google" class="btn btn-outline w-full">
+          <a href="/auth/google" class="btn btn-outline w-full flex items-center justify-center">
             {{> icons/google}} Sign up with Google
           </a>
         </div>
 
+        {{!-- Login Redirect --}}
         <p class="text-center mt-4">
           Already have an account?
-          <a href="/auth/login" class="text-primary">Login</a>
+          <a href="/auth/login" class="text-primary hover:underline">Login</a>
         </p>
       </div>
     </div>
   </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('register-form')
-    const alertBox = document.getElementById('alert')
-    const alertMessage = document.getElementById('alert-message')
-
-    // Utility to show alert messages
-    function showAlert(message) {
-      alertMessage.textContent = message
-      alertBox.classList.remove('hidden')
-    }
-
-    // Utility to hide alert messages
-    function hideAlert() {
-      alertMessage.textContent = ''
-      alertBox.classList.add('hidden')
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault()
-
-      // Gather form data
-      const full_name = e.target.full_name.value.trim()
-      const username = e.target.username.value.trim()
-      const email = e.target.email.value.trim()
-      const password = e.target.password.value.trim()
-
-      // Clear previous alerts
-      hideAlert()
-
-      // Disable submit button to prevent duplicate requests
-      const submitButton = e.target.querySelector('button[type="submit"]')
-      submitButton.disabled = true
-
-      try {
-        // Send registration request
-        const response = await axios.post('/auth/register', {
-          full_name,
-          username,
-          email,
-          password,
-        })
-
-        // Redirect to login page on success
-        window.location.href = '/auth/login'
-      } catch (error) {
-        // Handle errors
-        if (error.response && error.response.data && error.response.data.message) {
-          showAlert(error.response.data.message)
-        } else {
-          showAlert('An unexpected error occurred. Please try again later.')
-        }
-      } finally {
-        // Re-enable the submit button
-        submitButton.disabled = false
-      }
-    })
-  })
-</script>

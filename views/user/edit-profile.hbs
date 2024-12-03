@@ -1,0 +1,80 @@
+{{!-- views/users/edit-profile.hbs --}}
+<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
+  <div class="max-w-xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Edit Profile</h1>
+
+    {{!-- Alerts --}} {{#if successMessage}}
+    <div class="alert alert-success shadow-lg mb-4">
+      <span>{{successMessage}}</span>
+    </div>
+    {{/if}} {{#if errorMessage}}
+    <div class="alert alert-error shadow-lg mb-4">
+      <span>{{errorMessage}}</span>
+    </div>
+    {{/if}}
+
+    <form action="/user/edit-profile" method="POST" class="space-y-4">
+      <input type="hidden" name="_method" value="PUT" />
+
+      <div class="form-control">
+        <label class="label"><span class="label-text">Full Name</span></label>
+        <input
+          type="text"
+          name="full_name"
+          value="{{user.full_name}}"
+          class="input input-bordered w-full"
+          required
+        />
+      </div>
+
+      <div class="form-control">
+        <label class="label"><span class="label-text">Pen Name (optional)</span></label>
+        <input
+          type="text"
+          name="pen_name"
+          value="{{user.pen_name}}"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <div class="form-control">
+        <label class="label"><span class="label-text">Email</span></label>
+        <input
+          type="email"
+          name="email"
+          value="{{user.email}}"
+          class="input input-bordered w-full"
+          required
+        />
+      </div>
+
+      <div class="form-control">
+        <label class="label"><span class="label-text">Date of Birth</span></label>
+        <input
+          type="date"
+          name="date_of_birth"
+          value="{{formatDate user.date_of_birth 'YYYY-MM-DD'}}"
+          class="input input-bordered w-full"
+          required
+        />
+      </div>
+
+      <div class="form-control">
+        <label class="label"><span class="label-text">Avatar</span></label>
+        <input
+          type="file"
+          name="avatar"
+          accept="image/*"
+          class="file-input file-input-bordered w-full"
+        />
+        {{#if user.avatarUrl}}
+        <div class="mt-2">
+          <img src="{{user.avatarUrl}}" alt="Current Avatar" class="w-24 h-24 rounded-full" />
+        </div>
+        {{/if}}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full">Save Changes</button>
+    </form>
+  </div>
+</div>

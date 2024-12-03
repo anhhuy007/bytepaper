@@ -1,1 +1,42 @@
 {{!-- views/admin/dashboard.hbs --}}
+{{#extend "layouts/admin"}}
+
+  {{#content "title"}}Dashboard{{/content}}
+
+  {{#content "body"}}
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {{!-- Tổng số người dùng --}}
+        <div class="stat">
+          <div class="stat-title">Total Users</div>
+          <div class="stat-value">{{stats.totalUsers}}</div>
+          <div class="stat-desc">Registered Users</div>
+        </div>
+
+        {{!-- Tổng số bài viết --}}
+        <div class="stat">
+          <div class="stat-title">Total Articles</div>
+          <div class="stat-value">{{stats.totalArticles}}</div>
+          <div class="stat-desc">Published Articles</div>
+        </div>
+
+        {{!-- Tổng số chuyên mục --}}
+        <div class="stat">
+          <div class="stat-title">Total Categories</div>
+          <div class="stat-value">{{stats.totalCategories}}</div>
+          <div class="stat-desc">Available Categories</div>
+        </div>
+
+        {{!-- Tổng số thẻ --}}
+        <div class="stat">
+          <div class="stat-title">Total Tags</div>
+          <div class="stat-value">{{stats.totalTags}}</div>
+          <div class="stat-desc">Tags in Use</div>
+        </div>
+      </div>
+    </div>
+  {{/content}}
+
+{{/extend}}

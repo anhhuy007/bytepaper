@@ -44,8 +44,10 @@ const register = async (req, res, next) => {
       full_name,
     })
 
-    // Return a success response with the new user data
-    res.status(201).json({ success: true, data: user })
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'User already exists' })
+    }
+    res.redirect('/auth/login')
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
@@ -96,6 +98,41 @@ const login = (req, res, next) => {
   })(req, res, next)
 }
 
+const googleLogin = (req, res, next) => {
+  passport.authenticate('google', { scope: ['email', 'profile'] })(req, res, next)
+}
+
+const googleCallback = (req, res, next) => {
+  passport.authenticate('google', { session: false }, (err, user) => {
+    if (err) {
+      console.error('Error during Google OAuth:', err)
+      return next(err)
+    }
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Authentication failed' })
+    }
+
+    req.login(user, (err) => {
+      if (err) {
+        console.error('Error during login session:', err)
+        return next(err)
+      }
+
+      // Explicitly save the session
+      req.session.save((err) => {
+        if (err) {
+          console.error('Error explicitly saving session:', err)
+          return next(err)
+        } else {
+          console.log('Session saved successfully')
+        }
+        res.redirect('/')
+      })
+    })
+  })(req, res, next)
+}
+
 /**
  * Sends a password reset OTP to the user with the given email address.
  *
@@ -123,7 +160,8 @@ const forgotPassword = async (req, res, next) => {
     await userService.sendPasswordResetOtp(email)
 
     // Return a success response with a message
-    res.status(200).json({ success: true, message: 'OTP sent to email' })
+    // res.status(200).json({ success: true, message: 'OTP sent to email' })\
+    res.redirect('/auth/reset-password')
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
@@ -161,7 +199,8 @@ const resetPassword = async (req, res, next) => {
     await userService.resetPassword(email, otpCode, newPassword)
 
     // Return a success response with a message
-    res.status(200).json({ success: true, message: 'Password reset successful' })
+    // res.status(200).json({ success: true, message: 'Password reset successful' })
+    res.redirect('/auth/login')
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
@@ -189,6 +228,8 @@ export const logout = (req, res, next) => {
 export default {
   register,
   login,
+  googleLogin,
+  googleCallback,
   forgotPassword,
   resetPassword,
   logout,

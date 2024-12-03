@@ -1,11 +1,12 @@
 {{!-- views/articles/search.hbs --}}
-<div class="px-40">
-  <div class="space-y-10">
-    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
-      Kết quả tìm kiếm
-    </h1>
-    {{#each articles}}
-    <div class="w-full">{{> article/tag-article article=this tags=this.tags}}</div>
-    {{/each}}
-  </div>
+<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
+  <h1 class="text-3xl md:text-4xl font-bold mb-6">Search Results for "{{query}}"</h1>
+
+  {{#if articles.length}} {{!-- Articles List --}}
+  <div class="space-y-6">{{#each articles}} {{> article-item this}} {{/each}}</div>
+
+  {{!-- Pagination --}} {{> pagination currentPage=currentPage totalPages=totalPages query=query}}
+  {{else}}
+  <p>No articles found matching your search criteria.</p>
+  {{/if}}
 </div>

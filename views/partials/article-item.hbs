@@ -1,16 +1,14 @@
 {{!-- views/partials/article-item.hbs --}}
-<article class="card card-side bg-base-100 shadow-md my-4">
-  <figure>
-    <img src="{{thumbnail}}" alt="{{title}}" class="w-48 h-32 object-cover" />
-  </figure>
+<article class="card bg-base-100 shadow-md">
   <div class="card-body">
-    <h2 class="card-title">
+    <h2 class="card-title text-2xl">
       <a href="/articles/{{slug}}" class="hover:underline">{{title}}</a>
     </h2>
     <p class="text-sm text-gray-500">
       {{#if category}}
-      <a href="/categories/{{category.id}}" class="link">{{category.name}}</a> | {{/if}}
-      {{formatDate publishedAt}}
+      <a href="/categories/{{category.id}}" class="link">{{category.name}}</a>
+      <span class="mx-2">|</span>
+      {{/if}} {{formatDate publishedAt}}
     </p>
     <p>{{abstract}}</p>
     <div class="flex flex-wrap gap-2 mt-2">
@@ -19,4 +17,11 @@
       {{/each}}
     </div>
   </div>
+  {{#if thumbnail}}
+  <figure class="w-full h-48 overflow-hidden">
+    <a href="/articles/{{slug}}">
+      <img src="{{thumbnail}}" alt="{{title}}" class="object-cover w-full h-full" />
+    </a>
+  </figure>
+  {{/if}}
 </article>

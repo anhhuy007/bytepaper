@@ -4,18 +4,31 @@ import express from 'express'
 import userController from '../controllers/user.controller.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import viewRenderer from '../utils/viewRenderer.js'
-
+import cacheMiddleware, { deleteCacheMiddleware } from '../middlewares/cacheMiddleware.js'
+import cacheKeyGenerator from '../utils/cacheKeyGenerator.js'
 const router = express.Router()
 
 router.use(authMiddleware())
 
 // @route   GET /api/v1/user/profile
 // @desc    Get user profile
-router.get('/profile', viewRenderer('user/profile', userController.getUserProfile))
+router.get(
+  '/profile',
+  cacheMiddleware(cacheKeyGenerator.userProfileCacheKeyGenerator),
+  userController.getUserProfile,
+)
+
+// @route   GET /api/v1/user/edit-profile
+// @desc    Get edit profile view
+router.get('/edit-profile', viewRenderer('user/edit-profile'))
 
 // @route   PUT /api/v1/user/profile
 // @desc    Update user profile
-router.put('/profile', userController.updateUserProfile)
+router.post(
+  '/edit-profile',
+  deleteCacheMiddleware(cacheKeyGenerator.userProfileCacheKeyGenerator),
+  userController.updateUserProfile,
+)
 
 // @route   GET /api/v1/user/change-password
 // @desc    Get change password view
@@ -23,7 +36,19 @@ router.get('/change-password', viewRenderer('user/change-password'))
 
 // @route   PUT /api/v1/user/change-password
 // @desc    Change user password
-router.put('/change-password', userController.changePassword)
+router.post('/change-password', userController.changePassword)
+
+// @route   GET /api/v1/user/extend-subscription
+// @desc    Get extend subscription view
+router.get('/extend-subscription', viewRenderer('user/extend-subscription'))
+
+// @route   POST /api/v1/user/extend-subscription
+// @desc    Extend subscription
+router.post(
+  '/extend-subscription',
+  deleteCacheMiddleware(cacheKeyGenerator.userProfileCacheKeyGenerator),
+  userController.extendSubscription,
+)
 
 // @route   DELETE /api/v1/user/delete
 // @desc    Delete user account

@@ -15,13 +15,13 @@ import connectLivereload from 'connect-livereload'
 import { engine } from 'express-handlebars'
 import { RedisStore } from 'connect-redis'
 import cookieParser from 'cookie-parser'
-
+import methodOverride from 'method-override'
 // Custom modules
 import routes from './routes/index.routes.js'
 import errorHandler from './middlewares/errorHandler.js'
 import passport from './config/passport.js'
 import redisClient from './utils/redisClient.js'
-import * as helpers from './helpers/handlebars.js'
+import * as helpers from './utils/handlebars.js'
 
 // Load environment variables
 dotenv.config()
@@ -104,22 +104,9 @@ function setupLiveReload(app) {
 
 if (isDevelopment) setupLiveReload(app)
 
-// For debugging
-// app.use((req, res, next) => {
-//   console.log('Session ID:', req.sessionID)
-//   console.log('Session Data:', req.session)
-//   console.log('Authenticated:', req.isAuthenticated())
-//   console.log('User:', req.user)
-//   next()
-// })
-
 // Routes
+app.use(methodOverride('_method'))
 app.use('/', routes)
-
-// Error Handling
-// app.use((req, res) => {
-//   res.status(404).render('errors/404', { title: 'Page Not Found' })
-// })
 app.use(errorHandler)
 
 /* ---------- Start Server ---------- */

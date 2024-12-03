@@ -35,6 +35,11 @@ const categoryListCacheKeyGenerator = () => 'categories:list'
 
 const tagListCacheKeyGenerator = () => 'tags:list'
 
+const userProfileCacheKeyGenerator = (req) => {
+  const userId = req.user.id
+  return `user:${userId}`
+}
+
 export default {
   homeCacheKeyGenerator,
   articlesByCategoryCacheKeyGenerator,
@@ -43,4 +48,5 @@ export default {
   searchCacheKeyGenerator,
   categoryListCacheKeyGenerator,
   tagListCacheKeyGenerator,
+  userProfileCacheKeyGenerator,
 }

@@ -3,15 +3,17 @@
   <div class="w-full max-w-md">
     <div class="card bg-base-100 shadow-xl">
       <div class="card-body">
-        <h2 class="card-title text-center">Login to Paperly</h2>
+        <h2 class="card-title text-center text-2xl font-bold">Login to Paperly</h2>
 
-        <div id="alert" class="hidden alert alert-error shadow-lg mt-4">
+        {{!-- Alert for Errors --}}
+        <div id="alert" class="hidden alert alert-error mt-4">
           <div>
             {{> icons/alert}}
-            <span id="alert-message"></span>
+            <span id="alert-message">Invalid username or password</span>
           </div>
         </div>
 
+        {{!-- Login Form --}}
         <form id="login-form" action="/auth/login" method="POST">
           <div class="form-control">
             <label class="label">
@@ -20,12 +22,11 @@
             <input
               type="text"
               name="username"
-              placeholder="Username"
+              placeholder="Enter your username"
               class="input input-bordered"
               required
             />
           </div>
-
           <div class="form-control mt-4">
             <label class="label">
               <span class="label-text">Password</span>
@@ -33,12 +34,11 @@
             <input
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder="Enter your password"
               class="input input-bordered"
               required
             />
           </div>
-
           <div class="form-control mt-6">
             <button type="submit" class="btn btn-primary w-full">Login</button>
           </div>
@@ -47,17 +47,17 @@
         <div class="divider">OR</div>
 
         <div class="flex justify-center">
-          <a href="/auth/google" class="btn btn-outline w-full">
+          <a href="/auth/google" class="btn btn-outline btn-info w-full flex items-center">
             {{> icons/google}} Sign in with Google
           </a>
         </div>
 
         <p class="text-center mt-4">
           Don't have an account?
-          <a href="/auth/register" class="text-primary">Register</a>
+          <a href="/auth/register" class="text-primary hover:underline">Register</a>
         </p>
         <p class="text-center">
-          <a href="/auth/forgot-password" class="text-primary">Forgot Password?</a>
+          <a href="/auth/forgot-password" class="text-primary hover:underline">Forgot Password?</a>
         </p>
       </div>
     </div>
