@@ -12,7 +12,7 @@ const authMiddleware =
       return res.status(401).redirect('/auth/login') // Redirect unauthenticated users
     }
 
-    console.log('Authenticated user:', req.user) // Log authenticated user details
+    // console.log('Authenticated user:', req.user) // Log authenticated user details
 
     const user = req.user
     if (roles.length && !roles.includes(user.role)) {

@@ -58,3 +58,24 @@ export default function cacheMiddleware(cacheKeyGenerator, expiration = 300) {
     }
   }
 }
+
+export const deleteCacheMiddleware = (cacheKeyGenerator) => {
+  return async (req, res, next) => {
+    try {
+      const cacheKey = cacheKeyGenerator(req)
+
+      // Xóa cache khỏi Redis
+      const result = await redisClient.del(cacheKey)
+      if (result) {
+        console.log(`Cache deleted: ${cacheKey}`)
+      } else {
+        console.log(`No cache found to delete for: ${cacheKey}`)
+      }
+
+      next()
+    } catch (err) {
+      console.error('Delete cache middleware error:', err)
+      next()
+    }
+  }
+}

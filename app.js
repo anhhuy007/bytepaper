@@ -104,20 +104,6 @@ function setupLiveReload(app) {
 
 if (isDevelopment) setupLiveReload(app)
 
-// For debugging
-// app.use((req, res, next) => {
-//   console.log('Session ID:', req.sessionID)
-//   console.log('Session Data:', req.session)
-//   console.log('Authenticated:', req.isAuthenticated())
-//   console.log('User:', req.user)
-//   next()
-// })
-
-app.use((req, res, next) => {
-  console.log(`===========================> ${req.method} ${req.url}`)
-  next()
-})
-
 // Routes
 app.use(methodOverride('_method'))
 app.use('/', routes)

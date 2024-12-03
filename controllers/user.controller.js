@@ -51,7 +51,7 @@ const updateUserProfile = async (req, res, next) => {
 
     // Return the updated user profile as JSON
     // res.status(200).json({ success: true, data: user })\
-    res.redirect('/profile')
+    res.redirect('/user/profile')
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
