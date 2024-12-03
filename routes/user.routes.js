@@ -38,6 +38,18 @@ router.get('/change-password', viewRenderer('user/change-password'))
 // @desc    Change user password
 router.post('/change-password', userController.changePassword)
 
+// @route   GET /api/v1/user/extend-subscription
+// @desc    Get extend subscription view
+router.get('/extend-subscription', viewRenderer('user/extend-subscription'))
+
+// @route   POST /api/v1/user/extend-subscription
+// @desc    Extend subscription
+router.post(
+  '/extend-subscription',
+  deleteCacheMiddleware(cacheKeyGenerator.userProfileCacheKeyGenerator),
+  userController.extendSubscription,
+)
+
 // @route   DELETE /api/v1/user/delete
 // @desc    Delete user account
 router.delete('/delete', userController.deleteUser)

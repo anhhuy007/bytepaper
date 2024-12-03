@@ -47,7 +47,7 @@ const updateUserProfile = async (req, res, next) => {
     console.log(profileData)
 
     // Update the user profile in the database
-    const user = await userService.updateUserProfile(userId, profileData)
+    await userService.updateUserProfile(userId, profileData)
 
     // Return the updated user profile as JSON
     // res.status(200).json({ success: true, data: user })\
@@ -99,9 +99,25 @@ const deleteUser = async (req, res, next) => {
   }
 }
 
+const extendSubscription = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+
+    // Number of days to renew, default to 7 if not provided
+    const days = parseInt(req.body.days) || 7
+
+    await subscriptionService.createOrUpdateSubscription(userId, days)
+
+    res.redirect('/user/profile')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   deleteUser,
   getUserProfile,
   updateUserProfile,
   changePassword,
+  extendSubscription,
 }

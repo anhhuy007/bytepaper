@@ -107,11 +107,6 @@ if (isDevelopment) setupLiveReload(app)
 // Routes
 app.use(methodOverride('_method'))
 app.use('/', routes)
-
-// Error Handling
-// app.use((req, res) => {
-//   res.status(404).render('errors/404', { title: 'Page Not Found' })
-// })
 app.use(errorHandler)
 
 /* ---------- Start Server ---------- */
