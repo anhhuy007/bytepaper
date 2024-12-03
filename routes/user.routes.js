@@ -9,13 +9,21 @@ const router = express.Router()
 
 router.use(authMiddleware())
 
+router.get('/', (req, res) => {
+  res.redirect('/user/profile')
+})
+
 // @route   GET /api/v1/user/profile
 // @desc    Get user profile
 router.get('/profile', viewRenderer('user/profile', userController.getUserProfile))
 
+// @route   GET /api/v1/user/edit-profile
+// @desc    Get edit profile view
+router.get('/edit-profile', viewRenderer('user/edit-profile'))
+
 // @route   PUT /api/v1/user/profile
 // @desc    Update user profile
-router.put('/profile', userController.updateUserProfile)
+router.post('/edit-profile', userController.updateUserProfile)
 
 // @route   GET /api/v1/user/change-password
 // @desc    Get change password view

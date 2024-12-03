@@ -5,6 +5,10 @@ Handlebars.registerHelper('eq', function (a, b) {
   return a === b
 })
 
+Handlebars.registerHelper('ne', function (a, b) {
+  return a !== b
+})
+
 Handlebars.registerHelper('hasSubCategorySelected', function (subCategories, currentCategoryId) {
   return subCategories.some((subCategory) => subCategory.subId === currentCategoryId)
 })
@@ -42,4 +46,31 @@ Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) 
     pages.push(i)
   }
   return pages
+})
+
+Handlebars.registerHelper('capitalize', function (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+})
+
+Handlebars.registerHelper('compare', function (a, operator, b, options) {
+  switch (operator) {
+    case '==':
+      return a == b ? options.fn(this) : options.inverse(this)
+    case '!=':
+      return a != b ? options.fn(this) : options.inverse(this)
+    case '===':
+      return a === b ? options.fn(this) : options.inverse(this)
+    case '!==':
+      return a !== b ? options.fn(this) : options.inverse(this)
+    case '>':
+      return a > b ? options.fn(this) : options.inverse(this)
+    case '<':
+      return a < b ? options.fn(this) : options.inverse(this)
+    case '>=':
+      return a >= b ? options.fn(this) : options.inverse(this)
+    case '<=':
+      return a <= b ? options.fn(this) : options.inverse(this)
+    default:
+      throw new Error(`Unknown operator: ${operator}`)
+  }
 })

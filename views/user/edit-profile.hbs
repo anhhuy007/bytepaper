@@ -3,64 +3,42 @@
   <div class="max-w-xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">Edit Profile</h1>
 
-    {{!-- Alert for Success Message --}} {{#if successMessage}}
+    {{!-- Alerts --}} {{#if successMessage}}
     <div class="alert alert-success shadow-lg mb-4">
-      <div>
-        <svg class="h-6 w-6">
-          <use href="#heroicon-o-check-circle"></use>
-        </svg>
-        <span>{{successMessage}}</span>
-      </div>
+      <span>{{successMessage}}</span>
     </div>
-    {{/if}} {{!-- Alert for Error Message --}} {{#if errorMessage}}
+    {{/if}} {{#if errorMessage}}
     <div class="alert alert-error shadow-lg mb-4">
-      <div>
-        <svg class="h-6 w-6">
-          <use href="#heroicon-o-exclamation-circle"></use>
-        </svg>
-        <span>{{errorMessage}}</span>
-      </div>
+      <span>{{errorMessage}}</span>
     </div>
     {{/if}}
 
-    <form
-      action="/users/edit-profile"
-      method="POST"
-      enctype="multipart/form-data"
-      class="space-y-4"
-    >
-      {{!-- Full Name --}}
+    <form action="/user/edit-profile" method="POST" class="space-y-4">
+      <input type="hidden" name="_method" value="PUT" />
+
       <div class="form-control">
-        <label class="label">
-          <span class="label-text">Full Name</span>
-        </label>
+        <label class="label"><span class="label-text">Full Name</span></label>
         <input
           type="text"
-          name="fullName"
-          value="{{user.fullName}}"
+          name="full_name"
+          value="{{user.full_name}}"
           class="input input-bordered w-full"
           required
         />
       </div>
 
-      {{!-- Pen Name --}}
       <div class="form-control">
-        <label class="label">
-          <span class="label-text">Pen Name (if applicable)</span>
-        </label>
+        <label class="label"><span class="label-text">Pen Name (optional)</span></label>
         <input
           type="text"
-          name="penName"
-          value="{{user.penName}}"
+          name="pen_name"
+          value="{{user.pen_name}}"
           class="input input-bordered w-full"
         />
       </div>
 
-      {{!-- Email --}}
       <div class="form-control">
-        <label class="label">
-          <span class="label-text">Email</span>
-        </label>
+        <label class="label"><span class="label-text">Email</span></label>
         <input
           type="email"
           name="email"
@@ -70,25 +48,19 @@
         />
       </div>
 
-      {{!-- Date of Birth --}}
       <div class="form-control">
-        <label class="label">
-          <span class="label-text">Date of Birth</span>
-        </label>
+        <label class="label"><span class="label-text">Date of Birth</span></label>
         <input
           type="date"
-          name="dateOfBirth"
-          value="{{formatDate user.dateOfBirth 'YYYY-MM-DD'}}"
+          name="date_of_birth"
+          value="{{formatDate user.date_of_birth 'YYYY-MM-DD'}}"
           class="input input-bordered w-full"
           required
         />
       </div>
 
-      {{!-- Avatar Upload --}}
       <div class="form-control">
-        <label class="label">
-          <span class="label-text">Avatar</span>
-        </label>
+        <label class="label"><span class="label-text">Avatar</span></label>
         <input
           type="file"
           name="avatar"

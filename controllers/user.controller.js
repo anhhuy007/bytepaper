@@ -1,6 +1,6 @@
 // controllers/user.controller.js
 import userService from '../services/user.service.js'
-
+import subscriptionService from '../services/subscription.service.js'
 /**
  * Retrieves the profile of the authenticated user.
  *
@@ -17,10 +17,10 @@ const getUserProfile = async (req, res, next) => {
 
     // Retrieve the user record from the database
     const user = await userService.getUserById(userId)
-
+    const subscription = await subscriptionService.getSubscriptionByUserId(userId)
     // Return the user profile as JSON
     // res.status(200).json({ success: true, data: user });
-    return { user }
+    return { user, subscription }
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
@@ -44,11 +44,14 @@ const updateUserProfile = async (req, res, next) => {
     // Retrieve the profile data from the request body
     const profileData = req.body
 
+    console.log(profileData)
+
     // Update the user profile in the database
     const user = await userService.updateUserProfile(userId, profileData)
 
     // Return the updated user profile as JSON
-    res.status(200).json({ success: true, data: user })
+    // res.status(200).json({ success: true, data: user })\
+    res.redirect('/profile')
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
