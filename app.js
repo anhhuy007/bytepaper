@@ -21,7 +21,7 @@ import routes from './routes/index.routes.js'
 import errorHandler from './middlewares/errorHandler.js'
 import passport from './config/passport.js'
 import redisClient from './utils/redisClient.js'
-import * as helpers from './helpers/handlebars.js'
+import * as helpers from './utils/handlebars.js'
 
 // Load environment variables
 dotenv.config()
