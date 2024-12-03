@@ -1,6 +1,5 @@
 .env
 gpt
 node_modules/*
-node_modules/.package-lock.json
 public/output.css
 todo.txt
