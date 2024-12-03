@@ -1,27 +1,34 @@
 {{!-- views/home/index.hbs --}}
-<div class="space-y-28 px-64">
-  <div class="">
-    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
-      Bài viết nổi bật nhất trong tuần vừa qua
+<div class="space-y-28 px-4 md:px-16 lg:px-32 xl:px-64">
+  {{!-- Featured Articles Carousel --}}
+  <section>
+    <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
+      Featured Articles
     </h1>
     {{> article/layout/carousel articles=articles}}
-  </div>
-  <div class="space-y-10">
-    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
-      Những bài viết được xem nhiều nhất
+  </section>
+
+  {{!-- Most Viewed Articles --}}
+  <section class="space-y-10">
+    <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
+      Most Viewed Articles
     </h1>
     {{> article/layout/basic articles=articles}}
-  </div>
-  <div class="space-y-10">
-    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
-      Những bài viết mới nhất
+  </section>
+
+  {{!-- Latest Articles --}}
+  <section class="space-y-10">
+    <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
+      Latest Articles
     </h1>
     {{> article/layout/basic articles=articles}}
-  </div>
-  <div class="space-y-10">
-    <h1 class="text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-b-black">
-      Top 10 chuyên mục
+  </section>
+
+  {{!-- Top Categories --}}
+  <section class="space-y-10">
+    <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
+      Top Categories
     </h1>
-    {{> article/layout/tab articles=articles}}
-  </div>
+    {{> article/layout/tab categories=categories}}
+  </section>
 </div>
