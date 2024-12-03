@@ -1,8 +1,6 @@
 // routes/auth.routes.js
 
 import express from 'express'
-import passport from 'passport'
-import jwt from 'jsonwebtoken'
 import authController from '../controllers/auth.controller.js'
 import viewRenderer from '../utils/viewRenderer.js'
 import { config } from 'dotenv'
@@ -10,6 +8,8 @@ import redirectIfAuthenticated from '../middlewares/redirectIfAuthenticated.js'
 config()
 
 const router = express.Router()
+
+router.use(redirectIfAuthenticated())
 
 // @route   POST /api/v1/auth/register
 // @desc    Register a new user
@@ -35,8 +35,8 @@ router.get('/google', authController.googleLogin)
 // @desc    Handle Google OAuth callback
 router.get('/google/callback', authController.googleCallback)
 
-router.get('/login', redirectIfAuthenticated(), viewRenderer('auth/login'))
-router.get('/register', redirectIfAuthenticated(), viewRenderer('auth/register'))
+router.get('/login', viewRenderer('auth/login'))
+router.get('/register', viewRenderer('auth/register'))
 router.get('/forgot-password', viewRenderer('auth/forgot-password'))
 router.get('/reset-password', viewRenderer('auth/reset-password'))
 router.get('/logout', authController.logout)

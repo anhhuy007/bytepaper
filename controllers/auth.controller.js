@@ -160,7 +160,8 @@ const forgotPassword = async (req, res, next) => {
     await userService.sendPasswordResetOtp(email)
 
     // Return a success response with a message
-    res.status(200).json({ success: true, message: 'OTP sent to email' })
+    // res.status(200).json({ success: true, message: 'OTP sent to email' })\
+    res.redirect('/auth/reset-password')
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
@@ -198,7 +199,8 @@ const resetPassword = async (req, res, next) => {
     await userService.resetPassword(email, otpCode, newPassword)
 
     // Return a success response with a message
-    res.status(200).json({ success: true, message: 'Password reset successful' })
+    // res.status(200).json({ success: true, message: 'Password reset successful' })
+    res.redirect('/auth/login')
   } catch (error) {
     // If an error occurs, pass it to the next middleware
     next(error)
