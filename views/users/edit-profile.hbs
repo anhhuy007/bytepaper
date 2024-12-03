@@ -1,1 +1,108 @@
 {{!-- views/users/edit-profile.hbs --}}
+<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
+  <div class="max-w-xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Edit Profile</h1>
+
+    {{!-- Alert for Success Message --}} {{#if successMessage}}
+    <div class="alert alert-success shadow-lg mb-4">
+      <div>
+        <svg class="h-6 w-6">
+          <use href="#heroicon-o-check-circle"></use>
+        </svg>
+        <span>{{successMessage}}</span>
+      </div>
+    </div>
+    {{/if}} {{!-- Alert for Error Message --}} {{#if errorMessage}}
+    <div class="alert alert-error shadow-lg mb-4">
+      <div>
+        <svg class="h-6 w-6">
+          <use href="#heroicon-o-exclamation-circle"></use>
+        </svg>
+        <span>{{errorMessage}}</span>
+      </div>
+    </div>
+    {{/if}}
+
+    <form
+      action="/users/edit-profile"
+      method="POST"
+      enctype="multipart/form-data"
+      class="space-y-4"
+    >
+      {{!-- Full Name --}}
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Full Name</span>
+        </label>
+        <input
+          type="text"
+          name="fullName"
+          value="{{user.fullName}}"
+          class="input input-bordered w-full"
+          required
+        />
+      </div>
+
+      {{!-- Pen Name --}}
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Pen Name (if applicable)</span>
+        </label>
+        <input
+          type="text"
+          name="penName"
+          value="{{user.penName}}"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      {{!-- Email --}}
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Email</span>
+        </label>
+        <input
+          type="email"
+          name="email"
+          value="{{user.email}}"
+          class="input input-bordered w-full"
+          required
+        />
+      </div>
+
+      {{!-- Date of Birth --}}
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Date of Birth</span>
+        </label>
+        <input
+          type="date"
+          name="dateOfBirth"
+          value="{{formatDate user.dateOfBirth 'YYYY-MM-DD'}}"
+          class="input input-bordered w-full"
+          required
+        />
+      </div>
+
+      {{!-- Avatar Upload --}}
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Avatar</span>
+        </label>
+        <input
+          type="file"
+          name="avatar"
+          accept="image/*"
+          class="file-input file-input-bordered w-full"
+        />
+        {{#if user.avatarUrl}}
+        <div class="mt-2">
+          <img src="{{user.avatarUrl}}" alt="Current Avatar" class="w-24 h-24 rounded-full" />
+        </div>
+        {{/if}}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full">Save Changes</button>
+    </form>
+  </div>
+</div>

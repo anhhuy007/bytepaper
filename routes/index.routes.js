@@ -11,7 +11,6 @@ import writerRoutes from './writer.routes.js'
 import editorRoutes from './editor.routes.js'
 import adminRoutes from './admin.routes.js'
 import subscriptionRoutes from './subscription.routes.js'
-import { newsData } from '../utils/dummy.js'
 import { articles } from '../utils/categories.js'
 const router = express.Router()
 

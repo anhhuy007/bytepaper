@@ -33,3 +33,13 @@ Handlebars.registerHelper('formatDate', function (dateString) {
     year: 'numeric',
   })
 })
+
+Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) {
+  let startPage = Math.max(1, currentPage - 2)
+  let endPage = Math.min(totalPages, currentPage + 2)
+  let pages = []
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i)
+  }
+  return pages
+})
