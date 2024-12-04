@@ -4,7 +4,7 @@
     {{!-- Previous Button --}} {{#compare currentPage '>' 1}}
     <li>
       <a
-        href="?page={{subtract currentPage 1}}{{#if query}}&query={{query}}{{/if}}"
+        href="?page={{subtract currentPage 1}}{{#if query}}&q={{query}}{{/if}}"
         class="btn btn-outline"
         >«</a
       >
@@ -12,7 +12,7 @@
     {{/compare}} {{!-- Page Numbers --}} {{#each (paginationPages currentPage totalPages)}}
     <li>
       <a
-        href="?page={{this}}{{#if ../query}}&query={{../query}}{{/if}}"
+        href="?page={{this}}{{#if ../query}}&q={{../query}}{{/if}}"
         class="btn {{#if (eq this ../currentPage)}}btn-active{{else}}btn-outline{{/if}}"
       >
         {{this}}
@@ -20,9 +20,7 @@
     </li>
     {{/each}} {{!-- Next Button --}} {{#compare currentPage '<' totalPages}}
     <li>
-      <a
-        href="?page={{add currentPage 1}}{{#if query}}&query={{query}}{{/if}}"
-        class="btn btn-outline"
+      <a href="?page={{add currentPage 1}}{{#if query}}&q={{query}}{{/if}}" class="btn btn-outline"
         >»</a
       >
     </li>

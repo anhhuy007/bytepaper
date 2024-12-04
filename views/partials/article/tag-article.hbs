@@ -21,7 +21,9 @@
         {{!-- Tags --}}
         <div class="flex flex-wrap gap-2 mb-4 z-20">
           {{#if article.tags}} {{#each article.tags}}
-          <a href="/tags/{{ this.id }}" class="btn-sm btn btn-outline text-xl">#{{ this.name }}</a>
+          <a href="articles/filter?tagId={{ this.id }}" class="btn-sm btn btn-outline text-xl"
+            >#{{ this.name }}</a
+          >
           {{/each}} {{else}}
           <span class="text-gray-500 text-sm">No tags available.</span>
           {{/if}}
@@ -29,7 +31,7 @@
 
         {{!-- Category --}}
         <a
-          href="/categories/{{ default article.category_id '#' }}"
+          href="filter?categoryId={{ default article.category_id '#' }}"
           class="text-blue-500 hover:underline text-xl z-20 mt-auto"
         >
           {{ default article.category "Uncategorized" }}
