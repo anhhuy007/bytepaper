@@ -364,7 +364,7 @@ const getHomepageArticles = async (req, res, next) => {
     //   success: true,
     //   data: homepageData,
     // });
-    return { homepageData }
+    return homepageData
   } catch (error) {
     next(error)
   }

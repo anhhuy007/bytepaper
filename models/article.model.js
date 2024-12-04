@@ -456,8 +456,9 @@ class ArticleModel extends BaseModel {
 
   async getFeaturedArticles() {
     const query = `
-      SELECT * 
-      FROM articles 
+      SELECT a.*, c.name AS category
+      FROM articles a
+      LEFT JOIN categories c ON a.category_id = c.id
       WHERE status = 'published' 
         AND published_at >= NOW() - INTERVAL '7 days' 
       ORDER BY views DESC 
@@ -469,8 +470,9 @@ class ArticleModel extends BaseModel {
 
   async getMostViewedArticles() {
     const query = `
-      SELECT * 
-      FROM articles 
+      SELECT a.*, c.name AS category
+      FROM articles a
+      LEFT JOIN categories c ON a.category_id = c.id
       WHERE status = 'published' 
       ORDER BY views DESC 
       LIMIT 10
@@ -481,8 +483,9 @@ class ArticleModel extends BaseModel {
 
   async getNewestArticles() {
     const query = `
-      SELECT * 
-      FROM articles 
+      SELECT a.*, c.name AS category
+      FROM articles a
+      LEFT JOIN categories c ON a.category_id = c.id
       WHERE status = 'published' 
       ORDER BY published_at DESC 
       LIMIT 10
@@ -493,8 +496,9 @@ class ArticleModel extends BaseModel {
 
   async getTopCategoryArticles() {
     const query = `
-      SELECT DISTINCT ON (category_id) * 
-      FROM articles 
+      SELECT DISTINCT ON (category_id) a.*, c.name AS category
+      FROM articles a
+      LEFT JOIN categories c ON a.category_id = c.id
       WHERE status = 'published' 
       ORDER BY category_id, published_at DESC
     `
