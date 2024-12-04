@@ -1,46 +1,7 @@
 // controllers/article.controller.js
 
 import articleService from '../services/article.service.js'
-import tagService from '../services/tag.service.js'
-import categoryService from '../services/category.service.js'
 import commentService from '../services/comment.service.js'
-const getAllArticles = async (req, res, next) => {
-  try {
-    const { page = 1, limit = 10, orderBy = 'a.published_at DESC', query } = req.query
-
-    const options = {
-      limit: parseInt(limit),
-      offset: (parseInt(page) - 1) * parseInt(limit),
-      orderBy,
-    }
-
-    const filters = query ? { query } : {}
-
-    filters.status = 'published'
-
-    // Retrieve categories assigned to the current editor
-    const categories = await categoryService.getAllCategories()
-
-    // Map category IDs for filtering articles
-    const categoryIds = categories.map((category) => category.id)
-
-    filters.category_id = categoryIds
-
-    const articles = await articleService.getAllArticles(filters, options)
-
-    const totalPages = Math.ceil(articles.length / options.limit)
-
-    console.log('==================> articles', articles)
-    return res.render('articles/list', {
-      articles,
-      currentPage: parseInt(page),
-      totalPages,
-      query,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
 
 const getArticleById = async (req, res, next) => {
   try {
@@ -59,76 +20,6 @@ const getArticleById = async (req, res, next) => {
       relatedArticles,
       comments,
       user,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-const searchArticles = async (req, res, next) => {
-  try {
-    // Extract the search keyword from the query parameters
-    const keyword = req.query.q || '' // Default to an empty string if no query provided
-    console.log('Search Keyword:', keyword)
-
-    // Define search options for pagination (limit and offset)
-    const options = {
-      limit: parseInt(req.query.limit, 10) || 10,
-      offset: parseInt(req.query.offset, 10) || 0,
-    }
-
-    // Call the service method to search for articles based on the keyword and options
-    const articles = await articleService.searchArticles(keyword, options)
-
-    console.log('Search Results:', articles)
-
-    // Optionally, calculate pagination info here or within the service
-    const totalArticles = articles.length // Assuming articles have all results
-    const totalPages = Math.ceil(totalArticles / options.limit)
-
-    // Return the search results along with pagination data
-    return res.render('articles/search', {
-      articles,
-      currentPage: req.query.page || 1,
-      totalPages: totalPages,
-      query: keyword,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-const getFilteredArticles = async (req, res, next) => {
-  try {
-    const { categoryId, tagId, page = 1, limit = 10, query } = req.query
-
-    const options = {
-      limit: parseInt(limit),
-      offset: (parseInt(page) - 1) * parseInt(limit),
-      status: 'published',
-    }
-
-    let articles
-    if (categoryId) {
-      // Filter by category
-      articles = await articleService.getArticlesByCategory(categoryId, options)
-    } else if (tagId) {
-      // Filter by tag
-      articles = await tagService.getArticlesByTagId(tagId, options)
-    } else {
-      // Default: Get all articles
-      articles = await articleService.getAllArticles({}, options)
-    }
-
-    const totalPages = Math.ceil(articles.length / options.limit)
-
-    return res.render('articles/list', {
-      articles,
-      currentPage: parseInt(page),
-      totalPages,
-      categoryId,
-      tagId,
-      query,
     })
   } catch (error) {
     next(error)
@@ -236,10 +127,8 @@ const handleArticles = async (req, res, next) => {
 
 export default {
   handleArticles,
-  getAllArticles,
   getArticleById,
   searchArticles,
-  getFilteredArticles,
   increaseArticleViewCount,
   downloadArticle,
   getHomepageArticles,

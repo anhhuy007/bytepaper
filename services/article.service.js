@@ -212,12 +212,12 @@ class ArticleService {
 
     if (keyword) {
       // Tìm kiếm bài viết
-      return await articleModel.searchArticles(keyword, options)
+      return await this.searchArticles(keyword, options)
     }
 
     if (categoryId) {
       // Lọc theo category
-      return await articleModel.getArticlesByCategory(categoryId, options)
+      return await this.getArticlesByCategory(categoryId, options)
     }
 
     if (tagId) {
