@@ -215,6 +215,7 @@ class ArticleService {
       return await this.getAllArticles({ status }, options)
     }
   }
+
 }
 
 export default new ArticleService()

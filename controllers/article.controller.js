@@ -51,6 +51,8 @@ const getArticleById = async (req, res, next) => {
     const relatedArticles = await articleService.getRelatedArticles(articleId)
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
+
+    console.log('Article:', article)
     // Render the detail view
     return res.render('articles/detail', {
       article,
@@ -98,7 +100,7 @@ const searchArticles = async (req, res, next) => {
 
 const getFilteredArticles = async (req, res, next) => {
   try {
-    const { categoryId, tagId, page = 1, limit = 10 } = req.query
+    const { categoryId, tagId, page = 1, limit = 10, query } = req.query
 
     const options = {
       limit: parseInt(limit),
@@ -126,12 +128,12 @@ const getFilteredArticles = async (req, res, next) => {
       totalPages,
       categoryId,
       tagId,
+      query,
     })
   } catch (error) {
     next(error)
   }
 }
-
 
 const increaseArticleViewCount = async (req, res, next) => {
   try {
