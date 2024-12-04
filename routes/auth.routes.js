@@ -13,7 +13,7 @@ router.use(redirectIfAuthenticated())
 
 // @route   POST /api/v1/auth/register
 // @desc    Register a new user
-router.post('/register', authController.register)
+router.post('/signup', authController.register)
 
 // @route   POST /api/v1/auth/login
 // @desc    Login user and return JWT token
