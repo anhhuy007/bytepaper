@@ -71,7 +71,6 @@ Handlebars.registerHelper('buildPaginationUrl', function (query, page) {
   return `?${url.toString()}`
 })
 
-
 Handlebars.registerHelper('capitalize', function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 })
@@ -105,4 +104,8 @@ Handlebars.registerHelper('default', function (value, defaultValue) {
 
 Handlebars.registerHelper('hasItems', function (array) {
   return Array.isArray(array) && array.length > 0
+})
+
+Handlebars.registerHelper('json', function (context) {
+  return JSON.stringify(context)
 })

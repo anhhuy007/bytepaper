@@ -12,7 +12,7 @@ const router = express.Router()
 
 router.get('/filter?', articleController.handleArticles)
 
-router.get('/home', viewRenderer('home', articleController.getHomepageArticles))
+router.get('/home', viewRenderer('home', 'main',articleController.getHomepageArticles))
 
 router.get('/:id', articleController.getArticleById)
 
