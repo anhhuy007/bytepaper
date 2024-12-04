@@ -39,5 +39,9 @@ class CategoryService {
   async getCategoriesWithArticleCount() {
     return await categoryModel.getCategoriesWithArticleCount()
   }
+
+  async getParentCategory(id) {
+    return await categoryModel.getParentCategory(id)
+  }
 }
 export default new CategoryService()

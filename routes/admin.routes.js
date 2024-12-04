@@ -15,87 +15,52 @@ router.use(authMiddleware(['admin']))
 
 router.get('/dashboard', adminController.getDashboard)
 
-// @route   GET /api/v1/admin/users
-// @desc    Get all users
-// router.get('/users', viewRenderer('admin/users', adminController.getAllUsers))
 router.get('/users', adminController.getAllUsers)
-// @route   GET /api/v1/admin/users/:userId
-// @desc    Get user by ID
-router.get('/users/:userId', viewRenderer('admin/users', adminController.getUserById))
 
-// @route   PUT /api/v1/admin/users/:userId/role
-// @desc    Assign role to a user
-router.put('/users/:userId/role', adminController.assignUserRole)
+router.get('/users/edit/:userId', adminController.getUserById)
 
-// @route   DELETE /api/v1/admin/users/:userId
-// @desc    Delete a user
-router.delete('/users/:userId', adminController.deleteUser)
+router.post('/users/edit/:userId', adminController.assignUserRole)
+
+router.post('/users/delete/:userId', adminController.deleteUser)
 
 // Category Management
 
-// @route   GET /api/v1/admin/categories
-// @desc    Get all categories
-
 router.get(
   '/categories',
-  viewRenderer('admin/categories', categoryController.getAllCategories),
+  viewRenderer('admin/categories', 'admin', categoryController.getAllCategories),
 )
 
-// @route   GET /api/v1/admin/categories/:categoryId
-// @desc    Get category by ID
 router.get(
-  '/categories/:categoryId',
-  viewRenderer('admin/category', categoryController.getCategoryById),
+  '/categories/add',
+  viewRenderer('admin/add-category', 'admin', categoryController.getAllCategories),
 )
 
-// @route   POST /api/v1/admin/categories
-// @desc    Create a new category
-router.post('/categories', adminController.createCategory)
+router.post('/categories/add', adminController.createCategory)
 
-// @route   PUT /api/v1/admin/categories/:categoryId
-// @desc    Update a category
-router.put('/categories/:categoryId', adminController.updateCategory)
+router.get('/categories/edit/:categoryId', adminController.getEditCategory)
 
-// @route   DELETE /api/v1/admin/categories/:categoryId
-// @desc    Delete a category
-router.delete('/categories/:categoryId', adminController.deleteCategory)
+router.post('/categories/edit/:categoryId', adminController.updateCategory)
+
+router.post('/categories/delete/:categoryId', adminController.deleteCategory)
 
 // Tag Management (Similar to categories)
 
-// @route   GET /api/v1/admin/tags
-// @desc    Get all tags
 router.get('/tags', viewRenderer('admin/tags', tagController.getAllTags))
 
-// @route   GET /api/v1/admin/tags/:tagId
-// @desc    Get tag by ID
 router.get('/tags/:tagId', viewRenderer('admin/tag', tagController.getTagById))
 
-// @route   POST /api/v1/admin/tags
-// @desc    Create a new tag
 router.post('/tags', tagController.createTag)
 
-// @route   PUT /api/v1/admin/tags/:tagId
-// @desc    Update a tag
 router.put('/tags/:tagId', tagController.updateTag)
 
-// @route   DELETE /api/v1/admin/tags/:tagId
-// @desc    Delete a tag
 router.delete('/tags/:tagId', tagController.deleteTag)
 
 // Editor Management
 
-// @route   GET /api/v1/admin/editors
-// @desc    Get all editors
-
 router.get('/editors', viewRenderer('admin/assign-categories', adminController.getAllEditors))
-
-// @route   GET /api/v1/admin/editors/:editorId
-// @desc    Get editor by ID
 
 router.get('/editors/:userId', viewRenderer('admin/editor', adminController.getUserById))
 
-// @route   PUT /api/v1/admin/editors/:editorId/categories
-// @desc    Assign categories to an editor
 router.put('/editors/:editorId/categories', adminController.assignCategoriesToEditor)
 
 export default router

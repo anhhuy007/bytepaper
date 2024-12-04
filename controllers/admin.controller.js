@@ -1,7 +1,9 @@
 // controllers/admin.controller.js
 
+import { response } from 'express'
 import adminService from '../services/admin.service.js'
 import userService from '../services/user.service.js'
+import categoryService from '../services/category.service.js'
 
 const getAllUsers = async (req, res, next) => {
   try {
@@ -11,7 +13,14 @@ const getAllUsers = async (req, res, next) => {
       offset: parseInt(req.query.offset) || 0,
     }
     const users = await adminService.getAllUsers(filters, options)
-    res.status(200).json({ success: true, data: users })
+    res.render('admin/users', {
+      title: 'Admin Users',
+      layout: 'admin',
+      users,
+      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+      user: req.user,
+      isEdit: true,
+    })
   } catch (error) {
     next(error)
   }
@@ -21,7 +30,13 @@ const getUserById = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const user = await userService.getUserById(userId)
-    res.status(200).json({ success: true, data: user })
+    console.log(user)
+    res.render('admin/edit-user', {
+      title: 'Edit User',
+      layout: 'admin',
+      user,
+      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+    })
   } catch (error) {
     next(error)
   }
@@ -40,8 +55,8 @@ const assignUserRole = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const { role } = req.body
-    const user = await adminService.assignUserRole(userId, role)
-    res.status(200).json({ success: true, data: user })
+    await adminService.assignUserRole(userId, role)
+    res.redirect('/admin/users/edit/' + userId)
   } catch (error) {
     next(error)
   }
@@ -51,7 +66,7 @@ const deleteUser = async (req, res, next) => {
   try {
     const { userId } = req.params
     await adminService.deleteUser(userId)
-    res.status(200).json({ success: true, message: 'User deleted successfully' })
+    res.redirect('/admin/users')
   } catch (error) {
     next(error)
   }
@@ -60,8 +75,15 @@ const deleteUser = async (req, res, next) => {
 const createCategory = async (req, res, next) => {
   try {
     const data = req.body
-    const category = await adminService.createCategory(data)
-    res.status(201).json({ success: true, data: category })
+    if (!req.body.parent_id) {
+      data.parent_id = null
+    }
+    if (!req.body.name) {
+      throw new Error('Category name is required')
+    }
+
+    await adminService.createCategory(data)
+    res.redirect('/admin/categories')
   } catch (error) {
     next(error)
   }
@@ -73,10 +95,10 @@ const updateCategory = async (req, res, next) => {
     const data = req.body
 
     // Call the admin service to update the category with the given ID and data
-    const category = await adminService.updateCategory(req.params.categoryId, data)
+    await adminService.updateCategory(req.params.categoryId, data)
 
     // Send a success response with the updated category data
-    res.status(200).json({ success: true, data: category })
+    res.redirect('/admin/categories')
   } catch (error) {
     // Pass any errors to the next middleware
     next(error)
@@ -89,10 +111,7 @@ const deleteCategory = async (req, res, next) => {
     await adminService.deleteCategory(req.params.categoryId)
 
     // Send a success response with a success message
-    res.status(200).json({
-      success: true,
-      message: 'Category deleted successfully',
-    })
+    res.redirect('/admin/categories')
   } catch (error) {
     // Pass any errors to the next middleware
     next(error)
@@ -123,7 +142,28 @@ const getDashboard = async (req, res, next) => {
   }
 }
 
+const getEditCategory = async (req, res, next) => {
+  try {
+    const category = await categoryService.getCategoryById(req.params.categoryId)
+    const categories = await categoryService.getAllCategories()
+    // Remove the current category from the list of categories
+    const index = categories.findIndex((c) => c.id === category.id)
+    if (index !== -1) {
+      categories.splice(index, 1)
+    }
+    res.render('admin/edit-category', {
+      title: 'Edit Category',
+      layout: 'admin',
+      category,
+      categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
+  getEditCategory,
   getAllUsers,
   getAllEditors,
   getUserById,
