@@ -23,11 +23,7 @@ router.get(
 
 // @route   GET /api/v1/articles/search?q=<query>
 // @desc    Search articles
-router.get(
-  '/search',
-  cacheMiddleware(cacheKeyGenerator.searchCacheKeyGenerator),
-  viewRenderer('articles/index', articleController.searchArticles),
-)
+router.get('/search', articleController.searchArticles)
 
 // @route   GET /api/v1/articles/:id
 // @desc    Get article by ID

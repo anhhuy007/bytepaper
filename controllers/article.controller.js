@@ -3,50 +3,7 @@
 import articleService from '../services/article.service.js'
 import tagService from '../services/tag.service.js'
 import categoryService from '../services/category.service.js'
-/**
- * Retrieves a list of articles from the database based on the provided filters and options.
- *
- * @param {Object} req.query - The filters to apply to the query. Each filter should be an object
- * with the column name as the key and the value to filter by as the value.
- *
- * @param {Object} req.query - The options to apply to the query. The following options are supported:
- *
- *   - `limit`: The maximum number of records to return.
- *   - `offset`: The number of records to skip before returning results.
- *   - `orderBy`: The column(s) to order the results by. The default is `published_at DESC`.
- *
- * @returns {Promise<Object[]>} The list of articles retrieved from the database.
- *
- * @example
- * const articles = await articleController.getAllArticles({
- *   status: "published",
- * }, {
- *   limit: 10,
- *   offset: 0,
- *   orderBy: "published_at DESC",
- * });
- * console.log(articles);
- * [
- *   {
- *     id: 1,
- *     title: "Example Article",
- *     abstract: "This is an example article.",
- *     content: "<p>This is the article content.</p>",
- *     thumbnail: null,
- *     author_id: 1,
- *     category_id: null,
- *     status: "published",
- *     published_at: "2021-01-01T00:00:00.000Z",
- *     views: 0,
- *     is_premium: false,
- *     search_vector: null,
- *     created_at: "2021-01-01T00:00:00.000Z",
- *     updated_at: "2021-01-01T00:00:00.000Z",
- *     author_name: "John Doe",
- *     category_name: null,
- *   },
- * ]
- */
+
 const getAllArticles = async (req, res, next) => {
   try {
     const { page = 1, limit = 10, orderBy = 'a.published_at DESC', query } = req.query
@@ -85,44 +42,6 @@ const getAllArticles = async (req, res, next) => {
   }
 }
 
-/**
- * Retrieves an article by its ID.
- *
- * @param {Object} req - The Express.js request object containing the article ID
- *   to retrieve.
- * @param {Object} res - The Express.js response object used to send the article
- *   data back to the client.
- * @param {Function} next - The Express.js next middleware function which is used
- *   to pass any errors to the next middleware in the stack.
- *
- * @returns {Promise<void>} A promise that resolves when the middleware has finished
- *   executing.
- * @throws {Error} If there is an error retrieving the article.
- * @example
- * const response = await articleController.getArticleById(req, res, next);
- * console.log(response);
- * {
- *   success: true,
- *   data: {
- *     id: 1,
- *     title: "Example Article",
- *     abstract: "This is an example article.",
- *     content: "<p>This is the article content.</p>",
- *     thumbnail: null,
- *     author_id: 1,
- *     category_id: null,
- *     status: "published",
- *     published_at: "2021-01-01T00:00:00.000Z",
- *     views: 0,
- *     is_premium: false,
- *     search_vector: null,
- *     created_at: "2021-01-01T00:00:00.000Z",
- *     updated_at: "2021-01-01T00:00:00.000Z",
- *     author_name: "John Doe",
- *     category_name: null,
- *   },
- * }
- */
 const getArticleById = async (req, res, next) => {
   try {
     // Retrieve the article by its ID
@@ -136,119 +55,39 @@ const getArticleById = async (req, res, next) => {
   }
 }
 
-/**
- * Searches for articles based on a keyword.
- *
- * This method extracts the keyword from the request query parameters and uses
- * the article service to search for articles that match the keyword. The search
- * results are paginated based on the limit and offset query parameters.
- *
- * @param {Object} req - The Express.js request object containing query parameters.
- * @param {Object} res - The Express.js response object used to send the search results.
- * @param {Function} next - The Express.js next middleware function for error handling.
- *
- * @returns {Promise<void>} A promise that resolves when the middleware has finished executing.
- * @throws {Error} If an error occurs during the search process.
- * @example
- * // Request query: { q: "example", limit: 5, offset: 0 }
- * const response = await searchArticles(req, res, next);
- * console.log(response);
- * // { success: true, data: [{ id: 1, title: "Example Article", ... }, ...] }
- */
 const searchArticles = async (req, res, next) => {
   try {
     // Extract the search keyword from the query parameters
-    const keyword = req.query.q
+    const keyword = req.query.q || '' // Default to an empty string if no query provided
+    console.log('Search Keyword:', keyword)
 
-    console.log('==================> keyword', keyword)
-
-    // Define search options for pagination
+    // Define search options for pagination (limit and offset)
     const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+      limit: parseInt(req.query.limit, 10) || 10,
+      offset: parseInt(req.query.offset, 10) || 0,
     }
 
-    // Perform the search using the article service
+    // Call the service method to search for articles based on the keyword and options
     const articles = await articleService.searchArticles(keyword, options)
 
-    // Send the search results as a JSON response
-    // res.status(200).json({ success: true, data: articles });
-    return { articles }
+    console.log('Search Results:', articles)
+
+    // Optionally, calculate pagination info here or within the service
+    const totalArticles = articles.length // Assuming articles have all results
+    const totalPages = Math.ceil(totalArticles / options.limit)
+
+    // Return the search results along with pagination data
+    return res.render('articles/search', {
+      articles,
+      currentPage: req.query.page || 1,
+      totalPages: totalPages,
+      query: keyword,
+    })
   } catch (error) {
-    // Pass any errors to the next middleware for handling
     next(error)
   }
 }
 
-/**
- * Retrieves a list of articles that belong to a specific category.
- *
- * This method will execute a SQL query to retrieve a list of articles that
- * belong to the specified category. The result is an array of objects with
- * the keys "id", "title", "abstract", "content", "thumbnail", "author_id",
- * "category_id", "status", "published_at", "views", "is_premium",
- * "search_vector", "created_at", "updated_at", "author_name", and
- * "category_name".
- *
- * @param {Object} req - The Express.js request object containing the category
- *   ID to retrieve articles for.
- * @param {Object} res - The Express.js response object used to send the article
- *   data back to the client.
- * @param {Function} next - The Express.js next middleware function for error
- *   handling.
- *
- * @returns {Promise<void>} A promise that resolves when the middleware has
- *   finished executing.
- * @throws {Error} If there is an error retrieving the articles.
- * @example
- * const response = await articleController.getArticlesByCategory(
- *   req,
- *   res,
- *   next
- * );
- * console.log(response);
- * {
- *   success: true,
- *   data: [
- *     {
- *       id: 1,
- *       title: "Example Article",
- *       abstract: "This is an example article.",
- *       content: "<p>This is the article content.</p>",
- *       thumbnail: null,
- *       author_id: 1,
- *       category_id: null,
- *       status: "published",
- *       published_at: "2021-01-01T00:00:00.000Z",
- *       views: 0,
- *       is_premium: false,
- *       search_vector: null,
- *       created_at: "2021-01-01T00:00:00.000Z",
- *       updated_at: "2021-01-01T00:00:00.000Z",
- *       author_name: "John Doe",
- *       category_name: null,
- *     },
- *     {
- *       id: 2,
- *       title: "Example Article 2",
- *       abstract: "This is another example article.",
- *       content: "<p>This is the article content.</p>",
- *       thumbnail: null,
- *       author_id: 1,
- *       category_id: null,
- *       status: "published",
- *       published_at: "2021-01-01T00:00:00.000Z",
- *       views: 0,
- *       is_premium: false,
- *       search_vector: null,
- *       created_at: "2021-01-01T00:00:00.000Z",
- *       updated_at: "2021-01-01T00:00:00.000Z",
- *       author_name: "John Doe",
- *       category_name: null,
- *     },
- *   ],
- * }
- */
 const getArticlesByCategory = async (req, res, next) => {
   try {
     const categoryId = req.params.categoryId
@@ -279,24 +118,6 @@ const getArticlesByTag = async (req, res, next) => {
   }
 }
 
-/**
- * Increases the view count of an article by 1.
- *
- * This function handles the request to increment the view count of the
- * specified article. It uses the article service to perform the update and
- * sends the updated view count in the response.
- *
- * @param {Object} req - The Express request object containing article ID in params.
- * @param {Object} res - The Express response object used to send the response.
- * @param {Function} next - The next middleware function in the stack.
- *
- * @returns {Promise<void>} A promise that resolves when the view count has been
- *   incremented and the response is sent.
- *
- * @example
- * // Increment the view count of an article with ID 1
- * await articleController.increaseArticleViewCount({ params: { id: 1 } }, {}, () => {});
- */
 const increaseArticleViewCount = async (req, res, next) => {
   try {
     // Extract the article ID from the request parameters
@@ -316,29 +137,6 @@ const increaseArticleViewCount = async (req, res, next) => {
   }
 }
 
-/**
- * Downloads an article as a file.
- *
- * This function handles the request to download an article by its ID. It uses
- * the article service to retrieve the article and check if it is published and
- * not premium. If the article is found and meets the criteria, it downloads the
- * file associated with the article.
- *
- * @param {Object} req - The Express request object containing the article ID in
- *   params.
- * @param {Object} res - The Express response object used to send the file.
- * @param {Function} next - The next middleware function in the stack.
- *
- * @returns {Promise<void>} A promise that resolves when the file has been
- *   downloaded and the response is sent.
- *
- * @throws {Error} If there is an error retrieving the article or downloading
- *   the file.
- *
- * @example
- * // Download an article with ID 1
- * await articleController.downloadArticle({ params: { id: 1 } }, {}, () => {});
- */
 const downloadArticle = async (req, res, next) => {
   try {
     // Retrieve the article ID from the request parameters
