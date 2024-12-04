@@ -13,7 +13,8 @@ const getArticleById = async (req, res, next) => {
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
 
-    console.log('Article:', article)
+    console.log('=========================> Comments:', comments)
+
     // Render the detail view
     return res.render('articles/detail', {
       article,
@@ -128,7 +129,6 @@ const handleArticles = async (req, res, next) => {
 export default {
   handleArticles,
   getArticleById,
-  searchArticles,
   increaseArticleViewCount,
   downloadArticle,
   getHomepageArticles,

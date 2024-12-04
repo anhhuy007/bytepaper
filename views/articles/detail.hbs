@@ -66,7 +66,7 @@
         </p>
         {{/if}} {{!-- Comments List --}}
         <div class="space-y-4">
-          {{#each comments}} {{> comment-item this}} {{else}}
+          {{#each comments as |comment|}} {{> comment-item comment}} {{else}}
           <p class="text-gray-500">No comments yet. Be the first to comment!</p>
           {{/each}}
         </div>
@@ -87,34 +87,3 @@
     </aside>
   </div>
 </div>
-
-<script>
-  document.getElementById('comment-form')?.addEventListener('submit', async function (e) {
-    e.preventDefault()
-    const form = e.target
-    const content = form.content.value.trim()
-
-    if (!content) {
-      alert('Comment content cannot be empty.')
-      return
-    }
-
-    try {
-      const response = await axios.post(`/api/v1/comments`, {
-        articleId: '{{article.id}}',
-        content: content,
-      })
-
-      // Clear the textarea
-      form.content.value = ''
-
-      // Prepend the new comment to the comments list
-      const newCommentHtml = response.data.commentHtml
-      const commentsSection = document.querySelector('#comments .space-y-4')
-      commentsSection.insertAdjacentHTML('afterbegin', newCommentHtml)
-    } catch (error) {
-      console.error('Error submitting comment:', error)
-      alert('An error occurred while submitting your comment.')
-    }
-  })
-</script>

@@ -3,6 +3,7 @@ import express from 'express'
 import articleController from '../controllers/article.controller.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import checkSubscription from '../middlewares/checkSubscription.js'
+import commentController from '../controllers/comment.controller.js'
 import cacheMiddleware from '../middlewares/cacheMiddleware.js'
 import cacheKeyGenerator from '../utils/cacheKeyGenerator.js'
 import viewRenderer from '../utils/viewRenderer.js'
@@ -23,5 +24,7 @@ router.get(
 )
 
 router.post('/:id/views', articleController.increaseArticleViewCount)
+
+router.post('/:articleId/comments', authMiddleware(), commentController.addCommentToArticle)
 
 export default router

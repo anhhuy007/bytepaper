@@ -4,14 +4,14 @@
     <div class="flex items-center mb-2">
       <div class="avatar">
         <div class="w-8 rounded-full">
-          <img src="{{default comment.avatarUrl ''}}" alt="{{comment.user_name}}" />
+          <img src="/images/default-avatar.jpg" alt="{{user_name}}" width="32" />
         </div>
       </div>
       <div class="ml-2">
-        <p class="font-semibold">{{default comment.user_name 'Anonymous'}}</p>
-        <p class="text-xs text-gray-500">{{formatDate comment.created_at}}</p>
+        <p class="font-semibold">{{default user_name 'Anonymous'}}</p>
+        <p class="text-xs text-gray-500">{{formatDate created_at}}</p>
       </div>
     </div>
-    <p>{{comment.content}}</p>
+    <p>{{content}}</p>
   </div>
 </div>
