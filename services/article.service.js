@@ -206,16 +206,27 @@ class ArticleService {
     return result
   }
 
-  async getFilteredArticles({ categoryId, tagId, status }, options) {
-    if (categoryId) {
-      return await this.getArticlesByCategory(categoryId, options)
-    } else if (tagId) {
-      return await tagService.getArticlesByTagId(tagId, options)
-    } else {
-      return await this.getAllArticles({ status }, options)
-    }
-  }
+  getFilteredArticles = async (filters, options) => {
+    const { keyword, categoryId, tagId, status } = filters
 
+    if (keyword) {
+      // Tìm kiếm bài viết
+      return await articleModel.searchArticles(keyword, options)
+    }
+
+    if (categoryId) {
+      // Lọc theo category
+      return await articleModel.getArticlesByCategory(categoryId, options)
+    }
+
+    if (tagId) {
+      // Lọc theo tag
+      return await tagService.getArticlesByTagId(tagId, options)
+    }
+
+    // Mặc định: tất cả bài viết
+    return await articleModel.getArticles({ status }, options)
+  }
 }
 
 export default new ArticleService()

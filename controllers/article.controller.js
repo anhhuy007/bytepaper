@@ -208,6 +208,34 @@ const getHomepageArticles = async (req, res, next) => {
   }
 }
 
+const handleArticles = async (req, res, next) => {
+  try {
+    const { keyword, categoryId, tagId, page = 1, limit = 10 } = req.query
+
+    const options = {
+      limit: parseInt(limit),
+      offset: (parseInt(page) - 1) * parseInt(limit),
+      status: 'published',
+    }
+
+    const filters = { keyword, categoryId, tagId, status: 'published' }
+
+    const articles = await articleService.getFilteredArticles(filters, options)
+    const totalPages = Math.ceil(articles.length / options.limit)
+
+    return res.render('articles/list', {
+      articles,
+      currentPage: parseInt(page),
+      totalPages,
+      keyword: keyword || '',
+      categoryId,
+      tagId,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   getAllArticles,
   getArticleById,
