@@ -1,10 +1,9 @@
 // controllers/admin.controller.js
 
-import { response } from 'express'
 import adminService from '../services/admin.service.js'
 import userService from '../services/user.service.js'
 import categoryService from '../services/category.service.js'
-
+import tagService from '../services/tag.service.js'
 const getAllUsers = async (req, res, next) => {
   try {
     const filters = req.query
@@ -162,7 +161,21 @@ const getEditCategory = async (req, res, next) => {
   }
 }
 
+const getEditTag = async (req, res, next) => {
+  try {
+    const tag = await tagService.getTagById(req.params.tagId)
+    res.render('admin/edit-tag', {
+      title: 'Edit Tag',
+      layout: 'admin',
+      tag,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
+  getEditTag,
   getEditCategory,
   getAllUsers,
   getAllEditors,
