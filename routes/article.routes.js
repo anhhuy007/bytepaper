@@ -9,13 +9,9 @@ import viewRenderer from '../utils/viewRenderer.js'
 
 const router = express.Router()
 
-router.get('/', articleController.getAllArticles)
+router.get('/filter?', articleController.handleArticles)
 
 router.get('/home', viewRenderer('home', articleController.getHomepageArticles))
-
-router.get('/search?', articleController.searchArticles)
-
-router.get('/filter?', articleController.getFilteredArticles)
 
 router.get('/:id', articleController.getArticleById)
 

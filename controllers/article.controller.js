@@ -227,9 +227,7 @@ const handleArticles = async (req, res, next) => {
       articles,
       currentPage: parseInt(page),
       totalPages,
-      keyword: keyword || '',
-      categoryId,
-      tagId,
+      query: req.query,
     })
   } catch (error) {
     next(error)
@@ -237,6 +235,7 @@ const handleArticles = async (req, res, next) => {
 }
 
 export default {
+  handleArticles,
   getAllArticles,
   getArticleById,
   searchArticles,

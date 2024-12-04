@@ -2,6 +2,7 @@
 
 import articleModel from '../models/article.model.js'
 import articleTagModel from '../models/articleTag.model.js'
+import categoryService from './category.service.js'
 import tagService from './tag.service.js'
 class ArticleService {
   async getAllArticles(filters = {}, options = {}) {
@@ -225,7 +226,9 @@ class ArticleService {
     }
 
     // Mặc định: tất cả bài viết
-    return await articleModel.getArticles({ status }, options)
+    const categories = await categoryService.getAllCategories()
+    const categoryIds = categories.map((category) => category.id)
+    return await articleModel.getArticles({ category_id: categoryIds, status }, options)
   }
 }
 

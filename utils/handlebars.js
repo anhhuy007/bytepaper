@@ -65,6 +65,13 @@ Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) 
   return pages
 })
 
+Handlebars.registerHelper('buildPaginationUrl', function (query, page) {
+  const url = new URLSearchParams(query)
+  url.set('page', page) // Cập nhật hoặc thêm `page`
+  return `?${url.toString()}`
+})
+
+
 Handlebars.registerHelper('capitalize', function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 })
