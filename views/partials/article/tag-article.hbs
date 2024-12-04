@@ -5,7 +5,7 @@
 
     <div class="grid grid-cols-[10%_45%_10%_35%]">
       {{!-- Published Date --}}
-      <span>{{ default formatDate article.published_at || "Not Published" }}</span>
+      <span>{{ formatDate article.published_at}}</span>
 
       <div class="flex flex-col h-full">
         {{!-- Title --}}
@@ -29,7 +29,7 @@
 
         {{!-- Category --}}
         <a
-          href="/categories/{{ article.category_id || '#' }}"
+          href="/categories/{{ default article.category_id '#' }}"
           class="text-blue-500 hover:underline text-xl z-20 mt-auto"
         >
           {{ default article.category "Uncategorized" }}

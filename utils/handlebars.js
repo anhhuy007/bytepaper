@@ -30,6 +30,7 @@ Handlebars.registerHelper('subtract', function (a, b) {
 })
 
 Handlebars.registerHelper('formatDate', function (dateString) {
+  if (!dateString) return 'Invalid Date'
   const date = new Date(dateString)
   return date.toLocaleDateString('en-GB', {
     day: '2-digit',
