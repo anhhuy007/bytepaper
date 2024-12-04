@@ -9,6 +9,22 @@ Handlebars.registerHelper('ne', function (a, b) {
   return a !== b
 })
 
+Handlebars.registerHelper('gt', function (a, b) {
+  return a > b
+})
+
+Handlebars.registerHelper('lt', function (a, b) {
+  return a < b
+})
+
+Handlebars.registerHelper('gte', function (a, b) {
+  return a >= b
+})
+
+Handlebars.registerHelper('lte', function (a, b) {
+  return a <= b
+})
+
 Handlebars.registerHelper('hasSubCategorySelected', function (subCategories, currentCategoryId) {
   return subCategories.some((subCategory) => subCategory.subId === currentCategoryId)
 })
@@ -30,6 +46,7 @@ Handlebars.registerHelper('subtract', function (a, b) {
 })
 
 Handlebars.registerHelper('formatDate', function (dateString) {
+  if (!dateString) return 'Invalid Date'
   const date = new Date(dateString)
   return date.toLocaleDateString('en-GB', {
     day: '2-digit',
@@ -47,6 +64,13 @@ Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) 
   }
   return pages
 })
+
+Handlebars.registerHelper('buildPaginationUrl', function (query, page) {
+  const url = new URLSearchParams(query)
+  url.set('page', page) // Cập nhật hoặc thêm `page`
+  return `?${url.toString()}`
+})
+
 
 Handlebars.registerHelper('capitalize', function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1)
@@ -73,4 +97,12 @@ Handlebars.registerHelper('compare', function (a, operator, b, options) {
     default:
       throw new Error(`Unknown operator: ${operator}`)
   }
+})
+
+Handlebars.registerHelper('default', function (value, defaultValue) {
+  return value || defaultValue
+})
+
+Handlebars.registerHelper('hasItems', function (array) {
+  return Array.isArray(array) && array.length > 0
 })
