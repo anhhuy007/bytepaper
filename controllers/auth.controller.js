@@ -91,7 +91,7 @@ const login = (req, res, next) => {
           console.log('Session saved successfully')
         }
 
-        const redirectUrl = user.role === 'admin' ? '/admin/users' : '/'
+        const redirectUrl = user.role === 'admin' ? '/admin/dashboard' : '/'
         res.redirect(redirectUrl)
       })
     })

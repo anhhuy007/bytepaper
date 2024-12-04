@@ -74,10 +74,10 @@ class ArticleModel extends BaseModel {
       OFFSET $4
     `
     const { rows } = await db.query(query, [
-      filters.category_id,
-      filters.status,
-      options.limit,
-      options.offset,
+      filters.category_id || [],
+      filters.status || 'published',
+      options.limit || 10,
+      options.offset || 0,
     ])
     return rows
   }

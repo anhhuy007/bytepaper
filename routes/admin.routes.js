@@ -13,6 +13,8 @@ router.use(authMiddleware(['admin']))
 
 // User Management
 
+router.get('/dashboard', adminController.getDashboard)
+
 // @route   GET /api/v1/admin/users
 // @desc    Get all users
 // router.get('/users', viewRenderer('admin/users', adminController.getAllUsers))
@@ -36,7 +38,7 @@ router.delete('/users/:userId', adminController.deleteUser)
 
 router.get(
   '/categories',
-  viewRenderer('admin/manage-categories', categoryController.getAllCategories),
+  viewRenderer('admin/categories', categoryController.getAllCategories),
 )
 
 // @route   GET /api/v1/admin/categories/:categoryId
@@ -62,7 +64,7 @@ router.delete('/categories/:categoryId', adminController.deleteCategory)
 
 // @route   GET /api/v1/admin/tags
 // @desc    Get all tags
-router.get('/tags', viewRenderer('admin/manage-tags', tagController.getAllTags))
+router.get('/tags', viewRenderer('admin/tags', tagController.getAllTags))
 
 // @route   GET /api/v1/admin/tags/:tagId
 // @desc    Get tag by ID
@@ -85,7 +87,7 @@ router.delete('/tags/:tagId', tagController.deleteTag)
 // @route   GET /api/v1/admin/editors
 // @desc    Get all editors
 
-router.get('/editors', viewRenderer('admin/manage-editors', adminController.getAllEditors))
+router.get('/editors', viewRenderer('admin/assign-categories', adminController.getAllEditors))
 
 // @route   GET /api/v1/admin/editors/:editorId
 // @desc    Get editor by ID
