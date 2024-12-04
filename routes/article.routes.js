@@ -15,15 +15,13 @@ router.get('/', articleController.getAllArticles)
 
 // @route   GET /api/v1/articles/home
 // @desc    Fetch homepage articles (featured, most-viewed, newest, top-categories)
-router.get(
-  '/home',
-  cacheMiddleware(cacheKeyGenerator.homeCacheKeyGenerator),
-  viewRenderer('home', articleController.getHomepageArticles),
-)
+router.get('/home', viewRenderer('home', articleController.getHomepageArticles))
 
 // @route   GET /api/v1/articles/search?q=<query>
 // @desc    Search articles
 router.get('/search', articleController.searchArticles)
+
+router.get('/filter?', articleController.getFilteredArticles)
 
 // @route   GET /api/v1/articles/:id
 // @desc    Get article by ID
@@ -36,22 +34,6 @@ router.get(
   authMiddleware(['subscriber']),
   checkSubscription,
   articleController.downloadArticle,
-)
-
-// @route   GET /api/v1/articles/category/:categoryId
-// @desc    Get articles by category
-router.get(
-  '/category/:categoryId',
-  cacheMiddleware(cacheKeyGenerator.articlesByCategoryCacheKeyGenerator),
-  viewRenderer('articles/index', articleController.getArticlesByCategory),
-)
-
-// @route   GET /api/v1/articles/tag/:tagId
-// @desc    Get articles by tag
-router.get(
-  '/tag/:tagId',
-  cacheMiddleware(cacheKeyGenerator.articlesByTagCacheKeyGenerator),
-  viewRenderer('articles/index', articleController.getArticlesByTag),
 )
 
 // @route   POST /api/v1/articles/:id/views

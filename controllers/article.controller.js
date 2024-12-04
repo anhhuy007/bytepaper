@@ -50,12 +50,13 @@ const getArticleById = async (req, res, next) => {
     const article = await articleService.getArticleById(articleId)
     const relatedArticles = await articleService.getRelatedArticles(articleId)
     const comments = await commentService.getCommentsByArticleId(articleId)
-
+    const user = req.user
     // Render the detail view
     return res.render('articles/detail', {
       article,
       relatedArticles,
       comments,
+      user,
     })
   } catch (error) {
     next(error)
@@ -95,35 +96,42 @@ const searchArticles = async (req, res, next) => {
   }
 }
 
-const getArticlesByCategory = async (req, res, next) => {
+const getFilteredArticles = async (req, res, next) => {
   try {
-    const categoryId = req.params.categoryId
+    const { categoryId, tagId, page = 1, limit = 10 } = req.query
+
     const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+      limit: parseInt(limit),
+      offset: (parseInt(page) - 1) * parseInt(limit),
+      status: 'published',
     }
-    const articles = await articleService.getArticlesByCategory(categoryId, options)
-    // res.status(200).json({ success: true, data: articles });
-    return { articles }
+
+    let articles
+    if (categoryId) {
+      // Filter by category
+      articles = await articleService.getArticlesByCategory(categoryId, options)
+    } else if (tagId) {
+      // Filter by tag
+      articles = await tagService.getArticlesByTagId(tagId, options)
+    } else {
+      // Default: Get all articles
+      articles = await articleService.getAllArticles({}, options)
+    }
+
+    const totalPages = Math.ceil(articles.length / options.limit)
+
+    return res.render('articles/list', {
+      articles,
+      currentPage: parseInt(page),
+      totalPages,
+      categoryId,
+      tagId,
+    })
   } catch (error) {
     next(error)
   }
 }
 
-const getArticlesByTag = async (req, res, next) => {
-  try {
-    const { tagId } = req.params
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-    }
-    const articles = await tagService.getArticlesByTagId(tagId, options)
-    // res.status(200).json({ success: true, data: articles });
-    return { articles }
-  } catch (error) {
-    next(error)
-  }
-}
 
 const increaseArticleViewCount = async (req, res, next) => {
   try {
@@ -202,8 +210,7 @@ export default {
   getAllArticles,
   getArticleById,
   searchArticles,
-  getArticlesByCategory,
-  getArticlesByTag,
+  getFilteredArticles,
   increaseArticleViewCount,
   downloadArticle,
   getHomepageArticles,
