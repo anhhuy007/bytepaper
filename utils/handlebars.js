@@ -74,3 +74,7 @@ Handlebars.registerHelper('compare', function (a, operator, b, options) {
       throw new Error(`Unknown operator: ${operator}`)
   }
 })
+
+Handlebars.registerHelper('default', function (value, defaultValue) {
+  return value || defaultValue
+})

@@ -1,6 +1,9 @@
 {{!-- views/partials/header.hbs --}}
-<header class="navbar bg-base-100 fixed top-0 z-50 shadow-md">
-  <div class="navbar-start">
+<header
+  x-data="{ sidebarOpen: false }"
+  class="navbar bg-base-100 fixed top-0 z-50 shadow-md justify-between"
+>
+  <div class="navbar-start flex items-center">
     {{!-- Sidebar toggle for mobile --}}
     <button
       @click="sidebarOpen = !sidebarOpen"
@@ -11,8 +14,10 @@
     </button>
     <a href="/" class="btn btn-ghost normal-case text-xl">Paperly</a>
   </div>
+
   <div class="navbar-center hidden lg:flex">{{!-- Category Menu --}} {{> category-menu}}</div>
-  <div class="navbar-end">
+
+  <div class="navbar-end flex items-center">
     {{!-- Search Bar --}}
     <form action="/search" method="GET" class="form-control">
       <div class="input-group">
@@ -20,6 +25,7 @@
         <button type="submit" class="btn btn-square">{{> icons/search}}</button>
       </div>
     </form>
+
     {{!-- User Menu --}} {{#if user}}
     <div class="dropdown dropdown-end ml-2">
       <label tabindex="0" class="btn btn-ghost btn-circle avatar">
@@ -44,12 +50,7 @@
 </header>
 
 {{!-- Mobile Sidebar for Categories --}}
-<div
-  x-data="{ sidebarOpen: false }"
-  class="drawer-side lg:hidden"
-  x-show="sidebarOpen"
-  @click.away="sidebarOpen = false"
->
+<div class="drawer-side lg:hidden" x-show="sidebarOpen" @click.away="sidebarOpen = false">
   <label class="drawer-overlay"></label>
   <ul class="menu p-4 w-64 bg-base-100">
     {{> category-menu}}
