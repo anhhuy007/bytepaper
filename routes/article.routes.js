@@ -11,7 +11,7 @@ const router = express.Router()
 
 // @route   GET /api/v1/articles
 // @desc    Get all published articles
-router.get('/', viewRenderer('articles/index', articleController.getAllArticles))
+router.get('/', articleController.getAllArticles)
 
 // @route   GET /api/v1/articles/home
 // @desc    Fetch homepage articles (featured, most-viewed, newest, top-categories)

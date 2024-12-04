@@ -2,6 +2,7 @@
 
 import articleService from '../services/article.service.js'
 import tagService from '../services/tag.service.js'
+import categoryService from '../services/category.service.js'
 /**
  * Retrieves a list of articles from the database based on the provided filters and options.
  *
@@ -48,15 +49,37 @@ import tagService from '../services/tag.service.js'
  */
 const getAllArticles = async (req, res, next) => {
   try {
-    const filters = req.query
+    const { page = 1, limit = 10, orderBy = 'a.published_at DESC', query } = req.query
+
     const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-      orderBy: req.query.orderBy || 'a.published_at DESC',
+      limit: parseInt(limit),
+      offset: (parseInt(page) - 1) * parseInt(limit),
+      orderBy,
     }
+
+    const filters = query ? { query } : {}
+
+    filters.status = 'published'
+
+    // Retrieve categories assigned to the current editor
+    const categories = await categoryService.getAllCategories()
+
+    // Map category IDs for filtering articles
+    const categoryIds = categories.map((category) => category.id)
+
+    filters.category_id = categoryIds
+
     const articles = await articleService.getAllArticles(filters, options)
-    // res.status(200).json({ success: true, data: articles });
-    return { articles }
+
+    const totalPages = Math.ceil(articles.length / options.limit)
+
+    console.log('==================> articles', articles)
+    return res.render('articles/list', {
+      articles,
+      currentPage: parseInt(page),
+      totalPages,
+      query,
+    })
   } catch (error) {
     next(error)
   }

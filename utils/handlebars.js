@@ -79,3 +79,7 @@ Handlebars.registerHelper('compare', function (a, operator, b, options) {
 Handlebars.registerHelper('default', function (value, defaultValue) {
   return value || defaultValue
 })
+
+Handlebars.registerHelper('hasItems', function (array) {
+  return Array.isArray(array) && array.length > 0
+})

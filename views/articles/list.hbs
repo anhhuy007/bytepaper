@@ -3,7 +3,18 @@
   <h1 class="text-3xl md:text-4xl font-bold mb-6">Articles</h1>
 
   {{!-- Articles List --}}
-  <div class="space-y-6">{{#each articles}} {{> article-item this}} {{/each}}</div>
+  <div class="space-y-6">
+    {{#if (hasItems articles)}}
+      {{#each articles}}
+        {{!-- Render each article --}}
+        {{> article-item this}}
+      {{/each}}
+    {{else}}
+      <p class="text-center text-gray-500">No articles found.</p>
+    {{/if}}
+  </div>
 
-  {{!-- Pagination --}} {{> pagination currentPage=currentPage totalPages=totalPages}}
+  {{!-- Pagination --}}
+  {{> pagination currentPage=currentPage totalPages=totalPages query=query}}
 </div>
+
