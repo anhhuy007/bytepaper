@@ -414,10 +414,14 @@ class ArticleModel extends BaseModel {
    * ]
    */
   async getRelatedArticles(categoryId, excludeArticleId, limit = 5) {
+    console.log('Category ID:', categoryId)
+    console.log('Exclude Article ID:', excludeArticleId)
+
     const query = `
-      SELECT id, title, thumbnail
-      FROM articles
-      WHERE category_id = $1 AND id != $2 AND status = 'published'
+      SELECT a.id, a.title, a.thumbnail, c.name as category, c.id as category_id
+      FROM articles a
+      LEFT JOIN categories c ON a.category_id = c.id
+      WHERE a.category_id = $1 AND a.id != $2 AND status = 'published'
       ORDER BY RANDOM()
       LIMIT $3
     `

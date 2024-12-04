@@ -3,7 +3,7 @@
 import articleService from '../services/article.service.js'
 import tagService from '../services/tag.service.js'
 import categoryService from '../services/category.service.js'
-
+import commentService from '../services/comment.service.js'
 const getAllArticles = async (req, res, next) => {
   try {
     const { page = 1, limit = 10, orderBy = 'a.published_at DESC', query } = req.query
@@ -44,13 +44,20 @@ const getAllArticles = async (req, res, next) => {
 
 const getArticleById = async (req, res, next) => {
   try {
-    // Retrieve the article by its ID
-    const article = await articleService.getArticleById(req.params.id)
-    // Return the article as JSON response
-    // res.status(200).json({ success: true, data: article });
-    return { article }
+    const articleId = req.params.id
+
+    // Fetch article, related articles, and comments
+    const article = await articleService.getArticleById(articleId)
+    const relatedArticles = await articleService.getRelatedArticles(articleId)
+    const comments = await commentService.getCommentsByArticleId(articleId)
+
+    // Render the detail view
+    return res.render('articles/detail', {
+      article,
+      relatedArticles,
+      comments,
+    })
   } catch (error) {
-    // If any error occurs, pass it to the next middleware function
     next(error)
   }
 }

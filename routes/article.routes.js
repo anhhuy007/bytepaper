@@ -27,11 +27,7 @@ router.get('/search', articleController.searchArticles)
 
 // @route   GET /api/v1/articles/:id
 // @desc    Get article by ID
-router.get(
-  '/:id',
-  cacheMiddleware(cacheKeyGenerator.articleDetailCacheKeyGenerator),
-  viewRenderer('articles/detail', articleController.getArticleById),
-)
+router.get('/:id', articleController.getArticleById)
 
 // @route   GET /api/v1/articles/:id/download
 // @desc    Download article PDF (Protected for subscribers)
