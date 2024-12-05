@@ -56,6 +56,18 @@ class CategoryModel extends BaseModel {
     return rows
   }
 
+  async getParentCategories(id) {
+    const query = `
+        SELECT c1.*, c2.name AS parent_name
+        FROM categories c1
+        LEFT JOIN categories c2 ON c1.parent_id = c2.id
+        WHERE c1.id = $1
+      `
+    const { rows } = await db.query(query, [id])
+    return rows
+  }
+
+
   // Add another methods related to categories...
 }
 

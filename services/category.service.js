@@ -1,7 +1,7 @@
 // services/categoryService.js
 
 import categoryModel from '../models/category.model.js'
-
+import editorCategoryModel from '../models/editorCategory.model.js'
 class CategoryService {
   async getAllCategories() {
     // Fetch all categories from the category model
@@ -38,6 +38,34 @@ class CategoryService {
 
   async getCategoriesWithArticleCount() {
     return await categoryModel.getCategoriesWithArticleCount()
+  }
+
+  async getParentCategory(id) {
+    return await categoryModel.getParentCategory(id)
+  }
+
+  async getCategoriesByEditor(editorId) {
+    return await editorCategoryModel.getCategoriesByEditor(editorId)
+  }
+
+  async getEditorsByCategory(categoryId) {
+    return await editorCategoryModel.getEditorsByCategory(categoryId)
+  }
+
+  async updateEditorCategories(editorId, categoryIds) {
+    return await editorCategoryModel.assignCategories(editorId, categoryIds)
+  }
+
+  async getAssignedCategories() {
+    return await editorCategoryModel.getAssignedCategories()
+  }
+
+  async assignCategory(editorId, categoryId) {
+    return await editorCategoryModel.assignCategory(editorId, categoryId)
+  }
+
+  async unassignCategory(editorId, categoryId) {
+    return await editorCategoryModel.unassignCategory(editorId, categoryId)
   }
 }
 export default new CategoryService()

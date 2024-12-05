@@ -13,7 +13,7 @@ router.use(redirectIfAuthenticated())
 
 // @route   POST /api/v1/auth/register
 // @desc    Register a new user
-router.post('/register', authController.register)
+router.post('/signup', authController.register)
 
 // @route   POST /api/v1/auth/login
 // @desc    Login user and return JWT token
@@ -35,10 +35,11 @@ router.get('/google', authController.googleLogin)
 // @desc    Handle Google OAuth callback
 router.get('/google/callback', authController.googleCallback)
 
-router.get('/login', viewRenderer('auth/login'))
-router.get('/register', viewRenderer('auth/register'))
-router.get('/forgot-password', viewRenderer('auth/forgot-password'))
-router.get('/reset-password', viewRenderer('auth/reset-password'))
+// render views
+router.get('/login', viewRenderer('auth/login', 'auth'))
+router.get('/signup', viewRenderer('auth/signup', 'auth'))
+router.get('/forgot-password', viewRenderer('auth/forgot-password', 'auth'))
+router.get('/reset-password', viewRenderer('auth/reset-password', 'auth'))
 router.get('/logout', authController.logout)
 
 export default router

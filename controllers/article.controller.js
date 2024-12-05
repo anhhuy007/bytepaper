@@ -115,6 +115,8 @@ const handleArticles = async (req, res, next) => {
     const articles = await articleService.getFilteredArticles(filters, options)
     const totalPages = Math.ceil(articles.length / options.limit)
 
+    console.log('=========================> Articles:', articles)
+
     return res.render('articles/list', {
       articles,
       currentPage: parseInt(page),
