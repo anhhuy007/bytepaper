@@ -65,8 +65,9 @@ router.post('/articles/status/:articleId', adminController.updateArticleStatus)
 
 // Editor Management
 
-router.get('/assign-categories', adminController.getAssignCategories)
-router.post('/assign-categories/assign', adminController.assignCategory)
-router.post('/assign-categories/unassign', adminController.unassignCategory)
+router.get('/editors', adminController.getEditors)
+router.get('/editors/:editorId/categories', adminController.getEditorCategories)
+router.post('/editors/:editorId/categories/assign', adminController.assignCategory)
+router.post('/editors/:editorId/categories/unassign', adminController.unassignCategory)
 
 export default router

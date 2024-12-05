@@ -42,26 +42,9 @@ const getUserById = async (req, res, next) => {
   }
 }
 
-const getAllEditors = async (req, res, next) => {
-  try {
-    const editors = await adminService.getAllEditors()
-    const categories = await categoryService.getAllCategories()
-    console.log(editors)
-    res.render('admin/assign-categories', {
-      title: 'Admin Editors',
-      layout: 'admin',
-      editors,
-      categories,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-const getAssignCategories = async (req, res, next) => {
+const getEditors = async (req, res, next) => {
   try {
     const editors = await adminService.getAllEditors() // Fetch editors
-    const categories = await categoryService.getAllCategories() // Fetch categories
     const assignedCategories = await categoryService.getAssignedCategories() // Fetch all assignments
 
     // Map assigned categories for each editor
@@ -79,11 +62,34 @@ const getAssignCategories = async (req, res, next) => {
 
     console.log(JSON.stringify(editors, null, 2))
 
-    res.render('admin/assign-categories', {
+    res.render('admin/editors', {
       title: 'Assign Categories',
       layout: 'admin',
       editors,
-      categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getEditorCategories = async (req, res, next) => {
+  try {
+    const { editorId } = req.params
+    const editor = await userService.getUserById(editorId)
+    const categories = await categoryService.getAllCategories()
+    const assignedCategories = await categoryService.getCategoriesByEditor(editorId)
+
+    console.log('=============================', assignedCategories)
+
+    const availableCategories = categories.filter(
+      (category) => !assignedCategories.some((assigned) => assigned.id === category.id),
+    )
+
+    res.render('admin/editor-categories', {
+      title: `Manage Categories for ${editor.full_name}`,
+      editor,
+      assignedCategories,
+      availableCategories,
     })
   } catch (error) {
     next(error)
@@ -92,14 +98,15 @@ const getAssignCategories = async (req, res, next) => {
 
 const assignCategory = async (req, res, next) => {
   try {
-    const { editorId, categoryId } = req.body
+    const { categoryId } = req.body
+    const { editorId } = req.params
 
     if (!editorId || !categoryId) {
       throw new Error('Editor ID and Category ID are required')
     }
 
     await categoryService.assignCategory(editorId, categoryId)
-    res.json({ success: true, message: 'Category assigned successfully' })
+    res.redirect('/admin/editors/' + editorId + '/categories')
   } catch (error) {
     next(error)
   }
@@ -107,19 +114,19 @@ const assignCategory = async (req, res, next) => {
 
 const unassignCategory = async (req, res, next) => {
   try {
-    const { editorId, categoryId } = req.body
+    const { categoryId } = req.body
+    const { editorId } = req.params
 
     if (!editorId || !categoryId) {
       throw new Error('Editor ID and Category ID are required')
     }
 
     await categoryService.unassignCategory(editorId, categoryId)
-    res.json({ success: true, message: 'Category unassigned successfully' })
+    res.redirect('/admin/editors/' + editorId + '/categories')
   } catch (error) {
     next(error)
   }
 }
-
 
 const assignUserRole = async (req, res, next) => {
   try {
@@ -281,7 +288,8 @@ const updateArticleStatus = async (req, res, next) => {
 }
 
 export default {
-  getAssignCategories,
+  getEditors,
+  getEditorCategories,
   assignCategory,
   unassignCategory,
   updateArticleStatus,
@@ -289,7 +297,6 @@ export default {
   getEditTag,
   getEditCategory,
   getAllUsers,
-  getAllEditors,
   getUserById,
   assignUserRole,
   deleteUser,
