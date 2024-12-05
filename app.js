@@ -106,8 +106,12 @@ if (isDevelopment) setupLiveReload(app)
 
 // Routes
 app.use(methodOverride('_method'))
-app.use('/', routes)
+// app.use('/', routes)
 app.use(errorHandler)
+
+app.get('/', (req, res) => {
+  res.render('writer/create-article')
+})
 
 /* ---------- Start Server ---------- */
 app.listen(PORT, () => {
