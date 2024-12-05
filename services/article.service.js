@@ -116,8 +116,7 @@ class ArticleService {
 
     // Update the article status to "published" and set the published_at field to the current date
     return await articleModel.updateArticle(id, {
-      status: 'published',
-      published_at: new Date(),
+      status: 'approved',
       editor_id: editorId,
       category_id: categoryId,
     })
@@ -142,6 +141,20 @@ class ArticleService {
       status: 'rejected',
       rejection_reason: rejectionReason,
       editor_id: editorId,
+    })
+  }
+
+  async publishArticle(id) {
+    // Retrieve the article from the database
+    const article = await articleModel.findById(id)
+    if (!article) {
+      throw new Error('Article not found')
+    }
+
+    // Update the article status to "published" and set the published_at field to the current date
+    return await articleModel.updateArticle(id, {
+      status: 'published',
+      published_at: new Date(),
     })
   }
 
@@ -229,6 +242,10 @@ class ArticleService {
     const categories = await categoryService.getAllCategories()
     const categoryIds = categories.map((category) => category.id)
     return await articleModel.getArticles({ category_id: categoryIds, status }, options)
+  }
+
+  async updateArticleStatus(id, status) {
+    return await articleModel.updateArticle(id, { status })
   }
 }
 

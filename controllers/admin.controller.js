@@ -4,6 +4,7 @@ import adminService from '../services/admin.service.js'
 import userService from '../services/user.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
+import articleService from '../services/article.service.js'
 const getAllUsers = async (req, res, next) => {
   try {
     const filters = req.query
@@ -174,7 +175,39 @@ const getEditTag = async (req, res, next) => {
   }
 }
 
+const getAllArticles = async (req, res, next) => {
+  try {
+    const filters = req.query
+    const options = {
+      limit: parseInt(req.query.limit) || 10,
+      offset: parseInt(req.query.offset) || 0,
+    }
+    const articles = await articleService.getFilteredArticles(filters, options)
+    res.render('admin/articles', {
+      title: 'Admin Articles',
+      layout: 'admin',
+      articles,
+      statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+const updateArticleStatus = async (req, res, next) => {
+  try {
+    const articleId = req.params.articleId
+    await articleService.updateArticleStatus(articleId, req.body.status)
+    res.redirect('/admin/articles')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
+  updateArticleStatus,
+  getAllArticles,
   getEditTag,
   getEditCategory,
   getAllUsers,

@@ -57,6 +57,12 @@ router.post('/tags/edit/:tagId', tagController.updateTag)
 
 router.post('/tags/delete/:tagId', tagController.deleteTag)
 
+// Article Management
+
+router.get('/articles', adminController.getAllArticles)
+
+router.post('/articles/status/:articleId', adminController.updateArticleStatus)
+
 // Editor Management
 
 router.get('/editors', viewRenderer('admin/assign-categories', adminController.getAllEditors))
