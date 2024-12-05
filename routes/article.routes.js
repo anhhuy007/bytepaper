@@ -10,9 +10,13 @@ import viewRenderer from '../utils/viewRenderer.js'
 
 const router = express.Router()
 
+router.get('/', (req, res, next) => {
+  res.redirect('/home')
+})
+
 router.get('/filter?', articleController.handleArticles)
 
-router.get('/home', viewRenderer('home', 'main',articleController.getHomepageArticles))
+router.get('/home', viewRenderer('home', 'main', articleController.getHomepageArticles))
 
 router.get('/:id', articleController.getArticleById)
 
