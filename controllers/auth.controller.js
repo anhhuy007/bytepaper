@@ -27,12 +27,12 @@ import passport from 'passport'
 const register = async (req, res, next) => {
   try {
     // Extract the user data from the request body
-    const { username, email, password, full_name } = req.body
+    const { username, email, password, fullname } = req.body
 
-    if (!username || !email || !password || !full_name) {
+    if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide all required fields (username, email, password, full_name)',
+        message: 'Please provide all required fields (username, email, password)',
       })
     }
 
@@ -41,9 +41,8 @@ const register = async (req, res, next) => {
       username,
       email,
       password,
-      full_name,
+      full_name: fullname || username,
     })
-
     if (!user) {
       return res.status(400).json({ success: false, message: 'User already exists' })
     }

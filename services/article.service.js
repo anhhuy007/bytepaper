@@ -5,7 +5,7 @@ import articleTagModel from '../models/articleTag.model.js'
 import categoryService from './category.service.js'
 import tagService from './tag.service.js'
 class ArticleService {
-  async getAllArticles(filters = {}, options = {}) {
+  async getArticles(filters = {}, options = {}) {
     return await articleModel.getArticles(filters, options)
   }
 
@@ -20,13 +20,15 @@ class ArticleService {
   }
 
   async createArticle(articleData, authorId) {
-    //const { title, content, category_id, tag_ids = [] } = articleData;
-    const { title, content } = articleData
+    const { title, content, abstract, category_id, thumbnail } = articleData
 
     const newArticle = {
       title,
       content,
+      abstract,
       author_id: authorId,
+      category_id,
+      thumbnail,
       status: 'draft',
     }
 
@@ -239,19 +241,15 @@ class ArticleService {
     }
 
     // Mặc định: tất cả bài viết
-    const categories = await categoryService.getAllCategories()
-    const categoryIds = categories.map((category) => category.id)
-    return await articleModel.getArticles(
-      {
-        category_id: categoryIds,
-        status: status ? [status] : ['draft', 'pending', 'approved', 'published', 'rejected'],
-      },
-      options,
-    )
+    return await articleModel.getArticles(options)
   }
 
   async updateArticleStatus(id, status) {
     return await articleModel.updateArticle(id, { status })
+  }
+
+  async getArticleStats(authorId) {
+    return await articleModel.getArticleStats(authorId)
   }
 }
 
