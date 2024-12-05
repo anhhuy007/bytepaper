@@ -3,17 +3,17 @@
 import express from 'express'
 import editorController from '../controllers/editor.controller.js'
 import articleController from '../controllers/article.controller.js'
-import authMiddleware from '../middlewares/authMiddleware.js'
+// import authMiddleware from '../middlewares/authMiddleware.js'
 import viewRenderer from '../utils/viewRenderer.js'
 
 const router = express.Router()
 
 // Protected Routes for Editors
-router.use(authMiddleware(['editor']))
+// router.use(authMiddleware(['editor']))
 
 // @route   GET /api/v1/editor/
 // @desc    Get editor's profile
-router.get('/', viewRenderer('editor/dashboard'))
+router.get('/', viewRenderer('editor/dashboard', 'editor'))
 
 // @route   GET /api/v1/editor/articles?status=pending
 // @desc    Get pending articles for editor's categories
