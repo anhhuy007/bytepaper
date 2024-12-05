@@ -1,49 +1,48 @@
 {{!-- views/admin/assign-categories.hbs --}}
-{{#extend "layouts/admin"}}
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Assign Categories</h1>
 
-  {{#content "title"}}Assign Categories to Editors{{/content}}
+  {{#each editors}}
+  <div class="mb-6 border-b pb-4">
+    <h2 class="text-xl font-semibold mb-2">{{this.full_name}} ({{this.username}})</h2>
 
-  {{#content "body"}}
-    <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-6">Assign Categories</h1>
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Assigned Categories -->
+      <div>
+        <label class="block text-lg font-medium mb-2">Assigned Categories</label>
+        <ul class="list-disc pl-5">
+          {{#if this.assignedCategories.length}} {{#each this.assignedCategories}}
+          <li class="flex justify-between items-center">
+            {{this.name}}
+            <form action="/admin/assign-categories/unassign" method="POST" class="inline">
+              <input type="hidden" name="editorId" value="{{../this.id}}" />
+              <input type="hidden" name="categoryId" value="{{this.id}}" />
+              <button type="submit" class="btn btn-xs btn-error">Unassign</button>
+            </form>
+          </li>
+          {{/each}} {{else}}
+          <p class="text-sm text-gray-500">No categories assigned.</p>
+          {{/if}}
+        </ul>
+      </div>
 
-      {{#each editors}}
-        <div class="mb-6">
-          <h2 class="text-xl font-semibold">{{this.fullName}} ({{this.username}})</h2>
-          <div class="form-control">
-            <label class="label">Assigned Categories</label>
-            <select class="select select-bordered w-full" multiple @change="assignCategories('{{this.id}}', $event.target.selectedOptions)">
-              {{#each ../categories}}
-                <option value="{{this.id}}" {{#if (includes ../this.assignedCategories this.id)}}selected{{/if}}>
-                  {{this.name}}
-                </option>
-              {{/each}}
-            </select>
-          </div>
-        </div>
-      {{/each}}
-
-      {{!-- Scripts --}}
-      <script>
-        function assignCategories() {
-          return {
-            async assignCategories(editorId, selectedOptions) {
-              const categoryIds = Array.from(selectedOptions).map(option => option.value);
-              try {
-                await axios.post('/api/admin/assign-categories', {
-                  editorId: editorId,
-                  categoryIds: categoryIds,
-                });
-                alert('Categories assigned successfully.');
-              } catch (error) {
-                console.error(error);
-                alert('An error occurred.');
-              }
-            },
-          };
-        }
-      </script>
+      <!-- Available Categories -->
+      <div>
+        <label class="block text-lg font-medium mb-2">Available Categories</label>
+        <ul class="list-disc pl-5">
+          {{#each ../categories}} {{#unless (includes ../this.assignedCategories this.id)}}
+          <li class="flex justify-between items-center">
+            {{this.name}}
+            <form action="/admin/assign-categories/assign" method="POST" class="inline">
+              <input type="hidden" name="editorId" value="{{../this.id}}" />
+              <input type="hidden" name="categoryId" value="{{this.id}}" />
+              <button type="submit" class="btn btn-xs btn-primary">Assign</button>
+            </form>
+          </li>
+          {{/unless}} {{/each}}
+        </ul>
+      </div>
     </div>
-  {{/content}}
-
-{{/extend}}
+  </div>
+  {{/each}}
+</div>

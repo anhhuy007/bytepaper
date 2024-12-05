@@ -67,6 +67,7 @@ class CategoryModel extends BaseModel {
     return rows
   }
 
+
   // Add another methods related to categories...
 }
 

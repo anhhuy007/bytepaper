@@ -109,3 +109,7 @@ Handlebars.registerHelper('hasItems', function (array) {
 Handlebars.registerHelper('json', function (context) {
   return JSON.stringify(context)
 })
+
+Handlebars.registerHelper('includes', function (array, value) {
+  return Array.isArray(array) && array.includes(value)
+})

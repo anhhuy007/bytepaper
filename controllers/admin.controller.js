@@ -45,11 +45,81 @@ const getUserById = async (req, res, next) => {
 const getAllEditors = async (req, res, next) => {
   try {
     const editors = await adminService.getAllEditors()
-    return { editors }
+    const categories = await categoryService.getAllCategories()
+    console.log(editors)
+    res.render('admin/assign-categories', {
+      title: 'Admin Editors',
+      layout: 'admin',
+      editors,
+      categories,
+    })
   } catch (error) {
     next(error)
   }
 }
+
+const getAssignCategories = async (req, res, next) => {
+  try {
+    const editors = await adminService.getAllEditors() // Fetch editors
+    const categories = await categoryService.getAllCategories() // Fetch categories
+    const assignedCategories = await categoryService.getAssignedCategories() // Fetch all assignments
+
+    // Map assigned categories for each editor
+    const categoryMap = assignedCategories.reduce((map, row) => {
+      if (!map[row.editor_id]) {
+        map[row.editor_id] = []
+      }
+      map[row.editor_id].push(row) // Push the category object
+      return map
+    }, {})
+
+    editors.forEach((editor) => {
+      editor.assignedCategories = categoryMap[editor.id] || []
+    })
+
+    console.log(JSON.stringify(editors, null, 2))
+
+    res.render('admin/assign-categories', {
+      title: 'Assign Categories',
+      layout: 'admin',
+      editors,
+      categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const assignCategory = async (req, res, next) => {
+  try {
+    const { editorId, categoryId } = req.body
+
+    if (!editorId || !categoryId) {
+      throw new Error('Editor ID and Category ID are required')
+    }
+
+    await categoryService.assignCategory(editorId, categoryId)
+    res.json({ success: true, message: 'Category assigned successfully' })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const unassignCategory = async (req, res, next) => {
+  try {
+    const { editorId, categoryId } = req.body
+
+    if (!editorId || !categoryId) {
+      throw new Error('Editor ID and Category ID are required')
+    }
+
+    await categoryService.unassignCategory(editorId, categoryId)
+    res.json({ success: true, message: 'Category unassigned successfully' })
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 const assignUserRole = async (req, res, next) => {
   try {
@@ -211,6 +281,9 @@ const updateArticleStatus = async (req, res, next) => {
 }
 
 export default {
+  getAssignCategories,
+  assignCategory,
+  unassignCategory,
   updateArticleStatus,
   getAllArticles,
   getEditTag,
