@@ -78,8 +78,7 @@ class AdminService {
     const categories = await categoryModel.getAllCategories()
     const tags = await tagModel.getAllTags()
 
-    const categoryIds = categories.map((category) => category.id)
-    const articles = await articleModel.getArticles({ category_id: categoryIds })
+    const articles = await articleModel.getArticles()
     return {
       totalUsers: users.length,
       totalCategories: categories.length,

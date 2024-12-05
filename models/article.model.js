@@ -61,24 +61,52 @@ class ArticleModel extends BaseModel {
   }
 
   async getArticles(filters = {}, options = {}) {
-    // Build the SELECT query with the provided options
-    const query = `
+    // Initialize base query
+    let query = `
       SELECT a.*, u.full_name AS author_name, c.name AS category_name
       FROM articles a
       LEFT JOIN users u ON a.author_id = u.id
       LEFT JOIN categories c ON a.category_id = c.id
-      WHERE category_id = ANY($1::int[])
-        AND status = ANY($2::article_status[])
-      ORDER BY a.published_at DESC
-      LIMIT $3
-      OFFSET $4
+      WHERE 1=1
     `
-    const { rows } = await db.query(query, [
-      filters.category_id || [],
-      filters.status || ['draft', 'pending', 'approved', 'published', 'rejected'],
-      options.limit || 10,
-      options.offset || 0,
-    ])
+
+    // Store query parameters
+    const queryParams = []
+
+    // Dynamically add conditions
+    if (filters.author_id) {
+      queryParams.push(filters.author_id)
+      query += ` AND a.author_id = $${queryParams.length}`
+    }
+
+    if (filters.category_id) {
+      queryParams.push(filters.category_id)
+      query += ` AND a.category_id = $${queryParams.length}`
+    }
+
+    if (filters.status) {
+      queryParams.push(filters.status)
+      query += ` AND a.status = $${queryParams.length}`
+    }
+
+    if (filters.is_premium) {
+      queryParams.push(filters.is_premium)
+      query += ` AND a.is_premium = $${queryParams.length}`
+    }
+
+    // Add ORDER BY, LIMIT, and OFFSET
+    query += `
+      ORDER BY a.published_at DESC
+      LIMIT $${queryParams.length + 1}
+      OFFSET $${queryParams.length + 2}
+    `
+
+    // Add LIMIT and OFFSET to queryParams
+    queryParams.push(options.limit || 10)
+    queryParams.push(options.offset || 0)
+
+    // Execute query
+    const { rows } = await db.query(query, queryParams)
     return rows
   }
 
@@ -109,7 +137,7 @@ class ArticleModel extends BaseModel {
   }
 
   async getArticlesByCategory(categoryId, options = {}) {
-    return await this.getArticles({ category_id: [categoryId], status: ['published'] }, options)
+    return await this.getArticles({ category_id: categoryId, status: 'published' }, options)
   }
 
   async getArticlesByAuthor(authorId, options = {}) {
@@ -214,6 +242,21 @@ class ArticleModel extends BaseModel {
     `
     const { rows } = await db.query(query)
     return rows
+  }
+
+  async getArticleStats(authorId) {
+    const query = `
+    SELECT
+      COUNT(*) FILTER (WHERE status = 'draft') AS draftArticles,
+      COUNT(*) FILTER (WHERE status = 'pending') AS pendingArticles,
+      COUNT(*) FILTER (WHERE status = 'approved') AS approvedArticles,
+      COUNT(*) FILTER (WHERE status = 'rejected') AS rejectedArticles,
+      COUNT(*) FILTER (WHERE status = 'published') AS publishedArticles
+    FROM articles
+    WHERE author_id = $1
+  `
+    const { rows } = await db.query(query, [authorId])
+    return rows[0]
   }
 }
 

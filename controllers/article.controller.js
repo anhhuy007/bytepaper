@@ -107,10 +107,10 @@ const handleArticles = async (req, res, next) => {
     const options = {
       limit: parseInt(limit),
       offset: (parseInt(page) - 1) * parseInt(limit),
-      status: ['published'],
+      status: 'published',
     }
 
-    const filters = { keyword, categoryId, tagId, status: ['published'] }
+    const filters = { keyword, categoryId, tagId, status: 'published'}
 
     const articles = await articleService.getFilteredArticles(filters, options)
     const totalPages = Math.ceil(articles.length / options.limit)
