@@ -182,18 +182,23 @@ const getAllArticles = async (req, res, next) => {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
     }
+
     const articles = await articleService.getFilteredArticles(filters, options)
+
+    // Determine selected status
+    const selectedStatus = filters.status || ''
+
     res.render('admin/articles', {
       title: 'Admin Articles',
       layout: 'admin',
       articles,
       statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
+      selectedStatus, // Pass selected status to view
     })
   } catch (error) {
     next(error)
   }
 }
-
 
 const updateArticleStatus = async (req, res, next) => {
   try {

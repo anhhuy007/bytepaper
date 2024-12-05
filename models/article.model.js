@@ -68,14 +68,14 @@ class ArticleModel extends BaseModel {
       LEFT JOIN users u ON a.author_id = u.id
       LEFT JOIN categories c ON a.category_id = c.id
       WHERE category_id = ANY($1::int[])
-        AND status = $2
+        AND status = ANY($2::article_status[])
       ORDER BY a.published_at DESC
       LIMIT $3
       OFFSET $4
     `
     const { rows } = await db.query(query, [
       filters.category_id || [],
-      filters.status || 'published',
+      filters.status || ['draft', 'pending', 'approved', 'published', 'rejected'],
       options.limit || 10,
       options.offset || 0,
     ])

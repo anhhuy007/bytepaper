@@ -28,6 +28,7 @@
           <th>Category</th>
           <th>Status</th>
           <th>Published At</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -37,14 +38,19 @@
           <td>{{this.author_name}}</td>
           <td>{{this.category_name}}</td>
           <td>
-            <form action="/admin/articles/status/{{this.id}}" method="POST">
-              <select name="status" class="select select-bordered select-xs" onchange="this.form.submit()">
+            <form
+              action="/admin/articles/status/{{this.id}}"
+              method="POST"
+              onsubmit="return confirmStatusChange(event, this)"
+            >
+              <select name="status" class="select select-bordered select-xs">
                 {{#each ../statuses}}
                 <option value="{{this}}" {{#if (eq ../this.status this)}}selected{{/if}}>
                   {{this}}
                 </option>
                 {{/each}}
               </select>
+              <button type="submit" class="btn btn-xs btn-primary mt-2">Confirm</button>
             </form>
           </td>
           <td>{{formatDate this.published_at}}</td>
@@ -54,6 +60,21 @@
     </table>
   </div>
 </div>
+
+
+<!-- Confirmation Script -->
+<script>
+  function confirmStatusChange(event, form) {
+    event.preventDefault();
+    const selectedStatus = form.querySelector("select[name='status']").value;
+    const confirmMessage = `Are you sure you want to change the status to "${selectedStatus}"?`;
+
+    if (confirm(confirmMessage)) {
+      form.submit();
+    }
+  }
+</script>
+
 
 
 

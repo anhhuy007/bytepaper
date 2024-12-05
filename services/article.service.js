@@ -241,7 +241,13 @@ class ArticleService {
     // Mặc định: tất cả bài viết
     const categories = await categoryService.getAllCategories()
     const categoryIds = categories.map((category) => category.id)
-    return await articleModel.getArticles({ category_id: categoryIds, status }, options)
+    return await articleModel.getArticles(
+      {
+        category_id: categoryIds,
+        status: status ? [status] : ['draft', 'pending', 'approved', 'published', 'rejected'],
+      },
+      options,
+    )
   }
 
   async updateArticleStatus(id, status) {
