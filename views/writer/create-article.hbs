@@ -1,7 +1,13 @@
 {{!-- views/writer/create-article.hbs --}}
 <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
   <h1 class="text-4xl font-bold mb-6 text-gray-800">Create Article</h1>
-  <form action="/articles" method="POST" enctype="multipart/form-data" class="space-y-6">
+  <form
+    action="/writer/articles/create"
+    method="POST"
+    enctype="multipart/form-data"
+    class="space-y-6"
+    id="createArticleForm"
+  >
     <!-- Title -->
     <div class="form-control">
       <label class="label" for="title">
@@ -60,6 +66,7 @@
     </div>
 
     <!-- Author -->
+    {{!--
     <div class="form-control">
       <label class="label" for="author">
         <span class="label-text text-lg font-semibold">Author</span>
@@ -73,20 +80,22 @@
         required
       />
     </div>
+    --}}
 
     <!-- Category -->
     <div class="form-control">
       <label class="label" for="category">
         <span class="label-text text-lg font-semibold">Category</span>
       </label>
-      <select name="category_name" id="category" class="select select-bordered w-full">
+      <select name="category_id" id="category" class="select select-bordered w-full" required>
         <option value="" disabled selected>Select a category</option>
-        <option value="Technology">Technology</option>
-        <option value="Health">Health</option>
-        <option value="Lifestyle">Lifestyle</option>
+        {{#each categories}}
+        <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
       </select>
     </div>
 
+    {{!--
     <div class="form-control">
       <label class="label" for="status">
         <span class="label-text text-lg font-semibold">Status</span>
@@ -96,6 +105,7 @@
         <option value="published">Published</option>
       </select>
     </div>
+    --}}
 
     <!-- Is Premium -->
     <div class="form-control">
@@ -142,33 +152,22 @@
 </script>
 
 <script>
-  document.querySelector('form').addEventListener('submit', async function (event) {
-    event.preventDefault()
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#createArticleForm')
+    console.log('Form:', form)
+    if (form) {
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault()
 
-    // Sync Quill editor content to the hidden input
-    document.querySelector('#hiddenContent').value = quill.root.innerHTML
+        const content = quill.root.innerHTML.trim()
+        document.querySelector('#hiddenContent').value = content
 
-    const formData = new FormData(this)
+        console.log('=== Quill Content ===', content)
 
-    console.log('Form data:')
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`)
-    }
-
-    try {
-      const response = await fetch('/articles', {
-        method: 'POST',
-        body: formData,
+        this.submit()
       })
-
-      if (response.ok) {
-        alert('Article created successfully!')
-      } else {
-        alert('Failed to create article.')
-      }
-    } catch (error) {
-      console.error('Error:', error)
-      alert('An error occurred while creating the article.')
+    } else {
+      console.error('Form element not found.')
     }
   })
 </script>

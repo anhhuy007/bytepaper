@@ -20,7 +20,7 @@ class ArticleService {
   }
 
   async createArticle(articleData, authorId) {
-    const { title, content, abstract, category_id, thumbnail } = articleData
+    const { title, content, abstract, category_id, thumbnail, is_premium } = articleData
 
     const newArticle = {
       title,
@@ -29,7 +29,7 @@ class ArticleService {
       author_id: authorId,
       category_id,
       thumbnail,
-      status: 'draft',
+      is_premium,
     }
 
     const createdArticle = await articleModel.createArticle(newArticle)

@@ -1,120 +1,109 @@
 {{!-- views/writer/edit-article.hbs --}}
 <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
-    <h1 class="text-4xl font-bold mb-6 text-gray-800">Create Article</h1>
-    <form action="/articles" method="POST" enctype="multipart/form-data" class="space-y-6">
-        <!-- Title -->
-        <div class="form-control">
-            <label class="label" for="title">
-                <span class="label-text text-lg font-semibold">Title</span>
-            </label>
-            <input type="text" name="title" id="title" class="input input-bordered w-full"
-                placeholder="Enter the article title" value="{{title}}" required />
-        </div>
+  <h1 class="text-4xl font-bold mb-6 text-gray-800">Edit Article</h1>
+  <form
+    action="/writer/articles/edit/{{article.id}}"
+    method="POST"
+    class="space-y-6"
+    id="editArticleForm"
+  >
+    <!-- Title -->
+    <div class="form-control">
+      <label class="label" for="title">
+        <span class="label-text text-lg font-semibold">Title</span>
+      </label>
+      <input
+        type="text"
+        name="title"
+        id="title"
+        class="input input-bordered w-full"
+        value="{{article.title}}"
+        required
+      />
+    </div>
 
-        <!-- Abstract -->
-        <div class="form-control">
-            <label class="label" for="abstract">
-                <span class="label-text text-lg font-semibold">Abstract</span>
-            </label>
-            <textarea name="abstract" id="abstract" class="textarea textarea-bordered w-full"
-                placeholder="Provide a brief summary" value="{{abstract}}" required>{{abstract}}</textarea>
-        </div>
+    <!-- Abstract -->
+    <div class="form-control">
+      <label class="label" for="abstract">
+        <span class="label-text text-lg font-semibold">Abstract</span>
+      </label>
+      <textarea name="abstract" id="abstract" class="textarea textarea-bordered w-full" required>
+{{article.abstract}}</textarea
+      >
+    </div>
 
-        <!-- Content -->
-        <div class="form-control">
-            <label class="label" for="content">
-                <span class="label-text text-lg font-semibold">Content</span>
-            </label>
-            {{! Hidden input because quill content isn't registered to form directly }}
-            <input type="hidden" name="content" id="hiddenContent" />
-            <div id="content" name="content">
-                {{{content}}}
-            </div>
-        </div>
+    <!-- Content -->
+    <div class="form-control">
+      <label class="label" for="content">
+        <span class="label-text text-lg font-semibold">Content</span>
+      </label>
+      <input type="hidden" name="content" id="hiddenContent" value="{{article.content}}" />
+      <div id="content">{{{article.content}}}</div>
+    </div>
 
-        <!-- Thumbnail -->
-        <div class="form-control">
-            <label class="label" for="thumbnail">
-                <span class="label-text text-lg font-semibold">Thumbnail</span>
-            </label>
-            <input type="file" name="thumbnail" id="thumbnail" class="file-input file-input-bordered w-full"
-                accept="image/*" />
-        </div>
+    <input type="hidden" name="action" id="actionInput" />
 
-        <!-- Author -->
-        <div class="form-control">
-            <label class="label" for="author">
-                <span class="label-text text-lg font-semibold">Author</span>
-            </label>
-            <input type="text" name="author_name" id="author" class="input input-bordered w-full"
-                placeholder="Author name" value="{{author}}" required />
-        </div>
-
-        <!-- Category -->
-        <div class="form-control">
-            <label class="label" for="category">
-                <span class="label-text text-lg font-semibold">Category</span>
-            </label>
-            <select
-                name="category_name"
-                id="category"
-                class="select select-bordered w-full"
-            >
-                <option value="Technology" {{#if (eq category "Technology")}}selected{{/if}}>Technology</option>
-                <option value="Health" {{#if (eq category "Health")}}selected{{/if}}>Health</option>
-                <option value="Lifestyle" {{#if (eq category "Lifestyle")}}selected{{/if}}>Lifestyle</option>
-            </select>
-        </div>
-
-        <div class="form-control">
-            <label class="label" for="status">
-                <span class="label-text text-lg font-semibold">Status</span>
-            </label>
-            <select name="status" id="status" class="select select-bordered w-full" required>
-                <option value="draft" {{#if (eq status "draft" )}}selected{{/if}}>Draft</option>
-                <option value="published" {{#if (eq status "published" )}}selected{{/if}}>Published</option>
-            </select>
-        </div>
-
-        <!-- Is Premium -->
-         <div class="form-control">
-            <label class="label cursor-pointer">
-                <span class="label-text text-lg font-semibold">Is Premium</span>
-                <input
-                    type="checkbox"
-                    name="is_premium"
-                    class="checkbox checkbox-primary"
-                    {{#if is_premium}}checked{{/if}}
-                />
-            </label>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="form-control">
-            <button type="submit" class="btn btn-primary w-full">Create Article</button>
-        </div>
-    </form>
+    <!-- Buttons -->
+    <div class="flex space-x-4">
+      <button type="submit" class="btn btn-primary" name="action" value="save">Save</button>
+      <button type="submit" class="btn btn-secondary" name="action" value="submit">Submit</button>
+      <button type="submit" class="btn btn-error" name="action" value="delete">Delete</button>
+    </div>
+  </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/quill-image-uploader/dist/quill.imageUploader.min.js"></script>
 <script>
-    const quill = new Quill('#content', { theme: 'snow' });
+  Quill.register('modules/imageUploader', window.ImageUploader)
+  const quill = new Quill('#content', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ header: [1, 2, 3, false] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['image'],
+      ],
+      imageUploader: {
+        upload: (file) => {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve(
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/480px-JavaScript-logo.png',
+              )
+            }, 3500)
+          })
+        },
+      },
+    },
+  })
 </script>
 
 <script>
-    document.querySelector('form').addEventListener('submit', async function
-        (event) {
-            event.preventDefault(); // Sync Quill editor content to the hidden
-    input document.querySelector('#hiddenContent').value = quill.root.innerHTML;
-        const formData = new FormData(this); console.log('Form data:'); for (const
-            [key, value] of formData.entries()) { console.log(`${key}: ${value}`); } try {
-            const response = await fetch('/articles', {
-                method: 'POST', body: formData
-            }); if (response.ok) { alert('Article created successfully!'); } else {
-                alert('Failed to create article.');
-            }
-        } catch (error) {
-            console.error('Error:', error); alert('An error occurred while creating the
-    article.'); } });
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#editArticleForm')
+    console.log('Form:', form)
+    if (form) {
+      form.addEventListener('submit', async function (event) {
+        const target = event.target
+
+        if (target.tagName === 'BUTTON' && target.dataset.action) {
+          actionInput.value = target.dataset.action
+
+          const content = quill.root.innerHTML.trim()
+          quillContent.value = content
+
+          console.log('=== Quill Content ===', content)
+          console.log('Action:', actionInput.value)
+
+          // Gửi form
+          form.submit()
+        }
+      })
+    } else {
+      console.error('Form element not found.')
+    }
+  })
 </script>
