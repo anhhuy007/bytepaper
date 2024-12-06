@@ -17,7 +17,7 @@ router.get('/', viewRenderer('editor/dashboard', 'editor'))
 
 // @route   GET /api/v1/editor/articles?status=pending
 // @desc    Get pending articles for editor's categories
-router.get('/articles/', viewRenderer('editor/articles', editorController.getMyArticles))
+router.get('/articles/', editorController.getMyArticles)
 
 // @route   GET /api/v1/editor/articles/:articleId
 // @desc    Get article by ID

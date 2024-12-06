@@ -36,7 +36,7 @@ router.get('/google', authController.googleLogin)
 router.get('/google/callback', authController.googleCallback)
 
 // render views
-router.get('/login', viewRenderer('auth/login', 'auth'))
+router.post('/login', authController.login)
 router.get('/signup', viewRenderer('auth/signup', 'auth'))
 router.get('/forgot-password', viewRenderer('auth/forgot-password', 'auth'))
 router.get('/reset-password', viewRenderer('auth/reset-password', 'auth'))

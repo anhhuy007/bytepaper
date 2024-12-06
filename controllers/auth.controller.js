@@ -66,38 +66,25 @@ const register = async (req, res, next) => {
  *
  * @returns {Promise<void>} The promise that resolves when the login is handled.
  */
-const login = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      console.error('Error during authentication:', err)
-      return next(err)
-    }
-    if (!user) {
-      return res.status(401).render('auth/login', { error: 'Invalid credentials' })
-    }
-
-    req.login(user, (err) => {
-      if (err) {
-        console.error('Error during login session:', err)
-        return next(err)
-      }
-
-      // Explicitly save the session
-      req.session.save((err) => {
-        if (err) {
-          console.error('Error explicitly saving session:', err)
-          return next(err)
-        } else {
-          console.log('Session saved successfully')
-        }
-
-        const redirectUrl = user.role === 'admin' ? '/admin/users' : '/'
-        res.redirect(redirectUrl)
-      })
+const login = async (req, res, next) => {
+  try {
+    // Extract username and password from the request body
+    const { username, password } = req.body
+console.log(username, password)
+    // Authenticate the user with the service
+    const { user, token } = await userService.authenticateUser({
+      username,
+      password,
     })
-  })(req, res, next)
-}
+    
 
+    // Return a success response with the user data and token
+    res.status(200).json({ success: true, data: { user, token } })
+  } catch (error) {
+    // If an error occurs, pass it to the next middleware
+    next(error)
+  }
+}
 const googleLogin = (req, res, next) => {
   passport.authenticate('google', { scope: ['email', 'profile'] })(req, res, next)
 }

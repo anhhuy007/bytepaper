@@ -109,8 +109,9 @@ const getMyArticles = async (req, res, next) => {
       offset: parseInt(req.query.offset) || 0,
     }
     const articles = await articleService.getAllArticles(filters, options)
+    console.log(articles)
     // res.status(200).json({ success: true, data: articles });
-    return { articles }
+    return res.render('editor/articleDetail', { layout: 'editor', articles })
   } catch (error) {
     next(error)
   }
