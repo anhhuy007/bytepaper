@@ -1,6 +1,7 @@
-// models/tagModel.js
+// models/tag.model.js
 import BaseModel from './Base.model.js'
 import db from '../utils/Database.js'
+import { buildSelectQuery, buildWhereClause } from '../utils/QueryBuilder.js'
 // CREATE TABLE tags (
 //   id SERIAL PRIMARY KEY,
 //   name VARCHAR(50) UNIQUE NOT NULL,
@@ -17,9 +18,35 @@ class TagModel extends BaseModel {
     return await this.findById(id)
   }
 
-  async getAllTags() {
-    // Retrieve all tags using the find method
-    return await this.find()
+  async getAllTags(filters = {}, options = {}) {
+    const { whereClause, values } = buildWhereClause(filters)
+
+    // Build the SQL query for fetching tags with filters and pagination
+    const query = buildSelectQuery({
+      table: 'tags',
+      columns: ['id', 'name', 'created_at'],
+      where: whereClause,
+      orderBy: options.orderBy,
+      limit: options.limit,
+      offset: options.offset,
+    })
+
+    const totalCountQuery = `
+      SELECT COUNT(*) 
+      FROM tags 
+      ${whereClause ? `WHERE ${whereClause}` : ''}
+    `
+
+    // Execute both queries in parallel
+    const [tagsResult, countResult] = await Promise.all([
+      db.query(query, values),
+      db.query(totalCountQuery, values),
+    ])
+
+    return {
+      tags: tagsResult.rows,
+      totalTags: parseInt(countResult.rows[0].count, 10),
+    }
   }
 
   async createTag(data) {

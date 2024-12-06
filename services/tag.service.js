@@ -4,8 +4,8 @@ import tagModel from '../models/tag.model.js'
 import articleTagModel from '../models/articleTag.model.js'
 
 class TagService {
-  async getAllTags() {
-    return await tagModel.getAllTags()
+  async getAllTags(filters = {}, options = {}) {
+    return await tagModel.getAllTags(filters, options)
   }
 
   async getTagById(id) {

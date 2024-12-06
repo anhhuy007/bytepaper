@@ -43,9 +43,9 @@ router.post('/categories/delete/:categoryId', adminController.deleteCategory)
 
 // Tag Management (Similar to categories)
 
-router.get('/tags', viewRenderer('admin/tags', 'admin', tagController.getAllTags))
+router.get('/tags', tagController.getAllTags)
 
-router.get('/tags/add', viewRenderer('admin/add-tag', 'admin'))
+router.get('/tags/add', tagController.getAddTag)
 
 router.post('/tags/add', tagController.createTag)
 
