@@ -211,6 +211,41 @@ const deleteUser = async (req, res, next) => {
   }
 }
 
+const getAllCategories = async (req, res, next) => {
+  try {
+    const filters = {
+      parent_id: req.query.parent_id || null,
+      name: req.query.name || null,
+    }
+
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default to 10, min 1
+    const page = parseInt(req.query.page, 10) || 1 // Default to page 1
+    const offset = (page - 1) * limit // Calculate offset dynamically
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'name ASC', // Default sorting by name
+    }
+
+    const { categories, totalCategories } = await adminService.getAllCategories(filters, options)
+
+    const totalPages = Math.ceil(totalCategories / limit)
+    const query = { ...req.query, limit, page }
+
+    res.render('admin/categories', {
+      title: 'Admin Categories',
+      layout: 'admin',
+      categories,
+      totalPages,
+      currentPage: page,
+      query,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const createCategory = async (req, res, next) => {
   try {
     const data = req.body
@@ -284,7 +319,7 @@ const getDashboard = async (req, res, next) => {
 const getEditCategory = async (req, res, next) => {
   try {
     const category = await categoryService.getCategoryById(req.params.categoryId)
-    const categories = await categoryService.getAllCategories()
+    const { categories, totalCategories } = await categoryService.getAllCategories()
     // Remove the current category from the list of categories
     const index = categories.findIndex((c) => c.id === category.id)
     if (index !== -1) {
@@ -364,6 +399,7 @@ export default {
   getUserById,
   assignUserRole,
   deleteUser,
+  getAllCategories,
   createCategory,
   updateCategory,
   deleteCategory,

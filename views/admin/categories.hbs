@@ -5,18 +5,69 @@
     <a href="/admin/categories/add" class="btn btn-primary">Add Category</a>
   </div>
 
+  <!-- Filters -->
+  <form class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" method="GET">
+    <!-- Category Name Filter -->
+    <input
+      type="text"
+      name="name"
+      class="input input-bordered"
+      placeholder="Search by category name"
+      value="{{query.name}}"
+    />
+
+    <!-- Parent Category Filter -->
+    <input
+      type="number"
+      name="parent_id"
+      class="input input-bordered"
+      placeholder="Parent ID"
+      value="{{query.parent_id}}"
+    />
+
+    <!-- Sort By -->
+    <select name="orderBy" class="select select-bordered">
+      <option value="name ASC" {{#if (eq query.orderBy "name ASC")}}selected{{/if}}>Name A-Z</option>
+      <option value="name DESC" {{#if (eq query.orderBy "name DESC")}}selected{{/if}}>Name Z-A</option>
+    </select>
+
+    <!-- Limit -->
+    <input
+      type="number"
+      name="limit"
+      class="input input-bordered"
+      placeholder="Items per page"
+      min="1"
+      value="{{query.limit}}"
+    />
+
+    <!-- Default page to 1 -->
+    <input type="hidden" name="page" value="1" />
+
+    <!-- Submit and Reset -->
+    <div class="flex items-center space-x-2">
+      <button type="submit" class="btn btn-primary">Apply</button>
+      <a href="/admin/categories" class="btn btn-secondary">Reset</a>
+    </div>
+  </form>
+
+  <!-- Pagination (Top) -->
+  <div class="mt-4 mb-2">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
+
   <!-- Categories Table -->
-  <div class="overflow-x-auto">
+  {{#if categories.length}}
+  <div class="overflow-x-auto mb-4">
     <table class="table w-full">
       <thead>
         <tr>
-          <th>Name</th>
+          <th>Category Name</th>
           <th>Parent Category</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Dynamically Render Categories -->
         {{#each categories}}
         <tr>
           <td>{{this.name}}</td>
@@ -26,8 +77,8 @@
             <form
               action="/admin/categories/delete/{{this.id}}"
               method="POST"
+              onsubmit="return confirmDelete('{{this.name}}')"
               style="display: inline"
-              onsubmit="return confirm('Are you sure you want to delete this category?');"
             >
               <button type="submit" class="btn btn-xs btn-error">Delete</button>
             </form>
@@ -37,5 +88,19 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination (Bottom) -->
+  <div class="mt-2">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
+
+  {{else}}
+  <div class="text-center text-gray-500">No categories found.</div>
+  {{/if}}
 </div>
 
+<script>
+  function confirmDelete(categoryName) {
+    return confirm(`Are you sure you want to delete category "${categoryName}"?`);
+  }
+</script>

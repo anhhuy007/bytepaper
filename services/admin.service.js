@@ -122,6 +122,10 @@ class AdminService {
       totalArticles: articles.length,
     }
   }
+
+  async getAllCategories(filters = {}, options = {}) {
+    return await categoryModel.getAllCategories(filters, options)
+  }
 }
 
 export default new AdminService()

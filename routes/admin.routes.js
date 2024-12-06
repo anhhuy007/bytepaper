@@ -29,10 +29,7 @@ router.post('/users/delete/:userId', adminController.deleteUser)
 
 // Category Management
 
-router.get(
-  '/categories',
-  viewRenderer('admin/categories', 'admin', categoryController.getAllCategories),
-)
+router.get('/categories', adminController.getAllCategories)
 
 router.get(
   '/categories/add',
