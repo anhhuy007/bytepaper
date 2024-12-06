@@ -31,10 +31,7 @@ router.post('/users/delete/:userId', adminController.deleteUser)
 
 router.get('/categories', adminController.getAllCategories)
 
-router.get(
-  '/categories/add',
-  viewRenderer('admin/add-category', 'admin', categoryController.getAllCategories),
-)
+router.get('/categories/add', adminController.getAddCategory)
 
 router.post('/categories/add', adminController.createCategory)
 

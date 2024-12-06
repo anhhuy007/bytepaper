@@ -249,33 +249,23 @@ const getAllCategories = async (req, res, next) => {
 const createCategory = async (req, res, next) => {
   try {
     const data = req.body
-    if (!req.body.parent_id) {
-      data.parent_id = null
-    }
-    if (!req.body.name) {
-      throw new Error('Category name is required')
-    }
-
+    data.parent_id = data.parent_id || null // Ensure null for no parent
+    if (!data.name) throw new Error('Category name is required')
     await adminService.createCategory(data)
-    res.redirect('/admin/categories')
+    res.status(200).send({ message: 'Category added successfully' })
   } catch (error) {
-    next(error)
+    res.status(400).send({ message: error.message })
   }
 }
 
 const updateCategory = async (req, res, next) => {
   try {
-    // Extract update data from the request body
     const data = req.body
-
-    // Call the admin service to update the category with the given ID and data
+    data.parent_id = data.parent_id || null // Ensure null for no parent
     await adminService.updateCategory(req.params.categoryId, data)
-
-    // Send a success response with the updated category data
-    res.redirect('/admin/categories')
+    res.status(200).send({ message: 'Category updated successfully' })
   } catch (error) {
-    // Pass any errors to the next middleware
-    next(error)
+    res.status(400).send({ message: error.message })
   }
 }
 
@@ -316,20 +306,32 @@ const getDashboard = async (req, res, next) => {
   }
 }
 
+const getAddCategory = async (req, res, next) => {
+  try {
+    const { categories } = await categoryService.getAllCategories()
+    res.render('admin/add-category', {
+      title: 'Add Category',
+      layout: 'admin',
+      categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const getEditCategory = async (req, res, next) => {
   try {
     const category = await categoryService.getCategoryById(req.params.categoryId)
-    const { categories, totalCategories } = await categoryService.getAllCategories()
-    // Remove the current category from the list of categories
-    const index = categories.findIndex((c) => c.id === category.id)
-    if (index !== -1) {
-      categories.splice(index, 1)
-    }
+    const { categories } = await categoryService.getAllCategories()
+
+    // Remove the current category from potential parent category options
+    const filteredCategories = categories.filter((c) => c.id !== category.id)
+
     res.render('admin/edit-category', {
       title: 'Edit Category',
       layout: 'admin',
       category,
-      categories,
+      categories: filteredCategories,
     })
   } catch (error) {
     next(error)
@@ -385,6 +387,7 @@ const updateArticleStatus = async (req, res, next) => {
 }
 
 export default {
+  getAddCategory,
   getAddUser,
   createUser,
   getEditors,
