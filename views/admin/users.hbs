@@ -2,12 +2,34 @@
 <div class="container mx-auto px-4 py-8">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Users Management</h1>
-    <!-- Add User Button -->
     <a href="/admin/users/add" class="btn btn-primary">Add User</a>
   </div>
 
+  <!-- Filters -->
+  <form class="mb-4 flex space-x-4" method="GET">
+    <input
+      type="text"
+      name="username"
+      class="input input-bordered"
+      placeholder="Search by username"
+      value="{{query.username}}"
+    />
+    <select name="role" class="select select-bordered">
+      <option value="">All Roles</option>
+      {{#each roles}}
+      <option value="{{this}}" {{#if (eq this ../query.role)}}selected{{/if}}>{{this}}</option>
+      {{/each}}
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+    <a href="/admin/users" class="btn btn-secondary">Reset</a>
+  </form>
+
+  <!-- Pagination (Top) -->
+  {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+
   <!-- Users Table -->
-  <div class="overflow-x-auto">
+  {{#if users.length}}
+  <div class="overflow-x-auto mb-4">
     <table class="table w-full">
       <thead>
         <tr>
@@ -26,9 +48,7 @@
           <td>{{this.email}}</td>
           <td>{{this.role}}</td>
           <td>
-            <!-- Edit Button -->
             <a href="/admin/users/edit/{{this.id}}" class="btn btn-xs btn-warning">Edit</a>
-            <!-- Delete Form -->
             <form
               action="/admin/users/delete/{{this.id}}"
               method="POST"
@@ -43,7 +63,15 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination (Bottom) -->
+  {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+
+  {{else}}
+  <div class="text-center text-gray-500">No users found.</div>
+  {{/if}}
 </div>
+
 
 <!-- Add JavaScript -->
 <script>
