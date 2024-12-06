@@ -110,22 +110,25 @@ const googleCallback = (req, res, next) => {
 
 const forgotPassword = async (req, res, next) => {
   try {
-    // Extract the email address from the request body
     const { email } = req.body
 
-    // Check if email is provided
     if (!email) {
       return res.status(400).json({ success: false, message: 'Email is required.' })
     }
 
-    // Send the OTP to the user
+    // Call the user service to send the reset OTP/email
     await userService.sendPasswordResetOtp(email)
 
-    // Return a success response with a message
-    // res.status(200).json({ success: true, message: 'OTP sent to email' })\
-    res.redirect('/auth/reset-password')
+    return res
+      .status(200)
+      .json({ success: true, message: 'Password reset link sent to your email.' })
   } catch (error) {
-    // If an error occurs, pass it to the next middleware
+    if (error.message === 'User not found') {
+      return res
+        .status(404)
+        .json({ success: false, message: 'No user found with that email address.' })
+    }
+    console.error('Error in forgotPassword controller:', error)
     next(error)
   }
 }
