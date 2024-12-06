@@ -167,6 +167,19 @@ class UserModel extends BaseModel {
     const users = await this.find({ reset_token: token })
     return users[0]
   }
+
+  async getUserProfileData(userId) {
+    const query = `
+      SELECT
+        u.*,
+        s.expiry_date AS subscription_expiry_date 
+      FROM users u
+      LEFT JOIN subscriptions s ON s.user_id = u.id 
+      WHERE u.id = $1`
+
+    const { rows } = await db.query(query, [userId])
+    return rows[0]
+  }
 }
 
 const userModel = new UserModel()

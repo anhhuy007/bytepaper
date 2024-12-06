@@ -1,41 +1,25 @@
 // controllers/user.controller.js
 import userService from '../services/user.service.js'
 import subscriptionService from '../services/subscription.service.js'
-/**
- * Retrieves the profile of the authenticated user.
- *
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @param {Function} next - The Express next middleware function.
- *
- * @return {Promise<void>} The promise that resolves when the request is handled.
- */
+
 const getUserProfile = async (req, res, next) => {
   try {
-    // Get the ID of the authenticated user
     const userId = req.user.id
+    const profileData = await userService.getUserProfile(userId)
+    console.log(profileData)
+    if (!profileData) {
+      return res.status(404).render('error/404', { message: 'User not found' })
+    }
 
-    // Retrieve the user record from the database
-    const user = await userService.getUserById(userId)
-    const subscription = await subscriptionService.getSubscriptionByUserId(userId)
-    // Return the user profile as JSON
-    // res.status(200).json({ success: true, data: user });
+    const { subscription_expiry_date, ...user } = profileData
+    const subscription = subscription_expiry_date ? { expiry_date: subscription_expiry_date } : null
+
     res.render('user/profile', { user, subscription })
   } catch (error) {
-    // If an error occurs, pass it to the next middleware
     next(error)
   }
 }
 
-/**
- * Updates the profile of the authenticated user.
- *
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @param {Function} next - The Express next middleware function.
- *
- * @return {Promise<void>} The promise that resolves when the request is handled.
- */
 const updateUserProfile = async (req, res, next) => {
   try {
     // Get the ID of the authenticated user
@@ -58,15 +42,6 @@ const updateUserProfile = async (req, res, next) => {
   }
 }
 
-/**
- * Changes the password of the authenticated user.
- *
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @param {Function} next - The Express next middleware function.
- *
- * @return {Promise<void>} The promise that resolves when the request is handled.
- */
 const changePassword = async (req, res, next) => {
   try {
     // Get the ID of the authenticated user
