@@ -5,29 +5,34 @@ import passport from 'passport'
 
 const register = async (req, res, next) => {
   try {
-    // Extract the user data from the request body
     const { username, email, password, fullname } = req.body
 
+    // Validate input
     if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide all required fields (username, email, password)',
+        message: 'Please fill in all required fields (username, email, password).',
       })
     }
 
-    // Register the user with the service
+    // Register user
     const user = await userService.registerUser({
       username,
       email,
       password,
       full_name: fullname || username,
     })
+
     if (!user) {
-      return res.status(400).json({ success: false, message: 'User already exists' })
+      return res.status(400).json({ success: false, message: 'User already exists.' })
     }
-    res.redirect('/auth/login')
+
+    res.status(200).json({ success: true, redirectUrl: '/auth/login' })
   } catch (error) {
-    // If an error occurs, pass it to the next middleware
+    if (error.message === 'Username or email already exists') {
+      return res.status(400).json({ success: false, message: error.message })
+    }
+    console.error('Error during user registration:', error)
     next(error)
   }
 }

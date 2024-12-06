@@ -11,11 +11,15 @@ class UserService {
     const { username, email, password, full_name } = userData
 
     // Check if username or email already exists in the database
-    const existingUser = await userModel.find({
-      $or: [{ username }, { email }],
-    })
-    if (existingUser.length > 0) {
-      throw new Error('Username or email already exists')
+    const existingUserEmail = await userModel.findByEmail(email)
+
+    if (existingUserEmail) {
+      throw new Error('Email already exists. Please use a different email.')
+    }
+
+    const existingUser = await userModel.findByUsername(username)
+    if (existingUser) {
+      throw new Error('Username already exists. Please use a different username.')
     }
 
     // Hash the password for security
