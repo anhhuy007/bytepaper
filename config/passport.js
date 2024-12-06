@@ -10,21 +10,18 @@ dotenv.config()
 // Local Strategy for username/password authentication
 passport.use(
   new LocalStrategy(
-    {
-      usernameField: 'username',
-      passwordField: 'password',
-    },
+    { usernameField: 'username', passwordField: 'password' },
     async (username, password, done) => {
       try {
         console.log('Authenticating user:', username)
         const user = await userService.authenticateUser({ username, password })
         if (!user) {
           console.warn('Invalid credentials for username:', username)
-          return done(null, false, { message: 'Invalid credentials' })
+          return done(null, false, { message: 'Invalid username or password' })
         }
         return done(null, user)
       } catch (error) {
-        console.error('Error in Local strategy:', error)
+        console.error('Error during user authentication:', error)
         return done(error)
       }
     },
