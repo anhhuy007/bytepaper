@@ -2,6 +2,7 @@
 
 import articleService from '../services/article.service.js'
 import adminService from '../services/admin.service.js'
+// import userService from '../services/user.service.js'
 
 /**
  * Retrieves a list of pending articles assigned to the current editor, based on
@@ -82,20 +83,23 @@ const getPendingArticles = async (req, res, next) => {
 
 const getMyArticles = async (req, res, next) => {
   try {
-    const editorId = req.user.id
-    const categories = await adminService.getCategoriesByEditor(editorId)
-    const categoryIds = categories.map((category) => parseInt(category.id, 10))
-    if (!categoryIds.length) {
-      return []
-    }
-    const filters = {
-      category_id: categoryIds,
-    }
+    console.log('hihi')
+
+    // const editorId = req.user.id
+    // const categories = await adminService.getCategoriesByEditor(editorId)
+    // const categoryIds = categories.map((category) => parseInt(category.id, 10))
+    // if (!categoryIds.length) {
+    //   return []
+    // }
+    // const filters = {
+    //   category_id: categoryIds,
+    // }
+    let filters = {}
 
     const status = req.query.status
 
     if (!status) {
-      filters.status = 'pending'
+      filters.status = 'draft'
     }
 
     if (!['draft', 'pending', 'published', 'rejected', 'approved'].includes(status)) {
@@ -103,15 +107,39 @@ const getMyArticles = async (req, res, next) => {
     }
 
     filters.status = status
+    res.locals.status = status
 
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-    }
-    const articles = await articleService.getAllArticles(filters, options)
-    console.log(articles)
+    // const options = {
+    //   limit: parseInt(req.query.limit) || 10,
+    //   offset: parseInt(req.query.offset) || 0,
+    // }
+    // const articles = await articleService.getAllArticles(filters, options)
+    // console.log(articles)
+
     // res.status(200).json({ success: true, data: articles });
-    return res.render('editor/articleDetail', { layout: 'editor', articles })
+    // return res.render('editor/articleDetail', { layout: 'editor', articles })
+
+    // const article = filters
+
+    // article.title = 'title1'
+    // article.content = 'content1'
+    // article.user = 'user1'
+    // articles.user = userService.getUserById(2)
+
+    const articles = [
+      { title: 'title1', content: 'content1', abstract: 'abstract1', user: 'user1' },
+      { title: 'title2', content: 'content2', abstract: 'abstract2', user: 'user2' },
+      { title: 'title3', content: 'content3', abstract: 'abstract3', user: 'user3' },
+      { title: 'title4', content: 'content4', abstract: 'abstract4', user: 'user4' },
+      { title: 'title5', content: 'content5', abstract: 'abstract5', user: 'user5' },
+      { title: 'title6', content: 'content6', abstract: 'abstract6', user: 'user6' },
+      { title: 'title7', content: 'content7', abstract: 'abstract7', user: 'user7' },
+      { title: 'title8', content: 'content8', abstract: 'abstract8', user: 'user8' },
+      { title: 'title9', content: 'content9', abstract: 'abstract9', user: 'user9' },
+      { title: 'title10', content: 'content10', abstract: 'abstract10', user: 'user10' },
+    ]
+
+    res.render('editor/articleDetail', { layout: 'editor', data: articles })
   } catch (error) {
     next(error)
   }

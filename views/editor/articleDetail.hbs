@@ -1,6 +1,22 @@
 <div>hello</div>
-<select>
-  {{#each articles}}
-  <div>{{this.title}}</div>
-  {{/each}}
-</select>
+
+<table class="table-auto border-collapse border border-gray-300 w-full text-left">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="border border-gray-300 px-4 py-2">Title</th>
+      <th class="border border-gray-300 px-4 py-2">Content</th>
+      <th class="border border-gray-300 px-4 py-2">Abstract</th>
+      <th class="border border-gray-300 px-4 py-2">User</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each data}}
+    <tr class="hover:bg-gray-50">
+      <td class="border border-gray-300 px-4 py-2">{{this.title}}</td>
+      <td class="border border-gray-300 px-4 py-2">{{this.content}}</td>
+      <td class="border border-gray-300 px-4 py-2">{{this.abstract}}</td>
+      <td class="border border-gray-300 px-4 py-2">{{this.user}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
