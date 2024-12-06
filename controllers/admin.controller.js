@@ -185,10 +185,19 @@ const assignUserRole = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const { role } = req.body
+
+    // Validate role
+    if (!['admin', 'editor', 'guest', 'subscriber', 'writer'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role selected.' })
+    }
+
     await adminService.assignUserRole(userId, role)
-    res.redirect('/admin/users/edit/' + userId)
+
+    res.status(200).json({ message: 'User role updated successfully.' })
   } catch (error) {
-    next(error)
+    res
+      .status(500)
+      .json({ message: error.message || 'An error occurred while updating the user role.' })
   }
 }
 
