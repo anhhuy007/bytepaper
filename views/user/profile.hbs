@@ -1,38 +1,54 @@
 {{!-- views/user/profile.hbs --}}
-<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
   {{#if successMessage}}
-  <div class="alert alert-success">{{successMessage}}</div>
+  <div class="alert alert-success shadow-lg mb-6">{{successMessage}}</div>
   {{/if}}
 
-  <div class="card lg:card-side bg-base-100 shadow-xl">
-    <div class="card-body">
-      <h2 class="card-title text-3xl font-bold">
-        {{default user.full_name 'full_name not found'}}
-      </h2>
-      <p class="text-sm text-gray-500 mb-4">
-        <!-- Username -->
-        <span class="font-semibold">Username:</span> {{default user.username 'username not
-        found'}}<br />
-        <!-- Full Name -->
-        <span class="font-semibold">Full Name:</span> {{default user.full_name 'Full name not
-        found'}}<br />
-        <!-- Email -->
-        <span class="font-semibold">Email:</span> {{default user.email 'Email not found'}}<br />
-        <!-- Pen Name -->
-        <span class="font-semibold">Pen Name:</span> {{default user.pen_name 'Pen name not
-        found'}}<br />
-        <!-- Date of Birth -->
-        <span class="font-semibold">Date of Birth:</span> {{formatDate user.date_of_birth}}<br />
-        <!-- Role -->
-        <span class="font-semibold">Role:</span> {{capitalize user.role}}<br />
-        <!-- Subscription -->
-        <span class="font-semibold">Subscription:</span>
-        {{#if subscription}}
-        <span class="badge badge-success">Valid until {{formatDate subscription.expiry_date}}</span>
-        {{else}}
-        <span class="badge badge-secondary">No active subscription</span>
-        {{/if}}
-      </p>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+    <!-- Profile Details -->
+    <div class="card bg-white shadow-xl rounded-lg hover:shadow-2xl transition-shadow duration-300">
+      <div class="card-body">
+        <h2 class="card-title text-2xl sm:text-3xl font-bold text-gray-800">
+          {{default user.full_name 'Full name not found'}}
+        </h2>
+        <p class="text-sm text-gray-600 mt-4 space-y-2">
+          <span class="block">
+            <strong class="font-semibold">Username:</strong> {{default user.username 'Username not
+            found'}}
+          </span>
+          <span class="block">
+            <strong class="font-semibold">Email:</strong> {{default user.email 'Email not found'}}
+          </span>
+          <span class="block">
+            <strong class="font-semibold">Pen Name:</strong> {{default user.pen_name 'Pen name not
+            found'}}
+          </span>
+          <span class="block">
+            <strong class="font-semibold">Date of Birth:</strong> {{formatDate user.date_of_birth}}
+          </span>
+          <span class="block">
+            <strong class="font-semibold">Role:</strong> {{capitalize user.role}}
+          </span>
+          <span class="block">
+            <strong class="font-semibold">Subscription:</strong>
+            {{#if subscription}}
+            <span class="badge badge-success"
+              >Valid until {{formatDate subscription.expiry_date}}</span
+            >
+            {{else}}
+            <span class="badge badge-secondary">No active subscription</span>
+            {{/if}}
+          </span>
+        </p>
+        <div class="mt-6">
+          <a
+            href="/user/edit-profile"
+            class="btn btn-primary w-full sm:w-auto text-sm font-semibold"
+          >
+            Edit Profile
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

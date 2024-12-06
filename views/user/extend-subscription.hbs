@@ -1,17 +1,28 @@
 {{!-- views/users/extend-subscription.hbs --}}
-<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
-  <div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="max-w-xl mx-auto bg-white shadow-lg rounded-lg p-8">
+    <!-- Page Title -->
     <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Extend Subscription</h1>
 
     <!-- Alerts -->
-    <div id="formSuccess" class="hidden alert alert-success shadow-lg mb-4"></div>
+    <div id="formSuccess" class="hidden alert alert-success shadow-lg mb-4">
+      Subscription extended successfully!
+    </div>
     <div id="formError" class="hidden alert alert-error shadow-lg mb-4"></div>
 
     <!-- Form -->
-    <form id="extendSubscriptionForm" class="space-y-4">
+    <form id="extendSubscriptionForm" class="space-y-6">
+      <!-- Subscription Plan -->
       <div class="form-control">
-        <label class="label font-semibold text-gray-600">Select Subscription Plan</label>
-        <select id="subscriptionPlan" class="select select-bordered w-full" required>
+        <label for="subscriptionPlan" class="label font-semibold text-gray-600">
+          <span class="label-text">Select Subscription Plan</span>
+        </label>
+        <select
+          id="subscriptionPlan"
+          class="select select-bordered w-full"
+          aria-label="Subscription Plan"
+          required
+        >
           <option value="" disabled selected>Choose a plan</option>
           <option value="7">7 days - $5</option>
           <option value="30">30 days - $18</option>
@@ -19,18 +30,24 @@
         </select>
       </div>
 
+      <!-- Price -->
       <div class="form-control">
-        <label class="label font-semibold text-gray-600">Price</label>
+        <label for="priceDisplay" class="label font-semibold text-gray-600">
+          <span class="label-text">Price</span>
+        </label>
         <input
           type="text"
           id="priceDisplay"
-          class="input input-bordered w-full"
+          class="input input-bordered w-full bg-gray-100"
           readonly
           placeholder="Select a plan to see the price"
         />
       </div>
 
-      <button type="submit" class="btn btn-primary w-full">Extend Subscription</button>
+      <!-- Submit Button -->
+      <div class="flex justify-center">
+        <button type="submit" class="btn btn-primary w-full sm:w-auto">Extend Subscription</button>
+      </div>
     </form>
   </div>
 </div>
@@ -45,16 +62,16 @@
       90: '$50',
     }
 
-    // Update price display based on selected plan
+    // Update price display when the subscription plan changes
     subscriptionPlan.addEventListener('change', () => {
       const selectedValue = subscriptionPlan.value
       priceDisplay.value = priceMap[selectedValue] || 'Select a plan to see the price'
     })
 
+    // Handle form submission
     document.getElementById('extendSubscriptionForm').addEventListener('submit', async (event) => {
-      event.preventDefault() // Prevent form submission
+      event.preventDefault()
 
-      // DOM elements for feedback and selected plan
       const formSuccess = document.getElementById('formSuccess')
       const formError = document.getElementById('formError')
       const selectedPlan = subscriptionPlan.value
@@ -70,16 +87,13 @@
       }
 
       try {
-        // Send data via Axios
         const response = await axios.post('/user/extend-subscription', { days: selectedPlan })
 
         if (response.data.success) {
-          formSuccess.textContent =
-            response.data.message ||
-            'Subscription extended successfully! Redirecting after 2 seconds...'
+          formSuccess.textContent = 'Subscription extended successfully! Redirecting...'
           formSuccess.classList.remove('hidden')
 
-          // Redirect after 2 seconds
+          // Redirect to the profile page after 2 seconds
           setTimeout(() => {
             window.location.href = '/user/profile'
           }, 2000)
@@ -88,7 +102,7 @@
         }
       } catch (error) {
         formError.textContent =
-          error.response?.data?.message || 'An error occurred. Please try again. ' + error.message
+          error.response?.data?.message || `An error occurred. Please try again. ${error.message}`
         formError.classList.remove('hidden')
       }
     })
