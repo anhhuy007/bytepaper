@@ -94,6 +94,15 @@ class OtpModel extends BaseModel {
     // Execute the query with the provided userId
     await db.query(query, [userId])
   }
+
+  async validateOtp(userId, otp) {
+    const query = `
+      SELECT * FROM otps
+      WHERE user_id = $1 AND otp = $2
+    `
+    const { rows } = await db.query(query, [userId, otp])
+    return rows[0]
+  }
 }
 
 const otpModel = new OtpModel()

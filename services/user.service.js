@@ -5,6 +5,7 @@ import subscriptionModel from '../models/subscription.model.js'
 import otpModel from '../models/otp.model.js'
 import bcrypt from 'bcrypt'
 import sendEmail from '../utils/mailer.js'
+import crypto from 'crypto'
 import { decorateSendMail } from '../utils/mailDecorator.js'
 class UserService {
   async registerUser(userData) {
@@ -60,6 +61,10 @@ class UserService {
     return await userModel.findById(id)
   }
 
+  async findUserByEmail(email) {
+    return await userModel.findByEmail(email)
+  }
+
   async updateUserProfile(userId, profileData) {
     return await userModel.updateProfile(userId, profileData)
   }
@@ -78,34 +83,23 @@ class UserService {
     return await userModel.updatePassword(userId, newPassword)
   }
 
-  async resetPassword(email, otpCode, newPassword) {
-    // Retrieve the user by email
-    const user = await userModel.findByEmail(email)
-    if (!user) {
-      throw new Error('User not found')
-    }
-
+  async resetPassword(resetToken, newPassword) {
     // Retrieve the OTP record for the user
-    const otpRecord = await otpModel.findByUserId(user.id)
-    console.log(otpRecord.otp, otpCode)
-    if (!otpRecord || otpRecord.otp !== otpCode) {
-      throw new Error('Invalid OTP')
-    }
-
-    // Check if the OTP has expired
-    if (new Date() > new Date(otpRecord.expiry)) {
-      throw new Error('OTP has expired')
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex') // Hash the token
+    const user = await userModel.findByResetToken(hashedToken)
+    if (!user || new Date() > new Date(user.reset_token_expiry)) {
+      throw new Error('User not found or token expired')
     }
 
     // Update password
     await userModel.updatePassword(user.id, newPassword)
-    // Delete OTP
-    await otpModel.deleteOtp(user.id)
+    // Clear reset token
+    await userModel.clearResetToken(user.id)
 
     return true
   }
 
-  async sendPasswordResetOtp(email) {
+  async sendPasswordResetOtp(req, email) {
     if (!email || typeof email !== 'string' || email.trim() === '') {
       throw new Error('Invalid email address.')
     }
@@ -115,17 +109,22 @@ class UserService {
       throw new Error('User not found')
     }
 
-    // Generate a random OTP code
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString()
+    // Generate a secure reset token
+    const resetToken = crypto.randomBytes(32).toString('hex')
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex') // Hash the token
+    const expiry = new Date(Date.now() + 15 * 60 * 1000) // Valid for 15 minutes
 
     // Store the OTP code in the user's OTP record
-    await otpModel.createOrUpdate(user.id, otpCode)
-    console.log('User email', email)
+    await userModel.saveResetToken(user.id, hashedToken, expiry)
+
+    // Send the reset link via email
+    const resetLink = `${req.protocol}://${req.get('host')}/auth/reset-password?token=${resetToken}`
+
     // Send the OTP code via email
     await sendEmail({
       to: email,
-      subject: 'Password Reset OTP',
-      html: decorateSendMail(otpCode),
+      subject: 'Password Reset Request',
+      html: `Click <a href="${resetLink}">here</a> to reset your password. The link is valid for 15 minutes.`,
     })
 
     return true
@@ -183,6 +182,18 @@ class UserService {
     }
 
     return user
+  }
+
+  async clearResetToken(userId) {
+    return await userModel.clearResetToken(userId)
+  }
+
+  async saveResetToken(userId, token, expiry) {
+    return await userModel.saveResetToken(userId, token, expiry)
+  }
+
+  async findByResetToken(token) {
+    return await userModel.findByResetToken(token)
   }
 }
 

@@ -116,8 +116,15 @@ const forgotPassword = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Email is required.' })
     }
 
+    const user = await userService.findUserByEmail(email)
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'No user found with that email address.' })
+    }
+
     // Call the user service to send the reset OTP/email
-    await userService.sendPasswordResetOtp(email)
+    await userService.sendPasswordResetOtp(req, email)
 
     return res
       .status(200)
@@ -133,27 +140,45 @@ const forgotPassword = async (req, res, next) => {
   }
 }
 
+const getResetPassword = (req, res, next) => {
+  try {
+    const { token } = req.query
+    if (!token) {
+      return res.status(400).json({ success: false, message: 'Token is required.' })
+    }
+    res.render('auth/reset-password', {
+      token: token,
+      title: 'Reset Password',
+      layout: 'auth',
+    })
+  } catch (error) {
+    console.error('Error in getResetPassword controller:', error)
+    next(error)
+  }
+}
+
 const resetPassword = async (req, res, next) => {
   try {
     // Extract the email address, OTP code, and new password from the request body
-    const { email, otpCode, newPassword } = req.body
+    const { resetToken, newPassword } = req.body
 
     // Check if email, OTP code, and new password are provided
-    if (!email || !otpCode || !newPassword) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email, OTP code, and new password are required.',
-      })
+    if (!resetToken || !newPassword) {
+      return res.status(400).json({ success: false, message: 'All fields are required.' })
     }
 
     // Reset the user's password using the service
-    await userService.resetPassword(email, otpCode, newPassword)
+    await userService.resetPassword(resetToken, newPassword)
 
     // Return a success response with a message
     // res.status(200).json({ success: true, message: 'Password reset successful' })
-    res.redirect('/auth/login')
+    res.status(200).json({ success: true, message: 'Password reset successful' })
   } catch (error) {
     // If an error occurs, pass it to the next middleware
+    if (error.message === 'User not found or token expired') {
+      return res.status(400).json({ success: false, message: error.message })
+    }
+    console.error('Error in resetPassword:', error)
     next(error)
   }
 }
@@ -184,4 +209,5 @@ export default {
   forgotPassword,
   resetPassword,
   logout,
+  getResetPassword,
 }

@@ -13,6 +13,8 @@ import bcrypt from 'bcrypt'
 //   pen_name VARCHAR(100),
 //   date_of_birth DATE,
 //   role user_role NOT NULL DEFAULT 'guest',
+//   reset_token VARCHAR(64),
+//   reset_token_expiry TIMESTAMPTZ,
 //   created_at TIMESTAMPTZ DEFAULT NOW(),
 //   updated_at TIMESTAMPTZ DEFAULT NOW()
 // );
@@ -151,6 +153,19 @@ class UserModel extends BaseModel {
       return false
     }
     return true
+  }
+
+  async clearResetToken(userId) {
+    return this.update(userId, { reset_token: null, reset_token_expiry: null })
+  }
+
+  async saveResetToken(userId, token, expiry) {
+    return this.update(userId, { reset_token: token, reset_token_expiry: expiry })
+  }
+
+  async findByResetToken(token) {
+    const users = await this.find({ reset_token: token })
+    return users[0]
   }
 }
 

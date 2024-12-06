@@ -22,7 +22,7 @@ router.post('/login', authController.login)
 router.get('/forgot-password', viewRenderer('auth/forgot-password', 'auth'))
 router.post('/forgot-password', authController.forgotPassword)
 
-router.get('/reset-password', viewRenderer('auth/reset-password', 'auth'))
+router.get('/reset-password', authController.getResetPassword)
 router.post('/reset-password', authController.resetPassword)
 
 router.get('/google', authController.googleLogin)
