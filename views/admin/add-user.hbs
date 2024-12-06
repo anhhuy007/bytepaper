@@ -1,0 +1,114 @@
+{{!-- views/admin/add-user.hbs --}}
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Add New User</h1>
+
+  <!-- Success/Error Messages -->
+  <div id="responseMessage" class="mt-4 hidden"></div>
+
+  <form id="addUserForm" class="space-y-6">
+    <!-- Username -->
+    <div class="form-control">
+      <label class="label font-semibold">Username</label>
+      <input
+        type="text"
+        name="username"
+        class="input input-bordered"
+        placeholder="Enter username"
+        required
+      />
+    </div>
+
+    <!-- Password -->
+    <div class="form-control">
+      <label class="label font-semibold">Password</label>
+      <input
+        type="password"
+        name="password"
+        class="input input-bordered"
+        placeholder="Enter password"
+        required
+      />
+    </div>
+
+    <!-- Email -->
+    <div class="form-control">
+      <label class="label font-semibold">Email</label>
+      <input
+        type="email"
+        name="email"
+        class="input input-bordered"
+        placeholder="Enter email"
+        required
+      />
+    </div>
+
+    <!-- Full Name -->
+    <div class="form-control">
+      <label class="label font-semibold">Full Name</label>
+      <input
+        type="text"
+        name="full_name"
+        class="input input-bordered"
+        placeholder="Enter full name"
+        required
+      />
+    </div>
+
+    <!-- Pen Name (Optional) -->
+    <div class="form-control">
+      <label class="label font-semibold">Pen Name (Optional)</label>
+      <input
+        type="text"
+        name="pen_name"
+        class="input input-bordered"
+        placeholder="Enter pen name"
+      />
+    </div>
+
+    <!-- Date of Birth -->
+    <div class="form-control">
+      <label class="label font-semibold">Date of Birth (Optional)</label>
+      <input type="date" name="date_of_birth" class="input input-bordered" />
+    </div>
+
+    <!-- Role -->
+    <div class="form-control">
+      <label class="label font-semibold">Role</label>
+      <select name="role" class="select select-bordered" required>
+        {{#each roles}}
+        <option value="{{this}}">{{capitalize this}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary w-full">Add User</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('addUserForm')
+  const responseMessage = document.getElementById('responseMessage')
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault() // Prevent default form submission
+    const formData = new FormData(form)
+    const data = Object.fromEntries(formData.entries())
+
+    try {
+      const response = await axios.post('/admin/users/add', data)
+      responseMessage.className = 'alert alert-success shadow-lg mt-4'
+      responseMessage.textContent = 'User added successfully! Redirecting to users page...'
+      responseMessage.hidden = false
+      form.reset() // Clear the form
+
+      setTimeout(() => {
+        window.location.href = '/admin/users'
+      }, 2000)
+    } catch (error) {
+      responseMessage.className = 'alert alert-error shadow-lg mt-4'
+      responseMessage.textContent = error.response?.data?.message || 'Failed to add user.'
+      responseMessage.hidden = false
+    }
+  })
+</script>

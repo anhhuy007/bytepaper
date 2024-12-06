@@ -17,6 +17,10 @@ router.get('/dashboard', adminController.getDashboard)
 
 router.get('/users', adminController.getAllUsers)
 
+router.get('/users/add', adminController.getAddUser)
+
+router.post('/users/add', adminController.createUser)
+
 router.get('/users/edit/:userId', adminController.getUserById)
 
 router.post('/users/edit/:userId', adminController.assignUserRole)

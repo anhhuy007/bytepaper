@@ -5,11 +5,47 @@ import categoryModel from '../models/category.model.js'
 import editorCategoryModel from '../models/editorCategory.model.js'
 import tagModel from '../models/tag.model.js'
 import articleModel from '../models/article.model.js'
+import bcrypt from 'bcrypt'
 class AdminService {
   async getAllUsers(filters = {}, options = {}) {
     return await userModel.getAllUsers(filters, options)
   }
 
+  async createUser(data) {
+    const { username, email, password, full_name, pen_name, date_of_birth, role } = data
+
+    // Check if username or email already exists in the database
+    const existingUserEmail = await userModel.findByEmail(email)
+
+    if (existingUserEmail) {
+      throw new Error('Email already exists. Please use a different email.')
+    }
+
+    const existingUser = await userModel.findByUsername(username)
+    if (existingUser) {
+      throw new Error('Username already exists. Please use a different username.')
+    }
+
+    // Hash the password for security
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    // Prepare the new user object with hashed password
+    const newUser = {
+      username,
+      email,
+      password_hash: hashedPassword,
+      full_name,
+      pen_name,
+      date_of_birth,
+      role,
+    }
+
+    // Create the new user in the database
+    const createdUser = await userModel.create(newUser)
+
+    // Return the newly created user record
+    return createdUser
+  }
   async assignUserRole(userId, role) {
     if (!role) {
       throw new Error('Role is required.')

@@ -60,6 +60,41 @@ const getUserById = async (req, res, next) => {
   }
 }
 
+const getAddUser = async (req, res, next) => {
+  try {
+    res.render('admin/add-user', {
+      title: 'Add User',
+      layout: 'admin',
+      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const createUser = async (req, res, next) => {
+  try {
+    const data = req.body
+
+    // Input validation (optional: consider using libraries like Joi or express-validator)
+    if (!data.username || !data.password || !data.email || !data.full_name) {
+      return res.status(400).json({ message: 'All required fields must be filled.' })
+    }
+
+    // Call the service to create the user
+    await userService.registerUser(data)
+
+    // Send success response
+    res.status(201).json({ message: 'User added successfully!' })
+  } catch (error) {
+    // Send error response
+    res.status(500).json({ message: error.message || 'An error occurred while adding the user.' })
+
+    // Pass the error to the error handling middleware
+    next(error)
+  }
+}
+
 const getEditors = async (req, res, next) => {
   try {
     const editors = await adminService.getAllEditors() // Fetch editors
@@ -306,6 +341,8 @@ const updateArticleStatus = async (req, res, next) => {
 }
 
 export default {
+  getAddUser,
+  createUser,
   getEditors,
   getEditorCategories,
   assignCategory,
