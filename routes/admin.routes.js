@@ -45,13 +45,7 @@ router.post('/categories/delete/:categoryId', adminController.deleteCategory)
 
 router.get('/tags', tagController.getAllTags)
 
-router.get('/tags/add', tagController.getAddTag)
-
-router.post('/tags/add', tagController.createTag)
-
-router.get('/tags/edit/:tagId', adminController.getEditTag)
-
-router.post('/tags/edit/:tagId', tagController.updateTag)
+router.post('/tags/save', tagController.createOrUpdateTag)
 
 router.post('/tags/delete/:tagId', tagController.deleteTag)
 

@@ -2,8 +2,23 @@
 <div class="container mx-auto px-4 py-8">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Tags Management</h1>
-    <a href="/admin/tags/add" class="btn btn-primary">Add Tag</a>
   </div>
+
+  <!-- Add/Edit Tag Form -->
+  <form id="tagForm" action="/admin/tags/save" method="POST" class="mb-6 space-y-4 bg-gray-100 p-4 rounded-md shadow-lg">
+    <h2 id="formTitle" class="text-xl font-bold">Add New Tag</h2>
+    <!-- Hidden ID Field for Editing -->
+    <input type="hidden" name="id" id="tagId" />
+
+    <!-- Tag Name -->
+    <div class="form-control">
+      <label class="label font-semibold">Tag Name</label>
+      <input type="text" name="name" id="tagName" class="input input-bordered" placeholder="Enter tag name" required />
+    </div>
+
+    <!-- Submit Button -->
+    <button id="formButton" type="submit" class="btn btn-primary w-full">Add Tag</button>
+  </form>
 
   <!-- Filters -->
   <form class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" method="GET">
@@ -62,7 +77,12 @@
         <tr>
           <td>{{this.name}}</td>
           <td>
-            <a href="/admin/tags/edit/{{this.id}}" class="btn btn-xs btn-warning">Edit</a>
+            <button
+              class="btn btn-xs btn-warning"
+              onclick="editTag({ id: '{{this.id}}', name: '{{this.name}}' })"
+            >
+              Edit
+            </button>
             <form
               action="/admin/tags/delete/{{this.id}}"
               method="POST"
@@ -87,3 +107,23 @@
   <div class="text-center text-gray-500">No tags found.</div>
   {{/if}}
 </div>
+
+<script>
+  // Function to handle editing a tag
+  function editTag(tag) {
+    document.getElementById('formTitle').textContent = 'Edit Tag';
+    document.getElementById('formButton').textContent = 'Update Tag';
+    document.getElementById('tagId').value = tag.id;
+    document.getElementById('tagName').value = tag.name;
+    window.scrollTo(0, 0); // Scroll to the form
+  }
+
+  // Reset form state for adding a tag
+  document.getElementById('tagForm').addEventListener('reset', () => {
+    document.getElementById('formTitle').textContent = 'Add New Tag';
+    document.getElementById('formButton').textContent = 'Add Tag';
+    document.getElementById('tagId').value = '';
+    document.getElementById('tagName').value = '';
+  });
+</script>
+

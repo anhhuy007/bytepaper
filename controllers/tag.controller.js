@@ -71,11 +71,26 @@ const updateTag = async (req, res, next) => {
   }
 }
 
+const createOrUpdateTag = async (req, res, next) => {
+  try {
+    const data = req.body
+    if (req.body.id) {
+      // If `id` exists in the form, update the tag
+      await tagService.updateTag(req.body.id, { name: data.name })
+    } else {
+      // Otherwise, create a new tag
+      await tagService.createTag({ name: data.name })
+    }
+    res.redirect('/admin/tags')
+  } catch (error) {
+    next(error)
+  }
+}
+
 const deleteTag = async (req, res, next) => {
   try {
-    const { tagId: id } = req.params
-    await tagService.deleteTag(id)
-    // res.status(200).json({ success: true, message: 'Tag deleted successfully' })
+    const { tagId } = req.params
+    await tagService.deleteTag(tagId)
     res.redirect('/admin/tags')
   } catch (error) {
     next(error)
@@ -83,6 +98,7 @@ const deleteTag = async (req, res, next) => {
 }
 
 export default {
+  createOrUpdateTag,
   getAllTags,
   getTagById,
   getAddTag,
