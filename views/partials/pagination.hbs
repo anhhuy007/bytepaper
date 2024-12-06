@@ -1,25 +1,30 @@
 {{!-- views/partials/pagination.hbs --}}
 <nav class="flex justify-center mt-8">
   <ul class="pagination">
-    {{!-- Previous Button --}} {{#compare currentPage '>' 1}}
+    <!-- Previous Button -->
+    {{#if (gt currentPage 1)}}
     <li>
-      <a href="{{buildPaginationUrl ../query (subtract currentPage 1)}}" class="btn btn-outline">
-        «
-      </a>
+      <a href="{{buildPaginationUrl query (subtract currentPage 1)}}" class="btn btn-outline">«</a>
     </li>
-    {{/compare}} {{!-- Page Numbers --}} {{#each (paginationPages currentPage totalPages)}}
+    {{/if}}
+
+    <!-- Page Numbers -->
+    {{#each (paginationPages currentPage totalPages)}}
     <li>
       <a
-        href="{{buildPaginationUrl ../query this}}"
+        href="{{buildPaginationUrl query this}}"
         class="btn {{#if (eq this ../currentPage)}}btn-active{{else}}btn-outline{{/if}}"
       >
         {{this}}
       </a>
     </li>
-    {{/each}} {{!-- Next Button --}} {{#compare currentPage '<' totalPages}}
+    {{/each}}
+
+    <!-- Next Button -->
+    {{#if (lt currentPage totalPages)}}
     <li>
-      <a href="{{buildPaginationUrl ../query (add currentPage 1)}}" class="btn btn-outline"> » </a>
+      <a href="{{buildPaginationUrl query (add currentPage 1)}}" class="btn btn-outline">»</a>
     </li>
-    {{/compare}}
+    {{/if}}
   </ul>
 </nav>

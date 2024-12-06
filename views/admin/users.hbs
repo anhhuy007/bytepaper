@@ -6,7 +6,8 @@
   </div>
 
   <!-- Filters -->
-  <form class="mb-4 flex space-x-4" method="GET">
+  <form class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" method="GET">
+    <!-- Username Filter -->
     <input
       type="text"
       name="username"
@@ -14,18 +15,44 @@
       placeholder="Search by username"
       value="{{query.username}}"
     />
+
+    <!-- Role Filter -->
     <select name="role" class="select select-bordered">
       <option value="">All Roles</option>
       {{#each roles}}
       <option value="{{this}}" {{#if (eq this ../query.role)}}selected{{/if}}>{{this}}</option>
       {{/each}}
     </select>
-    <button type="submit" class="btn btn-primary">Filter</button>
-    <a href="/admin/users" class="btn btn-secondary">Reset</a>
+
+    <!-- Sort By -->
+    <select name="orderBy" class="select select-bordered">
+      <option value="created_at DESC" {{#if (eq query.orderBy "created_at DESC")}}selected{{/if}}>Newest</option>
+      <option value="created_at ASC" {{#if (eq query.orderBy "created_at ASC")}}selected{{/if}}>Oldest</option>
+      <option value="username ASC" {{#if (eq query.orderBy "username ASC")}}selected{{/if}}>Username A-Z</option>
+      <option value="username DESC" {{#if (eq query.orderBy "username DESC")}}selected{{/if}}>Username Z-A</option>
+    </select>
+
+    <!-- Limit -->
+    <input
+      type="number"
+      name="limit"
+      class="input input-bordered"
+      placeholder="Items per page"
+      min="1"
+      value="{{query.limit}}"
+    />
+
+    <!-- Default page to 1 -->
+    <input type="hidden" name="page" value="1" />
+
+    <!-- Submit and Reset -->
+    <div class="flex items-center space-x-2">
+      <button type="submit" class="btn btn-primary">Apply</button>
+      <a href="/admin/users" class="btn btn-secondary">Reset</a>
+    </div>
   </form>
 
-  <!-- Pagination (Top) -->
-  {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+
 
   <!-- Users Table -->
   {{#if users.length}}
@@ -72,10 +99,8 @@
   {{/if}}
 </div>
 
-
-<!-- Add JavaScript -->
 <script>
   function confirmDelete(userName) {
-    return confirm(`Are you sure you want to delete user "${userName}"?`)
+    return confirm(`Are you sure you want to delete user "${userName}"?`);
   }
 </script>

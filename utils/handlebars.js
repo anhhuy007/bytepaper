@@ -1,6 +1,6 @@
 // helpers/handlebars.js
 import Handlebars from 'handlebars'
-
+import { URLSearchParams } from 'url'
 Handlebars.registerHelper('eq', function (a, b) {
   return a === b
 })
@@ -72,13 +72,34 @@ Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) 
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i)
   }
-
+  console.log('helpers/handlebars.js: =======================> pages:', pages)
   return pages
 })
 
 Handlebars.registerHelper('buildPaginationUrl', function (query, page) {
-  const params = new URLSearchParams(query || {})
-  params.set('page', page) // Update or add `page` parameter
+  // Ensure query is always an object
+  query = query || {}
+
+  console.log('helpers/handlebars.js: =======================> page:', page)
+
+  // Initialize URLSearchParams with existing query
+  const params = new URLSearchParams(query)
+
+  // Get the `limit` parameter, or set a default value
+  const limit = parseInt(params.get('limit')) || 10
+
+  // Calculate the offset based on the page and limit
+  const offset = (page - 1) * limit
+
+  // Update or set the necessary query parameters
+  params.set('page', page)
+  params.set('offset', offset)
+
+  // Ensure `limit` is retained in the query
+  if (!params.has('limit')) {
+    params.set('limit', limit)
+  }
+
   return `?${params.toString()}`
 })
 

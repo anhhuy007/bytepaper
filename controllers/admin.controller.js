@@ -7,30 +7,37 @@ import tagService from '../services/tag.service.js'
 import articleService from '../services/article.service.js'
 const getAllUsers = async (req, res, next) => {
   try {
-    // Extract filters, pagination, and sorting options
+    // Extract filters
     const filters = {
       role: req.query.role || null,
       username: req.query.username || null,
     }
+
+    // Extract and validate pagination options
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default to 10, min 1
+    const page = parseInt(req.query.page, 10) || 1 // Default to page 1
+    const offset = (page - 1) * limit // Calculate offset dynamically
+
     const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+      limit,
+      offset,
       orderBy: req.query.orderBy || 'created_at DESC',
     }
 
     const { users, totalUsers } = await adminService.getAllUsers(filters, options)
 
     // Calculate pagination data
-    const totalPages = Math.ceil(totalUsers / options.limit)
-    const currentPage = Math.ceil(options.offset / options.limit) + 1
+    const totalPages = Math.ceil(totalUsers / limit)
+    const query = { ...req.query, limit, page } // Ensure limit and page are included in the query
 
+    console.log('controllers/admin.controller.js: =======================> query:', query)
     res.render('admin/users', {
       title: 'Admin Users',
       layout: 'admin',
       users,
       totalPages,
-      currentPage,
-      query: req.query,
+      currentPage: page, // Use `page` directly for consistency
+      query,
       roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
     })
   } catch (error) {
