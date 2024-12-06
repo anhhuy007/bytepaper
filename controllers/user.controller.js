@@ -59,7 +59,6 @@ const updateUserProfile = async (req, res, next) => {
   } catch (error) {
     console.error('Error updating profile:', error)
 
-    // Gửi phản hồi JSON lỗi
     res.status(500).json({
       success: false,
       message: error.message || 'Internal Server Error',
@@ -69,21 +68,23 @@ const updateUserProfile = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   try {
-    // Get the ID of the authenticated user
     const userId = req.user.id
-
-    // Retrieve the current password and new password from the request body
     const { currentPassword, newPassword } = req.body
 
-    // Change the user's password in the database
     await userService.changePassword(userId, currentPassword, newPassword)
 
-    // Return a success message as JSON
-    // res.status(200).json({ success: true, message: 'Password changed successfully' })
-    res.redirect('/user/profile')
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully!',
+    })
   } catch (error) {
-    // If an error occurs, pass it to the next middleware
-    next(error)
+    console.error('Error changing password:', error)
+
+    // Phản hồi JSON lỗi
+    res.status(400).json({
+      success: false,
+      message: error.message || 'Failed to change password.',
+    })
   }
 }
 
