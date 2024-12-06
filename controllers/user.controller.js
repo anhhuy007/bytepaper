@@ -103,13 +103,23 @@ const deleteUser = async (req, res, next) => {
 const extendSubscription = async (req, res, next) => {
   try {
     const userId = req.user.id
+    const days = parseInt(req.body.days, 10)
 
-    // Number of days to renew, default to 7 if not provided
-    const days = parseInt(req.body.days) || 7
+    // Validate subscription days
+    if (![7, 30, 90].includes(days)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid subscription plan. Please select a valid plan.',
+      })
+    }
 
+    // Call service to update subscription
     await subscriptionService.createOrUpdateSubscription(userId, days)
 
-    res.redirect('/user/profile')
+    res.status(200).json({
+      success: true,
+      message: `Subscription extended by ${days} days successfully!`,
+    })
   } catch (error) {
     next(error)
   }
