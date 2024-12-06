@@ -7,7 +7,7 @@ import tagModel from '../models/tag.model.js'
 import articleModel from '../models/article.model.js'
 class AdminService {
   async getAllUsers(filters = {}, options = {}) {
-    return await userModel.find(filters, options)
+    return await userModel.getAllUsers(filters, options)
   }
 
   async assignUserRole(userId, role) {

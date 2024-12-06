@@ -65,19 +65,21 @@ Handlebars.registerHelper('formatDate', function (dateString, format) {
 })
 
 Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) {
-  let startPage = Math.max(1, currentPage - 2)
-  let endPage = Math.min(totalPages, currentPage + 2)
-  let pages = []
+  const pages = []
+  const startPage = Math.max(1, currentPage - 2)
+  const endPage = Math.min(totalPages, currentPage + 2)
+
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i)
   }
+
   return pages
 })
 
 Handlebars.registerHelper('buildPaginationUrl', function (query, page) {
-  const url = new URLSearchParams(query)
-  url.set('page', page) // Cập nhật hoặc thêm `page`
-  return `?${url.toString()}`
+  const params = new URLSearchParams(query || {})
+  params.set('page', page) // Update or add `page` parameter
+  return `?${params.toString()}`
 })
 
 Handlebars.registerHelper('capitalize', function (str) {

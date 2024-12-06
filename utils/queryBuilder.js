@@ -142,6 +142,8 @@ export const buildWhereClause = (filters, startingIndex = 1) => {
   let index = startingIndex
 
   for (const [key, value] of Object.entries(filters)) {
+    // Exclude null or undefined values
+    if (value === null || value === undefined || value === '') continue
     if (key === '$or') {
       // Handle OR conditions
       const orConditions = value.map((condition) => {

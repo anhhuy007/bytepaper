@@ -7,19 +7,31 @@ import tagService from '../services/tag.service.js'
 import articleService from '../services/article.service.js'
 const getAllUsers = async (req, res, next) => {
   try {
-    const filters = req.query
+    // Extract filters, pagination, and sorting options
+    const filters = {
+      role: req.query.role || null,
+      username: req.query.username || null,
+    }
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
+      orderBy: req.query.orderBy || 'created_at DESC',
     }
-    const users = await adminService.getAllUsers(filters, options)
+
+    const { users, totalUsers } = await adminService.getAllUsers(filters, options)
+
+    // Calculate pagination data
+    const totalPages = Math.ceil(totalUsers / options.limit)
+    const currentPage = Math.ceil(options.offset / options.limit) + 1
+
     res.render('admin/users', {
       title: 'Admin Users',
       layout: 'admin',
       users,
+      totalPages,
+      currentPage,
+      query: req.query,
       roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
-      user: req.user,
-      isEdit: true,
     })
   } catch (error) {
     next(error)
