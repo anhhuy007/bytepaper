@@ -1,30 +1,38 @@
-{{!-- views/partials/pagination.hbs --}}
-<nav class="flex justify-center mt-8">
-  <ul class="pagination">
+{{!-- views/partials/pagination.hbs --}} {{!-- views/partials/pagination.hbs --}}
+<nav class="flex justify-center mt-4">
+  <div class="flex md:flex-row space-y-2 md:space-y-0 md:space-x-2 join">
     <!-- Previous Button -->
     {{#if (gt currentPage 1)}}
-    <li>
-      <a href="{{buildPaginationUrl query (subtract currentPage 1)}}" class="btn btn-outline">«</a>
-    </li>
+    <button class="join-item">
+      <a
+        href="{{buildPaginationUrl query (subtract currentPage 1)}}"
+        class="btn btn-outline rotate-90"
+        >«</a
+      >
+    </button>
     {{/if}}
 
     <!-- Page Numbers -->
     {{#each (paginationPages currentPage totalPages)}}
-    <li>
+    <button class="join-item">
       <a
-        href="{{buildPaginationUrl query this}}"
-        class="btn {{#if (eq this ../currentPage)}}btn-active{{else}}btn-outline{{/if}}"
+        href="{{buildPaginationUrl ../query this}}"
+        class="btn {{#if (eq this ../currentPage)}}btn-active rotate-90{{else}}btn-outline rotate-90{{/if}}"
       >
         {{this}}
       </a>
-    </li>
+    </button>
     {{/each}}
 
     <!-- Next Button -->
     {{#if (lt currentPage totalPages)}}
-    <li>
-      <a href="{{buildPaginationUrl query (add currentPage 1)}}" class="btn btn-outline">»</a>
-    </li>
+    <button class="join-item">
+      <a
+        href="{{buildPaginationUrl query (add currentPage 1)}}"
+        class="btn btn-outline rotate-90"
+        >»</a
+      >
+    </button>
     {{/if}}
-  </ul>
+  </div>
 </nav>

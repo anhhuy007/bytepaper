@@ -72,15 +72,12 @@ Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) 
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i)
   }
-  console.log('helpers/handlebars.js: =======================> pages:', pages)
   return pages
 })
 
 Handlebars.registerHelper('buildPaginationUrl', function (query, page) {
   // Ensure query is always an object
   query = query || {}
-
-  console.log('helpers/handlebars.js: =======================> page:', page)
 
   // Initialize URLSearchParams with existing query
   const params = new URLSearchParams(query)

@@ -30,7 +30,6 @@ const getAllUsers = async (req, res, next) => {
     const totalPages = Math.ceil(totalUsers / limit)
     const query = { ...req.query, limit, page } // Ensure limit and page are included in the query
 
-    console.log('controllers/admin.controller.js: =======================> query:', query)
     res.render('admin/users', {
       title: 'Admin Users',
       layout: 'admin',
