@@ -2,7 +2,7 @@
 import BaseModel from './Base.model.js'
 import db from '../utils/Database.js'
 import bcrypt from 'bcrypt'
-
+import { buildSelectQuery, buildWhereClause } from '../utils/queryBuilder.js'
 // CREATE TYPE user_role AS ENUM ('guest', 'subscriber', 'writer', 'editor', 'admin');
 // CREATE TABLE users (
 //   id SERIAL PRIMARY KEY,
@@ -166,6 +166,42 @@ class UserModel extends BaseModel {
   async findByResetToken(token) {
     const users = await this.find({ reset_token: token })
     return users[0]
+  }
+
+  async getUserProfileData(userId) {
+    const query = `
+      SELECT
+        u.*,
+        s.expiry_date AS subscription_expiry_date 
+      FROM users u
+      LEFT JOIN subscriptions s ON s.user_id = u.id 
+      WHERE u.id = $1`
+
+    const { rows } = await db.query(query, [userId])
+    return rows[0]
+  }
+
+  async getAllUsers(filters = {}, options = {}) {
+    const { whereClause, values } = buildWhereClause(filters)
+    const query = buildSelectQuery({
+      table: 'users',
+      columns: ['id', 'username', 'full_name', 'email', 'role', 'created_at'],
+      where: whereClause,
+      orderBy: options.orderBy,
+      limit: options.limit,
+      offset: options.offset,
+    })
+    const totalCountQuery = `SELECT COUNT(*) FROM users ${whereClause ? `WHERE ${whereClause}` : ''}`
+
+    const [usersResult, countResult] = await Promise.all([
+      db.query(query, values),
+      db.query(totalCountQuery, values),
+    ])
+
+    return {
+      users: usersResult.rows,
+      totalUsers: parseInt(countResult.rows[0].count, 10),
+    }
   }
 }
 

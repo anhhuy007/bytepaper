@@ -1,6 +1,6 @@
 // helpers/handlebars.js
 import Handlebars from 'handlebars'
-
+import { URLSearchParams } from 'url'
 Handlebars.registerHelper('eq', function (a, b) {
   return a === b
 })
@@ -45,9 +45,18 @@ Handlebars.registerHelper('subtract', function (a, b) {
   return a - b
 })
 
-Handlebars.registerHelper('formatDate', function (dateString) {
-  if (!dateString) return 'Invalid Date'
+Handlebars.registerHelper('formatDate', function (dateString, format) {
+  if (!dateString) return ''
+
   const date = new Date(dateString)
+
+  if (format === 'YYYY-MM-DD') {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   return date.toLocaleDateString('en-GB', {
     day: '2-digit',
     month: 'short',
@@ -56,9 +65,10 @@ Handlebars.registerHelper('formatDate', function (dateString) {
 })
 
 Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) {
-  let startPage = Math.max(1, currentPage - 2)
-  let endPage = Math.min(totalPages, currentPage + 2)
-  let pages = []
+  const pages = []
+  const startPage = Math.max(1, currentPage - 2)
+  const endPage = Math.min(totalPages, currentPage + 2)
+
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i)
   }
@@ -66,9 +76,28 @@ Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) 
 })
 
 Handlebars.registerHelper('buildPaginationUrl', function (query, page) {
-  const url = new URLSearchParams(query)
-  url.set('page', page) // Cập nhật hoặc thêm `page`
-  return `?${url.toString()}`
+  // Ensure query is always an object
+  query = query || {}
+
+  // Initialize URLSearchParams with existing query
+  const params = new URLSearchParams(query)
+
+  // Get the `limit` parameter, or set a default value
+  const limit = parseInt(params.get('limit')) || 10
+
+  // Calculate the offset based on the page and limit
+  const offset = (page - 1) * limit
+
+  // Update or set the necessary query parameters
+  params.set('page', page)
+  params.set('offset', offset)
+
+  // Ensure `limit` is retained in the query
+  if (!params.has('limit')) {
+    params.set('limit', limit)
+  }
+
+  return `?${params.toString()}`
 })
 
 Handlebars.registerHelper('capitalize', function (str) {
@@ -112,4 +141,9 @@ Handlebars.registerHelper('json', function (context) {
 
 Handlebars.registerHelper('includes', function (array, value) {
   return Array.isArray(array) && array.includes(value)
+})
+
+Handlebars.registerHelper('ifActive', function (path, options) {
+  const currentPath = options.data.root.currentPath || ''
+  return currentPath.includes(path) ? options.fn(this) : options.inverse(this)
 })

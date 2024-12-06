@@ -1,25 +1,38 @@
-{{!-- views/partials/pagination.hbs --}}
-<nav class="flex justify-center mt-8">
-  <ul class="pagination">
-    {{!-- Previous Button --}} {{#compare currentPage '>' 1}}
-    <li>
-      <a href="{{buildPaginationUrl ../query (subtract currentPage 1)}}" class="btn btn-outline">
-        «
-      </a>
-    </li>
-    {{/compare}} {{!-- Page Numbers --}} {{#each (paginationPages currentPage totalPages)}}
-    <li>
+{{!-- views/partials/pagination.hbs --}} {{!-- views/partials/pagination.hbs --}}
+<nav class="flex justify-center mt-4">
+  <div class="flex md:flex-row space-y-2 md:space-y-0 md:space-x-2 join">
+    <!-- Previous Button -->
+    {{#if (gt currentPage 1)}}
+    <button class="join-item">
+      <a
+        href="{{buildPaginationUrl query (subtract currentPage 1)}}"
+        class="btn btn-outline rotate-90"
+        >«</a
+      >
+    </button>
+    {{/if}}
+
+    <!-- Page Numbers -->
+    {{#each (paginationPages currentPage totalPages)}}
+    <button class="join-item">
       <a
         href="{{buildPaginationUrl ../query this}}"
-        class="btn {{#if (eq this ../currentPage)}}btn-active{{else}}btn-outline{{/if}}"
+        class="btn {{#if (eq this ../currentPage)}}btn-active rotate-90{{else}}btn-outline rotate-90{{/if}}"
       >
         {{this}}
       </a>
-    </li>
-    {{/each}} {{!-- Next Button --}} {{#compare currentPage '<' totalPages}}
-    <li>
-      <a href="{{buildPaginationUrl ../query (add currentPage 1)}}" class="btn btn-outline"> » </a>
-    </li>
-    {{/compare}}
-  </ul>
+    </button>
+    {{/each}}
+
+    <!-- Next Button -->
+    {{#if (lt currentPage totalPages)}}
+    <button class="join-item">
+      <a
+        href="{{buildPaginationUrl query (add currentPage 1)}}"
+        class="btn btn-outline rotate-90"
+        >»</a
+      >
+    </button>
+    {{/if}}
+  </div>
 </nav>

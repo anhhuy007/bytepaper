@@ -1,6 +1,7 @@
 // models/categoryModel.js
 import BaseModel from './Base.model.js'
 import db from '../utils/Database.js'
+import { buildSelectQuery, buildWhereClause } from '../utils/queryBuilder.js'
 // CREATE TABLE categories (
 //   id SERIAL PRIMARY KEY,
 //   name VARCHAR(100) NOT NULL,
@@ -18,18 +19,32 @@ class CategoryModel extends BaseModel {
     return await this.findById(id)
   }
 
-  async getAllCategories() {
-    // SQL query to select all categories with their parent category names
+  async getAllCategories(filters = {}, options = {}) {
+    const { whereClause, values } = buildWhereClause(filters)
     const query = `
-        SELECT c1.*, c2.name AS parent_name
-        FROM categories c1
-        LEFT JOIN categories c2 ON c1.parent_id = c2.id
-        ORDER BY c1.name ASC
-      `
-    // Execute the query and retrieve the results
-    const { rows } = await db.query(query)
-    // Return the list of categories
-    return rows
+      SELECT c1.id, c1.name, c1.parent_id, c1.created_at, c2.name AS parent_name
+      FROM categories c1
+      LEFT JOIN categories c2 ON c1.parent_id = c2.id
+      ${whereClause ? `WHERE ${whereClause}` : ''}
+      ORDER BY ${options.orderBy || 'c1.name ASC'}
+      LIMIT $${values.length + 1}
+      OFFSET $${values.length + 2}
+    `
+    const totalCountQuery = `
+      SELECT COUNT(*)
+      FROM categories c1
+      ${whereClause ? `WHERE ${whereClause}` : ''}
+    `
+
+    const [categoriesResult, countResult] = await Promise.all([
+      db.query(query, [...values, options.limit, options.offset]),
+      db.query(totalCountQuery, values),
+    ])
+
+    return {
+      categories: categoriesResult.rows,
+      totalCategories: parseInt(countResult.rows[0].count, 10),
+    }
   }
 
   async createCategory(data) {
@@ -66,7 +81,6 @@ class CategoryModel extends BaseModel {
     const { rows } = await db.query(query, [id])
     return rows
   }
-
 
   // Add another methods related to categories...
 }

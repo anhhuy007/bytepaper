@@ -195,6 +195,10 @@ class UserService {
   async findByResetToken(token) {
     return await userModel.findByResetToken(token)
   }
+
+  async getUserProfile(userId) {
+    return await userModel.getUserProfileData(userId)
+  }
 }
 
 export default new UserService()

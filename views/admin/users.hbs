@@ -2,12 +2,64 @@
 <div class="container mx-auto px-4 py-8">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Users Management</h1>
-    <!-- Add User Button -->
     <a href="/admin/users/add" class="btn btn-primary">Add User</a>
   </div>
 
+  <!-- Filters -->
+  <form class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" method="GET">
+    <!-- Username Filter -->
+    <input
+      type="text"
+      name="username"
+      class="input input-bordered"
+      placeholder="Search by username"
+      value="{{query.username}}"
+    />
+
+    <!-- Role Filter -->
+    <select name="role" class="select select-bordered">
+      <option value="">All Roles</option>
+      {{#each roles}}
+      <option value="{{this}}" {{#if (eq this ../query.role)}}selected{{/if}}>{{this}}</option>
+      {{/each}}
+    </select>
+
+    <!-- Sort By -->
+    <select name="orderBy" class="select select-bordered">
+      <option value="created_at DESC" {{#if (eq query.orderBy "created_at DESC")}}selected{{/if}}>Newest</option>
+      <option value="created_at ASC" {{#if (eq query.orderBy "created_at ASC")}}selected{{/if}}>Oldest</option>
+      <option value="username ASC" {{#if (eq query.orderBy "username ASC")}}selected{{/if}}>Username A-Z</option>
+      <option value="username DESC" {{#if (eq query.orderBy "username DESC")}}selected{{/if}}>Username Z-A</option>
+    </select>
+
+    <!-- Limit -->
+    <input
+      type="number"
+      name="limit"
+      class="input input-bordered"
+      placeholder="Items per page"
+      min="1"
+      value="{{query.limit}}"
+    />
+
+    <!-- Default page to 1 -->
+    <input type="hidden" name="page" value="1" />
+
+    <!-- Submit and Reset -->
+    <div class="flex items-center space-x-2">
+      <button type="submit" class="btn btn-primary">Apply</button>
+      <a href="/admin/users" class="btn btn-secondary">Reset</a>
+    </div>
+  </form>
+
+  <!-- Pagination (Top) -->
+  <div class="mt-4 mb-2">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
+
   <!-- Users Table -->
-  <div class="overflow-x-auto">
+  {{#if users.length}}
+  <div class="overflow-x-auto mb-4">
     <table class="table w-full">
       <thead>
         <tr>
@@ -26,9 +78,7 @@
           <td>{{this.email}}</td>
           <td>{{this.role}}</td>
           <td>
-            <!-- Edit Button -->
             <a href="/admin/users/edit/{{this.id}}" class="btn btn-xs btn-warning">Edit</a>
-            <!-- Delete Form -->
             <form
               action="/admin/users/delete/{{this.id}}"
               method="POST"
@@ -43,11 +93,19 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination (Bottom) -->
+  <div class="mt-2">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
+
+  {{else}}
+  <div class="text-center text-gray-500">No users found.</div>
+  {{/if}}
 </div>
 
-<!-- Add JavaScript -->
 <script>
   function confirmDelete(userName) {
-    return confirm(`Are you sure you want to delete user "${userName}"?`)
+    return confirm(`Are you sure you want to delete user "${userName}"?`);
   }
 </script>
