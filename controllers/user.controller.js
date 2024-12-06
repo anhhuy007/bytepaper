@@ -50,23 +50,20 @@ const getEditUserProfile = async (req, res, next) => {
 
 const updateUserProfile = async (req, res, next) => {
   try {
-    // Get the ID of the authenticated user
     const userId = req.user.id
-
-    // Retrieve the profile data from the request body
     const profileData = req.body
 
-    console.log(profileData)
+    const updatedUser = await userService.updateUserProfile(userId, profileData)
 
-    // Update the user profile in the database
-    await userService.updateUserProfile(userId, profileData)
-
-    // Return the updated user profile as JSON
-    // res.status(200).json({ success: true, data: user })\
-    res.redirect('/user/profile')
+    res.status(200).json({ success: true, data: updatedUser })
   } catch (error) {
-    // If an error occurs, pass it to the next middleware
-    next(error)
+    console.error('Error updating profile:', error)
+
+    // Gửi phản hồi JSON lỗi
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Internal Server Error',
+    })
   }
 }
 

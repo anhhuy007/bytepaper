@@ -1,25 +1,21 @@
 {{!-- views/users/edit-profile.hbs --}}
 <div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
-  <div class="max-w-xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Edit Profile</h1>
+  <div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Edit Profile</h1>
 
-    {{!-- Alerts --}} {{#if successMessage}}
-    <div class="alert alert-success shadow-lg mb-4">
-      <span>{{successMessage}}</span>
-    </div>
-    {{/if}} {{#if errorMessage}}
-    <div class="alert alert-error shadow-lg mb-4">
-      <span>{{errorMessage}}</span>
-    </div>
-    {{/if}}
+    <!-- Alerts -->
+    <div id="formSuccess" class="hidden alert alert-success shadow-lg mb-4"></div>
+    <div id="formError" class="hidden alert alert-error shadow-lg mb-4"></div>
 
-    <form action="/user/edit-profile" method="POST" class="space-y-4">
-      <input type="hidden" name="_method" value="PUT" />
-
+    <!-- Form -->
+    <form id="editProfileForm" class="space-y-4">
       <div class="form-control">
-        <label class="label"><span class="label-text">Full Name</span></label>
+        <label class="label font-semibold text-gray-600"
+          ><span class="label-text">Full Name</span></label
+        >
         <input
           type="text"
+          id="fullName"
           name="full_name"
           value="{{user.full_name}}"
           class="input input-bordered w-full"
@@ -28,9 +24,12 @@
       </div>
 
       <div class="form-control">
-        <label class="label"><span class="label-text">Pen Name (optional)</span></label>
+        <label class="label font-semibold text-gray-600"
+          ><span class="label-text">Pen Name (optional)</span></label
+        >
         <input
           type="text"
+          id="penName"
           name="pen_name"
           value="{{user.pen_name}}"
           class="input input-bordered w-full"
@@ -38,9 +37,12 @@
       </div>
 
       <div class="form-control">
-        <label class="label"><span class="label-text">Date of Birth</span></label>
+        <label class="label font-semibold text-gray-600"
+          ><span class="label-text">Date of Birth</span></label
+        >
         <input
           type="date"
+          id="dateOfBirth"
           name="date_of_birth"
           value="{{formatDate user.date_of_birth 'YYYY-MM-DD'}}"
           class="input input-bordered w-full"
@@ -52,3 +54,44 @@
     </form>
   </div>
 </div>
+
+<script>
+  document.getElementById('editProfileForm').addEventListener('submit', async (event) => {
+    event.preventDefault() // Prevent form default submission
+
+    // DOM elements for feedback and inputs
+    const formSuccess = document.getElementById('formSuccess')
+    const formError = document.getElementById('formError')
+    const fullName = document.getElementById('fullName').value.trim()
+    const penName = document.getElementById('penName').value.trim()
+    const dateOfBirth = document.getElementById('dateOfBirth').value
+
+    // Reset alerts
+    formSuccess.classList.add('hidden')
+    formError.classList.add('hidden')
+
+    try {
+      // Send the data via Axios
+      const response = await axios.post('/user/edit-profile', {
+        full_name: fullName,
+        pen_name: penName,
+        date_of_birth: dateOfBirth,
+      })
+
+      if (response.data.success) {
+        formSuccess.textContent = 'Profile updated successfully! Redirecting...'
+        formSuccess.classList.remove('hidden')
+
+        setTimeout(() => {
+          window.location.href = '/user/profile'
+        }, 2000)
+      } else {
+        throw new Error(response.data.message || 'Failed to update profile.')
+      }
+    } catch (error) {
+      formError.textContent =
+        error.response?.data?.message || `An error occurred. Please try again. ${error.message}`
+      formError.classList.remove('hidden')
+    }
+  })
+</script>
