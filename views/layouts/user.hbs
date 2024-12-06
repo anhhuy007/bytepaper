@@ -1,0 +1,59 @@
+{{!-- views/layouts/user.hbs --}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}} | User Dashboard</title>
+    <link rel="stylesheet" href="/output.css" />
+  </head>
+  <body class="bg-gray-100">
+    <div class="min-h-screen flex">
+      <!-- Sidebar -->
+      <aside class="w-1/4 bg-white shadow-lg">
+        <div class="p-4">
+          <h2 class="text-lg font-bold mb-4">User Dashboard</h2>
+          <ul class="space-y-4">
+            <li>
+              <a
+                href="/user/profile"
+                class="block px-4 py-2 rounded hover:bg-gray-200 {{#ifActive 'user/profile'}}bg-gray-200 font-semibold{{/ifActive}}"
+                >Profile</a
+              >
+            </li>
+            <li>
+              <a
+                href="/user/edit-profile"
+                class="block px-4 py-2 rounded hover:bg-gray-200 {{#ifActive 'user/edit-profile'}}bg-gray-200 font-semibold{{/ifActive}}"
+                >Edit Profile</a
+              >
+            </li>
+            <li>
+              <a
+                href="/user/change-password"
+                class="block px-4 py-2 rounded hover:bg-gray-200 {{#ifActive 'user/change-password'}}bg-gray-200 font-semibold{{/ifActive}}"
+                >Change Password</a
+              >
+            </li>
+            <li>
+              <a
+                href="/user/extend-subscription"
+                class="block px-4 py-2 rounded hover:bg-gray-200 {{#ifActive 'user/extend-subscription'}}bg-gray-200 font-semibold{{/ifActive}}"
+                >Extend Subscription</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-grow p-8 bg-gray-50">
+        {{#if successMessage}}
+        <div class="alert alert-success shadow-lg mb-4">{{successMessage}}</div>
+        {{/if}} {{#if errorMessage}}
+        <div class="alert alert-error shadow-lg mb-4">{{errorMessage}}</div>
+        {{/if}} {{{body}}}
+      </main>
+    </div>
+  </body>
+</html>

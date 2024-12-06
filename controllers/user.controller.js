@@ -14,7 +14,35 @@ const getUserProfile = async (req, res, next) => {
     const { subscription_expiry_date, ...user } = profileData
     const subscription = subscription_expiry_date ? { expiry_date: subscription_expiry_date } : null
 
-    res.render('user/profile', { user, subscription })
+    res.render('user/profile', {
+      title: 'User Profile',
+      layout: 'user',
+      user,
+      subscription,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getEditUserProfile = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+    const profileData = await userService.getUserProfile(userId)
+
+    if (!profileData) {
+      return res.status(404).render('error/404', { message: 'User not found' })
+    }
+
+    const { subscription_expiry_date, ...user } = profileData
+    const subscription = subscription_expiry_date ? { expiry_date: subscription_expiry_date } : null
+
+    res.render('user/edit-profile', {
+      title: 'Edit Profile',
+      layout: 'user',
+      user,
+      subscription,
+    })
   } catch (error) {
     next(error)
   }
@@ -92,6 +120,7 @@ const extendSubscription = async (req, res, next) => {
 export default {
   deleteUser,
   getUserProfile,
+  getEditUserProfile,
   updateUserProfile,
   changePassword,
   extendSubscription,

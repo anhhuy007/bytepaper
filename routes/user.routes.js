@@ -10,24 +10,19 @@ const router = express.Router()
 
 router.use(authMiddleware())
 
-
 router.get('/profile', userController.getUserProfile)
 
-router.get('/edit-profile', viewRenderer('user/edit-profile'))
+router.get('/edit-profile', userController.getEditUserProfile)
 
 router.post('/edit-profile', userController.updateUserProfile)
 
-router.get('/change-password', viewRenderer('user/change-password'))
+router.get('/change-password', viewRenderer('user/change-password', 'user'))
 
 router.post('/change-password', userController.changePassword)
 
-router.get('/extend-subscription', viewRenderer('user/extend-subscription'))
+router.get('/extend-subscription', viewRenderer('user/extend-subscription', 'user'))
 
-router.post(
-  '/extend-subscription',
-  deleteCacheMiddleware(cacheKeyGenerator.userProfileCacheKeyGenerator),
-  userController.extendSubscription,
-)
+router.post('/extend-subscription', userController.extendSubscription)
 
 router.delete('/delete', userController.deleteUser)
 

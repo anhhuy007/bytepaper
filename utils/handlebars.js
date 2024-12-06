@@ -113,3 +113,8 @@ Handlebars.registerHelper('json', function (context) {
 Handlebars.registerHelper('includes', function (array, value) {
   return Array.isArray(array) && array.includes(value)
 })
+
+Handlebars.registerHelper('ifActive', function (path, options) {
+  const currentPath = options.data.root.currentPath || ''
+  return currentPath.includes(path) ? options.fn(this) : options.inverse(this)
+})

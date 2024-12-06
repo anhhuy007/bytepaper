@@ -1,28 +1,28 @@
 {{!-- views/user/profile.hbs --}}
 <div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
-  <nav class="breadcrumbs"><a href="/">Home</a> > <a href="/user/profile">Profile</a></nav>
-
   {{#if successMessage}}
   <div class="alert alert-success">{{successMessage}}</div>
   {{/if}}
 
   <div class="card lg:card-side bg-base-100 shadow-xl">
-    <figure class="p-6">
-      <div class="avatar">
-        <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-          <img src="{{user.avatarUrl}}" alt="{{user.full_name}}" />
-        </div>
-      </div>
-    </figure>
     <div class="card-body">
       <h2 class="card-title text-3xl font-bold">
         {{default user.full_name 'full_name not found'}}
       </h2>
       <p class="text-sm text-gray-500 mb-4">
+        <!-- Username -->
         <span class="font-semibold">Username:</span> {{default user.username 'username not
         found'}}<br />
+        <!-- Email -->
         <span class="font-semibold">Email:</span> {{default user.email 'Email not found'}}<br />
+        <!-- Pen Name -->
+        <span class="font-semibold">Pen Name:</span> {{default user.pen_name 'Pen name not
+        found'}}<br />
+        <!-- Date of Birth -->
+        <span class="font-semibold">Date of Birth:</span> {{formatDate user.date_of_birth}}<br />
+        <!-- Role -->
         <span class="font-semibold">Role:</span> {{capitalize user.role}}<br />
+        <!-- Subscription -->
         <span class="font-semibold">Subscription:</span>
         {{#if subscription}}
         <span class="badge badge-success">Valid until {{formatDate subscription.expiry_date}}</span>
@@ -30,14 +30,6 @@
         <span class="badge badge-secondary">No active subscription</span>
         {{/if}}
       </p>
-
-      <div class="card-actions">
-        <a href="/user/edit-profile" class="btn btn-primary">Edit Profile</a>
-        <a href="/user/change-password" class="btn btn-outline">Change Password</a>
-        {{#compare user.role '===' 'guest'}}
-        <a href="/user/extend-subscription" class="btn btn-accent">Extend Subscription</a>
-        {{/compare}}
-      </div>
     </div>
   </div>
 </div>
