@@ -13,7 +13,7 @@ const router = express.Router()
 
 // @route   GET /api/v1/editor/
 // @desc    Get editor's profile
-router.get('/', viewRenderer('editor/dashboard', 'editor'))
+router.get('/', editorController.renderDashboard)
 
 // @route   GET /api/v1/editor/articles?status=pending
 // @desc    Get pending articles for editor's categories

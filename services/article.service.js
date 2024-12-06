@@ -264,7 +264,7 @@ class ArticleService {
    *
    * @returns {Promise<Object>} The updated article with the new status.
    */
-  async approveArticle(id, editorId, categoryId, tagIds) {
+  async approveArticle(id, editorId, category_id, tag_ids, published_at) {
     // Retrieve the article from the database
     const article = await articleModel.findById(id)
     if (!article) {
@@ -276,8 +276,8 @@ class ArticleService {
       throw new Error('Article is not pending approval')
     }
 
-    if (tagIds.length > 0) {
-      await articleTagModel.addTagsToArticle(id, tagIds)
+    if (tag_ids.length > 0) {
+      await articleTagModel.addTagsToArticle(id, tag_ids)
     }
 
     // Allow the editor to approve the article only if they have the rights to do so
@@ -286,9 +286,9 @@ class ArticleService {
     // Update the article status to "published" and set the published_at field to the current date
     return await articleModel.updateArticle(id, {
       status: 'published',
-      published_at: new Date(),
+      published_at: published_at,
       editor_id: editorId,
-      category_id: categoryId,
+      category_id: category_id,
     })
   }
 
@@ -304,7 +304,7 @@ class ArticleService {
    *
    * @returns {Promise<Object>} The updated article with the new status.
    */
-  async rejectArticle(id, editorId, rejectionReason) {
+  async rejectArticle(id, editorId, rejection_reason) {
     // Retrieve the article from the database
     const article = await articleModel.findById(id)
     if (!article) {
@@ -321,7 +321,7 @@ class ArticleService {
     // Update the article status to "rejected" and set the rejection_reason field to the provided reason
     return await articleModel.updateArticle(id, {
       status: 'rejected',
-      rejection_reason: rejectionReason,
+      rejection_reason: rejection_reason,
       editor_id: editorId,
     })
   }

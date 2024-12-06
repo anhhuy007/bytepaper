@@ -7,50 +7,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100">
-    <!-- Navbar -->
     <nav class="bg-white shadow-md">
       <div class="container mx-auto px-4 py-3">
         <ul class="flex w-full m-0 p-0">
           <li class="flex-1 text-center">
             <a
               href="/editor/articles?status=draft"
-              class="block text-xl font-bold py-4 px-4 hover:bg-black hover:text-white transition duration-200 w-full"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
               >Draft</a
             >
           </li>
           <li class="flex-1 text-center">
             <a
               href="/editor/articles?status=pending"
-              class="block text-xl font-bold py-4 px-4 hover:bg-black hover:text-white transition duration-200 w-full"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
               >Pending</a
             >
           </li>
           <li class="flex-1 text-center">
             <a
               href="/editor/articles?status=published"
-              class="block text-xl font-bold py-4 px-4 hover:bg-black hover:text-white transition duration-200 w-full"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
               >Published</a
             >
           </li>
           <li class="flex-1 text-center">
             <a
               href="/editor/articles?status=rejected"
-              class="block text-xl font-bold py-4 px-4 hover:bg-black hover:text-white transition duration-200 w-full"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
               >Rejected</a
             >
           </li>
           <li class="flex-1 text-center">
             <a
               href="/editor/articles?status=approved"
-              class="block text-xl font-bold py-4 px-4 hover:bg-black hover:text-white transition duration-200 w-full"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
               >Approved</a
-            >
-          </li>
-          <li class="flex-1 text-center">
-            <a
-              href="/editor/articles?status=overview"
-              class="block text-xl font-bold py-4 px-4 hover:bg-black hover:text-white transition duration-200 w-full"
-              >Overview</a
             >
           </li>
         </ul>
@@ -59,17 +51,16 @@
     {{{body}}}
 
     <script>
-      // Highlight the active link
-      const currentPath = window.location.pathname // Get the current path
-      const currentQuery = window.location.search // Get the current query parameters
-      const links = document.querySelectorAll('nav a') // Get all anchor tags in nav
+      const currentPath = window.location.pathname 
+      const currentQuery = window.location.search 
+      const links = document.querySelectorAll('nav a') 
 
       links.forEach((link) => {
-        const linkPath = link.getAttribute('href') // Get the href of the link
+        const linkPath = link.getAttribute('href') 
         if (linkPath === currentPath + currentQuery) {
-          link.classList.add('bg-black', 'text-white') // Add classes for the active link
+          link.classList.add('bg-black', 'text-white') 
         } else {
-          link.classList.remove('bg-black', 'text-white') // Remove classes for inactive links
+          link.classList.remove('bg-black', 'text-white') 
         }
       })
     </script>
