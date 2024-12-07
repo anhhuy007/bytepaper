@@ -109,6 +109,10 @@ class AdminService {
     return await userModel.find({ role: 'editor' })
   }
 
+  async getEditorsWithCategories() {
+    return await editorCategoryModel.getEditorsWithCategories()
+  }
+
   async getDashboard() {
     const users = await this.getAllUsers()
     const categories = await categoryModel.getAllCategories()

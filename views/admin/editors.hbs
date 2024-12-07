@@ -16,11 +16,22 @@
       <tr>
         <td>{{this.full_name}}</td>
         <td>{{this.email}}</td>
-        <td>{{this.assignedCategories.length}}</td>
+        <td>
+          {{#if this.assignedCategories.length}}
+          <ul>
+            {{#each this.assignedCategories}}
+            <li>{{this.name}}</li>
+            {{/each}}
+          </ul>
+          {{else}}
+          <span class="text-gray-500">No categories assigned</span>
+          {{/if}}
+        </td>
         <td>
           <a
             href="/admin/editors/{{this.id}}/categories"
             class="btn btn-sm btn-primary"
+            title="Assign or unassign categories for {{this.full_name}}"
           >
             Manage Categories
           </a>
@@ -30,4 +41,3 @@
     </tbody>
   </table>
 </div>
-

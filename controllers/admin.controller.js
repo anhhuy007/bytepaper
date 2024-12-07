@@ -5,7 +5,7 @@ import userService from '../services/user.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
 import articleService from '../services/article.service.js'
-import { query } from 'express'
+
 const getAllUsers = async (req, res, next) => {
   try {
     // Extract filters
@@ -98,23 +98,7 @@ const createUser = async (req, res, next) => {
 
 const getEditors = async (req, res, next) => {
   try {
-    const editors = await adminService.getAllEditors() // Fetch editors
-    const assignedCategories = await categoryService.getAssignedCategories() // Fetch all assignments
-
-    // Map assigned categories for each editor
-    const categoryMap = assignedCategories.reduce((map, row) => {
-      if (!map[row.editor_id]) {
-        map[row.editor_id] = []
-      }
-      map[row.editor_id].push(row) // Push the category object
-      return map
-    }, {})
-
-    editors.forEach((editor) => {
-      editor.assignedCategories = categoryMap[editor.id] || []
-    })
-
-    console.log(JSON.stringify(editors, null, 2))
+    const editors = await adminService.getEditorsWithCategories()
 
     res.render('admin/editors', {
       title: 'Assign Categories',
@@ -130,20 +114,31 @@ const getEditorCategories = async (req, res, next) => {
   try {
     const { editorId } = req.params
     const editor = await userService.getUserById(editorId)
-    const categories = await categoryService.getAllCategories()
+
+    // Fetch assigned categories
     const assignedCategories = await categoryService.getCategoriesByEditor(editorId)
 
-    console.log('=============================', assignedCategories)
+    // Fetch available categories with pagination and sorting
+    const filters = { exclude: assignedCategories.map((cat) => cat.id) } // Exclude already assigned categories
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1) // Default: page 1
+    const offset = (page - 1) * limit
+    const orderBy = req.query.orderBy || 'name ASC' // Default sorting by name
 
-    const availableCategories = categories.filter(
-      (category) => !assignedCategories.some((assigned) => assigned.id === category.id),
-    )
+    const { categories: availableCategories, totalCategories } =
+      await categoryService.getAvailableCategories(filters, { limit, offset, orderBy })
+
+    const totalPages = Math.ceil(totalCategories / limit)
 
     res.render('admin/editor-categories', {
       title: `Manage Categories for ${editor.full_name}`,
+      layout: 'admin',
       editor,
       assignedCategories,
       availableCategories,
+      query: { ...req.query, limit, page }, // Preserve query parameters
+      currentPage: page,
+      totalPages,
     })
   } catch (error) {
     next(error)
