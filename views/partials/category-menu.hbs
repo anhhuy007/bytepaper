@@ -1,44 +1,73 @@
 {{!-- views/partials/category-menu.hbs --}}
 <ul class="menu menu-horizontal px-1">
+  {{!-- Home Link --}}
   <li>
-    <a href="/" class="{{#if (eq currentCategoryId -1)}}active{{/if}}">Home</a>
-  </li>
-  {{#each categories}} {{#if subcategories}}
-  <li tabindex="0">
-    <a class="{{#if (eq id ../currentCategoryId)}}active{{/if}}">
-      {{name}}
-      <svg
-        class="fill-current"
-        xmlns="http://www.w3.org/2000/svg"
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-      >
-        <path d="M6 9l6 6 6-6"></path>
-      </svg>
+    <a 
+      href="/" 
+      class="{{#if (eq currentCategoryId -1)}}text-primary font-bold{{/if}}"
+    >
+      Home
     </a>
-    <ul class="p-2 bg-base-100">
-      {{#each subcategories}}
-      <li>
-        <a
-          href="/articles/filter?categoryId={{subId}}"
-          class="{{#if (eq id ../../currentCategoryId)}}active{{/if}}"
+  </li>
+
+  {{!-- Categories --}}
+  {{#each categories}}
+    <li class="dropdown dropdown-hover">
+      {{#if subcategories}}
+        {{!-- Category with dropdown --}}
+        <a 
+          tabindex="0" 
+          class="{{#if (eq id ../currentCategoryId)}}text-primary font-bold{{/if}}"
+        >
+          {{name}}
+          <svg 
+            class="w-4 h-4 ml-1 inline-block" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2" 
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </a>
+
+        {{!-- Dropdown Content --}}
+        <ul class="dropdown-content z-50 menu p-2 shadow bg-base-100 rounded-box w-52">
+          {{!-- Parent Category Link --}}
+          <li>
+            <a 
+              href="/articles/filter?categoryId={{id}}"
+              class="{{#if (eq id ../../currentCategoryId)}}text-primary font-bold{{/if}}"
+            >
+              All in {{name}}
+            </a>
+          </li>
+
+          {{!-- Subcategories --}}
+          {{#each subcategories}}
+            <li>
+              <a 
+                href="/articles/filter?categoryId={{id}}"
+                class="{{#if (eq id ../../currentCategoryId)}}text-primary font-bold{{/if}}"
+              >
+                {{name}}
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        {{!-- Category without dropdown --}}
+        <a 
+          href="/articles/filter?categoryId={{id}}"
+          class="{{#if (eq id ../currentCategoryId)}}text-primary font-bold{{/if}}"
         >
           {{name}}
         </a>
-      </li>
-      {{/each}}
-    </ul>
-  </li>
-  {{else}}
-  <li>
-    <a
-      href="/articles/filter?categoryId={{id}}"
-      class="{{#if (eq id ../currentCategoryId)}}active{{/if}}"
-    >
-      {{name}}
-    </a>
-    {{/each}}
-  </div>
-  {{/if}} {{/each}}
-</div>
+      {{/if}}
+    </li>
+  {{/each}}
+</ul>
