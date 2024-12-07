@@ -17,7 +17,7 @@
     <select name="category_id" class="select select-bordered">
       <option value="">All Categories</option>
       {{#each categories}}
-      <option value="{{this.id}}" {{#if (eq ../query.category_id this.id)}}selected{{/if}}>
+      <option value="{{this.id}}" {{#if (eq ../selectedCategory this.id)}}selected{{/if}}>
         {{this.name}}
       </option>
       {{/each}}

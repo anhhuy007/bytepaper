@@ -5,6 +5,7 @@ import userService from '../services/user.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
 import articleService from '../services/article.service.js'
+import { query } from 'express'
 const getAllUsers = async (req, res, next) => {
   try {
     // Extract filters
@@ -375,15 +376,16 @@ const getAllArticles = async (req, res, next) => {
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
     const { categories } = await categoryService.getAllCategories() // Fetch all categories for filtering
 
+    console.log('=============================', totalArticles)
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
-
     res.render('admin/articles', {
       title: 'Articles Management',
       layout: 'admin',
       articles,
       categories,
       statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
+      selectedCategory: filters.category_id, // Preserve selected category
       selectedStatus: filters.status,
       query: { ...req.query, limit, page }, // Preserve query params
       totalPages,

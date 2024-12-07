@@ -2,7 +2,7 @@
 
 import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
-
+import categoryService from '../services/category.service.js'
 const getArticleById = async (req, res, next) => {
   try {
     const articleId = req.params.id
@@ -102,20 +102,30 @@ const getHomepageArticles = async (req, res, next) => {
 
 const handleArticles = async (req, res, next) => {
   try {
-    const { keyword, categoryId, tagId, page = 1, limit = 10 } = req.query
-
-    const options = {
-      limit: parseInt(limit),
-      offset: (parseInt(page) - 1) * parseInt(limit),
-      status: 'published',
+    // Extract filters and pagination options
+    const filters = {
+      keyword: req.query.keyword || null,
+      category_id: req.query.category_id || null,
+      tag_id: req.query.tag_id || null,
+      status: req.query.status || null,
     }
 
-    const filters = { keyword, categoryId, tagId, status: 'published'}
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
 
-    const articles = await articleService.getFilteredArticles(filters, options)
-    const totalPages = Math.ceil(articles.length / options.limit)
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
 
-    console.log('=========================> Articles:', articles)
+    // Fetch articles and related data
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    const { categories } = await categoryService.getAllCategories() // Fetch all categories for filtering
+
+    // Calculate total pages for pagination
+    const totalPages = Math.ceil(totalArticles / limit)
 
     return res.render('articles/list', {
       articles,
