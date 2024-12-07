@@ -3,20 +3,66 @@
   <h1 class="text-3xl font-bold mb-6">Articles Management</h1>
 
   <!-- Filter Form -->
-  <form method="GET" class="flex items-center space-x-4 mb-6">
-    <div class="form-control">
-      <label class="label">Status</label>
-      <select name="status" class="select select-bordered">
-        <option value="">All</option>
-        {{#each statuses}}
-        <option value="{{this}}" {{#if (eq ../selectedStatus this)}}selected{{/if}}>
-          {{this}}
-        </option>
-        {{/each}}
-      </select>
+  <form method="GET" class="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Keyword Search -->
+    <input
+      type="text"
+      name="keyword"
+      class="input input-bordered"
+      placeholder="Search articles"
+      value="{{query.keyword}}"
+    />
+
+    <!-- Category Filter -->
+    <select name="category_id" class="select select-bordered">
+      <option value="">All Categories</option>
+      {{#each categories}}
+      <option value="{{this.id}}" {{#if (eq ../query.category_id this.id)}}selected{{/if}}>
+        {{this.name}}
+      </option>
+      {{/each}}
+    </select>
+
+    <!-- Status Filter -->
+    <select name="status" class="select select-bordered">
+      <option value="">All Statuses</option>
+      {{#each statuses}}
+      <option value="{{this}}" {{#if (eq ../query.status this)}}selected{{/if}}>
+        {{this}}
+      </option>
+      {{/each}}
+    </select>
+
+    <!-- Sorting -->
+    <select name="orderBy" class="select select-bordered">
+      <option value="published_at DESC" {{#if (eq query.orderBy "published_at DESC")}}selected{{/if}}>Newest</option>
+      <option value="published_at ASC" {{#if (eq query.orderBy "published_at ASC")}}selected{{/if}}>Oldest</option>
+    </select>
+
+    <!-- Limit -->
+    <input
+      type="number"
+      name="limit"
+      class="input input-bordered"
+      placeholder="Items per page"
+      min="1"
+      value="{{query.limit}}"
+    />
+
+    <!-- Default Page -->
+    <input type="hidden" name="page" value="1" />
+
+    <!-- Submit and Reset -->
+    <div class="flex space-x-2">
+      <button type="submit" class="btn btn-primary">Apply</button>
+      <a href="/admin/articles" class="btn btn-secondary">Reset</a>
     </div>
-    <button type="submit" class="btn btn-primary mt-6">Filter</button>
   </form>
+
+  <!-- Pagination (Top) -->
+  <div class="mt-4 mb-2">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
 
   <!-- Articles Table -->
   <div class="overflow-x-auto">
@@ -28,7 +74,7 @@
           <th>Category</th>
           <th>Status</th>
           <th>Published At</th>
-          {{!-- <th>Actions</th> --}}
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -54,7 +100,7 @@
             </form>
           </td>
           <td>{{formatDate this.published_at}}</td>
-          {{!-- <td>
+          <td>
             <form
               action="/admin/articles/delete/{{this.id}}"
               method="POST"
@@ -63,16 +109,19 @@
             >
               <button type="submit" class="btn btn-xs btn-error">Delete</button>
             </form>
-          </td> --}}
+          </td>
         </tr>
         {{/each}}
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination (Bottom) -->
+  <div class="mt-2">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
 </div>
 
-
-<!-- Confirmation Script -->
 <script>
   function confirmStatusChange(event, form) {
     event.preventDefault();
@@ -84,7 +133,3 @@
     }
   }
 </script>
-
-
-
-

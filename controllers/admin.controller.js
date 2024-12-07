@@ -353,23 +353,41 @@ const getEditTag = async (req, res, next) => {
 
 const getAllArticles = async (req, res, next) => {
   try {
-    const filters = req.query
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+    // Extract filters and pagination options
+    const filters = {
+      keyword: req.query.keyword || null,
+      category_id: req.query.category_id || null,
+      tag_id: req.query.tag_id || null,
+      status: req.query.status || null,
     }
 
-    const articles = await articleService.getFilteredArticles(filters, options)
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
 
-    // Determine selected status
-    const selectedStatus = filters.status || ''
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
+
+    // Fetch articles and related data
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    const { categories } = await categoryService.getAllCategories() // Fetch all categories for filtering
+
+    // Calculate total pages for pagination
+    const totalPages = Math.ceil(totalArticles / limit)
 
     res.render('admin/articles', {
-      title: 'Admin Articles',
+      title: 'Articles Management',
       layout: 'admin',
       articles,
+      categories,
       statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
-      selectedStatus, // Pass selected status to view
+      selectedStatus: filters.status,
+      query: { ...req.query, limit, page }, // Preserve query params
+      totalPages,
+      currentPage: page,
     })
   } catch (error) {
     next(error)
