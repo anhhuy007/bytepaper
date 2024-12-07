@@ -7,19 +7,37 @@ import tagService from '../services/tag.service.js'
 import articleService from '../services/article.service.js'
 const getAllUsers = async (req, res, next) => {
   try {
-    const filters = req.query
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+    // Extract filters
+    const filters = {
+      role: req.query.role || null,
+      username: req.query.username || null,
     }
-    const users = await adminService.getAllUsers(filters, options)
+
+    // Extract and validate pagination options
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default to 10, min 1
+    const page = parseInt(req.query.page, 10) || 1 // Default to page 1
+    const offset = (page - 1) * limit // Calculate offset dynamically
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'created_at DESC',
+    }
+
+    const { users, totalUsers } = await adminService.getAllUsers(filters, options)
+
+    // Calculate pagination data
+    const totalPages = Math.ceil(totalUsers / limit)
+    const query = { ...req.query, limit, page } // Ensure limit and page are included in the query
+
     res.render('admin/users', {
       title: 'Admin Users',
       layout: 'admin',
       users,
+      totalPages,
+      currentPage: page, // Use `page` directly for consistency
+      query,
       roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
-      user: req.user,
-      isEdit: true,
     })
   } catch (error) {
     next(error)
@@ -38,6 +56,41 @@ const getUserById = async (req, res, next) => {
       roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
     })
   } catch (error) {
+    next(error)
+  }
+}
+
+const getAddUser = async (req, res, next) => {
+  try {
+    res.render('admin/add-user', {
+      title: 'Add User',
+      layout: 'admin',
+      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const createUser = async (req, res, next) => {
+  try {
+    const data = req.body
+
+    // Input validation (optional: consider using libraries like Joi or express-validator)
+    if (!data.username || !data.password || !data.email || !data.full_name) {
+      return res.status(400).json({ message: 'All required fields must be filled.' })
+    }
+
+    // Call the service to create the user
+    await userService.registerUser(data)
+
+    // Send success response
+    res.status(201).json({ message: 'User added successfully!' })
+  } catch (error) {
+    // Send error response
+    res.status(500).json({ message: error.message || 'An error occurred while adding the user.' })
+
+    // Pass the error to the error handling middleware
     next(error)
   }
 }
@@ -132,10 +185,19 @@ const assignUserRole = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const { role } = req.body
+
+    // Validate role
+    if (!['admin', 'editor', 'guest', 'subscriber', 'writer'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role selected.' })
+    }
+
     await adminService.assignUserRole(userId, role)
-    res.redirect('/admin/users/edit/' + userId)
+
+    res.status(200).json({ message: 'User role updated successfully.' })
   } catch (error) {
-    next(error)
+    res
+      .status(500)
+      .json({ message: error.message || 'An error occurred while updating the user role.' })
   }
 }
 
@@ -149,36 +211,61 @@ const deleteUser = async (req, res, next) => {
   }
 }
 
-const createCategory = async (req, res, next) => {
+const getAllCategories = async (req, res, next) => {
   try {
-    const data = req.body
-    if (!req.body.parent_id) {
-      data.parent_id = null
-    }
-    if (!req.body.name) {
-      throw new Error('Category name is required')
+    const filters = {
+      parent_id: req.query.parent_id || null,
+      name: req.query.name || null,
     }
 
-    await adminService.createCategory(data)
-    res.redirect('/admin/categories')
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default to 10, min 1
+    const page = parseInt(req.query.page, 10) || 1 // Default to page 1
+    const offset = (page - 1) * limit // Calculate offset dynamically
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'name ASC', // Default sorting by name
+    }
+
+    const { categories, totalCategories } = await adminService.getAllCategories(filters, options)
+
+    const totalPages = Math.ceil(totalCategories / limit)
+    const query = { ...req.query, limit, page }
+
+    res.render('admin/categories', {
+      title: 'Admin Categories',
+      layout: 'admin',
+      categories,
+      totalPages,
+      currentPage: page,
+      query,
+    })
   } catch (error) {
     next(error)
   }
 }
 
+const createCategory = async (req, res, next) => {
+  try {
+    const data = req.body
+    data.parent_id = data.parent_id || null // Ensure null for no parent
+    if (!data.name) throw new Error('Category name is required')
+    await adminService.createCategory(data)
+    res.status(200).send({ message: 'Category added successfully' })
+  } catch (error) {
+    res.status(400).send({ message: error.message })
+  }
+}
+
 const updateCategory = async (req, res, next) => {
   try {
-    // Extract update data from the request body
     const data = req.body
-
-    // Call the admin service to update the category with the given ID and data
+    data.parent_id = data.parent_id || null // Ensure null for no parent
     await adminService.updateCategory(req.params.categoryId, data)
-
-    // Send a success response with the updated category data
-    res.redirect('/admin/categories')
+    res.status(200).send({ message: 'Category updated successfully' })
   } catch (error) {
-    // Pass any errors to the next middleware
-    next(error)
+    res.status(400).send({ message: error.message })
   }
 }
 
@@ -219,20 +306,32 @@ const getDashboard = async (req, res, next) => {
   }
 }
 
+const getAddCategory = async (req, res, next) => {
+  try {
+    const { categories } = await categoryService.getAllCategories()
+    res.render('admin/add-category', {
+      title: 'Add Category',
+      layout: 'admin',
+      categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const getEditCategory = async (req, res, next) => {
   try {
     const category = await categoryService.getCategoryById(req.params.categoryId)
-    const categories = await categoryService.getAllCategories()
-    // Remove the current category from the list of categories
-    const index = categories.findIndex((c) => c.id === category.id)
-    if (index !== -1) {
-      categories.splice(index, 1)
-    }
+    const { categories } = await categoryService.getAllCategories()
+
+    // Remove the current category from potential parent category options
+    const filteredCategories = categories.filter((c) => c.id !== category.id)
+
     res.render('admin/edit-category', {
       title: 'Edit Category',
       layout: 'admin',
       category,
-      categories,
+      categories: filteredCategories,
     })
   } catch (error) {
     next(error)
@@ -288,6 +387,9 @@ const updateArticleStatus = async (req, res, next) => {
 }
 
 export default {
+  getAddCategory,
+  getAddUser,
+  createUser,
   getEditors,
   getEditorCategories,
   assignCategory,
@@ -300,6 +402,7 @@ export default {
   getUserById,
   assignUserRole,
   deleteUser,
+  getAllCategories,
   createCategory,
   updateCategory,
   deleteCategory,

@@ -17,6 +17,10 @@ router.get('/dashboard', adminController.getDashboard)
 
 router.get('/users', adminController.getAllUsers)
 
+router.get('/users/add', adminController.getAddUser)
+
+router.post('/users/add', adminController.createUser)
+
 router.get('/users/edit/:userId', adminController.getUserById)
 
 router.post('/users/edit/:userId', adminController.assignUserRole)
@@ -25,15 +29,9 @@ router.post('/users/delete/:userId', adminController.deleteUser)
 
 // Category Management
 
-router.get(
-  '/categories',
-  viewRenderer('admin/categories', 'admin', categoryController.getAllCategories),
-)
+router.get('/categories', adminController.getAllCategories)
 
-router.get(
-  '/categories/add',
-  viewRenderer('admin/add-category', 'admin', categoryController.getAllCategories),
-)
+router.get('/categories/add', adminController.getAddCategory)
 
 router.post('/categories/add', adminController.createCategory)
 
@@ -45,15 +43,9 @@ router.post('/categories/delete/:categoryId', adminController.deleteCategory)
 
 // Tag Management (Similar to categories)
 
-router.get('/tags', viewRenderer('admin/tags', 'admin', tagController.getAllTags))
+router.get('/tags', tagController.getAllTags)
 
-router.get('/tags/add', viewRenderer('admin/add-tag', 'admin'))
-
-router.post('/tags/add', tagController.createTag)
-
-router.get('/tags/edit/:tagId', adminController.getEditTag)
-
-router.post('/tags/edit/:tagId', tagController.updateTag)
+router.post('/tags/save', tagController.createOrUpdateTag)
 
 router.post('/tags/delete/:tagId', tagController.deleteTag)
 

@@ -1,6 +1,6 @@
 // helpers/handlebars.js
 import Handlebars from 'handlebars'
-
+import { URLSearchParams } from 'url'
 Handlebars.registerHelper('eq', function (a, b) {
   return a === b
 })
@@ -65,9 +65,10 @@ Handlebars.registerHelper('formatDate', function (dateString, format) {
 })
 
 Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) {
-  let startPage = Math.max(1, currentPage - 2)
-  let endPage = Math.min(totalPages, currentPage + 2)
-  let pages = []
+  const pages = []
+  const startPage = Math.max(1, currentPage - 2)
+  const endPage = Math.min(totalPages, currentPage + 2)
+
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i)
   }
@@ -75,9 +76,28 @@ Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) 
 })
 
 Handlebars.registerHelper('buildPaginationUrl', function (query, page) {
-  const url = new URLSearchParams(query)
-  url.set('page', page) // Cập nhật hoặc thêm `page`
-  return `?${url.toString()}`
+  // Ensure query is always an object
+  query = query || {}
+
+  // Initialize URLSearchParams with existing query
+  const params = new URLSearchParams(query)
+
+  // Get the `limit` parameter, or set a default value
+  const limit = parseInt(params.get('limit')) || 10
+
+  // Calculate the offset based on the page and limit
+  const offset = (page - 1) * limit
+
+  // Update or set the necessary query parameters
+  params.set('page', page)
+  params.set('offset', offset)
+
+  // Ensure `limit` is retained in the query
+  if (!params.has('limit')) {
+    params.set('limit', limit)
+  }
+
+  return `?${params.toString()}`
 })
 
 Handlebars.registerHelper('capitalize', function (str) {
