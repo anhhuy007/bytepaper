@@ -222,26 +222,8 @@ class ArticleService {
     return result
   }
 
-  getFilteredArticles = async (filters, options) => {
-    const { keyword, categoryId, tagId, status } = filters
-
-    if (keyword) {
-      // Tìm kiếm bài viết
-      return await this.searchArticles(keyword, options)
-    }
-
-    if (categoryId) {
-      // Lọc theo category
-      return await this.getArticlesByCategory(categoryId, options)
-    }
-
-    if (tagId) {
-      // Lọc theo tag
-      return await tagService.getArticlesByTagId(tagId, options)
-    }
-
-    // Mặc định: tất cả bài viết
-    return await articleModel.getArticles(options)
+  async getFilteredArticles(filters, options) {
+    return await articleModel.getFilteredArticles(filters, options)
   }
 
   async updateArticleStatus(id, status) {
