@@ -1,73 +1,37 @@
 {{!-- views/partials/category-menu.hbs --}}
-<ul class="menu menu-horizontal px-1">
-  {{!-- Home Link --}}
-  <li>
-    <a 
-      href="/" 
-      class="{{#if (eq currentCategoryId -1)}}text-primary font-bold{{/if}}"
+<div class="w-full flex flex-col z-50 bg-base-100">
+  <div class="flex gap-4 items-center justify-center">
+    <a
+      href="/"
+      class="p-2 rounded-xl btn-ghost text-base font-bold 
+          {{#if (eq currentCategoryId -1)}}
+            border-b-4 border-b-black
+          {{/if}}"
     >
-      Home
+      Homepage
     </a>
-  </li>
+    {{#each categories}}
+    <a
+      href="/categories/{{ id }}"
+      class="btn btn-ghost text-lg font-bold {{#if (or (eq id ../currentCategoryId) (hasSubCategorySelected subCategories ../currentCategoryId))}} border-b-4 border-b-black {{/if}}"
+    >
+      {{ category }}
+    </a>
+    {{/each}}
+  </div>
 
-  {{!-- Categories --}}
-  {{#each categories}}
-    <li class="dropdown dropdown-hover">
-      {{#if subcategories}}
-        {{!-- Category with dropdown --}}
-        <a 
-          tabindex="0" 
-          class="{{#if (eq id ../currentCategoryId)}}text-primary font-bold{{/if}}"
-        >
-          {{name}}
-          <svg 
-            class="w-4 h-4 ml-1 inline-block" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              stroke-linecap="round" 
-              stroke-linejoin="round" 
-              stroke-width="2" 
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </a>
-
-        {{!-- Dropdown Content --}}
-        <ul class="dropdown-content z-50 menu p-2 shadow bg-base-100 rounded-box w-52">
-          {{!-- Parent Category Link --}}
-          <li>
-            <a 
-              href="/articles/filter?categoryId={{id}}"
-              class="{{#if (eq id ../../currentCategoryId)}}text-primary font-bold{{/if}}"
-            >
-              All in {{name}}
-            </a>
-          </li>
-
-          {{!-- Subcategories --}}
-          {{#each subcategories}}
-            <li>
-              <a 
-                href="/articles/filter?categoryId={{id}}"
-                class="{{#if (eq id ../../currentCategoryId)}}text-primary font-bold{{/if}}"
-              >
-                {{name}}
-              </a>
-            </li>
-          {{/each}}
-        </ul>
-      {{else}}
-        {{!-- Category without dropdown --}}
-        <a 
-          href="/articles/filter?categoryId={{id}}"
-          class="{{#if (eq id ../currentCategoryId)}}text-primary font-bold{{/if}}"
-        >
-          {{name}}
-        </a>
-      {{/if}}
-    </li>
-  {{/each}}
-</ul>
+  <div class="border-t-2 border-gray-200 flex-1 w-full"></div>
+  {{#each categories}} {{#if (or (eq id ../currentCategoryId) (hasSubCategorySelected subCategories
+  ../currentCategoryId))}}
+  <div class="flex gap-4 justify-center items-center">
+    {{#each subCategories}}
+    <a
+      href="/categories/{{ subId }}"
+      class="btn btn-ghost text-base font-medium {{#if (eq subId ../../currentCategoryId)}} border-b-4 border-b-red-500 {{/if}}"
+    >
+      {{ name }}
+    </a>
+    {{/each}}
+  </div>
+  {{/if}} {{/each}}
+</div>

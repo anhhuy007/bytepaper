@@ -32,7 +32,7 @@
         </div>
         <div class="collapse-content p-0">
           <div class="flex flex-col w-full">
-            <a href="/articles/filter?categoryId={{ id }}" class="w-full">
+            <a href="/categories/{{ id }}" class="w-full">
               <div
                 class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-base {{#if (eq id ../currentCategoryId)}} border-l-8 border-l-black {{/if}}"
               >
@@ -40,7 +40,7 @@
               </div>
             </a>
             {{#each subCategories}}
-            <a href="/articles/filter?categoryId={{ subId }}" class="w-full">
+            <a href="/categories/{{ subId }}" class="w-full">
               <div
                 class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-base {{#if (eq subId ../../currentCategoryId)}} border-l-8 border-l-black text-lg font-bold{{/if}}"
               >

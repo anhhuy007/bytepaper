@@ -7,7 +7,8 @@
 
   <form action="/search" method="GET" class="w-full my-20">
     <label class="input focus:border-2 h-14 border-black flex items-center justify-between">
-      <input type="text" name="q" placeholder="Search..." class="grow" />
+      {{#if query}}<input type="text" name="q" placeholder="{{querty}}" class="grow" /> {{else}}
+      <input type="text" name="q" placeholder="Search..." class="grow" /> {{/if}}
       <button type="submit" class="btn btn-square ml-20">
         <svg
           xmlns="http://www.w3.org/2000/svg"
