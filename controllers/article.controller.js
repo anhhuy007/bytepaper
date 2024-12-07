@@ -148,9 +148,77 @@ const getArticlesByFilter = async (req, res, next) => {
   }
 }
 
-const getArticlesByTagId = async (req, res, next) => {}
+const getArticlesByTagId = async (req, res, next) => {
+  try {
+    const tagId = req.params.tagId
 
-const getArticlesByCategoryId = async (req, res, next) => {}
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
+
+    const filters = {
+      tag_id: tagId,
+      status: 'published',
+    }
+
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    const totalPages = Math.ceil(totalArticles / limit)
+    const tag = await tagService.getTagById(tagId)
+
+    res.render('articles/list', {
+      articles,
+      currentPage: page,
+      totalPages,
+      title: `Articles with Tag: ${tag.name}`,
+      query: req.query,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getArticlesByCategoryId = async (req, res, next) => {
+  try {
+    const categoryId = req.params.categoryId
+
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
+
+    const filters = {
+      category_id: categoryId,
+      status: 'published',
+    }
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    const totalPages = Math.ceil(totalArticles / limit)
+    const category = await categoryService.getCategoryById(categoryId)
+
+    console.log('=========================> Category:', category)
+    console.log('=========================> Articles:', articles)
+
+    res.render('articles/list', {
+      articles,
+      currentPage: page,
+      totalPages,
+      title: `Articles in Category: ${category.name}`,
+      query: req.query,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 
 export default {
   getArticlesByFilter,
