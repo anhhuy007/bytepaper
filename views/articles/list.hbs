@@ -1,29 +1,40 @@
 {{!-- articles/list.hbs --}}
-<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
+<div class="container mx-auto py-8">
   {{!-- Dynamic Title --}}
-  <h1 class="text-3xl md:text-4xl font-bold mb-6">
+  <h1 class="text-3xl md:text-4xl font-bold mb-14">
     {{#if query}}Search Results for "{{query}}"{{else}}Articles{{/if}}
   </h1>
 
+  <form action="/search" method="GET" class="w-full my-20">
+    <label class="input focus:border-2 h-14 border-black flex items-center justify-between">
+      <input type="text" name="q" placeholder="Search..." class="grow" />
+      <button type="submit" class="btn btn-square ml-20">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          class="h-3 w-3 opacity-70"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </label>
+  </form>
+
   {{!-- Articles List --}}
   <div class="space-y-6">
-    {{#if (hasItems articles)}}
-      {{#each articles}}
-        {{!-- Render each article --}}
-        {{> article-item this}}
-      {{/each}}
-    {{else}}
-      <p class="text-center text-gray-500">
-        {{#if query}}
-          No articles found matching your search criteria.
-        {{else}}
-          No articles found.
-        {{/if}}
-      </p>
+    {{#if (hasItems articles)}} {{#each articles}} {{!-- Render each article --}} {{>
+    article/tag-article this}} {{/each}} {{else}}
+    <p class="text-center text-gray-500">
+      {{#if query}} No articles found matching your search criteria. {{else}} No articles found.
+      {{/if}}
+    </p>
     {{/if}}
   </div>
 
-  {{!-- Pagination --}}
-  {{> pagination currentPage=currentPage totalPages=totalPages query=query}}
+  {{!-- Pagination --}} {{> pagination currentPage=currentPage totalPages=totalPages query=query}}
 </div>
-
