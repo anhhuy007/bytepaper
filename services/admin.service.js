@@ -114,16 +114,16 @@ class AdminService {
   }
 
   async getDashboard() {
-    const users = await this.getAllUsers()
-    const categories = await categoryModel.getAllCategories()
-    const tags = await tagModel.getAllTags()
+    const { totalUsers } = await this.getAllUsers()
+    const { totalCategories } = await categoryModel.getAllCategories()
+    const { totalTags } = await tagModel.getAllTags()
 
-    const articles = await articleModel.getArticles()
+    const { totalArticles } = await articleModel.getFilteredArticles()
     return {
-      totalUsers: users.length,
-      totalCategories: categories.length,
-      totalTags: tags.length,
-      totalArticles: articles.length,
+      totalUsers,
+      totalCategories,
+      totalTags,
+      totalArticles,
     }
   }
 

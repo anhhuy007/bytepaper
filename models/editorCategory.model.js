@@ -12,24 +12,7 @@ class EditorCategoryModel extends BaseModel {
   constructor() {
     super('editor_categories')
   }
-  /**
-   * Assigns categories to an editor.
-   *
-   * This method will delete all existing category assignments for the editor
-   * and then insert new assignments for the specified category IDs.
-   *
-   * @param {number} editorId - The ID of the editor to assign categories to.
-   * @param {number[]} categoryIds - The IDs of the categories to assign.
-   * @returns {Promise<Object[]>} The inserted assignments.
-   *
-   * @example
-   * const assignments = await editorCategoryModel.assignCategories(1, [1, 2]);
-   * console.log(assignments);
-   * [
-   *   { editor_id: 1, category_id: 1 },
-   *   { editor_id: 1, category_id: 2 },
-   * ]
-   */
+
   async assignCategories(editorId, categoryIds) {
     // Delete existing assignments
     const deleteQuery = `

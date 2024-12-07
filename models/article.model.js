@@ -198,7 +198,6 @@ class ArticleModel extends BaseModel {
       FROM articles a
       LEFT JOIN categories c ON a.category_id = c.id
       WHERE status = 'published' 
-        AND published_at >= NOW() - INTERVAL '7 days' 
       ORDER BY views DESC 
       LIMIT 4
     `
@@ -239,6 +238,7 @@ class ArticleModel extends BaseModel {
       LEFT JOIN categories c ON a.category_id = c.id
       WHERE status = 'published' 
       ORDER BY category_id, published_at DESC
+      LIMIT 10
     `
     const { rows } = await db.query(query)
     return rows
