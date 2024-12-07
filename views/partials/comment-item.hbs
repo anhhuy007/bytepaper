@@ -4,12 +4,12 @@
     <div class="flex items-center mb-2">
       <div class="avatar">
         <div class="w-8 rounded-full">
-          <img src="{{user.avatarUrl}}" alt="{{user.fullName}}" />
+          <img src="/images/default-avatar.jpg" alt="{{user_name}}" width="32" />
         </div>
       </div>
       <div class="ml-2">
-        <p class="font-semibold">{{user.fullName}}</p>
-        <p class="text-xs text-gray-500">{{formatDate createdAt}}</p>
+        <p class="font-semibold">{{default user_name 'Anonymous'}}</p>
+        <p class="text-xs text-gray-500">{{formatDate created_at}}</p>
       </div>
     </div>
     <p>{{content}}</p>

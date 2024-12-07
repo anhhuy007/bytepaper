@@ -1,89 +1,90 @@
 // controllers/user.controller.js
 import userService from '../services/user.service.js'
 import subscriptionService from '../services/subscription.service.js'
-/**
- * Retrieves the profile of the authenticated user.
- *
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @param {Function} next - The Express next middleware function.
- *
- * @return {Promise<void>} The promise that resolves when the request is handled.
- */
+
 const getUserProfile = async (req, res, next) => {
   try {
-    // Get the ID of the authenticated user
     const userId = req.user.id
+    const profileData = await userService.getUserProfile(userId)
+    console.log(profileData)
+    if (!profileData) {
+      return res.status(404).render('error/404', { message: 'User not found' })
+    }
 
-    // Retrieve the user record from the database
-    const user = await userService.getUserById(userId)
-    const subscription = await subscriptionService.getSubscriptionByUserId(userId)
-    // Return the user profile as JSON
-    // res.status(200).json({ success: true, data: user });
-    res.render('user/profile', { user, subscription })
+    const { subscription_expiry_date, ...user } = profileData
+    const subscription = subscription_expiry_date ? { expiry_date: subscription_expiry_date } : null
+
+    res.render('user/profile', {
+      title: 'User Profile',
+      layout: 'user',
+      user,
+      subscription,
+    })
   } catch (error) {
-    // If an error occurs, pass it to the next middleware
     next(error)
   }
 }
 
-/**
- * Updates the profile of the authenticated user.
- *
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @param {Function} next - The Express next middleware function.
- *
- * @return {Promise<void>} The promise that resolves when the request is handled.
- */
+const getEditUserProfile = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+    const profileData = await userService.getUserProfile(userId)
+
+    if (!profileData) {
+      return res.status(404).render('error/404', { message: 'User not found' })
+    }
+
+    const { subscription_expiry_date, ...user } = profileData
+    const subscription = subscription_expiry_date ? { expiry_date: subscription_expiry_date } : null
+
+    res.render('user/edit-profile', {
+      title: 'Edit Profile',
+      layout: 'user',
+      user,
+      subscription,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const updateUserProfile = async (req, res, next) => {
   try {
-    // Get the ID of the authenticated user
     const userId = req.user.id
-
-    // Retrieve the profile data from the request body
     const profileData = req.body
 
-    console.log(profileData)
+    const updatedUser = await userService.updateUserProfile(userId, profileData)
 
-    // Update the user profile in the database
-    await userService.updateUserProfile(userId, profileData)
-
-    // Return the updated user profile as JSON
-    // res.status(200).json({ success: true, data: user })\
-    res.redirect('/user/profile')
+    res.status(200).json({ success: true, data: updatedUser })
   } catch (error) {
-    // If an error occurs, pass it to the next middleware
-    next(error)
+    console.error('Error updating profile:', error)
+
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Internal Server Error',
+    })
   }
 }
 
-/**
- * Changes the password of the authenticated user.
- *
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @param {Function} next - The Express next middleware function.
- *
- * @return {Promise<void>} The promise that resolves when the request is handled.
- */
 const changePassword = async (req, res, next) => {
   try {
-    // Get the ID of the authenticated user
     const userId = req.user.id
-
-    // Retrieve the current password and new password from the request body
     const { currentPassword, newPassword } = req.body
 
-    // Change the user's password in the database
     await userService.changePassword(userId, currentPassword, newPassword)
 
-    // Return a success message as JSON
-    // res.status(200).json({ success: true, message: 'Password changed successfully' })
-    res.redirect('/user/profile')
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully!',
+    })
   } catch (error) {
-    // If an error occurs, pass it to the next middleware
-    next(error)
+    console.error('Error changing password:', error)
+
+    // Phản hồi JSON lỗi
+    res.status(400).json({
+      success: false,
+      message: error.message || 'Failed to change password.',
+    })
   }
 }
 
@@ -102,13 +103,23 @@ const deleteUser = async (req, res, next) => {
 const extendSubscription = async (req, res, next) => {
   try {
     const userId = req.user.id
+    const days = parseInt(req.body.days, 10)
 
-    // Number of days to renew, default to 7 if not provided
-    const days = parseInt(req.body.days) || 7
+    // Validate subscription days
+    if (![7, 30, 90].includes(days)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid subscription plan. Please select a valid plan.',
+      })
+    }
 
+    // Call service to update subscription
     await subscriptionService.createOrUpdateSubscription(userId, days)
 
-    res.redirect('/user/profile')
+    res.status(200).json({
+      success: true,
+      message: `Subscription extended by ${days} days successfully!`,
+    })
   } catch (error) {
     next(error)
   }
@@ -117,6 +128,7 @@ const extendSubscription = async (req, res, next) => {
 export default {
   deleteUser,
   getUserProfile,
+  getEditUserProfile,
   updateUserProfile,
   changePassword,
   extendSubscription,

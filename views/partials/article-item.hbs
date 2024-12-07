@@ -2,13 +2,13 @@
 <article class="card bg-base-100 shadow-md">
   <div class="card-body">
     <h2 class="card-title text-2xl">
-      <a href="/articles/{{slug}}" class="hover:underline">{{title}}</a>
+      <a href="/articles/{{id}}" class="hover:underline">{{title}}</a>
     </h2>
     <p class="text-sm text-gray-500">
       {{#if category}}
       <a href="/categories/{{category.id}}" class="link">{{category.name}}</a>
       <span class="mx-2">|</span>
-      {{/if}} {{formatDate publishedAt}}
+      {{/if}} {{formatDate published_at}}
     </p>
     <p>{{abstract}}</p>
     <div class="flex flex-wrap gap-2 mt-2">

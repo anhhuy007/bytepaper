@@ -2,50 +2,43 @@
 
 import adminService from '../services/admin.service.js'
 import userService from '../services/user.service.js'
-
-/**
- * Retrieves a list of users from the database based on the provided filters and
- * options.
- *
- * This method retrieves users based on provided filters and options.
- *
- * @param {Object} req.query - The filters to apply to the query. Each filter
- * should be an object with the column name as the key and the value to filter by
- * as the value.
- * @param {Object} req.query - The options to apply to the query. The
- * following options are supported:
- *
- *   - `limit`: The maximum number of records to return.
- *   - `offset`: The number of records to skip before returning results.
- *
- * @returns {Promise<Object[]>} The list of users retrieved from the database.
- *
- * @example
- * const users = await adminController.getAllUsers({
- *   role: "subscriber",
- * }, {
- *   limit: 10,
- * });
- * console.log(users);
- * [
- *   {
- *     id: 1,
- *     username: "johnDoe",
- *     email: "johndoe@example.com",
- *     role: "subscriber",
- *     ...,
- *   },
- * ]
- */
+import categoryService from '../services/category.service.js'
+import tagService from '../services/tag.service.js'
+import articleService from '../services/article.service.js'
 const getAllUsers = async (req, res, next) => {
   try {
-    const filters = req.query
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+    // Extract filters
+    const filters = {
+      role: req.query.role || null,
+      username: req.query.username || null,
     }
-    const users = await adminService.getAllUsers(filters, options)
-    res.status(200).json({ success: true, data: users })
+
+    // Extract and validate pagination options
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default to 10, min 1
+    const page = parseInt(req.query.page, 10) || 1 // Default to page 1
+    const offset = (page - 1) * limit // Calculate offset dynamically
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'created_at DESC',
+    }
+
+    const { users, totalUsers } = await adminService.getAllUsers(filters, options)
+
+    // Calculate pagination data
+    const totalPages = Math.ceil(totalUsers / limit)
+    const query = { ...req.query, limit, page } // Ensure limit and page are included in the query
+
+    res.render('admin/users', {
+      title: 'Admin Users',
+      layout: 'admin',
+      users,
+      totalPages,
+      currentPage: page, // Use `page` directly for consistency
+      query,
+      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+    })
   } catch (error) {
     next(error)
   }
@@ -55,187 +48,240 @@ const getUserById = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const user = await userService.getUserById(userId)
-    res.status(200).json({ success: true, data: user })
+    console.log(user)
+    res.render('admin/edit-user', {
+      title: 'Edit User',
+      layout: 'admin',
+      user,
+      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+    })
   } catch (error) {
     next(error)
   }
 }
 
-const getAllEditors = async (req, res, next) => {
+const getAddUser = async (req, res, next) => {
   try {
-    const editors = await adminService.getAllEditors()
-    return { editors }
+    res.render('admin/add-user', {
+      title: 'Add User',
+      layout: 'admin',
+      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+    })
   } catch (error) {
     next(error)
   }
 }
 
-/**
- * Assigns a role to a user.
- *
- * This method updates the role of the user with the specified user ID.
- * The role must be one of the valid roles: guest, subscriber, writer, editor, admin.
- *
- * @param {number} userId - The ID of the user to update.
- * @param {string} role - The role to assign to the user.
- * @returns {Promise<Object>} The updated user record.
- * @throws {Error} If the role is not valid.
- * @example
- * const updatedUser = await adminController.assignUserRole(1, "writer");
- * console.log(updatedUser);
- * { id: 1, username: "johnDoe", email: "johndoe@example.com", role: "writer", ... }
- */
+const createUser = async (req, res, next) => {
+  try {
+    const data = req.body
+
+    // Input validation (optional: consider using libraries like Joi or express-validator)
+    if (!data.username || !data.password || !data.email || !data.full_name) {
+      return res.status(400).json({ message: 'All required fields must be filled.' })
+    }
+
+    // Call the service to create the user
+    await userService.registerUser(data)
+
+    // Send success response
+    res.status(201).json({ message: 'User added successfully!' })
+  } catch (error) {
+    // Send error response
+    res.status(500).json({ message: error.message || 'An error occurred while adding the user.' })
+
+    // Pass the error to the error handling middleware
+    next(error)
+  }
+}
+
+const getEditors = async (req, res, next) => {
+  try {
+    const editors = await adminService.getAllEditors() // Fetch editors
+    const assignedCategories = await categoryService.getAssignedCategories() // Fetch all assignments
+
+    // Map assigned categories for each editor
+    const categoryMap = assignedCategories.reduce((map, row) => {
+      if (!map[row.editor_id]) {
+        map[row.editor_id] = []
+      }
+      map[row.editor_id].push(row) // Push the category object
+      return map
+    }, {})
+
+    editors.forEach((editor) => {
+      editor.assignedCategories = categoryMap[editor.id] || []
+    })
+
+    console.log(JSON.stringify(editors, null, 2))
+
+    res.render('admin/editors', {
+      title: 'Assign Categories',
+      layout: 'admin',
+      editors,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getEditorCategories = async (req, res, next) => {
+  try {
+    const { editorId } = req.params
+    const editor = await userService.getUserById(editorId)
+    const categories = await categoryService.getAllCategories()
+    const assignedCategories = await categoryService.getCategoriesByEditor(editorId)
+
+    console.log('=============================', assignedCategories)
+
+    const availableCategories = categories.filter(
+      (category) => !assignedCategories.some((assigned) => assigned.id === category.id),
+    )
+
+    res.render('admin/editor-categories', {
+      title: `Manage Categories for ${editor.full_name}`,
+      editor,
+      assignedCategories,
+      availableCategories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const assignCategory = async (req, res, next) => {
+  try {
+    const { categoryId } = req.body
+    const { editorId } = req.params
+
+    if (!editorId || !categoryId) {
+      throw new Error('Editor ID and Category ID are required')
+    }
+
+    await categoryService.assignCategory(editorId, categoryId)
+    res.redirect('/admin/editors/' + editorId + '/categories')
+  } catch (error) {
+    next(error)
+  }
+}
+
+const unassignCategory = async (req, res, next) => {
+  try {
+    const { categoryId } = req.body
+    const { editorId } = req.params
+
+    if (!editorId || !categoryId) {
+      throw new Error('Editor ID and Category ID are required')
+    }
+
+    await categoryService.unassignCategory(editorId, categoryId)
+    res.redirect('/admin/editors/' + editorId + '/categories')
+  } catch (error) {
+    next(error)
+  }
+}
+
 const assignUserRole = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const { role } = req.body
-    const user = await adminService.assignUserRole(userId, role)
-    res.status(200).json({ success: true, data: user })
+
+    // Validate role
+    if (!['admin', 'editor', 'guest', 'subscriber', 'writer'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role selected.' })
+    }
+
+    await adminService.assignUserRole(userId, role)
+
+    res.status(200).json({ message: 'User role updated successfully.' })
   } catch (error) {
-    next(error)
+    res
+      .status(500)
+      .json({ message: error.message || 'An error occurred while updating the user role.' })
   }
 }
 
-/**
- * Deletes a user from the database.
- *
- * This method removes the user with the specified user ID from the
- * database. The user ID is specified as a route parameter.
- *
- * @param {number} userId - The ID of the user to delete.
- *
- * @returns {Promise<Object>} The response with a success message.
- *
- * @example
- * const response = await adminController.deleteUser(1);
- * console.log(response);
- * { success: true, message: "User deleted successfully" }
- */
 const deleteUser = async (req, res, next) => {
   try {
     const { userId } = req.params
     await adminService.deleteUser(userId)
-    res.status(200).json({ success: true, message: 'User deleted successfully' })
+    res.redirect('/admin/users')
   } catch (error) {
     next(error)
   }
 }
 
-/**
- * Creates a new category in the database.
- *
- * This method creates a new category with the specified `data` and returns the
- * newly created category.
- *
- * @param {Object} data - The data to create the category with. The following
- * properties are required:
- *
- *   - `name`: The name of the category.
- *
- * @returns {Promise<Object>} The newly created category.
- *
- * @example
- * const category = await adminController.createCategory({ name: "React" });
- * console.log(category);
- * { id: 1, name: "React", created_at: "2022-01-01 12:00:00", ... }
- */
+const getAllCategories = async (req, res, next) => {
+  try {
+    const filters = {
+      parent_id: req.query.parent_id || null,
+      name: req.query.name || null,
+    }
+
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default to 10, min 1
+    const page = parseInt(req.query.page, 10) || 1 // Default to page 1
+    const offset = (page - 1) * limit // Calculate offset dynamically
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'name ASC', // Default sorting by name
+    }
+
+    const { categories, totalCategories } = await adminService.getAllCategories(filters, options)
+
+    const totalPages = Math.ceil(totalCategories / limit)
+    const query = { ...req.query, limit, page }
+
+    res.render('admin/categories', {
+      title: 'Admin Categories',
+      layout: 'admin',
+      categories,
+      totalPages,
+      currentPage: page,
+      query,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const createCategory = async (req, res, next) => {
   try {
     const data = req.body
-    const category = await adminService.createCategory(data)
-    res.status(201).json({ success: true, data: category })
+    data.parent_id = data.parent_id || null // Ensure null for no parent
+    if (!data.name) throw new Error('Category name is required')
+    await adminService.createCategory(data)
+    res.status(200).send({ message: 'Category added successfully' })
   } catch (error) {
-    next(error)
+    res.status(400).send({ message: error.message })
   }
 }
 
-/**
- * Updates an existing category in the database.
- *
- * This method updates the category with the specified ID using the provided data.
- * The category ID is specified as a route parameter and the data comes from the request body.
- *
- * @param {Object} req - The request object, containing the category ID and update data.
- * @param {Object} res - The response object used to send back the updated category.
- * @param {Function} next - The next middleware function in the stack.
- *
- * @returns {Promise<void>} Responds with the updated category data.
- *
- * @example
- * const response = await adminController.updateCategory(req, res, next);
- * console.log(response);
- * // { success: true, data: { id: 1, name: "Updated Category", ... } }
- */
 const updateCategory = async (req, res, next) => {
   try {
-    // Extract update data from the request body
     const data = req.body
-
-    // Call the admin service to update the category with the given ID and data
-    const category = await adminService.updateCategory(req.params.categoryId, data)
-
-    // Send a success response with the updated category data
-    res.status(200).json({ success: true, data: category })
+    data.parent_id = data.parent_id || null // Ensure null for no parent
+    await adminService.updateCategory(req.params.categoryId, data)
+    res.status(200).send({ message: 'Category updated successfully' })
   } catch (error) {
-    // Pass any errors to the next middleware
-    next(error)
+    res.status(400).send({ message: error.message })
   }
 }
 
-/**
- * Deletes a category from the database.
- *
- * This method deletes the category with the specified category ID in the request
- * parameters. The category ID is specified as a route parameter.
- *
- * @param {Object} req - The request object, containing the category ID to delete.
- * @param {Object} res - The response object used to send back a success message.
- * @param {Function} next - The next middleware function in the stack.
- *
- * @returns {Promise<void>} Responds with a success message.
- *
- * @example
- * const response = await adminController.deleteCategory(req, res, next);
- * console.log(response);
- * // { success: true, message: "Category deleted successfully" }
- */
 const deleteCategory = async (req, res, next) => {
   try {
     // Delete the category with the given ID from the database
     await adminService.deleteCategory(req.params.categoryId)
 
     // Send a success response with a success message
-    res.status(200).json({
-      success: true,
-      message: 'Category deleted successfully',
-    })
+    res.redirect('/admin/categories')
   } catch (error) {
     // Pass any errors to the next middleware
     next(error)
   }
 }
 
-/**
- * Assigns categories to an editor.
- *
- * This method assigns the specified categories to an editor with the given
- * editor ID. The editor ID is specified as a route parameter and the category IDs
- * are specified in the request body.
- *
- * @param {Object} req - The request object, containing the editor ID and category IDs.
- * @param {Object} res - The response object used to send back the created assignments.
- * @param {Function} next - The next middleware function in the stack.
- *
- * @returns {Promise<Object[]>} The created assignments.
- *
- * @example
- * const response = await adminController.assignCategoriesToEditor(req, res, next);
- * console.log(response);
- * [
- *   { editor_id: 1, category_id: 1 },
- *   { editor_id: 1, category_id: 2 },
- * ]
- */
 const assignCategoriesToEditor = async (req, res, next) => {
   try {
     const editorId = req.params.editorId
@@ -247,14 +293,119 @@ const assignCategoriesToEditor = async (req, res, next) => {
   }
 }
 
+const getDashboard = async (req, res, next) => {
+  try {
+    const stats = await adminService.getDashboard()
+    res.render('admin/dashboard', {
+      title: 'Admin Dashboard',
+      layout: 'admin',
+      stats,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getAddCategory = async (req, res, next) => {
+  try {
+    const { categories } = await categoryService.getAllCategories()
+    res.render('admin/add-category', {
+      title: 'Add Category',
+      layout: 'admin',
+      categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getEditCategory = async (req, res, next) => {
+  try {
+    const category = await categoryService.getCategoryById(req.params.categoryId)
+    const { categories } = await categoryService.getAllCategories()
+
+    // Remove the current category from potential parent category options
+    const filteredCategories = categories.filter((c) => c.id !== category.id)
+
+    res.render('admin/edit-category', {
+      title: 'Edit Category',
+      layout: 'admin',
+      category,
+      categories: filteredCategories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getEditTag = async (req, res, next) => {
+  try {
+    const tag = await tagService.getTagById(req.params.tagId)
+    res.render('admin/edit-tag', {
+      title: 'Edit Tag',
+      layout: 'admin',
+      tag,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getAllArticles = async (req, res, next) => {
+  try {
+    const filters = req.query
+    const options = {
+      limit: parseInt(req.query.limit) || 10,
+      offset: parseInt(req.query.offset) || 0,
+    }
+
+    const articles = await articleService.getFilteredArticles(filters, options)
+
+    // Determine selected status
+    const selectedStatus = filters.status || ''
+
+    res.render('admin/articles', {
+      title: 'Admin Articles',
+      layout: 'admin',
+      articles,
+      statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
+      selectedStatus, // Pass selected status to view
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const updateArticleStatus = async (req, res, next) => {
+  try {
+    const articleId = req.params.articleId
+    await articleService.updateArticleStatus(articleId, req.body.status)
+    res.redirect('/admin/articles')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
+  getAddCategory,
+  getAddUser,
+  createUser,
+  getEditors,
+  getEditorCategories,
+  assignCategory,
+  unassignCategory,
+  updateArticleStatus,
+  getAllArticles,
+  getEditTag,
+  getEditCategory,
   getAllUsers,
-  getAllEditors,
   getUserById,
   assignUserRole,
   deleteUser,
+  getAllCategories,
   createCategory,
   updateCategory,
   deleteCategory,
   assignCategoriesToEditor,
+  getDashboard,
 }

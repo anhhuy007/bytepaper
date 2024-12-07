@@ -5,7 +5,7 @@
     <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
       Featured Articles
     </h1>
-    {{> article/layout/carousel articles=articles}}
+    {{> article/layout/carousel articles=featuredArticles}}
   </section>
 
   {{!-- Most Viewed Articles --}}
@@ -13,7 +13,7 @@
     <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
       Most Viewed Articles
     </h1>
-    {{> article/layout/basic articles=articles}}
+    {{> article/layout/basic articles=mostViewedArticles}}
   </section>
 
   {{!-- Latest Articles --}}
@@ -21,7 +21,7 @@
     <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
       Latest Articles
     </h1>
-    {{> article/layout/basic articles=articles}}
+    {{> article/layout/basic articles=newestArticles}}
   </section>
 
   {{!-- Top Categories --}}
@@ -29,6 +29,6 @@
     <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
       Top Categories
     </h1>
-    {{> article/layout/tab categories=categories}}
+    {{> article/layout/tab articles=topCategoryArticles}}
   </section>
 </div>

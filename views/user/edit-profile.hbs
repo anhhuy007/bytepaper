@@ -1,57 +1,58 @@
 {{!-- views/users/edit-profile.hbs --}}
-<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8">
-  <div class="max-w-xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Edit Profile</h1>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="max-w-xl mx-auto bg-white shadow-lg rounded-lg p-8">
+    <!-- Page Title -->
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Edit Profile</h1>
 
-    {{!-- Alerts --}} {{#if successMessage}}
-    <div class="alert alert-success shadow-lg mb-4">
-      <span>{{successMessage}}</span>
+    <!-- Alerts -->
+    <div id="formSuccess" class="hidden alert alert-success shadow-lg mb-4">
+      Profile updated successfully! Redirecting...
     </div>
-    {{/if}} {{#if errorMessage}}
-    <div class="alert alert-error shadow-lg mb-4">
-      <span>{{errorMessage}}</span>
+    <div id="formError" class="hidden alert alert-error shadow-lg mb-4">
+      An error occurred. Please try again.
     </div>
-    {{/if}}
 
-    <form action="/user/edit-profile" method="POST" class="space-y-4">
-      <input type="hidden" name="_method" value="PUT" />
-
+    <!-- Form -->
+    <form id="editProfileForm" class="space-y-6">
+      <!-- Full Name -->
       <div class="form-control">
-        <label class="label"><span class="label-text">Full Name</span></label>
+        <label for="fullName" class="label font-semibold text-gray-600">
+          <span class="label-text">Full Name</span>
+        </label>
         <input
           type="text"
+          id="fullName"
           name="full_name"
           value="{{user.full_name}}"
           class="input input-bordered w-full"
+          placeholder="Enter your full name"
           required
         />
       </div>
 
+      <!-- Pen Name -->
       <div class="form-control">
-        <label class="label"><span class="label-text">Pen Name (optional)</span></label>
+        <label for="penName" class="label font-semibold text-gray-600">
+          <span class="label-text">Pen Name (optional)</span>
+        </label>
         <input
           type="text"
+          id="penName"
           name="pen_name"
           value="{{user.pen_name}}"
           class="input input-bordered w-full"
+          placeholder="Enter your pen name"
         />
       </div>
 
+      <!-- Date of Birth -->
       <div class="form-control">
-        <label class="label"><span class="label-text">Email</span></label>
-        <input
-          type="email"
-          name="email"
-          value="{{user.email}}"
-          class="input input-bordered w-full"
-          required
-        />
-      </div>
-
-      <div class="form-control">
-        <label class="label"><span class="label-text">Date of Birth</span></label>
+        <label for="dateOfBirth" class="label font-semibold text-gray-600">
+          <span class="label-text">Date of Birth</span>
+        </label>
         <input
           type="date"
+          id="dateOfBirth"
           name="date_of_birth"
           value="{{formatDate user.date_of_birth 'YYYY-MM-DD'}}"
           class="input input-bordered w-full"
@@ -59,22 +60,48 @@
         />
       </div>
 
-      <div class="form-control">
-        <label class="label"><span class="label-text">Avatar</span></label>
-        <input
-          type="file"
-          name="avatar"
-          accept="image/*"
-          class="file-input file-input-bordered w-full"
-        />
-        {{#if user.avatarUrl}}
-        <div class="mt-2">
-          <img src="{{user.avatarUrl}}" alt="Current Avatar" class="w-24 h-24 rounded-full" />
-        </div>
-        {{/if}}
+      <!-- Submit Button -->
+      <div class="flex justify-center">
+        <button type="submit" class="btn btn-primary w-full sm:w-auto">Save Changes</button>
       </div>
-
-      <button type="submit" class="btn btn-primary w-full">Save Changes</button>
     </form>
   </div>
 </div>
+
+<script>
+  document.getElementById('editProfileForm').addEventListener('submit', async (event) => {
+    event.preventDefault()
+
+    const formSuccess = document.getElementById('formSuccess')
+    const formError = document.getElementById('formError')
+    const fullName = document.getElementById('fullName').value.trim()
+    const penName = document.getElementById('penName').value.trim()
+    const dateOfBirth = document.getElementById('dateOfBirth').value
+
+    // Reset alerts
+    formSuccess.classList.add('hidden')
+    formError.classList.add('hidden')
+
+    try {
+      const response = await axios.post('/user/edit-profile', {
+        full_name: fullName,
+        pen_name: penName,
+        date_of_birth: dateOfBirth,
+      })
+
+      if (response.data.success) {
+        formSuccess.textContent = 'Profile updated successfully! Redirecting...'
+        formSuccess.classList.remove('hidden')
+
+        setTimeout(() => {
+          window.location.href = '/user/profile'
+        }, 2000)
+      } else {
+        throw new Error(response.data.message || 'Failed to update profile.')
+      }
+    } catch (error) {
+      formError.textContent = error.response?.data?.message || `An error occurred: ${error.message}`
+      formError.classList.remove('hidden')
+    }
+  })
+</script>

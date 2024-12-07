@@ -1,0 +1,54 @@
+{{!-- views/admin/edit-category.hbs --}}
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Edit Category</h1>
+  <!-- Error/Success Message -->
+  <div id="responseMessage" class="mt-4 hidden"></div>
+  <form id="editCategoryForm" class="space-y-4">
+    <div class="form-control">
+      <label class="label">Name</label>
+      <input
+        type="text"
+        name="name"
+        class="input input-bordered"
+        value="{{category.name}}"
+        required
+      />
+    </div>
+    <div class="form-control">
+      <label class="label">Parent Category</label>
+      <select name="parent_id" class="select select-bordered">
+        <option value="">None</option>
+        {{#each categories}}
+        <option value="{{this.id}}" {{#if (eq this.id ../category.parent_id)}}selected{{/if}}>
+          {{this.name}}
+        </option>
+        {{/each}}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Category</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('editCategoryForm');
+  const responseMessage = document.getElementById('responseMessage');
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      await axios.post(`/admin/categories/edit/{{category.id}}`, data);
+      responseMessage.className = 'alert alert-success shadow-lg mt-4';
+      responseMessage.textContent = 'Category updated successfully!';
+      responseMessage.hidden = false;
+      setTimeout(() => (window.location.href = '/admin/categories'), 2000);
+    } catch (error) {
+      responseMessage.className = 'alert alert-error shadow-lg mt-4';
+      responseMessage.textContent = error.response?.data?.message || 'Failed to update category.';
+      responseMessage.hidden = false;
+    }
+  });
+</script>
+

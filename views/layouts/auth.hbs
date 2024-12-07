@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     {{!-- Move scripts here with defer --}}
     <script defer id="loading-template" type="text/x-handlebars-template">
       <svg class='animate-spin h-5 w-5 mr-3' viewBox='0 0 24 24'>
@@ -37,7 +37,7 @@
         )
 
         form.addEventListener('submit', function (e) {
-          e.preventDefault()
+          // e.preventDefault()
           submitButton.disabled = true
           submitButton.innerHTML = loadingTemplate()
 

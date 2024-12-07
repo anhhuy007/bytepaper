@@ -16,49 +16,6 @@ class CommentModel extends BaseModel {
     super('comments')
   }
 
-  /**
-   * Retrieves a list of comments associated with the specified article ID.
-   *
-   * This method executes a SQL query to retrieve a list of comments associated
-   * with the specified article ID, ordered by the comment's creation date in
-   * ascending order. The result is an array of objects with the keys "id",
-   * "article_id", "user_id", "content", "created_at", "updated_at", and
-   * "user_name".
-   *
-   * The options object can be used to limit the number of records returned
-   * (default is 10) and to skip a specified number of records before returning
-   * the results (default is 0).
-   *
-   * @param {number} articleId - The ID of the article to retrieve comments for.
-   * @param {Object} [options] - The options to apply to the query.
-   * @param {number} [options.limit=10] - The maximum number of records to return.
-   * @param {number} [options.offset=0] - The number of records to skip before returning results.
-   *
-   * @returns {Promise<Object[]>} The list of comments retrieved from the database.
-   * @example
-   * const comments = await commentModel.getCommentsByArticleId(1);
-   * console.log(comments);
-   * [
-   *   {
-   *     id: 1,
-   *     article_id: 1,
-   *     user_id: 1,
-   *     content: "This is the first comment.",
-   *     created_at: "2021-01-01T00:00:00.000Z",
-   *     updated_at: "2021-01-01T00:00:00.000Z",
-   *     user_name: "John Doe",
-   *   },
-   *   {
-   *     id: 2,
-   *     article_id: 1,
-   *     user_id: 2,
-   *     content: "This is the second comment.",
-   *     created_at: "2021-01-01T00:00:00.000Z",
-   *     updated_at: "2021-01-01T00:00:00.000Z",
-   *     user_name: "Jane Doe",
-   *   },
-   * ]
-   */
   async getCommentsByArticleId(articleId, { limit = 10, offset = 0 } = {}) {
     // Construct the SQL query to retrieve comments associated with the given article ID
     const query = `

@@ -20,7 +20,10 @@
     <ul class="p-2 bg-base-100">
       {{#each subcategories}}
       <li>
-        <a href="/categories/{{id}}" class="{{#if (eq id ../../currentCategoryId)}}active{{/if}}">
+        <a
+          href="/articles/filter?categoryId={{subId}}"
+          class="{{#if (eq id ../../currentCategoryId)}}active{{/if}}"
+        >
           {{name}}
         </a>
       </li>
@@ -29,7 +32,10 @@
   </li>
   {{else}}
   <li>
-    <a href="/categories/{{id}}" class="{{#if (eq id ../currentCategoryId)}}active{{/if}}">
+    <a
+      href="/articles/filter?categoryId={{id}}"
+      class="{{#if (eq id ../currentCategoryId)}}active{{/if}}"
+    >
       {{name}}
     </a>
   </li>
