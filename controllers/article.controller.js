@@ -3,6 +3,7 @@
 import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
 import categoryService from '../services/category.service.js'
+import tagService from '../services/tag.service.js'
 const getArticleById = async (req, res, next) => {
   try {
     const articleId = req.params.id
@@ -100,14 +101,14 @@ const getHomepageArticles = async (req, res, next) => {
   }
 }
 
-const handleArticles = async (req, res, next) => {
+const getArticlesByFilter = async (req, res, next) => {
   try {
     // Extract filters and pagination options
     const filters = {
       keyword: req.query.keyword || null,
       category_id: req.query.category_id || null,
       tag_id: req.query.tag_id || null,
-      status: req.query.status || null,
+      status: req.query.status || 'published',
     }
 
     const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
@@ -117,31 +118,46 @@ const handleArticles = async (req, res, next) => {
     const options = {
       limit,
       offset,
-      orderBy: req.query.orderBy || 'published_at DESC',
+      orderBy: req.query.orderBy || 'published_at DESC', // Default: Newest
     }
 
-    // Fetch articles and related data
+    // Fetch filtered articles and total count
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
-    const { categories } = await categoryService.getAllCategories() // Fetch all categories for filtering
+
+    // Fetch all categories and tags for filtering
+    const { categories } = await categoryService.getAllCategories()
+    const { tags } = await tagService.getAllTags()
 
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
 
-    return res.render('articles/list', {
+    // Render view with articles, filters, and pagination
+    res.render('articles/search', {
       articles,
-      currentPage: parseInt(page),
+      categories,
+      tags,
+      currentPage: page,
       totalPages,
       query: req.query,
+      selectedCategory: filters.category_id,
+      selectedTag: filters.tag_id,
+      keyword: filters.keyword,
     })
   } catch (error) {
     next(error)
   }
 }
 
+const getArticlesByTagId = async (req, res, next) => {}
+
+const getArticlesByCategoryId = async (req, res, next) => {}
+
 export default {
-  handleArticles,
+  getArticlesByFilter,
   getArticleById,
   increaseArticleViewCount,
   downloadArticle,
   getHomepageArticles,
+  getArticlesByTagId,
+  getArticlesByCategoryId,
 }
