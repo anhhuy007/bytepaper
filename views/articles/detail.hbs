@@ -9,25 +9,29 @@
         <figure>
           <img
             src="{{article.thumbnail}}"
-            alt="{{article.title}}"
+            alt="{{default article.title 'Article Thumbnail'}}"
             class="w-full h-64 object-cover"
           />
         </figure>
         {{/if}}
         <div class="card-body">
-          <h1 class="card-title text-3xl font-bold">{{article.title}}</h1>
+          <h1 class="card-title text-3xl font-bold">
+            {{default article.title 'Untitled Article'}}
+          </h1>
           <p class="text-sm text-gray-500 mb-4">
             {{#if article.category}}
-            <a href="/categories/{{article.category.id}}" class="link">{{article.category.name}}</a>
+            <a href="/categories/{{article.category.id}}" class="link">
+              {{article.category.name}}
+            </a>
             <span class="mx-2">|</span>
-            {{/if}} {{formatDate article.publishedAt}}
+            {{/if}} {{formatDate article.published_at}}
           </p>
           <div class="flex flex-wrap gap-2 mb-4">
-            {{#each article.tags}}
-            <a href="/tags/{{this}}" class="badge badge-outline">{{this}}</a>
+            {{#each article.tags as |tag|}}
+            <a href="filter?tagId={{tag.id}}" class="badge badge-outline">#{{tag.name}}</a>
             {{/each}}
           </div>
-          <div class="prose max-w-none">{{{article.content}}}</div>
+          <div class="prose max-w-none">{{{default article.content 'No content available.'}}}</div>
         </div>
       </article>
 
@@ -35,10 +39,10 @@
       <section id="comments" class="space-y-6">
         <h2 class="text-2xl font-bold">Comments</h2>
 
-        {{!-- Comment Form --}} {{#if user}}
+        {{#if user}} {{!-- Comment Form --}}
         <form
           id="comment-form"
-          action="/articles/{{article.slug}}/comments"
+          action="/articles/{{article.id}}/comments"
           method="POST"
           class="space-y-4"
         >
@@ -61,7 +65,11 @@
           <a href="/auth/register" class="link">Register</a> to post a comment.
         </p>
         {{/if}} {{!-- Comments List --}}
-        <div class="space-y-4">{{#each comments}} {{> comment-item this}} {{/each}}</div>
+        <div class="space-y-4">
+          {{#each comments as |comment|}} {{> comment-item comment}} {{else}}
+          <p class="text-gray-500">No comments yet. Be the first to comment!</p>
+          {{/each}}
+        </div>
       </section>
     </div>
 
@@ -70,34 +78,12 @@
       {{!-- Related Articles --}}
       <section>
         <h2 class="text-xl font-bold mb-4">Related Articles</h2>
-        <div class="space-y-4">{{#each relatedArticles}} {{> article-item this}} {{/each}}</div>
+        <div class="space-y-4">
+          {{#each relatedArticles}} {{> article-item this}} {{else}}
+          <p class="text-gray-500">No related articles available.</p>
+          {{/each}}
+        </div>
       </section>
     </aside>
   </div>
 </div>
-
-<script>
-  document.getElementById('comment-form').addEventListener('submit', async function (e) {
-    e.preventDefault()
-    const form = e.target
-    const content = form.content.value
-
-    try {
-      const response = await axios.post('/api/v1/comments', {
-        articleId: '{{article.id}}',
-        content: content,
-      })
-
-      // Clear the textarea
-      form.content.value = ''
-
-      // Prepend the new comment to the comments list
-      const newCommentHtml = response.data.commentHtml
-      const commentsSection = document.querySelector('#comments .space-y-4')
-      commentsSection.insertAdjacentHTML('afterbegin', newCommentHtml)
-    } catch (error) {
-      console.error('Error submitting comment:', error)
-      alert('An error occurred while submitting your comment.')
-    }
-  })
-</script>

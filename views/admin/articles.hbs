@@ -1,76 +1,90 @@
 {{!-- views/admin/articles.hbs --}}
-{{#extend "layouts/admin"}}
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Articles Management</h1>
 
-  {{#content "title"}}Manage Articles{{/content}}
-
-  {{#content "body"}}
-    <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-6">Articles Management</h1>
-
-      {{!-- Filter Form --}}
-      <form method="GET" class="flex items-center space-x-4 mb-6">
-        <div class="form-control">
-          <label class="label">Status</label>
-          <select name="status" class="select select-bordered">
-            <option value="">All</option>
-            {{#each statuses}}
-              <option value="{{this}}" {{#if (eq ../selectedStatus this)}}selected{{/if}}>{{this}}</option>
-            {{/each}}
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary mt-6">Filter</button>
-      </form>
-
-      {{!-- Articles Table --}}
-      <div class="overflow-x-auto">
-        <table class="table w-full">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Author</th>
-              <th>Category</th>
-              <th>Status</th>
-              <th>Published At</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each articles}}
-              <tr>
-                <td>{{this.title}}</td>
-                <td>{{this.author.fullName}}</td>
-                <td>{{this.category.name}}</td>
-                <td>{{this.status}}</td>
-                <td>{{formatDate this.publishedAt}}</td>
-                <td>
-                  <a href="/admin/articles/{{this.id}}" class="btn btn-xs btn-info">View</a>
-                  <button class="btn btn-xs btn-error" @click="deleteArticle('{{this.id}}')">Delete</button>
-                </td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-
-      {{!-- Scripts --}}
-      <script>
-        function articleManagement() {
-          return {
-            async deleteArticle(articleId) {
-              if (confirm('Are you sure you want to delete this article?')) {
-                try {
-                  await axios.delete('/api/admin/articles/' + articleId);
-                  window.location.reload();
-                } catch (error) {
-                  console.error(error);
-                  alert('An error occurred.');
-                }
-              }
-            },
-          };
-        }
-      </script>
+  <!-- Filter Form -->
+  <form method="GET" class="flex items-center space-x-4 mb-6">
+    <div class="form-control">
+      <label class="label">Status</label>
+      <select name="status" class="select select-bordered">
+        <option value="">All</option>
+        {{#each statuses}}
+        <option value="{{this}}" {{#if (eq ../selectedStatus this)}}selected{{/if}}>
+          {{this}}
+        </option>
+        {{/each}}
+      </select>
     </div>
-  {{/content}}
+    <button type="submit" class="btn btn-primary mt-6">Filter</button>
+  </form>
 
-{{/extend}}
+  <!-- Articles Table -->
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Published At</th>
+          {{!-- <th>Actions</th> --}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each articles}}
+        <tr>
+          <td>{{this.title}}</td>
+          <td>{{this.author_name}}</td>
+          <td>{{this.category_name}}</td>
+          <td>
+            <form
+              action="/admin/articles/status/{{this.id}}"
+              method="POST"
+              onsubmit="return confirmStatusChange(event, this)"
+            >
+              <select name="status" class="select select-bordered select-xs">
+                {{#each ../statuses}}
+                <option value="{{this}}" {{#if (eq ../this.status this)}}selected{{/if}}>
+                  {{this}}
+                </option>
+                {{/each}}
+              </select>
+              <button type="submit" class="btn btn-xs btn-primary mt-2">Confirm</button>
+            </form>
+          </td>
+          <td>{{formatDate this.published_at}}</td>
+          {{!-- <td>
+            <form
+              action="/admin/articles/delete/{{this.id}}"
+              method="POST"
+              style="display: inline"
+              onsubmit="return confirm('Are you sure you want to delete this article?');"
+            >
+              <button type="submit" class="btn btn-xs btn-error">Delete</button>
+            </form>
+          </td> --}}
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- Confirmation Script -->
+<script>
+  function confirmStatusChange(event, form) {
+    event.preventDefault();
+    const selectedStatus = form.querySelector("select[name='status']").value;
+    const confirmMessage = `Are you sure you want to change the status to "${selectedStatus}"?`;
+
+    if (confirm(confirmMessage)) {
+      form.submit();
+    }
+  }
+</script>
+
+
+
+

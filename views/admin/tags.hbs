@@ -1,98 +1,129 @@
 {{!-- views/admin/tags.hbs --}}
-{{#extend "layouts/admin"}}
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Tags Management</h1>
+  </div>
 
-  {{#content "title"}}Manage Tags{{/content}}
+  <!-- Add/Edit Tag Form -->
+  <form id="tagForm" action="/admin/tags/save" method="POST" class="mb-6 space-y-4 bg-gray-100 p-4 rounded-md shadow-lg">
+    <h2 id="formTitle" class="text-xl font-bold">Add New Tag</h2>
+    <!-- Hidden ID Field for Editing -->
+    <input type="hidden" name="id" id="tagId" />
 
-  {{#content "body"}}
-    <div class="container mx-auto px-4 py-8">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Tags Management</h1>
-        <button class="btn btn-primary" @click="openModal('addTag')">Add Tag</button>
-      </div>
-
-      {{!-- Tags Table --}}
-      <div class="overflow-x-auto">
-        <table class="table w-full">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each tags}}
-              <tr>
-                <td>{{this.name}}</td>
-                <td>
-                  <button class="btn btn-xs btn-warning" @click="editTag({{json this}})">Edit</button>
-                  <button class="btn btn-xs btn-error" @click="deleteTag('{{this.id}}')">Delete</button>
-                </td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-
-      {{!-- Add/Edit Tag Modal --}}
-      <div x-data="{ isOpen: false, tag: {}, isEdit: false }" x-show="isOpen">
-        <div class="modal modal-open">
-          <div class="modal-box">
-            <h3 class="font-bold text-lg" x-text="isEdit ? 'Edit Tag' : 'Add Tag'"></h3>
-            <form @submit.prevent="submitTag">
-              <div class="form-control">
-                <label class="label">Name</label>
-                <input type="text" class="input input-bordered" x-model="tag.name" required />
-              </div>
-              <div class="modal-action">
-                <button type="button" class="btn" @click="isOpen = false">Cancel</button>
-                <button type="submit" class="btn btn-primary" x-text="isEdit ? 'Update' : 'Create'"></button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      {{!-- Scripts --}}
-      <script>
-        function tagManagement() {
-          return {
-            isOpen: false,
-            tag: {},
-            isEdit: false,
-            openModal(action, tag = {}) {
-              this.isOpen = true;
-              this.isEdit = action === 'edit';
-              this.tag = tag;
-            },
-            async submitTag() {
-              try {
-                const url = this.isEdit ? '/api/admin/tags/' + this.tag.id : '/api/admin/tags';
-                const method = this.isEdit ? 'put' : 'post';
-                await axios[method](url, this.tag);
-                window.location.reload();
-              } catch (error) {
-                console.error(error);
-                alert('An error occurred.');
-              }
-            },
-            async deleteTag(tagId) {
-              if (confirm('Are you sure you want to delete this tag?')) {
-                try {
-                  await axios.delete('/api/admin/tags/' + tagId);
-                  window.location.reload();
-                } catch (error) {
-                  console.error(error);
-                  alert('An error occurred.');
-                }
-              }
-            },
-            editTag(tag) {
-              this.openModal('edit', tag);
-            },
-          };
-        }
-      </script>
+    <!-- Tag Name -->
+    <div class="form-control">
+      <label class="label font-semibold">Tag Name</label>
+      <input type="text" name="name" id="tagName" class="input input-bordered" placeholder="Enter tag name" required />
     </div>
-  {{/content}}
 
-{{/extend}}
+    <!-- Submit Button -->
+    <button id="formButton" type="submit" class="btn btn-primary w-full">Add Tag</button>
+  </form>
+
+  <!-- Filters -->
+  <form class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" method="GET">
+    <!-- Tag Name Filter -->
+    <input
+      type="text"
+      name="name"
+      class="input input-bordered"
+      placeholder="Search by tag name"
+      value="{{query.name}}"
+    />
+
+    <!-- Sort By -->
+    <select name="orderBy" class="select select-bordered">
+      <option value="name ASC" {{#if (eq query.orderBy "name ASC")}}selected{{/if}}>Name A-Z</option>
+      <option value="name DESC" {{#if (eq query.orderBy "name DESC")}}selected{{/if}}>Name Z-A</option>
+    </select>
+
+    <!-- Limit -->
+    <input
+      type="number"
+      name="limit"
+      class="input input-bordered"
+      placeholder="Items per page"
+      min="1"
+      value="{{query.limit}}"
+    />
+
+    <!-- Default page to 1 -->
+    <input type="hidden" name="page" value="1" />
+
+    <!-- Submit and Reset -->
+    <div class="flex items-center space-x-2">
+      <button type="submit" class="btn btn-primary">Apply</button>
+      <a href="/admin/tags" class="btn btn-secondary">Reset</a>
+    </div>
+  </form>
+
+  <!-- Pagination (Top) -->
+  <div class="mt-4 mb-2">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
+
+  <!-- Tags Table -->
+  {{#if tags.length}}
+  <div class="overflow-x-auto mb-4">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>Tag Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each tags}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td>
+            <button
+              class="btn btn-xs btn-warning"
+              onclick="editTag({ id: '{{this.id}}', name: '{{this.name}}' })"
+            >
+              Edit
+            </button>
+            <form
+              action="/admin/tags/delete/{{this.id}}"
+              method="POST"
+              style="display: inline"
+              onsubmit="return confirm('Are you sure you want to delete this tag?');"
+            >
+              <button type="submit" class="btn btn-xs btn-error">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination (Bottom) -->
+  <div class="mt-2">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
+
+  {{else}}
+  <div class="text-center text-gray-500">No tags found.</div>
+  {{/if}}
+</div>
+
+<script>
+  // Function to handle editing a tag
+  function editTag(tag) {
+    document.getElementById('formTitle').textContent = 'Edit Tag';
+    document.getElementById('formButton').textContent = 'Update Tag';
+    document.getElementById('tagId').value = tag.id;
+    document.getElementById('tagName').value = tag.name;
+    window.scrollTo(0, 0); // Scroll to the form
+  }
+
+  // Reset form state for adding a tag
+  document.getElementById('tagForm').addEventListener('reset', () => {
+    document.getElementById('formTitle').textContent = 'Add New Tag';
+    document.getElementById('formButton').textContent = 'Add Tag';
+    document.getElementById('tagId').value = '';
+    document.getElementById('tagName').value = '';
+  });
+</script>
+

@@ -1,0 +1,91 @@
+{{!-- views/admin/edit-user.hbs --}}
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Edit User</h1>
+
+  <!-- Success/Error Messages -->
+  <div id="responseMessage" class="hidden mt-4"></div>
+
+  <!-- Edit User Form -->
+  <form id="editUserForm" class="space-y-6">
+    <!-- Username -->
+    <div class="form-control">
+      <label class="label font-semibold">Username</label>
+      <input
+        type="text"
+        class="input input-bordered"
+        name="username"
+        value="{{user.username}}"
+        readonly
+      />
+    </div>
+
+    <!-- Full Name -->
+    <div class="form-control">
+      <label class="label font-semibold">Full Name</label>
+      <input
+        type="text"
+        class="input input-bordered"
+        name="full_name"
+        value="{{user.full_name}}"
+        readonly
+      />
+    </div>
+
+    <!-- Email -->
+    <div class="form-control">
+      <label class="label font-semibold">Email</label>
+      <input
+        type="email"
+        class="input input-bordered"
+        name="email"
+        value="{{user.email}}"
+        readonly
+      />
+    </div>
+
+    <!-- Role -->
+    <div class="form-control">
+      <label class="label font-semibold">Role</label>
+      <select class="select select-bordered" name="role" required>
+        <option disabled>Select Role</option>
+        {{#each roles}}
+        <option value="{{this}}" {{#if (eq this ../user.role)}}selected{{/if}}>
+          {{this}}
+        </option>
+        {{/each}}
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary w-full">Update User</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('editUserForm');
+  const responseMessage = document.getElementById('responseMessage');
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent default form submission
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const userId = "{{user.id}}";
+
+    try {
+      const response = await axios.post(`/admin/users/edit/${userId}`, data);
+      responseMessage.className = 'alert alert-success shadow-lg mt-4';
+      responseMessage.textContent = 'User updated successfully!';
+      responseMessage.hidden = false;
+
+      setTimeout(() => {
+        window.location.href = '/admin/users';
+      }, 2000);
+    } catch (error) {
+      responseMessage.className = 'alert alert-error shadow-lg mt-4';
+      responseMessage.textContent =
+        error.response?.data?.message || 'Failed to update user.';
+      responseMessage.hidden = false;
+    }
+  });
+</script>
+

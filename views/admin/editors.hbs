@@ -1,0 +1,33 @@
+{{!-- views/admin/editors.hbs --}}
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Editors Management</h1>
+
+  <table class="table w-full border">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Assigned Categories</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each editors}}
+      <tr>
+        <td>{{this.full_name}}</td>
+        <td>{{this.email}}</td>
+        <td>{{this.assignedCategories.length}}</td>
+        <td>
+          <a
+            href="/admin/editors/{{this.id}}/categories"
+            class="btn btn-sm btn-primary"
+          >
+            Manage Categories
+          </a>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+

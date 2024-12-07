@@ -29,7 +29,7 @@ router.use('/editor', editorRoutes)
 router.use('/admin', adminRoutes)
 
 router.get('/', (req, res) => {
-  res.render('home', { articles })
+  res.redirect('/articles/home')
 })
 
 export default router

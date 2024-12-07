@@ -109,10 +109,10 @@ const addCommentToArticle = async (req, res, next) => {
 
   try {
     // Add the comment to the database
-    const comment = await commentService.addCommentToArticle(articleId, req.user.id, content)
+    await commentService.addCommentToArticle(articleId, req.user.id, content)
 
     // Send the newly created comment as a JSON response
-    res.status(201).json({ success: true, data: comment })
+    res.redirect(`/articles/${articleId}`)
   } catch (error) {
     // If any error occurs, pass it to the next middleware function
     next(error)

@@ -51,23 +51,24 @@ class EditorCategoryModel extends BaseModel {
     return rows
   }
 
-  /**
-   * Retrieves the categories assigned to an editor.
-   *
-   * This method will return a list of categories assigned to the specified
-   * editor ID.
-   *
-   * @param {number} editorId - The ID of the editor to retrieve categories for.
-   * @returns {Promise<Object[]>} The list of categories assigned to the editor.
-   *
-   * @example
-   * const categories = await editorCategoryModel.getCategoriesByEditor(1);
-   * console.log(categories);
-   * [
-   *   { id: 1, name: "JavaScript", parent_id: null, created_at: "2022-01-01 12:00:00", ... },
-   *   { id: 2, name: "Node.js", parent_id: 1, created_at: "2022-01-01 12:00:00", ... },
-   * ]
-   */
+  async assignCategory(editorId, categoryId) {
+    const query = `
+      INSERT INTO editor_categories (editor_id, category_id)
+      VALUES ($1, $2)
+      ON CONFLICT DO NOTHING
+    `
+
+    await db.query(query, [editorId, categoryId])
+  }
+
+  async unassignCategory(editorId, categoryId) {
+    const query = `
+      DELETE FROM editor_categories
+      WHERE editor_id = $1 AND category_id = $2
+    `
+    await db.query(query, [editorId, categoryId])
+  }
+
   async getCategoriesByEditor(editorId) {
     const query = `
       SELECT c.*
@@ -79,23 +80,6 @@ class EditorCategoryModel extends BaseModel {
     return rows
   }
 
-  /**
-   * Retrieves the editors assigned to a category.
-   *
-   * This method will return a list of editors assigned to the specified
-   * category ID.
-   *
-   * @param {number} categoryId - The ID of the category to retrieve editors for.
-   * @returns {Promise<Object[]>} The list of editors assigned to the category.
-   *
-   * @example
-   * const editors = await editorCategoryModel.getEditorsByCategory(1);
-   * console.log(editors);
-   * [
-   *   { id: 1, full_name: "John Doe", email: "johndoe@example.com", role: "editor", ... },
-   *   { id: 2, full_name: "Jane Doe", email: "janedoe@example.com", role: "editor", ... },
-   * ]
-   */
   async getEditorsByCategory(categoryId) {
     const query = `
       SELECT u.*
@@ -107,21 +91,22 @@ class EditorCategoryModel extends BaseModel {
     return rows
   }
 
-  /**
-   * Deletes all category assignments for the specified editor ID.
-   *
-   * This method will remove all entries from the `editor_categories` table
-   * that have the specified `editorId`.
-   *
-   * @param {number} editorId - The ID of the editor to delete category assignments for.
-   * @returns {Promise<void>}
-   */
   async deleteByEditorId(editorId) {
     const query = `
       DELETE FROM editor_categories
       WHERE editor_id = $1
     `
     await db.query(query, [editorId])
+  }
+
+  async getAssignedCategories() {
+    const query = `
+    SELECT ec.editor_id, c.*
+    FROM editor_categories ec
+    INNER JOIN categories c ON c.id = ec.category_id
+  `
+    const { rows } = await db.query(query)
+    return rows
   }
 
   // Add another methods related to editor_categories...
