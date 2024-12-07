@@ -12,24 +12,7 @@ class EditorCategoryModel extends BaseModel {
   constructor() {
     super('editor_categories')
   }
-  /**
-   * Assigns categories to an editor.
-   *
-   * This method will delete all existing category assignments for the editor
-   * and then insert new assignments for the specified category IDs.
-   *
-   * @param {number} editorId - The ID of the editor to assign categories to.
-   * @param {number[]} categoryIds - The IDs of the categories to assign.
-   * @returns {Promise<Object[]>} The inserted assignments.
-   *
-   * @example
-   * const assignments = await editorCategoryModel.assignCategories(1, [1, 2]);
-   * console.log(assignments);
-   * [
-   *   { editor_id: 1, category_id: 1 },
-   *   { editor_id: 1, category_id: 2 },
-   * ]
-   */
+
   async assignCategories(editorId, categoryIds) {
     // Delete existing assignments
     const deleteQuery = `
@@ -110,6 +93,28 @@ class EditorCategoryModel extends BaseModel {
   }
 
   // Add another methods related to editor_categories...
+  async getEditorsWithCategories() {
+    const query = `
+      SELECT 
+        u.id AS editor_id, 
+        u.full_name, 
+        u.email, 
+        json_agg(json_build_object('id', c.id, 'name', c.name)) AS assignedCategories
+      FROM users u
+      LEFT JOIN editor_categories ec ON u.id = ec.editor_id
+      LEFT JOIN categories c ON ec.category_id = c.id
+      WHERE u.role = 'editor'
+      GROUP BY u.id
+      ORDER BY u.full_name ASC
+    `
+    const { rows } = await db.query(query)
+    return rows.map((row) => ({
+      id: row.editor_id,
+      full_name: row.full_name,
+      email: row.email,
+      assignedCategories: row.assignedcategories.filter(Boolean), // Filter out null values
+    }))
+  }
 }
 
 const editorCategoryModel = new EditorCategoryModel()

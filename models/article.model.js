@@ -198,7 +198,6 @@ class ArticleModel extends BaseModel {
       FROM articles a
       LEFT JOIN categories c ON a.category_id = c.id
       WHERE status = 'published' 
-        AND published_at >= NOW() - INTERVAL '7 days' 
       ORDER BY views DESC 
       LIMIT 4
     `
@@ -239,6 +238,7 @@ class ArticleModel extends BaseModel {
       LEFT JOIN categories c ON a.category_id = c.id
       WHERE status = 'published' 
       ORDER BY category_id, published_at DESC
+      LIMIT 10
     `
     const { rows } = await db.query(query)
     return rows
@@ -257,6 +257,88 @@ class ArticleModel extends BaseModel {
   `
     const { rows } = await db.query(query, [authorId])
     return rows[0]
+  }
+
+  async getFilteredArticles(filters = {}, options = {}) {
+    const queryParams = []
+    let query = `
+    SELECT 
+      a.*, 
+      u.full_name AS author_name, 
+      c.name AS category_name, 
+      ${filters.keyword ? 'ts_rank_cd(a.search_vector, query)' : '0'} AS rank
+    FROM articles a
+    LEFT JOIN users u ON a.author_id = u.id
+    LEFT JOIN categories c ON a.category_id = c.id
+  `
+
+    // Add search query if a keyword is provided
+    if (filters.keyword) {
+      const formattedKeyword = filters.keyword.trim().replace(/\s+/g, ' & ')
+      query += `, to_tsquery('english', $${queryParams.length + 1}) query `
+      queryParams.push(formattedKeyword)
+      query += `WHERE a.search_vector @@ query `
+    } else {
+      query += `WHERE 1=1 `
+    }
+
+    // Apply dynamic filters
+    if (filters.author_id) {
+      queryParams.push(filters.author_id)
+      query += `AND a.author_id = $${queryParams.length} `
+    }
+
+    if (filters.category_id) {
+      queryParams.push(filters.category_id)
+      query += `AND a.category_id = $${queryParams.length} `
+    }
+
+    if (filters.tag_id) {
+      query += `AND a.id IN (
+      SELECT article_id
+      FROM article_tags
+      WHERE tag_id = $${queryParams.length + 1}
+    ) `
+      queryParams.push(filters.tag_id)
+    }
+
+    if (filters.status) {
+      queryParams.push(filters.status)
+      query += `AND a.status = $${queryParams.length} `
+    }
+
+    if (filters.is_premium) {
+      queryParams.push(filters.is_premium)
+      query += `AND a.is_premium = $${queryParams.length} `
+    }
+
+    // Add ORDER BY, LIMIT, and OFFSET
+    query += `
+    ORDER BY ${filters.keyword ? 'rank DESC,' : ''} ${options.orderBy || 'a.published_at DESC'}
+    LIMIT $${queryParams.length + 1}
+    OFFSET $${queryParams.length + 2}
+  `
+    queryParams.push(options.limit || 10)
+    queryParams.push(options.offset || 0)
+
+    // Count total articles
+    const countQuery = `
+    SELECT COUNT(*) AS total
+    FROM articles a
+    LEFT JOIN users u ON a.author_id = u.id
+    LEFT JOIN categories c ON a.category_id = c.id
+    ${filters.keyword ? "WHERE a.search_vector @@ to_tsquery('english', $1)" : 'WHERE 1=1'}
+  `
+    const countParams = filters.keyword ? [filters.keyword.trim().replace(/\s+/g, ' & ')] : []
+    const countResult = await db.query(countQuery, countParams)
+
+    // Execute the main query
+    const { rows } = await db.query(query, queryParams)
+
+    return {
+      articles: rows,
+      totalArticles: parseInt(countResult.rows[0]?.total || 0, 10),
+    }
   }
 }
 

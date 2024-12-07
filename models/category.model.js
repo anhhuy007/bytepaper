@@ -83,6 +83,38 @@ class CategoryModel extends BaseModel {
   }
 
   // Add another methods related to categories...
+  async getAvailableCategories(filters = {}, options = {}) {
+    const queryParams = []
+    let query = `
+      SELECT * 
+      FROM categories 
+      WHERE 1=1
+    `
+
+    if (filters.exclude && filters.exclude.length > 0) {
+      query += ` AND id NOT IN (${filters.exclude.map((_, idx) => `$${queryParams.length + idx + 1}`).join(', ')})`
+      queryParams.push(...filters.exclude)
+    }
+
+    query += `
+      ORDER BY ${options.orderBy || 'name ASC'}
+      LIMIT $${queryParams.length + 1}
+      OFFSET $${queryParams.length + 2}
+    `
+    queryParams.push(options.limit || 10, options.offset || 0)
+
+    const countQuery = `
+      SELECT COUNT(*) AS total 
+      FROM categories 
+      WHERE 1=1
+      ${filters.exclude && filters.exclude.length > 0 ? ` AND id NOT IN (${filters.exclude.map((_, idx) => `$${idx + 1}`).join(', ')})` : ''}
+    `
+
+    const totalCategories = await db.query(countQuery, filters.exclude || [])
+    const { rows: categories } = await db.query(query, queryParams)
+
+    return { categories, totalCategories: totalCategories.rows[0].total }
+  }
 }
 
 const categoryModel = new CategoryModel()

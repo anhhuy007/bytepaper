@@ -2,7 +2,8 @@
 
 import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
-
+import categoryService from '../services/category.service.js'
+import tagService from '../services/tag.service.js'
 const getArticleById = async (req, res, next) => {
   try {
     const articleId = req.params.id
@@ -100,27 +101,118 @@ const getHomepageArticles = async (req, res, next) => {
   }
 }
 
-const handleArticles = async (req, res, next) => {
+const getArticlesByFilter = async (req, res, next) => {
   try {
-    const { keyword, categoryId, tagId, page = 1, limit = 10 } = req.query
+    // Extract filters and pagination options
+    const filters = {
+      keyword: req.query.keyword || null,
+      category_id: req.query.category_id || null,
+      tag_id: req.query.tag_id || null,
+      status: req.query.status || 'published',
+    }
+
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
 
     const options = {
-      limit: parseInt(limit),
-      offset: (parseInt(page) - 1) * parseInt(limit),
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC', // Default: Newest
+    }
+
+    // Fetch filtered articles and total count
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+
+    // Fetch all categories and tags for filtering
+    const { categories } = await categoryService.getAllCategories()
+    const { tags } = await tagService.getAllTags()
+
+    // Calculate total pages for pagination
+    const totalPages = Math.ceil(totalArticles / limit)
+
+    // Render view with articles, filters, and pagination
+    res.render('articles/search', {
+      articles,
+      categories,
+      tags,
+      currentPage: page,
+      totalPages,
+      query: req.query,
+      selectedCategory: filters.category_id,
+      selectedTag: filters.tag_id,
+      keyword: filters.keyword,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getArticlesByTagId = async (req, res, next) => {
+  try {
+    const tagId = req.params.tagId
+
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
+
+    const filters = {
+      tag_id: tagId,
       status: 'published',
     }
 
-    const filters = { keyword, categoryId, tagId, status: 'published'}
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    const totalPages = Math.ceil(totalArticles / limit)
+    const tag = await tagService.getTagById(tagId)
 
-    const articles = await articleService.getFilteredArticles(filters, options)
-    const totalPages = Math.ceil(articles.length / options.limit)
+    res.render('articles/list', {
+      articles,
+      currentPage: page,
+      totalPages,
+      title: `Articles with Tag: ${tag.name}`,
+      query: req.query,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 
+const getArticlesByCategoryId = async (req, res, next) => {
+  try {
+    const categoryId = req.params.categoryId
+
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
+
+    const filters = {
+      category_id: categoryId,
+      status: 'published',
+    }
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    const totalPages = Math.ceil(totalArticles / limit)
+    const category = await categoryService.getCategoryById(categoryId)
+
+    console.log('=========================> Category:', category)
     console.log('=========================> Articles:', articles)
 
-    return res.render('articles/list', {
+    res.render('articles/list', {
       articles,
-      currentPage: parseInt(page),
+      currentPage: page,
       totalPages,
+      title: `Articles in Category: ${category.name}`,
       query: req.query,
     })
   } catch (error) {
@@ -129,9 +221,11 @@ const handleArticles = async (req, res, next) => {
 }
 
 export default {
-  handleArticles,
+  getArticlesByFilter,
   getArticleById,
   increaseArticleViewCount,
   downloadArticle,
   getHomepageArticles,
+  getArticlesByTagId,
+  getArticlesByCategoryId,
 }

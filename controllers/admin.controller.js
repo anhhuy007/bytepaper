@@ -5,6 +5,7 @@ import userService from '../services/user.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
 import articleService from '../services/article.service.js'
+
 const getAllUsers = async (req, res, next) => {
   try {
     // Extract filters
@@ -97,23 +98,7 @@ const createUser = async (req, res, next) => {
 
 const getEditors = async (req, res, next) => {
   try {
-    const editors = await adminService.getAllEditors() // Fetch editors
-    const assignedCategories = await categoryService.getAssignedCategories() // Fetch all assignments
-
-    // Map assigned categories for each editor
-    const categoryMap = assignedCategories.reduce((map, row) => {
-      if (!map[row.editor_id]) {
-        map[row.editor_id] = []
-      }
-      map[row.editor_id].push(row) // Push the category object
-      return map
-    }, {})
-
-    editors.forEach((editor) => {
-      editor.assignedCategories = categoryMap[editor.id] || []
-    })
-
-    console.log(JSON.stringify(editors, null, 2))
+    const editors = await adminService.getEditorsWithCategories()
 
     res.render('admin/editors', {
       title: 'Assign Categories',
@@ -129,20 +114,31 @@ const getEditorCategories = async (req, res, next) => {
   try {
     const { editorId } = req.params
     const editor = await userService.getUserById(editorId)
-    const categories = await categoryService.getAllCategories()
+
+    // Fetch assigned categories
     const assignedCategories = await categoryService.getCategoriesByEditor(editorId)
 
-    console.log('=============================', assignedCategories)
+    // Fetch available categories with pagination and sorting
+    const filters = { exclude: assignedCategories.map((cat) => cat.id) } // Exclude already assigned categories
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1) // Default: page 1
+    const offset = (page - 1) * limit
+    const orderBy = req.query.orderBy || 'name ASC' // Default sorting by name
 
-    const availableCategories = categories.filter(
-      (category) => !assignedCategories.some((assigned) => assigned.id === category.id),
-    )
+    const { categories: availableCategories, totalCategories } =
+      await categoryService.getAvailableCategories(filters, { limit, offset, orderBy })
+
+    const totalPages = Math.ceil(totalCategories / limit)
 
     res.render('admin/editor-categories', {
       title: `Manage Categories for ${editor.full_name}`,
+      layout: 'admin',
       editor,
       assignedCategories,
       availableCategories,
+      query: { ...req.query, limit, page }, // Preserve query parameters
+      currentPage: page,
+      totalPages,
     })
   } catch (error) {
     next(error)
@@ -353,23 +349,42 @@ const getEditTag = async (req, res, next) => {
 
 const getAllArticles = async (req, res, next) => {
   try {
-    const filters = req.query
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+    // Extract filters and pagination options
+    const filters = {
+      keyword: req.query.keyword || null,
+      category_id: req.query.category_id || null,
+      tag_id: req.query.tag_id || null,
+      status: req.query.status || null,
     }
 
-    const articles = await articleService.getFilteredArticles(filters, options)
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
 
-    // Determine selected status
-    const selectedStatus = filters.status || ''
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
 
+    // Fetch articles and related data
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    const { categories } = await categoryService.getAllCategories() // Fetch all categories for filtering
+
+    console.log('=============================', totalArticles)
+    // Calculate total pages for pagination
+    const totalPages = Math.ceil(totalArticles / limit)
     res.render('admin/articles', {
-      title: 'Admin Articles',
+      title: 'Articles Management',
       layout: 'admin',
       articles,
+      categories,
       statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
-      selectedStatus, // Pass selected status to view
+      selectedCategory: filters.category_id, // Preserve selected category
+      selectedStatus: filters.status,
+      query: { ...req.query, limit, page }, // Preserve query params
+      totalPages,
+      currentPage: page,
     })
   } catch (error) {
     next(error)
