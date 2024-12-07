@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - NewsReader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    {{!-- Move scripts here with defer --}}
+    <script defer id="loading-template" type="text/x-handlebars-template">
+      <svg class='animate-spin h-5 w-5 mr-3' viewBox='0 0 24 24'>
+        <circle
+          class='opacity-25'
+          cx='12'
+          cy='12'
+          r='10'
+          stroke='currentColor'
+          stroke-width='4'
+        ></circle>
+        <path
+          class='opacity-75'
+          fill='currentColor'
+          d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+        ></path>
+      </svg>
+      Loading...
+    </script>
+
+    <script defer>
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('loginForm')
+        const submitButton = document.getElementById('submitButton')
+        const loadingTemplate = Handlebars.compile(
+          document.getElementById('loading-template').innerHTML,
+        )
+
+        form.addEventListener('submit', function (e) {
+          // e.preventDefault()
+          submitButton.disabled = true
+          submitButton.innerHTML = loadingTemplate()
+
+          setTimeout(function () {
+            submitButton.disabled = false
+            submitButton.textContent = 'Sign In'
+          }, 2000)
+        })
+
+        // Handlebars helper for current year
+        Handlebars.registerHelper('currentYear', function () {
+          return new Date().getFullYear()
+        })
+
+        // Apply the current year to the footer
+        const footerTemplate = Handlebars.compile(document.querySelector('footer').innerHTML)
+        document.querySelector('footer').innerHTML = footerTemplate()
+      })
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-[url('/assets/login-background.jpg')]">
+    <main class="flex-grow">{{{body}}}</main>
+
+    <footer class="p-4 bg-white text-center text-sm text-gray-600">
+      <p>&copy; {{currentYear}} Paperly. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

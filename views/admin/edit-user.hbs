@@ -1,0 +1,58 @@
+{{!-- views/admin/edit-user.hbs --}}
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Edit User</h1>
+
+  <!-- Edit User Form -->
+  <form action="/admin/users/edit/{{user.id}}" method="POST" class="space-y-4">
+    <!-- Username -->
+    <div class="form-control">
+      <label class="label">Username</label>
+      <input
+        type="text"
+        class="input input-bordered"
+        name="username"
+        value="{{user.username}}"
+        readonly
+      />
+    </div>
+    <!-- Full Name -->
+    <div class="form-control">
+      <label class="label">Full Name</label>
+      <input
+        type="text"
+        class="input input-bordered"
+        name="fullName"
+        value="{{user.full_name}}"
+        required
+      />
+    </div>
+    <!-- Email -->
+    <div class="form-control">
+      <label class="label">Email</label>
+      <input
+        type="email"
+        class="input input-bordered"
+        name="email"
+        value="{{user.email}}"
+        required
+      />
+    </div>
+    <!-- Role -->
+    <div class="form-control">
+      <label class="label">Role</label>
+      <select class="select select-bordered" name="role" required>
+        <option disabled>Select Role</option>
+        {{#each roles}}
+        <option value="{{this}}" {{#compare this '===' ../user.role}}selected{{/compare}}>
+          {{this}}
+        </option>
+        {{/each}}
+      </select>
+    </div>
+    <!-- Actions -->
+    <div class="mt-6 flex justify-end">
+      <a href="/admin/users" class="btn">Cancel</a>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+  </form>
+</div>

@@ -16,8 +16,9 @@
  * router.get("/admin/users", viewRenderer("admin/users", adminController.getUsers));
  * router.get("/admin/categories", viewRenderer("admin/categories", adminController.getCategories));
  */
+// utils/viewRenderer.js
 export const viewRenderer =
-  (viewName, dataLoader = null) =>
+  (viewName, layout = 'main', dataLoader = null) =>
   async (req, res, next) => {
     try {
       // Load additional data using the dataLoader function if provided
@@ -33,14 +34,13 @@ export const viewRenderer =
       const data = { ...defaultData, ...additionalData }
 
       if (req.method === 'GET') {
-        // For GET requests, render the specified view with the data
-        return res.render(viewName, data)
+        // For GET requests, render the specified view with the data and layout
+        return res.render(viewName, { ...data, layout })
       }
 
       // For non-GET requests, return a JSON response with the data
       res.json({ success: true, data })
     } catch (error) {
-      // If an error occurs, pass it to the next middleware for handling
       next(error)
     }
   }

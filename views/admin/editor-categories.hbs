@@ -1,0 +1,49 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Manage Categories for {{editor.full_name}}</h1>
+
+  <div class="grid grid-cols-2 gap-6">
+    <!-- Assigned Categories -->
+    <div>
+      <h2 class="text-xl font-semibold mb-4">Assigned Categories</h2>
+      <ul class="list-disc pl-5">
+        {{#if assignedCategories.length}}
+        {{#each assignedCategories}}
+        <li class="flex justify-between items-center">
+          {{this.name}}
+          <form
+            action="/admin/editors/{{../editor.id}}/categories/unassign"
+            method="POST"
+            class="inline"
+          >
+            <input type="hidden" name="categoryId" value="{{this.id}}" />
+            <button type="submit" class="btn btn-sm btn-error">Unassign</button>
+          </form>
+        </li>
+        {{/each}}
+        {{else}}
+        <p class="text-gray-500">No categories assigned.</p>
+        {{/if}}
+      </ul>
+    </div>
+
+    <!-- Available Categories -->
+    <div>
+      <h2 class="text-xl font-semibold mb-4">Available Categories</h2>
+      <ul class="list-disc pl-5">
+        {{#each availableCategories}}
+        <li class="flex justify-between items-center">
+          {{this.name}}
+          <form
+            action="/admin/editors/{{../editor.id}}/categories/assign"
+            method="POST"
+            class="inline"
+          >
+            <input type="hidden" name="categoryId" value="{{this.id}}" />
+            <button type="submit" class="btn btn-sm btn-primary">Assign</button>
+          </form>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>
