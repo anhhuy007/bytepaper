@@ -14,7 +14,11 @@ router.get('/', (req, res, next) => {
   res.redirect('/home')
 })
 
-router.get('/filter?', articleController.handleArticles)
+router.get('/filter?', articleController.getArticlesByFilter)
+
+router.get('/tags/:tagId', articleController.getArticlesByTagId)
+
+router.get('/categories/:categoryId', articleController.getArticlesByCategoryId)
 
 router.get('/home', viewRenderer('home', 'main', articleController.getHomepageArticles))
 

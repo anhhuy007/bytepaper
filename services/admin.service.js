@@ -109,17 +109,21 @@ class AdminService {
     return await userModel.find({ role: 'editor' })
   }
 
-  async getDashboard() {
-    const users = await this.getAllUsers()
-    const categories = await categoryModel.getAllCategories()
-    const tags = await tagModel.getAllTags()
+  async getEditorsWithCategories() {
+    return await editorCategoryModel.getEditorsWithCategories()
+  }
 
-    const articles = await articleModel.getArticles()
+  async getDashboard() {
+    const { totalUsers } = await this.getAllUsers()
+    const { totalCategories } = await categoryModel.getAllCategories()
+    const { totalTags } = await tagModel.getAllTags()
+
+    const { totalArticles } = await articleModel.getFilteredArticles()
     return {
-      totalUsers: users.length,
-      totalCategories: categories.length,
-      totalTags: tags.length,
-      totalArticles: articles.length,
+      totalUsers,
+      totalCategories,
+      totalTags,
+      totalArticles,
     }
   }
 

@@ -67,5 +67,9 @@ class CategoryService {
   async unassignCategory(editorId, categoryId) {
     return await editorCategoryModel.unassignCategory(editorId, categoryId)
   }
+
+  async getAvailableCategories(filters, options) {
+    return await categoryModel.getAvailableCategories(filters, options)
+  }
 }
 export default new CategoryService()

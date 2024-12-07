@@ -20,8 +20,8 @@
 
         {{!-- Tags --}}
         <div class="flex flex-wrap gap-2 mb-4 z-20">
-          {{#if tags}} {{#each tags}}
-          <a href="filter?tagId={{ this.id }}" class="btn-sm btn btn-outline text-xl"
+          {{#if article.tags}} {{#each article.tags}}
+          <a href="/tags/tagId={{ this.id }}" class="btn-sm btn btn-outline text-xl"
             >#{{ this.name }}</a
           >
           {{/each}} {{else}}
@@ -31,7 +31,7 @@
 
         {{!-- Category --}} {{#if category}}
         <a
-          href="filter?categoryId={{ default article.category_id '#' }}"
+          href="categories/categoryId={{ default article.category_id '#' }}"
           class="text-blue-500 hover:underline text-xl z-20 mt-auto"
         >
           {{category.name}}

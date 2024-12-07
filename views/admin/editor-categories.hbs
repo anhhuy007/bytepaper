@@ -1,50 +1,75 @@
-{{!-- views/admin/editor-categories.hbs --}}
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">Manage Categories for {{editor.full_name}}</h1>
+<div class="container mx-auto px-4 py-8 bg-white rounded shadow-md">
+  <!-- Back Button -->
+  <div class="mb-6">
+    <a href="/admin/editors" class="btn btn-outline btn-sm">
+      ← Back to Editors Management
+    </a>
+  </div>
 
-  <div class="grid grid-cols-2 gap-6">
-    <!-- Assigned Categories -->
-    <div>
-      <h2 class="text-xl font-semibold mb-4">Assigned Categories</h2>
-      <ul class="list-disc pl-5">
+  <!-- Page Title -->
+  <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">
+    Manage Categories for <span class="text-primary">{{editor.full_name}}</span>
+  </h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Assigned Categories Section -->
+    <div class="bg-gray-100 p-6 rounded shadow">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Assigned Categories</h2>
+      <ul class="space-y-4">
         {{#if assignedCategories.length}}
         {{#each assignedCategories}}
-        <li class="flex justify-between items-center">
-          {{this.name}}
+        <li class="flex justify-between items-center bg-white shadow p-3 rounded">
+          <span class="text-gray-800 font-medium">{{this.name}}</span>
           <form
             action="/admin/editors/{{../editor.id}}/categories/unassign"
             method="POST"
             class="inline"
           >
             <input type="hidden" name="categoryId" value="{{this.id}}" />
-            <button type="submit" class="btn btn-sm btn-error">Unassign</button>
+            <button type="submit" class="btn btn-error btn-sm">Unassign</button>
           </form>
         </li>
         {{/each}}
         {{else}}
-        <p class="text-gray-500">No categories assigned.</p>
+        <p class="text-gray-500 text-sm">No categories assigned yet.</p>
         {{/if}}
       </ul>
     </div>
 
-    <!-- Available Categories -->
-    <div>
-      <h2 class="text-xl font-semibold mb-4">Available Categories</h2>
-      <ul class="list-disc pl-5">
+    <!-- Available Categories Section -->
+    <div class="bg-gray-100 p-6 rounded shadow">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Available Categories</h2>
+
+      <!-- Sorting Form -->
+      <form method="GET" class="flex items-center space-x-4 mb-4">
+        <select name="orderBy" class="select select-bordered w-full">
+          <option value="name ASC" {{#if (eq query.orderBy "name ASC")}}selected{{/if}}>Name A-Z</option>
+          <option value="name DESC" {{#if (eq query.orderBy "name DESC")}}selected{{/if}}>Name Z-A</option>
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Apply Sort</button>
+      </form>
+
+      <!-- Available Categories List -->
+      <ul class="space-y-4">
         {{#each availableCategories}}
-        <li class="flex justify-between items-center">
-          {{this.name}}
+        <li class="flex justify-between items-center bg-white shadow p-3 rounded">
+          <span class="text-gray-800 font-medium">{{this.name}}</span>
           <form
             action="/admin/editors/{{../editor.id}}/categories/assign"
             method="POST"
             class="inline"
           >
             <input type="hidden" name="categoryId" value="{{this.id}}" />
-            <button type="submit" class="btn btn-sm btn-primary">Assign</button>
+            <button type="submit" class="btn btn-primary btn-sm">Assign</button>
           </form>
         </li>
         {{/each}}
       </ul>
+
+      <!-- Pagination -->
+      <div class="mt-4 mb-2">
+        {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+      </div>
     </div>
   </div>
 </div>
