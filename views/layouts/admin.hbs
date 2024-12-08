@@ -16,39 +16,60 @@
   <body>
     <div class="min-h-screen flex">
       <!-- Sidebar -->
-      <aside class="w-1/4 bg-white shadow-lg">
+      <aside class="w-64 bg-white shadow-lg">
         <div class="p-6">
-          <h2 class="text-lg font-bold mb-4">Admin Dashboard</h2>
+          <h2 class="text-xl font-bold mb-4 text-gray-800">Admin Dashboard</h2>
           <ul class="space-y-4">
-            <li>
-              <a href="/admin/dashboard" class="{{#ifActive 'admin/dashboard'}}active{{/ifActive}}"
-                >Dashboard</a
-              >
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a href="/" class="block px-4 py-2 text-gray-700"> Back to Home </a>
             </li>
-            <li>
-              <a href="/admin/users" class="{{#ifActive 'admin/users'}}active{{/ifActive}}"
-                >Users</a
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a
+                href="/admin/dashboard"
+                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/dashboard'}}font-bold text-accent{{/ifActive}}"
               >
+                Dashboard
+              </a>
             </li>
-            <li>
-              <a href="/admin/articles" class="{{#ifActive 'admin/articles'}}active{{/ifActive}}"
-                >Articles</a
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a
+                href="/admin/users"
+                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/users'}}font-bold text-accent{{/ifActive}}"
               >
+                Users
+              </a>
             </li>
-            <li>
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a
+                href="/admin/articles"
+                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/articles'}}font-bold text-accent{{/ifActive}}"
+              >
+                Articles
+              </a>
+            </li>
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/admin/categories"
-                class="{{#ifActive 'admin/categories'}}active{{/ifActive}}"
-                >Categories</a
+                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/categories'}}font-bold text-accent{{/ifActive}}"
               >
+                Categories
+              </a>
             </li>
-            <li>
-              <a href="/admin/tags" class="{{#ifActive 'admin/tags'}}active{{/ifActive}}">Tags</a>
-            </li>
-            <li>
-              <a href="/admin/editors" class="{{#ifActive 'admin/editors'}}active{{/ifActive}}"
-                >Editors</a
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a
+                href="/admin/tags"
+                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/tags'}}font-bold text-accent{{/ifActive}}"
               >
+                Tags
+              </a>
+            </li>
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a
+                href="/admin/editors"
+                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/editors'}}font-bold text-accent{{/ifActive}}"
+              >
+                Editors
+              </a>
             </li>
           </ul>
         </div>
@@ -56,11 +77,49 @@
 
       <!-- Main Content -->
       <main class="flex-grow p-8 bg-gray-50">
+        <!-- Success and Error Messages -->
         {{#if successMessage}}
-        <div class="alert alert-success shadow-lg mb-4">{{successMessage}}</div>
+        <div class="alert alert-success shadow-lg mb-6">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m2 5a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{{successMessage}}</span>
+          </div>
+        </div>
         {{/if}} {{#if errorMessage}}
-        <div class="alert alert-error shadow-lg mb-4">{{errorMessage}}</div>
-        {{/if}} {{{body}}}
+        <div class="alert alert-error shadow-lg mb-6">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+            <span>{{errorMessage}}</span>
+          </div>
+        </div>
+        {{/if}}
+
+        <!-- Main Content -->
+        {{{body}}}
       </main>
     </div>
   </body>
