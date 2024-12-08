@@ -1,21 +1,38 @@
 {{!-- views/admin/edit-category.hbs --}}
 <div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">Edit Category</h1>
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
+      <i data-lucide="edit-3" class="text-blue-500"></i>
+      <span>Edit Category</span>
+    </h1>
+    <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
+      <i data-lucide="arrow-left" class="text-gray-700"></i>
+      <span>Back to Categories</span>
+    </a>
+  </div>
+
   <!-- Error/Success Message -->
-  <div id="responseMessage" class="mt-4 hidden"></div>
-  <form id="editCategoryForm" class="space-y-4">
+  <div id="responseMessage" class="hidden mt-4"></div>
+
+  <!-- Edit Form -->
+  <form id="editCategoryForm" class="space-y-6">
+    <!-- Name Input -->
     <div class="form-control">
-      <label class="label">Name</label>
+      <label class="label font-semibold text-gray-700">Name</label>
       <input
         type="text"
         name="name"
         class="input input-bordered"
         value="{{category.name}}"
+        placeholder="Enter category name"
         required
       />
     </div>
+
+    <!-- Parent Category -->
     <div class="form-control">
-      <label class="label">Parent Category</label>
+      <label class="label font-semibold text-gray-700">Parent Category</label>
       <select name="parent_id" class="select select-bordered">
         <option value="">None</option>
         {{#each categories}}
@@ -25,7 +42,18 @@
         {{/each}}
       </select>
     </div>
-    <button type="submit" class="btn btn-primary">Update Category</button>
+
+    <!-- Buttons -->
+    <div class="flex justify-end space-x-4">
+      <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
+        <i data-lucide="x-circle"></i>
+        <span>Cancel</span>
+      </a>
+      <button type="submit" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
+        <i data-lucide="check-circle"></i>
+        <span>Update Category</span>
+      </button>
+    </div>
   </form>
 </div>
 
@@ -51,4 +79,5 @@
     }
   });
 </script>
+
 
