@@ -2,19 +2,28 @@
 <div class="container mx-auto px-4 py-8">
   <!-- Page Header -->
   <div class="flex justify-between items-center mb-8">
-    <h1 class="text-4xl font-bold text-gray-800">Edit User</h1>
-    <a href="/admin/users" class="btn btn-secondary">Back to Users</a>
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
+      <i data-lucide="user-edit" class="text-blue-500"></i>
+      <span>Edit User</span>
+    </h1>
+    <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
+      <i data-lucide="arrow-left"></i>
+      <span>Back to Users</span>
+    </a>
   </div>
 
   <!-- Success/Error Messages -->
   <div id="responseMessage" class="hidden"></div>
 
   <!-- Edit User Form -->
-  <div class="bg-white shadow-lg rounded-lg p-6">
+  <div class="bg-gray-100 shadow-lg rounded-lg p-6">
     <form id="editUserForm" class="space-y-6">
       <!-- Username -->
       <div>
-        <label class="block text-sm font-medium text-gray-600 mb-2">Username</label>
+        <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+          <i data-lucide="user"></i>
+          <span>Username</span>
+        </label>
         <input
           type="text"
           class="input input-bordered w-full"
@@ -26,7 +35,10 @@
 
       <!-- Full Name -->
       <div>
-        <label class="block text-sm font-medium text-gray-600 mb-2">Full Name</label>
+        <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+          <i data-lucide="user-check"></i>
+          <span>Full Name</span>
+        </label>
         <input
           type="text"
           class="input input-bordered w-full"
@@ -38,7 +50,10 @@
 
       <!-- Email -->
       <div>
-        <label class="block text-sm font-medium text-gray-600 mb-2">Email</label>
+        <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+          <i data-lucide="mail"></i>
+          <span>Email</span>
+        </label>
         <input
           type="email"
           class="input input-bordered w-full"
@@ -50,7 +65,10 @@
 
       <!-- Role -->
       <div>
-        <label class="block text-sm font-medium text-gray-600 mb-2">Role</label>
+        <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+          <i data-lucide="briefcase"></i>
+          <span>Role</span>
+        </label>
         <select class="select select-bordered w-full" name="role" required>
           {{#each roles}}
           <option value="{{this}}" {{#if (eq this ../user.role)}}selected{{/if}}>
@@ -60,10 +78,16 @@
         </select>
       </div>
 
-      <!-- Submit Button -->
+      <!-- Buttons -->
       <div class="flex justify-end space-x-4">
-        <a href="/admin/users" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn btn-primary">Update User</button>
+        <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
+          <i data-lucide="x-circle"></i>
+          <span>Cancel</span>
+        </a>
+        <button type="submit" class="btn btn-primary hover:shadow-md flex items-center space-x-2">
+          <i data-lucide="check-circle"></i>
+          <span>Update User</span>
+        </button>
       </div>
     </form>
   </div>
@@ -96,3 +120,4 @@
     }
   });
 </script>
+

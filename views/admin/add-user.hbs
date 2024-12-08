@@ -2,18 +2,27 @@
 <div class="container mx-auto px-4 py-8">
   <!-- Page Header -->
   <div class="flex justify-between items-center mb-8">
-    <h1 class="text-4xl font-extrabold text-gray-800">Add New User</h1>
-    <a href="/admin/users" class="btn btn-secondary">Back to Users</a>
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
+      <i data-lucide="user-plus" class="text-blue-500"></i>
+      <span>Add New User</span>
+    </h1>
+    <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
+      <i data-lucide="arrow-left"></i>
+      <span>Back to Users</span>
+    </a>
   </div>
 
   <!-- Success/Error Messages -->
   <div id="responseMessage" class="hidden"></div>
 
   <!-- User Form -->
-  <form id="addUserForm" class="bg-white p-6 rounded-lg shadow-lg space-y-6">
+  <form id="addUserForm" class="bg-gray-100 p-6 rounded-lg shadow-lg space-y-6">
     <!-- Username -->
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Username</label>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="user"></i>
+        <span>Username</span>
+      </label>
       <input
         type="text"
         name="username"
@@ -25,7 +34,10 @@
 
     <!-- Password -->
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Password</label>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="lock"></i>
+        <span>Password</span>
+      </label>
       <input
         type="password"
         name="password"
@@ -37,7 +49,10 @@
 
     <!-- Email -->
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Email</label>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="mail"></i>
+        <span>Email</span>
+      </label>
       <input
         type="email"
         name="email"
@@ -49,7 +64,10 @@
 
     <!-- Full Name -->
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Full Name</label>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="user-check"></i>
+        <span>Full Name</span>
+      </label>
       <input
         type="text"
         name="full_name"
@@ -61,7 +79,10 @@
 
     <!-- Pen Name -->
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Pen Name (Optional)</label>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="edit"></i>
+        <span>Pen Name (Optional)</span>
+      </label>
       <input
         type="text"
         name="pen_name"
@@ -72,13 +93,19 @@
 
     <!-- Date of Birth -->
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Date of Birth (Optional)</label>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="calendar"></i>
+        <span>Date of Birth (Optional)</span>
+      </label>
       <input type="date" name="date_of_birth" class="input input-bordered w-full" />
     </div>
 
     <!-- Role -->
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Role</label>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="briefcase"></i>
+        <span>Role</span>
+      </label>
       <select name="role" class="select select-bordered w-full" required>
         {{#each roles}}
         <option value="{{this}}">{{capitalize this}}</option>
@@ -88,8 +115,14 @@
 
     <!-- Submit and Back Buttons -->
     <div class="flex justify-end space-x-4">
-      <a href="/admin/users" class="btn btn-secondary">Cancel</a>
-      <button type="submit" class="btn btn-primary">Add User</button>
+      <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
+        <i data-lucide="x-circle"></i>
+        <span>Cancel</span>
+      </a>
+      <button type="submit" class="btn btn-primary hover:shadow-md flex items-center space-x-2">
+        <i data-lucide="check-circle"></i>
+        <span>Add User</span>
+      </button>
     </div>
   </form>
 </div>
@@ -120,3 +153,4 @@
     }
   });
 </script>
+
