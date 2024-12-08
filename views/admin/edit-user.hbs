@@ -1,64 +1,72 @@
 {{!-- views/admin/edit-user.hbs --}}
 <div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">Edit User</h1>
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-4xl font-bold text-gray-800">Edit User</h1>
+    <a href="/admin/users" class="btn btn-secondary">Back to Users</a>
+  </div>
 
   <!-- Success/Error Messages -->
-  <div id="responseMessage" class="hidden mt-4"></div>
+  <div id="responseMessage" class="hidden"></div>
 
   <!-- Edit User Form -->
-  <form id="editUserForm" class="space-y-6">
-    <!-- Username -->
-    <div class="form-control">
-      <label class="label font-semibold">Username</label>
-      <input
-        type="text"
-        class="input input-bordered"
-        name="username"
-        value="{{user.username}}"
-        readonly
-      />
-    </div>
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <form id="editUserForm" class="space-y-6">
+      <!-- Username -->
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Username</label>
+        <input
+          type="text"
+          class="input input-bordered w-full"
+          name="username"
+          value="{{user.username}}"
+          readonly
+        />
+      </div>
 
-    <!-- Full Name -->
-    <div class="form-control">
-      <label class="label font-semibold">Full Name</label>
-      <input
-        type="text"
-        class="input input-bordered"
-        name="full_name"
-        value="{{user.full_name}}"
-        readonly
-      />
-    </div>
+      <!-- Full Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Full Name</label>
+        <input
+          type="text"
+          class="input input-bordered w-full"
+          name="full_name"
+          value="{{user.full_name}}"
+          readonly
+        />
+      </div>
 
-    <!-- Email -->
-    <div class="form-control">
-      <label class="label font-semibold">Email</label>
-      <input
-        type="email"
-        class="input input-bordered"
-        name="email"
-        value="{{user.email}}"
-        readonly
-      />
-    </div>
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Email</label>
+        <input
+          type="email"
+          class="input input-bordered w-full"
+          name="email"
+          value="{{user.email}}"
+          readonly
+        />
+      </div>
 
-    <!-- Role -->
-    <div class="form-control">
-      <label class="label font-semibold">Role</label>
-      <select class="select select-bordered" name="role" required>
-        <option disabled>Select Role</option>
-        {{#each roles}}
-        <option value="{{this}}" {{#if (eq this ../user.role)}}selected{{/if}}>
-          {{this}}
-        </option>
-        {{/each}}
-      </select>
-    </div>
+      <!-- Role -->
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Role</label>
+        <select class="select select-bordered w-full" name="role" required>
+          {{#each roles}}
+          <option value="{{this}}" {{#if (eq this ../user.role)}}selected{{/if}}>
+            {{capitalize this}}
+          </option>
+          {{/each}}
+        </select>
+      </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary w-full">Update User</button>
-  </form>
+      <!-- Submit Button -->
+      <div class="flex justify-end space-x-4">
+        <a href="/admin/users" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Update User</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
@@ -66,7 +74,7 @@
   const responseMessage = document.getElementById('responseMessage');
 
   form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
     const userId = "{{user.id}}";
@@ -88,4 +96,3 @@
     }
   });
 </script>
-
