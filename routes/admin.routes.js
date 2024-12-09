@@ -10,6 +10,10 @@ const router = express.Router()
 // Protected Routes for Admins
 router.use(authMiddleware(['admin']))
 
+router.get('/', (req, res) => {
+  res.redirect('/admin/dashboard')
+})
+
 // User Management
 
 router.get(
@@ -58,37 +62,108 @@ router.post(
 
 // Category Management
 
-router.get('/categories', adminController.getAllCategories)
+router.get(
+  '/categories',
+  cacheMiddleware(adminCacheKeyGenerator.categoryList),
+  adminController.getAllCategories,
+)
 
-router.get('/categories/add', adminController.getAddCategory)
+router.get(
+  '/categories/add',
+  cacheMiddleware(adminCacheKeyGenerator.addCategoryPage),
+  adminController.getAddCategory,
+)
 
-router.post('/categories/add', adminController.createCategory)
+router.post(
+  '/categories/add',
+  deleteCacheMiddleware(adminCacheKeyGenerator.categoryList),
+  adminController.createCategory,
+)
 
-router.get('/categories/edit/:categoryId', adminController.getEditCategory)
+router.get(
+  '/categories/edit/:categoryId',
+  cacheMiddleware(adminCacheKeyGenerator.editCategoryPage),
+  adminController.getEditCategory,
+)
 
-router.post('/categories/edit/:categoryId', adminController.updateCategory)
+router.post(
+  '/categories/edit/:categoryId',
+  deleteCacheMiddleware((req) => [
+    adminCacheKeyGenerator.categoryDetails(req),
+    adminCacheKeyGenerator.categoryList(req),
+  ]),
+  adminController.updateCategory,
+)
 
-router.post('/categories/delete/:categoryId', adminController.deleteCategory)
+router.post(
+  '/categories/delete/:categoryId',
+  deleteCacheMiddleware((req) => [
+    adminCacheKeyGenerator.categoryDetails(req),
+    adminCacheKeyGenerator.categoryList(req),
+  ]),
+  adminController.deleteCategory,
+)
 
 // Tag Management
 
-router.get('/tags', tagController.getAllTags)
+router.get('/tags', cacheMiddleware(adminCacheKeyGenerator.tagList), tagController.getAllTags)
 
-router.post('/tags/save', tagController.createOrUpdateTag)
+router.post(
+  '/tags/save',
+  deleteCacheMiddleware(adminCacheKeyGenerator.tagList),
+  tagController.createOrUpdateTag,
+)
 
-router.post('/tags/delete/:tagId', tagController.deleteTag)
+router.post(
+  '/tags/delete/:tagId',
+  deleteCacheMiddleware(adminCacheKeyGenerator.tagList),
+  tagController.deleteTag,
+)
 
 // Article Management
 
-router.get('/articles', adminController.getAllArticles)
+router.get(
+  '/articles',
+  cacheMiddleware(adminCacheKeyGenerator.articleList),
+  adminController.getAllArticles,
+)
 
-router.post('/articles/status/:articleId', adminController.updateArticleStatus)
+router.post(
+  '/articles/status/:articleId',
+  deleteCacheMiddleware(adminCacheKeyGenerator.articleList),
+  adminController.updateArticleStatus,
+)
 
 // Editor Management
 
-router.get('/editors', adminController.getEditors)
-router.get('/editors/:editorId/categories', adminController.getEditorCategories)
-router.post('/editors/:editorId/categories/assign', adminController.assignCategory)
-router.post('/editors/:editorId/categories/unassign', adminController.unassignCategory)
+router.get(
+  '/editors',
+  cacheMiddleware(adminCacheKeyGenerator.editorList),
+  adminController.getEditors,
+)
+
+router.get(
+  '/editors/:editorId/categories',
+  cacheMiddleware(adminCacheKeyGenerator.editorCategories),
+  adminController.getEditorCategories,
+)
+
+router.post(
+  '/editors/:editorId/categories/assign',
+  deleteCacheMiddleware((req) => [
+    adminCacheKeyGenerator.editorCategories(req),
+    adminCacheKeyGenerator.editorList(req),
+  ]),
+  adminController.assignCategory,
+)
+
+router.post(
+  '/editors/:editorId/categories/unassign',
+  deleteCacheMiddleware((req) => [
+    adminCacheKeyGenerator.editorCategories(req),
+    adminCacheKeyGenerator.editorList(req),
+  ]),
+  adminController.unassignCategory,
+)
 
 export default router
