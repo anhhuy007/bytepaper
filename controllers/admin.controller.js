@@ -278,17 +278,6 @@ const deleteCategory = async (req, res, next) => {
   }
 }
 
-const assignCategoriesToEditor = async (req, res, next) => {
-  try {
-    const editorId = req.params.editorId
-    const { categoryIds } = req.body
-    const assignments = await adminService.assignCategoriesToEditor(editorId, categoryIds)
-    res.status(200).json({ success: true, data: assignments })
-  } catch (error) {
-    next(error)
-  }
-}
-
 const getDashboard = async (req, res, next) => {
   try {
     const stats = await adminService.getDashboard()
@@ -328,19 +317,6 @@ const getEditCategory = async (req, res, next) => {
       layout: 'admin',
       category,
       categories: filteredCategories,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-const getEditTag = async (req, res, next) => {
-  try {
-    const tag = await tagService.getTagById(req.params.tagId)
-    res.render('admin/edit-tag', {
-      title: 'Edit Tag',
-      layout: 'admin',
-      tag,
     })
   } catch (error) {
     next(error)
@@ -402,25 +378,28 @@ const updateArticleStatus = async (req, res, next) => {
 }
 
 export default {
-  getAddCategory,
+  // Dashboard
+  getDashboard,
+  // User Management
   getAddUser,
   createUser,
-  getEditors,
-  getEditorCategories,
-  assignCategory,
-  unassignCategory,
-  updateArticleStatus,
-  getAllArticles,
-  getEditTag,
-  getEditCategory,
-  getAllUsers,
-  getUserById,
   assignUserRole,
   deleteUser,
+  getAllUsers,
+  getUserById,
+  // Category Management
   getAllCategories,
   createCategory,
   updateCategory,
   deleteCategory,
-  assignCategoriesToEditor,
-  getDashboard,
+  getAddCategory,
+  getEditCategory,
+  // Article Management
+  updateArticleStatus,
+  getAllArticles,
+  // Editor Management
+  getEditors,
+  getEditorCategories,
+  assignCategory,
+  unassignCategory,
 }

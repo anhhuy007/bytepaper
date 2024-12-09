@@ -40,6 +40,13 @@ const userProfileCacheKeyGenerator = (req) => {
   return `user:${userId}`
 }
 
+export const adminCacheKeyGenerator = {
+  adminDashboard: () => 'admin:dashboard',
+  userList: (req) => `admin:users:${JSON.stringify(req.query)}`, // Include query for pagination, filters, etc.
+  addUser: () => 'admin:user:add',
+  userDetails: (req) => `admin:user:${req.params.userId}`, // Cache based on userId
+}
+
 export default {
   homeCacheKeyGenerator,
   articlesByCategoryCacheKeyGenerator,
@@ -49,4 +56,5 @@ export default {
   categoryListCacheKeyGenerator,
   tagListCacheKeyGenerator,
   userProfileCacheKeyGenerator,
+  adminCacheKeyGenerator,
 }
