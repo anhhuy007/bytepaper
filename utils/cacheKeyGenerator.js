@@ -13,7 +13,10 @@ export const adminCacheKeyGenerator = {
   tagDetails: (tagId) => `admin:tag:${tagId}`, // Cache for individual tag details if needed
   articleList: (req) => `admin:articles:${JSON.stringify(req.query)}`, // Cache for articles with filters/pagination
   editorList: () => 'admin:editors', // Cache for editor list
-  editorCategories: (req) => `admin:editor:${req.params.editorId}:categories`, // Cache for an editor's categories
+  editorCategories: (req) => {
+    const query = JSON.stringify(req.query) // Serialize query parameters
+    return `admin:editor:${req.params.editorId}:categories:${query}`
+  },
 }
 
 export const authCacheKeyGenerator = {
@@ -30,8 +33,11 @@ export const articleCacheKeyGenerator = {
   details: (req) => `articles:details:${req.params.id}`, // Cache article details
 }
 
+export const userCacheKeyGenerator = {}
+
 export default {
   adminCacheKeyGenerator,
   authCacheKeyGenerator,
   articleCacheKeyGenerator,
+  userCacheKeyGenerator,
 }
