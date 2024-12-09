@@ -56,6 +56,12 @@ export const adminCacheKeyGenerator = {
   editorCategories: (req) => `admin:editor:${req.params.editorId}:categories`, // Cache for an editor's categories
 }
 
+export const authCacheKeyGenerator = {
+  signupPage: () => 'auth:signup',
+  loginPage: () => 'auth:login',
+  forgotPasswordPage: () => 'auth:forgot-password',
+}
+
 export default {
   homeCacheKeyGenerator,
   articlesByCategoryCacheKeyGenerator,
@@ -66,4 +72,5 @@ export default {
   tagListCacheKeyGenerator,
   userProfileCacheKeyGenerator,
   adminCacheKeyGenerator,
+  authCacheKeyGenerator,
 }
