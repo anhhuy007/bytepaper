@@ -10,19 +10,46 @@ const router = express.Router()
 
 router.use(authMiddleware())
 
-router.get('/profile', userController.getUserProfile)
+router.get(
+  '/profile',
+  cacheMiddleware(userCacheKeyGenerator.profile),
+  userController.getUserProfile,
+)
 
-router.get('/edit-profile', userController.getEditUserProfile)
+router.get(
+  '/edit-profile',
+  cacheMiddleware(userCacheKeyGenerator.editProfile),
+  userController.getEditUserProfile,
+)
 
-router.post('/edit-profile', userController.updateUserProfile)
+router.post(
+  '/edit-profile',
+  deleteCacheMiddleware((req) => [
+    userCacheKeyGenerator.profile(req),
+    userCacheKeyGenerator.editProfile(req),
+  ]),
+  userController.updateUserProfile,
+)
 
-router.get('/change-password', viewRenderer('user/change-password', 'user'))
+router.get(
+  '/change-password',
+  cacheMiddleware(userCacheKeyGenerator.changePassword),
+  viewRenderer('user/change-password', 'user'),
+)
 
 router.post('/change-password', userController.changePassword)
 
-router.get('/extend-subscription', viewRenderer('user/extend-subscription', 'user'))
+router.get(
+  '/extend-subscription',
+  cacheMiddleware(userCacheKeyGenerator.subscription),
+  viewRenderer('user/extend-subscription', 'user'),
+)
 
-router.post('/extend-subscription', userController.extendSubscription)
+router.post(
+  '/extend-subscription',
+  deleteCacheMiddleware(userCacheKeyGenerator.profile),
+  userController.extendSubscription,
+)
 
 router.delete('/delete', userController.deleteUser)
 

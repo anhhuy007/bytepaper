@@ -33,7 +33,12 @@ export const articleCacheKeyGenerator = {
   details: (req) => `articles:details:${req.params.id}`, // Cache article details
 }
 
-export const userCacheKeyGenerator = {}
+export const userCacheKeyGenerator = {
+  profile: (req) => `user:${req.user.id}:profile`, // Cache key for user profile
+  editProfile: (req) => `user:${req.user.id}:edit-profile`, // Cache key for edit profile
+  changePassword: (req) => `user:change-password`, // Cache key for change password
+  subscription: (req) => `user:subscription`, // Cache key for subscription
+}
 
 export default {
   adminCacheKeyGenerator,
