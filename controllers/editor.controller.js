@@ -2,6 +2,9 @@
 
 import articleService from '../services/article.service.js'
 import adminService from '../services/admin.service.js'
+import tagService from '../services/tag.service.js'
+// import categoryService from '../services/category.service.js'
+// import userService from '../services/user.service.js'
 
 /**
  * Retrieves a list of pending articles assigned to the current editor, based on
@@ -80,6 +83,20 @@ const getPendingArticles = async (req, res, next) => {
   }
 }
 
+const renderDashboard = async (req, res, next) => {
+  try {
+    const editorId = req.user.id
+    const categories = await adminService.getCategoriesByEditor(editorId)
+
+    res.render('editor/dashboard', {
+      layout: 'editor',
+      data: categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const getMyArticles = async (req, res, next) => {
   try {
     const editorId = req.user.id
@@ -88,29 +105,223 @@ const getMyArticles = async (req, res, next) => {
     if (!categoryIds.length) {
       return []
     }
-    const filters = {
+    let filters = {
       category_id: categoryIds,
     }
 
-    const status = req.query.status
+    const status = req.query.status || null
 
     if (!status) {
-      filters.status = 'pending'
+      filters.status = 'draft'
     }
 
     if (!['draft', 'pending', 'published', 'rejected', 'approved'].includes(status)) {
       throw new Error('Invalid status')
     }
 
-    filters.status = status
+    // filters.status = status
+    res.locals.status = status
 
     const options = {
       limit: parseInt(req.query.limit) || 10,
       offset: parseInt(req.query.offset) || 0,
     }
-    const articles = await articleService.getAllArticles(filters, options)
-    // res.status(200).json({ success: true, data: articles });
-    return { articles }
+    const articles = await articleService.getArticles(filters, options)
+
+    // const articles = [
+    //   {
+    //     id: 1,
+    //     title: 'Introduction to Tailwind',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Getting Started with Tailwind CSS
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Tailwind CSS is a utility-first CSS framework designed for rapid UI development. It offers ready-to-use classes for styling without custom CSS.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract:
+    //       'Learn the basics of Tailwind CSS and how to quickly set up a project using this utility-first framework.',
+    //     author_id: 'author_id1',
+    //     reject_reason: 'The content does not meet the required guidelines.',
+    //     published_at: '2024-12-01T08:00:00Z',
+    //   },
+    //   {
+    //     id: 2,
+    //     title: 'Utility-First Design',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Why Choose Utility-First Design?
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Utility-first design empowers developers to use pre-defined classes to craft custom designs without writing additional CSS rules.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract:
+    //       'Explore the benefits of utility-first design and how it streamlines development.',
+    //     author_id: 'author_id2',
+    //     reject_reason: 'Formatting issues and incomplete examples.',
+    //     published_at: '2024-12-02T10:30:00Z',
+    //   },
+    //   {
+    //     id: 3,
+    //     title: 'Responsive Layouts',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Building Responsive Layouts with Tailwind
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Tailwind CSS offers powerful utilities for creating responsive designs that adapt seamlessly to any screen size.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract: 'Learn how to use Tailwind to create responsive layouts with ease.',
+    //     author_id: 'author_id3',
+    //     reject_reason: 'Requires additional examples for better clarity.',
+    //     published_at: '2024-12-03T15:00:00Z',
+    //   },
+    //   {
+    //     id: 4,
+    //     title: 'Typography Utilities',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Mastering Typography Utilities
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Tailwind provides extensive typography utilities for managing text size, weight, alignment, and more.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract: 'Discover how Tailwind simplifies typography styling with its utilities.',
+    //     author_id: 'author_id4',
+    //     reject_reason: 'Content needs a deeper explanation on advanced topics.',
+    //     published_at: '2024-12-04T09:45:00Z',
+    //   },
+    //   {
+    //     id: 5,
+    //     title: 'Customizing Colors',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Customizing Colors in Tailwind
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Tailwind allows developers to customize the default color palette to match their brand identity.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract: 'Learn how to customize and extend the color palette in Tailwind.',
+    //     author_id: 'author_id5',
+    //     reject_reason: 'Color palette lacks sufficient examples.',
+    //     published_at: '2024-12-05T12:00:00Z',
+    //   },
+    //   {
+    //     id: 6,
+    //     title: 'Dark Mode Support',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Enabling Dark Mode
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Tailwind makes it simple to add dark mode to your designs with utility classes.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract: 'Enable dark mode in your projects with Tailwind CSS.',
+    //     author_id: 'author_id6',
+    //     reject_reason: 'Requires more in-depth coverage of dark mode setup.',
+    //     published_at: '2024-12-06T14:30:00Z',
+    //   },
+    //   {
+    //     id: 7,
+    //     title: 'Grid Systems with Tailwind',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Utilizing Grid Systems
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Learn how to build powerful grid-based layouts using Tailwind's grid utilities.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract: 'A guide to implementing grid systems effectively using Tailwind CSS.',
+    //     author_id: 'author_id7',
+    //     reject_reason: 'Missing advanced grid examples.',
+    //     published_at: '2024-12-07T16:00:00Z',
+    //   },
+    //   {
+    //     id: 8,
+    //     title: 'Animations in Tailwind',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Adding Animations
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Tailwind CSS provides easy-to-use animation utilities to enhance author_id experience.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract: 'Learn to create stunning animations using Tailwind’s utility classes.',
+    //     author_id: 'author_id8',
+    //     reject_reason: 'Needs more examples of complex animations.',
+    //     published_at: '2024-12-08T13:30:00Z',
+    //   },
+    //   {
+    //     id: 9,
+    //     title: 'Custom Components',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Crafting Custom Components
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Learn how to use Tailwind's utilities to craft reusable custom components.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract: 'Master building custom components with Tailwind CSS.',
+    //     author_id: 'author_id9',
+    //     reject_reason: 'Requires detailed component examples.',
+    //     published_at: '2024-12-09T18:00:00Z',
+    //   },
+    //   {
+    //     id: 10,
+    //     title: 'Advanced Techniques',
+    //     content: `
+    //   <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+    //     <h1 class="text-2xl font-semibold text-gray-800 mb-3">
+    //       Advanced Tailwind Techniques
+    //     </h1>
+    //     <p class="text-gray-700 leading-relaxed">
+    //       Explore advanced techniques in Tailwind CSS to enhance your workflow.
+    //     </p>
+    //   </div>
+    // `,
+    //     abstract: 'Take your Tailwind CSS skills to the next level with these advanced techniques.',
+    //     author_id: 'author_id10',
+    //     reject_reason: 'Content requires additional best practices.',
+    //     published_at: '2024-12-10T20:15:00Z',
+    //   },
+    // ]
+
+    const { tags } = await tagService.getAllTags()
+    res.render('editor/articleDetail', {
+      layout: 'editor',
+      data: articles,
+      options: options,
+      status: res.locals.status,
+      tags: tags,
+      categories: categories,
+    })
   } catch (error) {
     next(error)
   }
@@ -135,10 +346,16 @@ const approveArticle = async (req, res, next) => {
     // Extract the editor ID from the request object
     const editorId = req.user.id
 
-    const { categoryId, tagIds = [] } = req.body
+    const { published_at, category_id, tag_ids = [] } = req.body
 
     // Approve the article using the article service
-    await articleService.approveArticle(req.params.articleId, editorId, categoryId, tagIds)
+    await articleService.approveArticle(
+      req.params.articleId,
+      editorId,
+      category_id,
+      tag_ids,
+      published_at,
+    )
 
     // Send a success response
     res.status(200).json({ success: true, message: 'Article approved' })
@@ -168,10 +385,10 @@ const rejectArticle = async (req, res, next) => {
     const editorId = req.user.id
 
     // Extract the rejection reason from the request body
-    const { rejectionReason } = req.body
+    const { rejection_reason } = req.body
 
     // Reject the article using the article service
-    await articleService.rejectArticle(req.params.articleId, editorId, rejectionReason)
+    await articleService.rejectArticle(req.params.articleId, editorId, rejection_reason)
 
     // Send a success response
     res.status(200).json({ success: true, message: 'Article rejected' })
@@ -182,6 +399,7 @@ const rejectArticle = async (req, res, next) => {
 }
 
 export default {
+  renderDashboard,
   getPendingArticles,
   getMyArticles,
   approveArticle,

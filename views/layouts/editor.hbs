@@ -1,34 +1,68 @@
-{{!-- views/layouts/editor.hbs --}}
 <!DOCTYPE html>
 <html lang="en" data-theme="emerald">
   <head>
-    <meta charset="utf-8" />
-    <title>{{#if title}}{{title}} | {{/if}}Editor Panel - Paperly</title>
-    <link rel="stylesheet" href="/output.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Article Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <div class="drawer drawer-mobile">
-      <input id="editor-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content flex flex-col">
-        {{> header}}
-        <main class="flex-grow container mx-auto px-4 py-6">{{{body}}}</main>
-        {{> footer}}
+  <body class="bg-gray-100">
+    <nav class="bg-white shadow-md">
+      <div class="container mx-auto px-4 py-3">
+        <ul class="flex w-full m-0 p-0">
+          <li class="flex-1 text-center">
+            <a
+              href="/editor/articles?status=draft"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
+              >Draft</a
+            >
+          </li>
+          <li class="flex-1 text-center">
+            <a
+              href="/editor/articles?status=pending"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
+              >Pending</a
+            >
+          </li>
+          <li class="flex-1 text-center">
+            <a
+              href="/editor/articles?status=published"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
+              >Published</a
+            >
+          </li>
+          <li class="flex-1 text-center">
+            <a
+              href="/editor/articles?status=rejected"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
+              >Rejected</a
+            >
+          </li>
+          <li class="flex-1 text-center">
+            <a
+              href="/editor/articles?status=approved"
+              class="block text-xl font-bold py-4 px-4 hover:bg-gray-700 hover:text-white transition duration-200 w-full"
+              >Approved</a
+            >
+          </li>
+        </ul>
       </div>
-      <div class="drawer-side">
-        <label for="editor-drawer" class="drawer-overlay"></label>
-        <aside class="w-64 bg-base-200">
-          <div class="menu p-4">
-            <h2 class="text-xl font-bold mb-4">Editor Menu</h2>
-            <ul>
-              <li><a href="/editor/dashboard" class="rounded">Dashboard</a></li>
-              <li><a href="/editor/review-articles" class="rounded">Review Articles</a></li>
-              <li><a href="/editor/profile" class="rounded">Profile</a></li>
-            </ul>
-          </div>
-        </aside>
-      </div>
-    </div>
-    <script src="/script.js"></script>
+    </nav>
+    {{{body}}}
+
+    <script>
+      const currentPath = window.location.pathname 
+      const currentQuery = window.location.search 
+      const links = document.querySelectorAll('nav a') 
+
+      links.forEach((link) => {
+        const linkPath = link.getAttribute('href') 
+        if (linkPath === currentPath + currentQuery) {
+          link.classList.add('bg-black', 'text-white') 
+        } else {
+          link.classList.remove('bg-black', 'text-white') 
+        }
+      })
+    </script>
   </body>
 </html>
