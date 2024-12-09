@@ -21,23 +21,29 @@ class CategoryModel extends BaseModel {
 
   async getAllCategories(filters = {}, options = {}) {
     const { whereClause, values } = buildWhereClause(filters)
+
+    // Set defaults for limit and offset if not provided
+    const limit = options.limit || 10 // Default limit to 10
+    const offset = options.offset || 0 // Default offset to 0
+
     const query = `
-      SELECT c1.id, c1.name, c1.parent_id, c1.created_at, c2.name AS parent_name
-      FROM categories c1
-      LEFT JOIN categories c2 ON c1.parent_id = c2.id
-      ${whereClause ? `WHERE ${whereClause}` : ''}
-      ORDER BY ${options.orderBy || 'c1.name ASC'}
-      LIMIT $${values.length + 1}
-      OFFSET $${values.length + 2}
-    `
+    SELECT c1.id, c1.name, c1.parent_id, c1.created_at, c2.name AS parent_name
+    FROM categories c1
+    LEFT JOIN categories c2 ON c1.parent_id = c2.id
+    ${whereClause ? `WHERE ${whereClause}` : ''}
+    ORDER BY ${options.orderBy || 'c1.name ASC'}
+    LIMIT $${values.length + 1}
+    OFFSET $${values.length + 2}
+  `
+
     const totalCountQuery = `
-      SELECT COUNT(*)
-      FROM categories c1
-      ${whereClause ? `WHERE ${whereClause}` : ''}
-    `
+    SELECT COUNT(*)
+    FROM categories c1
+    ${whereClause ? `WHERE ${whereClause}` : ''}
+  `
 
     const [categoriesResult, countResult] = await Promise.all([
-      db.query(query, [...values, options.limit, options.offset]),
+      db.query(query, [...values, limit, offset]),
       db.query(totalCountQuery, values),
     ])
 
@@ -86,8 +92,8 @@ class CategoryModel extends BaseModel {
   async getAvailableCategories(filters = {}, options = {}) {
     const queryParams = []
     let query = `
-      SELECT * 
-      FROM categories 
+      SELECT *
+      FROM categories
       WHERE 1=1
     `
 

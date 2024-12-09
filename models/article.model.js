@@ -262,15 +262,15 @@ class ArticleModel extends BaseModel {
   async getFilteredArticles(filters = {}, options = {}) {
     const queryParams = []
     let query = `
-    SELECT 
-      a.*, 
-      u.full_name AS author_name, 
-      c.name AS category_name, 
-      ${filters.keyword ? 'ts_rank_cd(a.search_vector, query)' : '0'} AS rank
-    FROM articles a
-    LEFT JOIN users u ON a.author_id = u.id
-    LEFT JOIN categories c ON a.category_id = c.id
-  `
+      SELECT 
+        a.*, 
+        u.full_name AS author_name, 
+        c.name AS category_name, 
+        ${filters.keyword ? 'ts_rank_cd(a.search_vector, query)' : '0'} AS rank
+      FROM articles a
+      LEFT JOIN users u ON a.author_id = u.id
+      LEFT JOIN categories c ON a.category_id = c.id
+    `
 
     // Add search query if a keyword is provided
     if (filters.keyword) {
@@ -295,10 +295,10 @@ class ArticleModel extends BaseModel {
 
     if (filters.tag_id) {
       query += `AND a.id IN (
-      SELECT article_id
-      FROM article_tags
-      WHERE tag_id = $${queryParams.length + 1}
-    ) `
+        SELECT article_id
+        FROM article_tags
+        WHERE tag_id = $${queryParams.length + 1}
+      ) `
       queryParams.push(filters.tag_id)
     }
 
@@ -314,21 +314,21 @@ class ArticleModel extends BaseModel {
 
     // Add ORDER BY, LIMIT, and OFFSET
     query += `
-    ORDER BY ${filters.keyword ? 'rank DESC,' : ''} ${options.orderBy || 'a.published_at DESC'}
-    LIMIT $${queryParams.length + 1}
-    OFFSET $${queryParams.length + 2}
-  `
+      ORDER BY ${filters.keyword ? 'rank DESC,' : ''} ${options.orderBy || 'a.published_at DESC'}
+      LIMIT $${queryParams.length + 1}
+      OFFSET $${queryParams.length + 2}
+    `
     queryParams.push(options.limit || 10)
     queryParams.push(options.offset || 0)
 
     // Count total articles
     const countQuery = `
-    SELECT COUNT(*) AS total
-    FROM articles a
-    LEFT JOIN users u ON a.author_id = u.id
-    LEFT JOIN categories c ON a.category_id = c.id
-    ${filters.keyword ? "WHERE a.search_vector @@ to_tsquery('english', $1)" : 'WHERE 1=1'}
-  `
+      SELECT COUNT(*) AS total
+      FROM articles a
+      LEFT JOIN users u ON a.author_id = u.id
+      LEFT JOIN categories c ON a.category_id = c.id
+      ${filters.keyword ? "WHERE a.search_vector @@ to_tsquery('english', $1)" : 'WHERE 1=1'}
+    `
     const countParams = filters.keyword ? [filters.keyword.trim().replace(/\s+/g, ' & ')] : []
     const countResult = await db.query(countQuery, countParams)
 
