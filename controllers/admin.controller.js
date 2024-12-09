@@ -278,17 +278,6 @@ const deleteCategory = async (req, res, next) => {
   }
 }
 
-const assignCategoriesToEditor = async (req, res, next) => {
-  try {
-    const editorId = req.params.editorId
-    const { categoryIds } = req.body
-    const assignments = await adminService.assignCategoriesToEditor(editorId, categoryIds)
-    res.status(200).json({ success: true, data: assignments })
-  } catch (error) {
-    next(error)
-  }
-}
-
 const getDashboard = async (req, res, next) => {
   try {
     const stats = await adminService.getDashboard()
@@ -334,19 +323,6 @@ const getEditCategory = async (req, res, next) => {
   }
 }
 
-const getEditTag = async (req, res, next) => {
-  try {
-    const tag = await tagService.getTagById(req.params.tagId)
-    res.render('admin/edit-tag', {
-      title: 'Edit Tag',
-      layout: 'admin',
-      tag,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
 const getAllArticles = async (req, res, next) => {
   try {
     // Extract filters and pagination options
@@ -367,11 +343,18 @@ const getAllArticles = async (req, res, next) => {
       orderBy: req.query.orderBy || 'published_at DESC',
     }
 
+    const all_filters = {}
+    const all_options = {
+      limit: 100,
+      offset: 0,
+    }
+
     // Fetch articles and related data
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
-    const { categories } = await categoryService.getAllCategories() // Fetch all categories for filtering
+    const { categories } = await categoryService.getAllCategories(all_filters, all_options) // Fetch all categories for filtering
 
-    console.log('=============================', totalArticles)
+    console.log('=========================> categories.length:', categories.length)
+
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
     res.render('admin/articles', {
@@ -402,25 +385,28 @@ const updateArticleStatus = async (req, res, next) => {
 }
 
 export default {
-  getAddCategory,
+  // Dashboard
+  getDashboard,
+  // User Management
   getAddUser,
   createUser,
-  getEditors,
-  getEditorCategories,
-  assignCategory,
-  unassignCategory,
-  updateArticleStatus,
-  getAllArticles,
-  getEditTag,
-  getEditCategory,
-  getAllUsers,
-  getUserById,
   assignUserRole,
   deleteUser,
+  getAllUsers,
+  getUserById,
+  // Category Management
   getAllCategories,
   createCategory,
   updateCategory,
   deleteCategory,
-  assignCategoriesToEditor,
-  getDashboard,
+  getAddCategory,
+  getEditCategory,
+  // Article Management
+  updateArticleStatus,
+  getAllArticles,
+  // Editor Management
+  getEditors,
+  getEditorCategories,
+  assignCategory,
+  unassignCategory,
 }

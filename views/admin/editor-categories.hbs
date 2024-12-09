@@ -1,24 +1,30 @@
+{{!-- views/admin/editor-categories.hbs --}}
 <div class="container mx-auto px-4 py-8 bg-white rounded shadow-md">
-  <!-- Back Button -->
-  <div class="mb-6">
-    <a href="/admin/editors" class="btn btn-outline btn-sm">
-      ← Back to Editors Management
+  <!-- Title and Back Button -->
+  <div class="flex items-center justify-between mb-6">
+    <a href="/admin/editors" class="btn btn-outline btn-md flex items-center space-x-2">
+      <i data-lucide="arrow-left"></i>
+      <span>Back to Editors Management</span>
     </a>
+    <h1 class="text-4xl font-bold text-gray-800 text-center flex items-center space-x-2">
+      <i data-lucide="user-check" class="text-green-500"></i>
+      <span>Manage Categories for</span>
+      <span class="text-primary">{{editor.full_name}}</span>
+    </h1>
+    <div class="w-16"></div> <!-- Spacer to align title in the center -->
   </div>
-
-  <!-- Page Title -->
-  <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">
-    Manage Categories for <span class="text-primary">{{editor.full_name}}</span>
-  </h1>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <!-- Assigned Categories Section -->
     <div class="bg-gray-100 p-6 rounded shadow">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Assigned Categories</h2>
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4 flex items-center space-x-2">
+        <i data-lucide="check-circle" class="text-green-500"></i>
+        <span>Assigned Categories</span>
+      </h2>
       <ul class="space-y-4">
         {{#if assignedCategories.length}}
         {{#each assignedCategories}}
-        <li class="flex justify-between items-center bg-white shadow p-3 rounded">
+        <li class="flex justify-between items-center bg-white shadow p-3 rounded hover:bg-gray-50">
           <span class="text-gray-800 font-medium">{{this.name}}</span>
           <form
             action="/admin/editors/{{../editor.id}}/categories/unassign"
@@ -26,19 +32,28 @@
             class="inline"
           >
             <input type="hidden" name="categoryId" value="{{this.id}}" />
-            <button type="submit" class="btn btn-error btn-sm">Unassign</button>
+            <button type="submit" class="btn btn-error btn-sm flex items-center space-x-2">
+              <i data-lucide="x-circle"></i>
+              <span>Unassign</span>
+            </button>
           </form>
         </li>
         {{/each}}
         {{else}}
-        <p class="text-gray-500 text-sm">No categories assigned yet.</p>
+        <p class="text-gray-500 text-sm flex items-center space-x-2">
+          <i data-lucide="info" class="text-blue-500"></i>
+          <span>No categories assigned yet.</span>
+        </p>
         {{/if}}
       </ul>
     </div>
 
     <!-- Available Categories Section -->
     <div class="bg-gray-100 p-6 rounded shadow">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Available Categories</h2>
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4 flex items-center space-x-2">
+        <i data-lucide="list-plus" class="text-blue-500"></i>
+        <span>Available Categories</span>
+      </h2>
 
       <!-- Sorting Form -->
       <form method="GET" class="flex items-center space-x-4 mb-4">
@@ -46,13 +61,16 @@
           <option value="name ASC" {{#if (eq query.orderBy "name ASC")}}selected{{/if}}>Name A-Z</option>
           <option value="name DESC" {{#if (eq query.orderBy "name DESC")}}selected{{/if}}>Name Z-A</option>
         </select>
-        <button type="submit" class="btn btn-primary btn-sm">Apply Sort</button>
+        <button type="submit" class="btn btn-primary btn-sm flex items-center space-x-2">
+          <i data-lucide="filter"></i>
+          <span>Apply Sort</span>
+        </button>
       </form>
 
       <!-- Available Categories List -->
       <ul class="space-y-4">
         {{#each availableCategories}}
-        <li class="flex justify-between items-center bg-white shadow p-3 rounded">
+        <li class="flex justify-between items-center bg-white shadow p-3 rounded hover:bg-gray-50">
           <span class="text-gray-800 font-medium">{{this.name}}</span>
           <form
             action="/admin/editors/{{../editor.id}}/categories/assign"
@@ -60,7 +78,10 @@
             class="inline"
           >
             <input type="hidden" name="categoryId" value="{{this.id}}" />
-            <button type="submit" class="btn btn-primary btn-sm">Assign</button>
+            <button type="submit" class="btn btn-primary btn-sm flex items-center space-x-2">
+              <i data-lucide="plus-circle"></i>
+              <span>Assign</span>
+            </button>
           </form>
         </li>
         {{/each}}
@@ -73,3 +94,4 @@
     </div>
   </div>
 </div>
+
