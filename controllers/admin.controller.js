@@ -343,11 +343,18 @@ const getAllArticles = async (req, res, next) => {
       orderBy: req.query.orderBy || 'published_at DESC',
     }
 
+    const all_filters = {}
+    const all_options = {
+      limit: 100,
+      offset: 0,
+    }
+
     // Fetch articles and related data
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
-    const { categories } = await categoryService.getAllCategories() // Fetch all categories for filtering
+    const { categories } = await categoryService.getAllCategories(all_filters, all_options) // Fetch all categories for filtering
 
-    console.log('=============================', totalArticles)
+    console.log('=========================> categories.length:', categories.length)
+
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
     res.render('admin/articles', {

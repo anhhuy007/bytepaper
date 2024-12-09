@@ -1,7 +1,7 @@
 // middlewares/cacheMiddleware.js
 import redisClient from '../utils/redisClient.js'
 
-export function cacheMiddleware(cacheKeyGenerator, expiration = 300) {
+export function cacheMiddleware(cacheKeyGenerator, expiration = 600) {
   return async (req, res, next) => {
     try {
       if (!redisClient.isOpen) {
@@ -43,11 +43,14 @@ export function cacheMiddleware(cacheKeyGenerator, expiration = 300) {
   }
 }
 
-
 export const deleteCacheMiddleware = (cacheKeyGenerator) => {
   return async (req, res, next) => {
     try {
       const cacheKeys = [].concat(cacheKeyGenerator(req)) // Ensure array format
+
+      if (!cacheKeys.every((key) => typeof key === 'string')) {
+        throw new Error('Invalid cache key(s) generated.')
+      }
 
       const results = await Promise.all(cacheKeys.map((key) => redisClient.del(key)))
 

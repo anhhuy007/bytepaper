@@ -21,7 +21,7 @@
       {{#each subcategories}}
       <li>
         <a
-          href="/articles/categories/categoryId={{subId}}"
+          href="/articles/categories/{{subId}}"
           class="{{#if (eq id ../../currentCategoryId)}}active{{/if}}"
         >
           {{name}}
@@ -33,7 +33,7 @@
   {{else}}
   <li>
     <a
-      href="/articles/categories/categoryId={{id}}"
+      href="/articles/categories/{{id}}"
       class="{{#if (eq id ../currentCategoryId)}}active{{/if}}"
     >
       {{name}}
