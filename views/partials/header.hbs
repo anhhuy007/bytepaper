@@ -3,9 +3,9 @@
   <div class="navbar bg-base-100 px-10 py-4 items-center border-b-2">
     <div class="navbar-start space-x-4">
       {{!-- Side navigation --}} {{> navbar}} {{!-- Search Bar --}}
-      <form action="/search" method="GET" class="grow max-w-[300px] items-start">
+      <form action="/articles/filter" method="GET" class="grow max-w-[300px] items-start">
         <label class="input input-bordered flex items-center gap-2">
-          <input type="text" name="q" placeholder="Search..." class="grow" />
+          <input type="text" name="keyword" placeholder="Search..." class="grow" />
           <button type="submit" class="btn btn-square ml-9">
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -20,30 +20,64 @@ class CategoryModel extends BaseModel {
   }
 
   async getAllCategories(filters = {}, options = {}) {
-    const { whereClause, values } = buildWhereClause(filters)
+    const queryParams = []
+    let whereClause = `WHERE 1=1 `
+
+    // Add dynamic filters
+    if (filters.name) {
+      queryParams.push(`%${filters.name}%`)
+      whereClause += `AND c1.name ILIKE $${queryParams.length} `
+    }
+
+    if (filters.parent_id) {
+      queryParams.push(filters.parent_id)
+      whereClause += `AND c1.parent_id = $${queryParams.length} `
+    }
+
+    if (filters.created_before) {
+      queryParams.push(filters.created_before)
+      whereClause += `AND c1.created_at <= $${queryParams.length} `
+    }
+
+    if (filters.created_after) {
+      queryParams.push(filters.created_after)
+      whereClause += `AND c1.created_at >= $${queryParams.length} `
+    }
+
+    // Build main query
     const query = `
-      SELECT c1.id, c1.name, c1.parent_id, c1.created_at, c2.name AS parent_name
+      SELECT 
+        c1.id, 
+        c1.name, 
+        c1.parent_id, 
+        c1.created_at, 
+        c2.name AS parent_name
       FROM categories c1
       LEFT JOIN categories c2 ON c1.parent_id = c2.id
-      ${whereClause ? `WHERE ${whereClause}` : ''}
+      ${whereClause}
       ORDER BY ${options.orderBy || 'c1.name ASC'}
-      LIMIT $${values.length + 1}
-      OFFSET $${values.length + 2}
+      LIMIT $${queryParams.length + 1}
+      OFFSET $${queryParams.length + 2}
     `
-    const totalCountQuery = `
-      SELECT COUNT(*)
+    queryParams.push(options.limit || 10) // Add limit
+    queryParams.push(options.offset || 0) // Add offset
+
+    // Build count query
+    const countQuery = `
+      SELECT COUNT(*) AS total
       FROM categories c1
-      ${whereClause ? `WHERE ${whereClause}` : ''}
+      ${whereClause}
     `
 
+    // Execute queries
     const [categoriesResult, countResult] = await Promise.all([
-      db.query(query, [...values, options.limit, options.offset]),
-      db.query(totalCountQuery, values),
+      db.query(query, queryParams),
+      db.query(countQuery, queryParams.slice(0, queryParams.length - 2)), // Exclude limit and offset
     ])
 
     return {
       categories: categoriesResult.rows,
-      totalCategories: parseInt(countResult.rows[0].count, 10),
+      totalCategories: parseInt(countResult.rows[0].total, 10),
     }
   }
 
@@ -86,8 +120,8 @@ class CategoryModel extends BaseModel {
   async getAvailableCategories(filters = {}, options = {}) {
     const queryParams = []
     let query = `
-      SELECT * 
-      FROM categories 
+      SELECT *
+      FROM categories
       WHERE 1=1
     `
 

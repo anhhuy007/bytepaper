@@ -4,8 +4,8 @@ import express from 'express'
 import userController from '../controllers/user.controller.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import viewRenderer from '../utils/viewRenderer.js'
-import cacheMiddleware, { deleteCacheMiddleware } from '../middlewares/cacheMiddleware.js'
-import cacheKeyGenerator from '../utils/cacheKeyGenerator.js'
+import { cacheMiddleware, deleteCacheMiddleware } from '../middlewares/cacheMiddleware.js'
+import { userCacheKeyGenerator } from '../utils/cacheKeyGenerator.js'
 const router = express.Router()
 
 router.use(authMiddleware())

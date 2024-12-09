@@ -103,8 +103,8 @@ const getArticlesByFilter = async (req, res, next) => {
     // Extract filters and pagination options
     const filters = {
       keyword: req.query.keyword || null,
-      category_id: req.query.category_id || null,
-      tag_id: req.query.tag_id || null,
+      category_id: parseInt(req.query.category_id, 10) || null,
+      tag_id: parseInt(req.query.tag_id, 10) || null,
       status: req.query.status || 'published',
     }
 
@@ -122,12 +122,20 @@ const getArticlesByFilter = async (req, res, next) => {
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
 
     // Fetch all categories and tags for filtering
-    const { categories } = await categoryService.getAllCategories()
-    const { tags } = await tagService.getAllTags()
+    const allOptions = {
+      limit: 100,
+      offset: 0,
+    }
+
+    const allFilters = {}
+    const { categories } = await categoryService.getAllCategories(allFilters, allOptions)
+    const { tags } = await tagService.getAllTags(allFilters, allOptions)
 
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
 
+    console.log('=========================> Article Filters: ', filters)
+    console.log('=========================> Total Articles:', totalArticles)
     // Render view with articles, filters, and pagination
     res.render('articles/search', {
       articles,

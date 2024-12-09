@@ -1,114 +1,156 @@
 {{!-- views/admin/add-user.hbs --}}
 <div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">Add New User</h1>
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
+      <i data-lucide="user-plus" class="text-blue-500"></i>
+      <span>Add New User</span>
+    </h1>
+    <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
+      <i data-lucide="arrow-left"></i>
+      <span>Back to Users</span>
+    </a>
+  </div>
 
   <!-- Success/Error Messages -->
-  <div id="responseMessage" class="mt-4 hidden"></div>
+  <div id="responseMessage" class="hidden"></div>
 
-  <form id="addUserForm" class="space-y-6">
+  <!-- User Form -->
+  <form id="addUserForm" class="bg-gray-100 p-6 rounded-lg shadow-lg space-y-6">
     <!-- Username -->
-    <div class="form-control">
-      <label class="label font-semibold">Username</label>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="user"></i>
+        <span>Username</span>
+      </label>
       <input
         type="text"
         name="username"
-        class="input input-bordered"
+        class="input input-bordered w-full"
         placeholder="Enter username"
         required
       />
     </div>
 
     <!-- Password -->
-    <div class="form-control">
-      <label class="label font-semibold">Password</label>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="lock"></i>
+        <span>Password</span>
+      </label>
       <input
         type="password"
         name="password"
-        class="input input-bordered"
+        class="input input-bordered w-full"
         placeholder="Enter password"
         required
       />
     </div>
 
     <!-- Email -->
-    <div class="form-control">
-      <label class="label font-semibold">Email</label>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="mail"></i>
+        <span>Email</span>
+      </label>
       <input
         type="email"
         name="email"
-        class="input input-bordered"
+        class="input input-bordered w-full"
         placeholder="Enter email"
         required
       />
     </div>
 
     <!-- Full Name -->
-    <div class="form-control">
-      <label class="label font-semibold">Full Name</label>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="user-check"></i>
+        <span>Full Name</span>
+      </label>
       <input
         type="text"
         name="full_name"
-        class="input input-bordered"
+        class="input input-bordered w-full"
         placeholder="Enter full name"
         required
       />
     </div>
 
-    <!-- Pen Name (Optional) -->
-    <div class="form-control">
-      <label class="label font-semibold">Pen Name (Optional)</label>
+    <!-- Pen Name -->
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="edit"></i>
+        <span>Pen Name (Optional)</span>
+      </label>
       <input
         type="text"
         name="pen_name"
-        class="input input-bordered"
+        class="input input-bordered w-full"
         placeholder="Enter pen name"
       />
     </div>
 
     <!-- Date of Birth -->
-    <div class="form-control">
-      <label class="label font-semibold">Date of Birth (Optional)</label>
-      <input type="date" name="date_of_birth" class="input input-bordered" />
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="calendar"></i>
+        <span>Date of Birth (Optional)</span>
+      </label>
+      <input type="date" name="date_of_birth" class="input input-bordered w-full" />
     </div>
 
     <!-- Role -->
-    <div class="form-control">
-      <label class="label font-semibold">Role</label>
-      <select name="role" class="select select-bordered" required>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
+        <i data-lucide="briefcase"></i>
+        <span>Role</span>
+      </label>
+      <select name="role" class="select select-bordered w-full" required>
         {{#each roles}}
         <option value="{{this}}">{{capitalize this}}</option>
         {{/each}}
       </select>
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary w-full">Add User</button>
+    <!-- Submit and Back Buttons -->
+    <div class="flex justify-end space-x-4">
+      <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
+        <i data-lucide="x-circle"></i>
+        <span>Cancel</span>
+      </a>
+      <button type="submit" class="btn btn-primary hover:shadow-md flex items-center space-x-2">
+        <i data-lucide="check-circle"></i>
+        <span>Add User</span>
+      </button>
+    </div>
   </form>
 </div>
 
 <script>
-  const form = document.getElementById('addUserForm')
-  const responseMessage = document.getElementById('responseMessage')
+  const form = document.getElementById('addUserForm');
+  const responseMessage = document.getElementById('responseMessage');
 
   form.addEventListener('submit', async (event) => {
-    event.preventDefault() // Prevent default form submission
-    const formData = new FormData(form)
-    const data = Object.fromEntries(formData.entries())
+    event.preventDefault(); // Prevent default form submission
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await axios.post('/admin/users/add', data)
-      responseMessage.className = 'alert alert-success shadow-lg mt-4'
-      responseMessage.textContent = 'User added successfully! Redirecting to users page...'
-      responseMessage.hidden = false
-      form.reset() // Clear the form
+      const response = await axios.post('/admin/users/add', data);
+      responseMessage.className = 'alert alert-success shadow-lg mt-4';
+      responseMessage.textContent = 'User added successfully! Redirecting to users page...';
+      responseMessage.hidden = false;
+      form.reset(); // Clear the form
 
       setTimeout(() => {
-        window.location.href = '/admin/users'
-      }, 2000)
+        window.location.href = '/admin/users';
+      }, 2000);
     } catch (error) {
-      responseMessage.className = 'alert alert-error shadow-lg mt-4'
-      responseMessage.textContent = error.response?.data?.message || 'Failed to add user.'
-      responseMessage.hidden = false
+      responseMessage.className = 'alert alert-error shadow-lg mt-4';
+      responseMessage.textContent = error.response?.data?.message || 'Failed to add user.';
+      responseMessage.hidden = false;
     }
-  })
+  });
 </script>
+

@@ -29,7 +29,7 @@
         <span>{{ formatDate article.published_at }}</span>
         <span class="mx-2">|</span>
         <a
-          href="categories/categoryId={{ default article.category_id '#' }}"
+          href="categories/{{ default article.category_id '#' }}"
           class="z-20 text-blue-500 hover:underline"
         >
           {{ default article.category "Uncategorized" }}
