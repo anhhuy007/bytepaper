@@ -4,24 +4,50 @@ import articleService from '../services/article.service.js'
 import categoryService from '../services/category.service.js'
 const getDashboard = async (req, res, next) => {
   try {
-    const authorId = req.user.id
-
-    // Fetch statistics
-    const stats = await articleService.getArticleStats(authorId)
-
-    // Fetch articles
-    const filters = { author_id: authorId, status: req.query.status || undefined }
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+    // Extract filters and pagination options
+    const author_id = req.user.id
+    const filters = {
+      keyword: req.query.keyword || null,
+      category_id: req.query.category_id || null,
+      tag_id: req.query.tag_id || null,
+      status: req.query.status || null,
+      author_id,
     }
-    const articles = await articleService.getArticles(filters, options)
 
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
+
+    // Fetch articles and related data
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+
+    const enhancedArticles = articles.map((article) => ({
+      ...article,
+      canEdit: article.status === 'draft' || article.status === 'pending',
+      canDelete: article.status === 'draft',
+    }))
+
+    const stats = await articleService.getArticleStats(author_id)
+
+    // Calculate total pages for pagination
+    const totalPages = Math.ceil(totalArticles / limit)
     res.render('writer/articles', {
+      title: 'Articles Management',
+      layout: 'writer',
       stats,
-      articles,
-      statuses: ['draft', 'pending', 'approved', 'published', 'rejected'],
-      selectedStatus: req.query.status || '',
+      articles: enhancedArticles,
+      statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
+      selectedCategory: filters.category_id, // Preserve selected category
+      selectedStatus: filters.status,
+      query: { ...req.query, limit, page }, // Preserve query params
+      totalPages,
+      currentPage: page,
     })
   } catch (error) {
     next(error)
@@ -30,7 +56,13 @@ const getDashboard = async (req, res, next) => {
 
 const getCreateArticle = async (req, res, next) => {
   try {
-    const categories = await categoryService.getAllCategories()
+    const filters = {}
+    const options = {
+      limit: 100,
+      offset: 0,
+    }
+    const { categories } = await categoryService.getAllCategories(filters, options)
+
     res.render('writer/create-article', {
       title: 'Create Article',
       layout: 'writer',
@@ -78,12 +110,20 @@ const createArticle = async (req, res, next) => {
 const getEditArticle = async (req, res, next) => {
   try {
     const article = await articleService.getArticleById(req.params.articleId)
-    const categories = await categoryService.getAllCategories()
+    const filters = {}
+    const options = {
+      limit: 100,
+      offset: 0,
+    }
+    const { categories } = await categoryService.getAllCategories(filters, options)
+
     res.render('writer/edit-article', {
       title: 'Edit Article',
       layout: 'writer',
       article,
       categories,
+      canDelete: article.status !== 'pending',
+      canSubmit: article.status !== 'pending',
     })
   } catch (error) {
     next(error)
@@ -94,19 +134,19 @@ const updateArticle = async (req, res, next) => {
   try {
     const authorId = req.user.id
     console.log('=================== body:', req.body)
-    // Lấy hành động từ form
+
+    // Extract the action and article data from the request body
     const { action, ...articleData } = req.body
-    const actionType = action[1]
-    console.log('Action:', actionType)
+
     console.log('Article Data:', articleData)
 
-    if (actionType === 'save') {
+    if (action === 'edit') {
       await articleService.updateArticle(req.params.articleId, articleData, authorId)
       res.redirect('/writer/articles')
-    } else if (actionType === 'submit') {
+    } else if (action === 'submit') {
       await articleService.submitArticleForApproval(req.params.articleId, authorId)
       res.redirect('/writer/articles')
-    } else if (actionType === 'delete') {
+    } else if (action === 'delete') {
       await articleService.deleteArticle(req.params.articleId, authorId)
       res.redirect('/writer/articles')
     } else {

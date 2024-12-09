@@ -3,6 +3,7 @@
 import articleModel from '../models/article.model.js'
 import articleTagModel from '../models/articleTag.model.js'
 import tagService from './tag.service.js'
+import categoryService from './category.service.js'
 class ArticleService {
   async getArticles(filters = {}, options = {}) {
     return await articleModel.getArticles(filters, options)
@@ -50,6 +51,10 @@ class ArticleService {
 
     // Extract the tag IDs from the article data and update the article
     const { tag_ids, ...updateData } = articleData
+
+    // Change the status to draft if the article is being updated
+    updateData.status = 'draft'
+
     const updatedArticle = await articleModel.updateArticle(id, updateData)
 
     // If there are tag IDs, remove them from the article and re-add them

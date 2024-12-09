@@ -247,11 +247,11 @@ class ArticleModel extends BaseModel {
   async getArticleStats(authorId) {
     const query = `
     SELECT
-      COUNT(*) FILTER (WHERE status = 'draft') AS draftArticles,
-      COUNT(*) FILTER (WHERE status = 'pending') AS pendingArticles,
-      COUNT(*) FILTER (WHERE status = 'approved') AS approvedArticles,
-      COUNT(*) FILTER (WHERE status = 'rejected') AS rejectedArticles,
-      COUNT(*) FILTER (WHERE status = 'published') AS publishedArticles
+      COUNT(*) FILTER (WHERE status = 'draft') AS draft_articles,
+      COUNT(*) FILTER (WHERE status = 'pending') AS pending_articles,
+      COUNT(*) FILTER (WHERE status = 'approved') AS approved_articles,
+      COUNT(*) FILTER (WHERE status = 'rejected') AS rejected_articles,
+      COUNT(*) FILTER (WHERE status = 'published') AS published_articles
     FROM articles
     WHERE author_id = $1
   `

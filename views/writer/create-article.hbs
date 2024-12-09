@@ -1,6 +1,12 @@
 {{!-- views/writer/create-article.hbs --}}
 <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
-  <h1 class="text-4xl font-bold mb-6 text-gray-800">Create Article</h1>
+  <!-- Page Title -->
+  <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2 mb-6">
+    <i data-lucide="file-plus" class="text-primary"></i>
+    <span>Create Article</span>
+  </h1>
+
+  <!-- Create Article Form -->
   <form
     action="/writer/articles/create"
     method="POST"
@@ -10,8 +16,12 @@
   >
     <!-- Title -->
     <div class="form-control">
-      <label class="label" for="title">
-        <span class="label-text text-lg font-semibold">Title</span>
+      <label
+        for="title"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="type"></i>
+        <span>Title</span>
       </label>
       <input
         type="text"
@@ -25,8 +35,12 @@
 
     <!-- Abstract -->
     <div class="form-control">
-      <label class="label" for="abstract">
-        <span class="label-text text-lg font-semibold">Abstract</span>
+      <label
+        for="abstract"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="align-left"></i>
+        <span>Abstract</span>
       </label>
       <textarea
         name="abstract"
@@ -39,22 +53,25 @@
 
     <!-- Content -->
     <div class="form-control">
-      <label class="label" for="content">
-        <span class="label-text text-lg font-semibold">Content</span>
+      <label
+        for="content"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="edit"></i>
+        <span>Content</span>
       </label>
-      {{! Hidden input because quill content isn't registered to form directly }}
       <input type="hidden" name="content" id="hiddenContent" />
-      <div id="content" name="content">
-        <p>Hello sss!</p>
-        <p>Some initial <strong>bold</strong> text</p>
-        <p><br /></p>
-      </div>
+      <div id="content" class="quill-editor bg-gray-50 border border-gray-300 rounded-md p-4"></div>
     </div>
 
     <!-- Thumbnail -->
     <div class="form-control">
-      <label class="label" for="thumbnail">
-        <span class="label-text text-lg font-semibold">Thumbnail</span>
+      <label
+        for="thumbnail"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="image"></i>
+        <span>Thumbnail</span>
       </label>
       <input
         type="file"
@@ -65,27 +82,14 @@
       />
     </div>
 
-    <!-- Author -->
-    {{!--
-    <div class="form-control">
-      <label class="label" for="author">
-        <span class="label-text text-lg font-semibold">Author</span>
-      </label>
-      <input
-        type="text"
-        name="author_name"
-        id="author"
-        class="input input-bordered w-full"
-        placeholder="Author name"
-        required
-      />
-    </div>
-    --}}
-
     <!-- Category -->
     <div class="form-control">
-      <label class="label" for="category">
-        <span class="label-text text-lg font-semibold">Category</span>
+      <label
+        for="category"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="folder"></i>
+        <span>Category</span>
       </label>
       <select name="category_id" id="category" class="select select-bordered w-full" required>
         <option value="" disabled selected>Select a category</option>
@@ -95,29 +99,29 @@
       </select>
     </div>
 
-    {{!--
-    <div class="form-control">
-      <label class="label" for="status">
-        <span class="label-text text-lg font-semibold">Status</span>
-      </label>
-      <select name="status" id="status" class="select select-bordered w-full" required>
-        <option value="draft">Draft</option>
-        <option value="published">Published</option>
-      </select>
-    </div>
-    --}}
-
     <!-- Is Premium -->
-    <div class="form-control">
-      <label class="label cursor-pointer">
-        <span class="label-text text-lg font-semibold">Is Premium</span>
-        <input type="checkbox" name="is_premium" class="checkbox checkbox-primary" />
+    <div class="form-control flex items-center">
+      <label
+        for="is_premium"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="star"></i>
+        <span>Is Premium</span>
       </label>
+      <input
+        type="checkbox"
+        name="is_premium"
+        id="is_premium"
+        class="checkbox checkbox-primary ml-4"
+      />
     </div>
 
     <!-- Submit Button -->
-    <div class="form-control">
-      <button type="submit" class="btn btn-primary w-full">Create Article</button>
+    <div class="flex justify-center">
+      <button type="submit" class="btn btn-primary flex items-center space-x-2 w-full sm:w-auto">
+        <i data-lucide="check-circle"></i>
+        <span>Create Article</span>
+      </button>
     </div>
   </form>
 </div>
