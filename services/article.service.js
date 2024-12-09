@@ -2,7 +2,6 @@
 
 import articleModel from '../models/article.model.js'
 import articleTagModel from '../models/articleTag.model.js'
-import categoryService from './category.service.js'
 import tagService from './tag.service.js'
 class ArticleService {
   async getArticles(filters = {}, options = {}) {
@@ -99,7 +98,7 @@ class ArticleService {
     return await articleModel.updateArticle(id, { status: 'pending' })
   }
 
-  async approveArticle(id, editorId, categoryId, tagIds) {
+  async approveArticle(id, editorId, categoryId, tagIds, publishedAt) {
     // Retrieve the article from the database
     const article = await articleModel.findById(id)
     if (!article) {
@@ -120,7 +119,8 @@ class ArticleService {
 
     // Update the article status to "published" and set the published_at field to the current date
     return await articleModel.updateArticle(id, {
-      status: 'approved',
+      status: 'published',
+      published_at: publishedAt,
       editor_id: editorId,
       category_id: categoryId,
     })

@@ -1,35 +1,12 @@
-{{!-- views/editor/dashboard.hbs --}}
-{{#extend "layouts/editor"}}
-
-  {{#content "title"}}Editor Dashboard{{/content}}
-
-  {{#content "body"}}
-    <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-6">Editor Dashboard</h1>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {{!-- Bài viết đang chờ duyệt --}}
-        <div class="stat">
-          <div class="stat-title">Pending Articles</div>
-          <div class="stat-value">{{stats.pendingArticles}}</div>
-          <div class="stat-desc">Articles awaiting review</div>
-        </div>
-
-        {{!-- Bài viết đã duyệt --}}
-        <div class="stat">
-          <div class="stat-title">Approved Articles</div>
-          <div class="stat-value">{{stats.approvedArticles}}</div>
-          <div class="stat-desc">Articles you approved</div>
-        </div>
-
-        {{!-- Bài viết bị từ chối --}}
-        <div class="stat">
-          <div class="stat-title">Rejected Articles</div>
-          <div class="stat-value">{{stats.rejectedArticles}}</div>
-          <div class="stat-desc">Articles you rejected</div>
-        </div>
-      </div>
-    </div>
-  {{/content}}
-
-{{/extend}}
+<div class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+  <h3 class="text-3xl font-semibold text-gray-800 mb-6">Topics Managed by You</h3>
+  <ul class="space-y-4">
+    {{#each data}}
+    <li
+      class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-300 ease-in-out shadow-sm"
+    >
+      <span class="text-lg font-medium text-gray-700">{{this.name}}</span>
+    </li>
+    {{/each}}
+  </ul>
+</div>
