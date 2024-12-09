@@ -185,7 +185,15 @@ class ArticleService {
     }
 
     // Retrieve related articles using the article model
-    return await articleModel.getRelatedArticles(article.category_id, articleId)
+    const articles = await articleModel.getRelatedArticles(article.category_id, articleId)
+
+    // Get tags for each related article
+    for (const article of articles) {
+      const tags = await articleTagModel.getTagsByArticleId(article.id)
+      article.tags = tags
+    }
+
+    return articles
   }
 
   async increaseArticleViewCount(id) {

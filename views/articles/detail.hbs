@@ -20,7 +20,7 @@
           </h1>
           <p class="text-sm text-gray-500 mb-4">
             {{#if article.category}}
-            <a href="/categories/{{article.category.id}}" class="link">
+            <a href="categories/{{article.category.id}}" class="link">
               {{article.category.name}}
             </a>
             <span class="mx-2">|</span>
@@ -28,7 +28,7 @@
           </p>
           <div class="flex flex-wrap gap-2 mb-4">
             {{#each article.tags as |tag|}}
-            <a href="/tags/{{tag.id}}" class="badge badge-outline">#{{tag.name}}</a>
+            <a href="tags/{{tag.id}}" class="badge badge-outline">#{{tag.name}}</a>
             {{/each}}
           </div>
           <div class="prose max-w-none">{{{default article.content 'No content available.'}}}</div>
