@@ -27,7 +27,7 @@
         </div>
       <div class="flex flex-wrap gap-2 mb-4">
           {{#each article.tags as |tag|}}
-          <a href="filter?tagId={{tag.id}}" class="badge badge-outline">#{{tag.name}}</a>
+            <a href="/tags/tagId={{tag.id}}" class="badge badge-outline">#{{tag.name}}</a>
           {{/each}}
         </div>
       </div>

@@ -1,8 +1,9 @@
 {{!-- views/partials/article/tag-article.hbs --}}
 <div class="flex flex-col gap-4">
   <div class="relative group">
-    <a href="/articles/{{ id }}" class="absolute inset-0"></a>
-
+    {{#if article.tags}} {{#each article.tags}}
+    <a href="/tags/tagId={{ this.id }}" class="btn-sm btn btn-outline text-xl">#{{ this.name }}</a>
+    {{/each}} {{else}}
     <div class="grid grid-cols-[10%_45%_5%_40%]">
       {{!-- Published Date --}}
       <span>{{ formatDate published_at}}</span>
