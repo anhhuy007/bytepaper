@@ -15,7 +15,9 @@ class ArticleService {
       throw new Error('Article not found')
     }
     const tags = await articleTagModel.getTagsByArticleId(id)
+    const category = await categoryService.getCategoryById(article.category_id)
     article.tags = tags
+    article.category = category
     return article
   }
 
