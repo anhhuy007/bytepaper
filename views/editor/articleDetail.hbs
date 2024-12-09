@@ -3,7 +3,6 @@
   function toggleContent(index) {
     const content = document.getElementById(`content-${index}`)
     const button = document.getElementById(`toggle-button-${index}`)
-
     if (content.style.maxHeight) {
       content.style.maxHeight = null
       button.textContent = 'Show More'
@@ -16,12 +15,10 @@
 <script>
   function handleStatusChange(index, status) {
     const articleId = document.getElementById(`article-id-${index}`).value
-
     if (status === 'approved') {
       const publishedAt = document.getElementById(`published-at-${index}`).value
       const categoryId = document.getElementById(`category-id-${index}`).value
       const tagIds = document.getElementById(`tag-ids-${index}`).value.split(',')
-
       axios
         .put(`/articles/${articleId}/approve`, {
           published_at: publishedAt,
@@ -36,7 +33,6 @@
         })
     } else if (status === 'rejected') {
       const rejectionReason = document.getElementById(`rejection-reason-${index}`).value
-
       axios
         .put(`/articles/${articleId}/reject`, {
           rejection_reason: rejectionReason,
@@ -49,11 +45,9 @@
         })
     }
   }
-
   function toggleInputs(status, index) {
     const approveFields = document.getElementById(`approve-fields-${index}`)
     const rejectFields = document.getElementById(`reject-fields-${index}`)
-
     if (status === 'approved') {
       approveFields.style.display = 'block'
       rejectFields.style.display = 'none'
@@ -63,7 +57,6 @@
     }
   }
 </script>
-
 <div>{{options.limit}}</div>
 <div>{{options.offset}}</div>
 <div>{{status}}</div>
@@ -75,7 +68,6 @@
     {{/each}}
   </ul>
 </div>
-
 <div>
   <h3>Tags:</h3>
   <ul>
@@ -89,13 +81,10 @@
   <div class="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden mb-4">
     <div class="p-6">
       <h2 class="text-2xl font-semibold text-gray-800 mb-3">{{this.title}}</h2>
-
       <div class="flex items-center space-x-3 mb-3">
-        <p class="text-xs text-gray-500">{{this.user}}</p>
+        <p class="text-xs text-gray-500">{{this.author_id}}</p>
       </div>
-
       <p class="text-gray-600 text-sm mb-4">{{this.abstract}}</p>
-
       {{#if (eq ../status "pending")}}
       <div class="mb-4">
         <label class="block text-gray-600 mb-2">Select Action</label>
@@ -109,7 +98,6 @@
           <option value="rejected">Reject</option>
         </select>
       </div>
-
       <div id="approve-fields-{{@index}}" style="display: none">
         <label for="category-id-{{@index}}" class="block text-gray-600 mb-2">Category</label>
         <input
@@ -118,7 +106,6 @@
           class="w-full p-2 border border-gray-300 rounded mb-4"
           placeholder="Enter category ID"
         />
-
         <label for="tag-ids-{{@index}}" class="block text-gray-600 mb-2"
           >Tags (comma separated)</label
         >
@@ -128,14 +115,12 @@
           class="w-full p-2 border border-gray-300 rounded mb-4"
           placeholder="Enter tag IDs (comma separated)"
         />
-
         <label for="published-at-{{@index}}" class="block text-gray-600 mb-2">Published At</label>
         <input
           type="datetime-local"
           id="published-at-{{@index}}"
           class="w-full p-2 border border-gray-300 rounded mb-4"
         />
-
         <button
           onclick="handleStatusChange({{@index}}, 'approved')"
           class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 mt-4"
@@ -143,7 +128,6 @@
           OK
         </button>
       </div>
-
       <div id="reject-fields-{{@index}}" style="display: none">
         <label for="rejection-reason-{{@index}}" class="block text-gray-600 mb-2"
           >Rejection Reason</label
@@ -153,7 +137,6 @@
           class="w-full p-2 border border-gray-300 rounded mb-4"
           placeholder="Enter rejection reason"
         ></textarea>
-
         <button
           onclick="handleStatusChange({{@index}}, 'rejected')"
           class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mt-4"
@@ -162,14 +145,12 @@
         </button>
       </div>
       {{/if}}
-
       <div
         class="overflow-hidden max-h-0 transition-all duration-500 ease-in-out"
         id="content-{{@index}}"
       >
         <div class="bg-gray-100 p-4 rounded-lg shadow-inner">{{{this.content}}}</div>
       </div>
-
       <button
         id="toggle-button-{{@index}}"
         onclick="toggleContent({{@index}})"
@@ -181,7 +162,6 @@
   </div>
   {{/each}}
 </div>
-
 <div class="flex justify-center mt-6">
   <button
     onclick="changePage('prev')"
