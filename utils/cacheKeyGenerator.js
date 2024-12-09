@@ -1,45 +1,5 @@
 // utils/cacheKeyGenerator.js
 
-const homeCacheKeyGenerator = (req) => {
-  const type = req.query.type || 'all'
-  return `home:${type}`
-}
-
-const articlesByCategoryCacheKeyGenerator = (req) => {
-  const categoryId = req.params.categoryId
-  const limit = req.query.limit || 10
-  const offset = req.query.offset || 0
-  return `articles:category:${categoryId}:limit:${limit}:offset:${offset}`
-}
-
-const articlesByTagCacheKeyGenerator = (req) => {
-  const tagId = req.params.tagId
-  const limit = req.query.limit || 10
-  const offset = req.query.offset || 0
-  return `articles:tag:${tagId}:limit:${limit}:offset:${offset}`
-}
-
-const articleDetailCacheKeyGenerator = (req) => {
-  const articleId = req.params.id
-  return `article:${articleId}`
-}
-
-const searchCacheKeyGenerator = (req) => {
-  const q = req.query.q || ''
-  const limit = req.query.limit || 10
-  const offset = req.query.offset || 0
-  return `search:q:${q}:limit:${limit}:offset:${offset}`
-}
-
-const categoryListCacheKeyGenerator = () => 'categories:list'
-
-const tagListCacheKeyGenerator = () => 'tags:list'
-
-const userProfileCacheKeyGenerator = (req) => {
-  const userId = req.user.id
-  return `user:${userId}`
-}
-
 export const adminCacheKeyGenerator = {
   adminDashboard: () => 'admin:dashboard',
   userList: (req) => `admin:users:${JSON.stringify(req.query)}`, // Include query for pagination, filters, etc.
@@ -62,15 +22,16 @@ export const authCacheKeyGenerator = {
   forgotPasswordPage: () => 'auth:forgot-password',
 }
 
+export const articleCacheKeyGenerator = {
+  homepage: (req) => `articles:home:${req.query.type || 'default'}`, // Cache homepage by type
+  filtered: (req) => `articles:filter:${JSON.stringify(req.query)}`, // Cache filtered articles
+  byTag: (req) => `articles:tag:${req.params.tagId}:${JSON.stringify(req.query)}`, // Cache by tag ID
+  byCategory: (req) => `articles:category:${req.params.categoryId}:${JSON.stringify(req.query)}`, // Cache by category ID
+  details: (req) => `articles:details:${req.params.id}`, // Cache article details
+}
+
 export default {
-  homeCacheKeyGenerator,
-  articlesByCategoryCacheKeyGenerator,
-  articlesByTagCacheKeyGenerator,
-  articleDetailCacheKeyGenerator,
-  searchCacheKeyGenerator,
-  categoryListCacheKeyGenerator,
-  tagListCacheKeyGenerator,
-  userProfileCacheKeyGenerator,
   adminCacheKeyGenerator,
   authCacheKeyGenerator,
+  articleCacheKeyGenerator,
 }
