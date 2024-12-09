@@ -27,9 +27,16 @@
       <label class="label" for="abstract">
         <span class="label-text text-lg font-semibold">Abstract</span>
       </label>
-      <textarea name="abstract" id="abstract" class="textarea textarea-bordered w-full" required>
-{{article.abstract}}</textarea
+      <textarea
+        name="abstract"
+        id="abstract"
+        class="textarea textarea-bordered w-full"
+        placeholder="Provide a brief summary"
+        required
       >
+        {{article.abstract}}
+
+      </textarea>
     </div>
 
     <!-- Content -->
@@ -37,17 +44,52 @@
       <label class="label" for="content">
         <span class="label-text text-lg font-semibold">Content</span>
       </label>
+      {{!-- Hidden input because quill content isn't registered to form directly --}}
       <input type="hidden" name="content" id="hiddenContent" value="{{article.content}}" />
       <div id="content">{{{article.content}}}</div>
     </div>
 
-    <input type="hidden" name="action" id="actionInput" />
+    <!-- Thumbnail -->
+    <div class="form-control">
+      <label class="label" for="thumbnail">
+        <span class="label-text text-lg font-semibold">Thumbnail</span>
+      </label>
+      <input
+        type="text"
+        name="thumbnail"
+        id="thumbnail"
+        class="input input-bordered w-full"
+        value="{{article.thumbnail}}"
+        placeholder="URL of the thumbnail image"
+      />
+      <img src="{{article.thumbnail}}" alt="Thumbnail" class="mt-2 max-w-[200px] h-auto" />
+    </div>
 
-    <!-- Buttons -->
-    <div class="flex space-x-4">
-      <button type="submit" class="btn btn-primary" name="action" value="save">Save</button>
-      <button type="submit" class="btn btn-secondary" name="action" value="submit">Submit</button>
-      <button type="submit" class="btn btn-error" name="action" value="delete">Delete</button>
+    <!-- Category -->
+    <div class="form-control">
+      <label class="label" for="category">
+        <span class="label-text text-lg font-semibold">Category</span>
+      </label>
+      <select name="category_id" id="category" class="select select-bordered w-full" required>
+        <option value="" disabled selected>Select a category</option>
+        {{#each categories}}
+        <option value="{{this.id}} {{#if (eq this.id article.category_id)}}selected{{/if}}">
+          {{this.name}}
+        {{/each}}
+      </select>
+    </div>
+
+    {{!-- Premium --}}
+    <div class="form-control">
+      <label class="label cursor-pointer">
+        <span class="label-text text-lg font-semibold">Is Premium</span>
+        <input type="checkbox" name="is_premium" class="checkbox checkbox-primary" {{#if article.is_premium}}checked{{/if}} />
+      </label>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-control">
+      <button type="submit" class="btn btn-primary w-full">Edit Article</button>
     </div>
   </form>
 </div>
@@ -84,23 +126,12 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#editArticleForm')
-    console.log('Form:', form)
+    const hiddenContent = document.querySelector('#hiddenContent')
     if (form) {
-      form.addEventListener('submit', async function (event) {
-        const target = event.target
-
-        if (target.tagName === 'BUTTON' && target.dataset.action) {
-          actionInput.value = target.dataset.action
-
-          const content = quill.root.innerHTML.trim()
-          quillContent.value = content
-
-          console.log('=== Quill Content ===', content)
-          console.log('Action:', actionInput.value)
-
-          // Gửi form
-          form.submit()
-        }
+      form.addEventListener('submit', function (event) {
+        event.preventDefault()
+        hiddenContent.value = quill.root.innerHTML.trim()
+        form.submit()
       })
     } else {
       console.error('Form element not found.')
