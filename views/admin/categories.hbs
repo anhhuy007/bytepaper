@@ -18,7 +18,7 @@
     <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" method="GET">
       <!-- Sort By -->
       <div>
-        <label for="orderBy" class="block text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+        <label for="orderBy" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="sort-desc" class="text-gray-500"></i>
           <span>Sort By</span>
         </label>
@@ -30,7 +30,7 @@
 
       <!-- Limit -->
       <div>
-        <label for="limit" class="block text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+        <label for="limit" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="list" class="text-gray-500"></i>
           <span>Items per Page</span>
         </label>
@@ -65,13 +65,13 @@
       <table class="table w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
     <thead class="bg-gray-100 text-gray-700">
       <tr>
-        <th class="py-4 px-6 text-left space-x-2">
+        <th class="py-3 px-6 text-left space-x-2">
           <span class="font-semibold text-lg">Category Name</span>
         </th>
-        <th class="py-4 px-6 text-left space-x-2">
+        <th class="py-3 px-6 text-left space-x-2">
           <span class="font-semibold text-lg">Parent Category</span>
         </th>
-        <th class="py-4 px-6 text-left space-x-2">
+        <th class="py-3 px-6 text-left space-x-2">
           <span class="font-semibold text-lg">Actions</span>
         </th>
       </tr>
@@ -79,9 +79,9 @@
     <tbody class="text-gray-600 divide-y divide-gray-200">
       {{#each categories}}
       <tr class="hover:bg-gray-50">
-        <td class="py-4 px-6 text-sm font-medium">{{this.name}}</td>
-        <td class="py-4 px-6 text-sm font-medium">{{default this.parent_name 'None'}}</td>
-        <td class="py-4 px-6 flex items-center space-x-3">
+        <td class="py-3 px-6 text-sm font-medium">{{this.name}}</td>
+        <td class="py-3 px-6 text-sm font-medium">{{default this.parent_name 'None'}}</td>
+        <td class="py-3 px-6 flex items-center space-x-3">
           <!-- Edit Button -->
           <a
             href="/admin/categories/edit/{{this.id}}"

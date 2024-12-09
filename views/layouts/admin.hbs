@@ -24,57 +24,69 @@
       <!-- Sidebar -->
       <aside class="w-64 bg-white shadow-lg">
         <div class="p-6">
-          <h2 class="text-xl font-bold mb-4 text-gray-800">Admin Dashboard</h2>
+          <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center space-x-2">
+            <i data-lucide="grid" class="text-accent"></i>
+            <span>Admin Dashboard</span>
+          </h2>
           <ul class="space-y-4">
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a href="/" class="block px-4 py-2 text-gray-700"> Back to Home </a>
+              <a href="/" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
+                <i data-lucide="home"></i>
+                <span>Back to Home</span>
+              </a>
             </li>
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/admin/dashboard"
-                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/dashboard'}}font-bold text-accent{{/ifActive}}"
+                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/dashboard'}}font-bold text-accent{{/ifActive}}"
               >
-                Dashboard
+                <i data-lucide="bar-chart-2"></i>
+                <span>Dashboard</span>
               </a>
             </li>
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/admin/users"
-                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/users'}}font-bold text-accent{{/ifActive}}"
+                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/users'}}font-bold text-accent{{/ifActive}}"
               >
-                Users
+                <i data-lucide="users"></i>
+                <span>Users</span>
               </a>
             </li>
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/admin/articles"
-                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/articles'}}font-bold text-accent{{/ifActive}}"
+                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/articles'}}font-bold text-accent{{/ifActive}}"
               >
-                Articles
+                <i data-lucide="file-text"></i>
+                <span>Articles</span>
               </a>
             </li>
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/admin/categories"
-                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/categories'}}font-bold text-accent{{/ifActive}}"
+                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/categories'}}font-bold text-accent{{/ifActive}}"
               >
-                Categories
+                <i data-lucide="layers"></i>
+                <span>Categories</span>
               </a>
             </li>
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/admin/tags"
-                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/tags'}}font-bold text-accent{{/ifActive}}"
+                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/tags'}}font-bold text-accent{{/ifActive}}"
               >
-                Tags
+                <i data-lucide="tag"></i>
+                <span>Tags</span>
               </a>
             </li>
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/admin/editors"
-                class="block px-4 py-2 text-gray-700 {{#ifActive 'admin/editors'}}font-bold text-accent{{/ifActive}}"
+                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/editors'}}font-bold text-accent{{/ifActive}}"
               >
-                Editors
+                <i data-lucide="edit"></i>
+                <span>Editors</span>
               </a>
             </li>
           </ul>
