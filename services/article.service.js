@@ -115,7 +115,8 @@ class ArticleService {
       throw new Error('Article is not pending approval')
     }
 
-    if (tagIds.length > 0) {
+    if (tagIds && tagIds.length > 0) {
+      await articleTagModel.removeTagsFromArticle(id)
       await articleTagModel.addTagsToArticle(id, tagIds)
     }
 
@@ -124,9 +125,8 @@ class ArticleService {
 
     // Update the article status to "published" and set the published_at field to the current date
     await articleModel.updateArticle(id, {
-      status: 'approved',
-      published_at: publishedAt,
-      editor_id: editorId,
+      status: publishedAt ? 'published' : 'approved',
+      published_at: publishedAt ? new Date(publishedAt) : null,
       category_id: categoryId,
     })
 
@@ -282,6 +282,14 @@ class ArticleService {
 
   async removeTagFromArticle(articleId, tagId) {
     return await articleTagModel.removeTagsFromArticle(articleId, [tagId])
+  }
+
+  async getArticleStatsByEditor(editorId) {
+    return await articleModel.getArticleStatsByEditorId(editorId)
+  }
+
+  async getArticlesForEditor(editorId, filters = {}, options = {}) {
+    return await articleModel.getArticlesForEditor(editorId, filters, options)
   }
 }
 
