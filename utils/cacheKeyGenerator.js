@@ -47,10 +47,19 @@ export const writerCacheKeyGenerator = {
   articleRejections: (req) => `writer:${req.user.id}:article-rejections:${req.params.articleId}`, // Cache key for article rejections
 }
 
+export const editorCacheKeyGenerator = {
+  dashboard: (req) => `editor:${req.user.id}:dashboard`,
+  articles: (req) => `editor:${req.user.id}:articles:${JSON.stringify(req.query)}`, // Cache by filters and pagination
+  articleDetails: (req) => `editor:${req.user.id}:article:${req.params.articleId}`,
+  approveForm: (req) => `editor:${req.user.id}:article:${req.params.articleId}:approve`,
+  rejectForm: (req) => `editor:${req.user.id}:article:${req.params.articleId}:reject`,
+}
+
 export default {
   adminCacheKeyGenerator,
   authCacheKeyGenerator,
   articleCacheKeyGenerator,
   userCacheKeyGenerator,
   writerCacheKeyGenerator,
+  editorCacheKeyGenerator,
 }
