@@ -90,6 +90,7 @@ const getHomepageArticles = async (req, res, next) => {
   try {
     const type = req.query.type
     const homepageData = await articleService.getHomepageArticles(type)
+    
     return homepageData
   } catch (error) {
     next(error)
