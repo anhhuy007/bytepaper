@@ -40,17 +40,18 @@ class ArticleRejectionsModel extends BaseModel {
     return this.delete({ editor_id: editorId })
   }
 
-  async getArticleRejection(editorId) {
+  async getArticleRejections(editorId, articleId) {
     const query = `
       SELECT ar.article_id, ar.reason, ar.rejected_at, a.title
       FROM article_rejections ar
       JOIN articles a ON ar.article_id = a.id
-      WHERE ar.editor_id = $1
+      WHERE ar.editor_id = $1 AND ar.article_id = $2
       ORDER BY ar.rejected_at DESC;
     `
-    const { rows } = await db.query(query, [editorId])
+    const { rows } = await db.query(query, [editorId, articleId])
     return rows
   }
+
 }
 
 export default new ArticleRejectionsModel()
