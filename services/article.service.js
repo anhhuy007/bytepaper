@@ -181,8 +181,8 @@ class ArticleService {
 
     // Update the article status to "published" and set the published_at field to the current date
     return await articleModel.updateArticle(id, {
-      status: 'published',
-      published_at: new Date(),
+      status: 'approved',
+      published_at: null,
     })
   }
 

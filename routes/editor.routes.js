@@ -31,6 +31,4 @@ router.post('/articles/:articleId/publish', editorController.publishArticle)
 
 router.post('/articles/:articleId/unpublish', editorController.unpublishArticle)
 
-
-
 export default router

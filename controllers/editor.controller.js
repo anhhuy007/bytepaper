@@ -120,14 +120,14 @@ const rejectArticle = async (req, res, next) => {
   }
 }
 
-
 const publishArticle = async (req, res, next) => {
   try {
     // Publish the article using the article service
     await articleService.publishArticle(req.params.articleId)
 
     // Send a success response
-    res.status(200).json({ success: true, message: 'Article published' })
+    // res.status(200).json({ success: true, message: 'Article published' })
+    res.redirect('/editor/articles')
   } catch (error) {
     // Pass any errors to the next middleware function
     next(error)
@@ -140,7 +140,8 @@ const unpublishArticle = async (req, res, next) => {
     await articleService.unpublishArticle(req.params.articleId)
 
     // Send a success response
-    res.status(200).json({ success: true, message: 'Article unpublished' })
+    // res.status(200).json({ success: true, message: 'Article unpublished' })
+    res.redirect('/editor/articles')
   } catch (error) {
     // Pass any errors to the next middleware function
     next(error)
@@ -205,7 +206,6 @@ const getRejectArticle = async (req, res, next) => {
     next(error)
   }
 }
-
 
 const getArticleById = async (req, res, next) => {
   try {
