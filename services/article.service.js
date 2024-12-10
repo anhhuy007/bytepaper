@@ -4,6 +4,7 @@ import articleModel from '../models/article.model.js'
 import articleTagModel from '../models/articleTag.model.js'
 import tagService from './tag.service.js'
 import categoryService from './category.service.js'
+import articleRejectionsModel from '../models/articleRejections.model.js'
 class ArticleService {
   async getArticles(filters = {}, options = {}) {
     return await articleModel.getArticles(filters, options)
@@ -123,12 +124,15 @@ class ArticleService {
     // TODO: Implement the logic to check if the editor has the rights to approve the article
 
     // Update the article status to "published" and set the published_at field to the current date
-    return await articleModel.updateArticle(id, {
-      status: 'published',
+    await articleModel.updateArticle(id, {
+      status: 'approved',
       published_at: publishedAt,
       editor_id: editorId,
       category_id: categoryId,
     })
+
+    // Update the article rejections table to remove any previous rejections
+    return await articleRejectionsModel.deleteByArticleId(id)
   }
 
   async rejectArticle(id, editorId, rejectionReason) {
@@ -146,11 +150,13 @@ class ArticleService {
     // Additional logic to check if editor has rights to reject this article
 
     // Update the article status to "rejected" and set the rejection_reason field to the provided reason
-    return await articleModel.updateArticle(id, {
+    await articleModel.updateArticle(id, {
       status: 'rejected',
-      rejection_reason: rejectionReason,
       editor_id: editorId,
     })
+
+    // Update the article rejections table with the rejection details
+    return await articleRejectionsModel.rejectArticle(id, editorId, rejectionReason)
   }
 
   async publishArticle(id) {
@@ -247,6 +253,10 @@ class ArticleService {
 
   async getArticleStats(authorId) {
     return await articleModel.getArticleStats(authorId)
+  }
+
+  async getArticleRejections(editorId) {
+    return await articleRejectionsModel.getArticleRejection(editorId)
   }
 }
 
