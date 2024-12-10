@@ -187,7 +187,21 @@ const deleteArticle = async (req, res, next) => {
   }
 }
 
+const getRejectedArticles = async (req, res, next) => {
+  try {
+    const articles = await articleService.getArticleRejections(req.user.id)
+    res.render('writer/rejected-articles', {
+      title: 'Rejected Articles',
+      layout: 'writer',
+      articles,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
+  getRejectedArticles,
   getEditArticle,
   getCreateArticle,
   getDashboard,

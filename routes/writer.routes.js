@@ -21,4 +21,6 @@ router.post('/articles/create', upload.single('thumbnail'), writerController.cre
 router.get('/articles/edit/:articleId', writerController.getEditArticle)
 router.post('/articles/edit/:articleId', writerController.updateArticle)
 
+router.get('/articles/rejected', writerController.getRejectedArticles)
+
 export default router
