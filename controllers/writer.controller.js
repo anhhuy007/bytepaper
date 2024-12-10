@@ -179,36 +179,6 @@ const updateArticle = async (req, res, next) => {
   }
 }
 
-const submitArticleForApproval = async (req, res, next) => {
-  try {
-    // Extract the author ID from the request object
-    const authorId = req.user.id
-
-    // Submit the article for approval using the article service
-    await articleService.submitArticleForApproval(req.params.articleId, authorId)
-
-    // Send a success response
-    // res.status(200).json({ success: true, message: 'Article submitted for approval' })
-    res.redirect('/writer/articles')
-  } catch (error) {
-    // Pass any errors to the next middleware function
-    next(error)
-  }
-}
-
-const deleteArticle = async (req, res, next) => {
-  try {
-    const authorId = req.user.id
-    const articleID = req.params.articleId
-    console.log('===========> Article ID:', articleID)
-    await articleService.deleteArticle(articleID, authorId)
-    // res.status(200).json({ success: true, data: article })
-    res.redirect('/writer/articles')
-  } catch (error) {
-    next(error)
-  }
-}
-
 const getArticleRejections = async (req, res, next) => {
   try {
     const editorId = req.user.id
@@ -231,7 +201,5 @@ export default {
   getCreateArticle,
   getDashboard,
   createArticle,
-  deleteArticle,
   updateArticle,
-  submitArticleForApproval,
 }

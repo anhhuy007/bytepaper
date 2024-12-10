@@ -40,9 +40,17 @@ export const userCacheKeyGenerator = {
   subscription: (req) => `user:subscription`, // Cache key for subscription
 }
 
+export const writerCacheKeyGenerator = {
+  dashboard: (req) => `writer:${req.user.id}:dashboard:${JSON.stringify(req.query)}`, // Cache key for dashboard
+  createArticle: (req) => `writer:${req.user.id}:create-article`, // Cache key for create article page
+  editArticle: (req) => `writer:${req.user.id}:edit-article:${req.params.articleId}`, // Cache key for edit article page
+  articleRejections: (req) => `writer:${req.user.id}:article-rejections:${req.params.articleId}`, // Cache key for article rejections
+}
+
 export default {
   adminCacheKeyGenerator,
   authCacheKeyGenerator,
   articleCacheKeyGenerator,
   userCacheKeyGenerator,
+  writerCacheKeyGenerator,
 }
