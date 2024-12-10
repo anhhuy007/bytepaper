@@ -40,28 +40,27 @@ class ArticleService {
     return createdArticle
   }
 
-  async updateArticle(id, articleData, authorId) {
+  async updateArticle(id, articleData) {
     const article = await articleModel.findById(id)
     if (!article) {
       throw new Error('Article not found')
     }
 
-    if (article.author_id !== authorId) {
-      throw new Error('Unauthorized')
-    }
+    // if (article.author_id !== authorId) {
+    //   throw new Error('Unauthorized')
+    // }
 
-    // Extract the tag IDs from the article data and update the article
-    const { tag_ids, ...updateData } = articleData
+    const { tags, ...updateData } = articleData
 
-    // Change the status to draft if the article is being updated
     updateData.status = 'draft'
 
     const updatedArticle = await articleModel.updateArticle(id, updateData)
 
-    // If there are tag IDs, remove them from the article and re-add them
-    if (tag_ids) {
-      await articleTagModel.removeTagsFromArticle(id, tag_ids)
-      await articleTagModel.addTagsToArticle(id, tag_ids)
+    // Xử lý tags
+    if (tags && tags.length > 0) {
+      await articleTagModel.removeTagsFromArticle(id)
+
+      await articleTagModel.addTagsToArticle(id, tags)
     }
 
     return updatedArticle
@@ -269,8 +268,12 @@ class ArticleService {
     return await articleModel.getArticleStats(authorId)
   }
 
-  async getArticleRejections(editorId) {
-    return await articleRejectionsModel.getArticleRejection(editorId)
+  async getArticleRejections(editorId, articleId) {
+    return await articleRejectionsModel.getArticleRejections(editorId, articleId)
+  }
+
+  async addTagsToArticle(articleId, tagIds) {
+    return await articleTagModel.addTagsToArticle(articleId, tagIds)
   }
 
   async addTagToArticle(articleId, tagId) {

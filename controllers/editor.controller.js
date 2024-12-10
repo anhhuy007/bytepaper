@@ -99,9 +99,6 @@ const rejectArticle = async (req, res, next) => {
 
 const publishArticle = async (req, res, next) => {
   try {
-    // Extract the editor ID from the request object
-    const editorId = req.user.id
-
     // Publish the article using the article service
     await articleService.publishArticle(req.params.articleId)
 
@@ -115,9 +112,6 @@ const publishArticle = async (req, res, next) => {
 
 const unpublishArticle = async (req, res, next) => {
   try {
-    // Extract the editor ID from the request object
-    const editorId = req.user.id
-
     // Unpublish the article using the article service
     await articleService.unpublishArticle(req.params.articleId)
 
@@ -132,7 +126,6 @@ const unpublishArticle = async (req, res, next) => {
 const addTag = async (req, res, next) => {
   try {
     // Extract the editor ID from the request object
-    const editorId = req.user.id
 
     // Extract tag IDs from the request body
     const { tag_id } = req.body
