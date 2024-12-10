@@ -368,6 +368,107 @@ class ArticleModel extends BaseModel {
     const { rows } = await db.query(query, values)
     return rows
   }
+
+  async getArticleStatsByEditorId(editorId) {
+    const query = `
+      SELECT
+        COUNT(*) FILTER (WHERE status = 'pending') AS pending_articles,
+        COUNT(*) FILTER (WHERE status = 'approved') AS approved_articles,
+        COUNT(*) FILTER (WHERE status = 'rejected') AS rejected_articles,
+        COUNT(*) FILTER (WHERE status = 'published') AS published_articles
+      FROM articles a
+      JOIN editor_categories ec ON a.category_id = ec.category_id
+      WHERE ec.editor_id = $1
+    `
+
+    const { rows } = await db.query(query, [editorId])
+    return rows[0]
+  }
+
+  async getArticlesForEditor(editorId, filters = {}, options = {}) {
+    const mainQueryParams = []
+    const countQueryParams = []
+    let whereClause = `
+    JOIN editor_categories ec ON a.category_id = ec.category_id
+    WHERE ec.editor_id = $${mainQueryParams.length + 1}
+  `
+    mainQueryParams.push(editorId)
+    countQueryParams.push(editorId)
+
+    // Apply dynamic filters
+    if (filters.status) {
+      whereClause += ` AND a.status = $${mainQueryParams.length + 1} `
+      mainQueryParams.push(filters.status)
+      countQueryParams.push(filters.status)
+    }
+
+    if (filters.category_id) {
+      whereClause += ` AND a.category_id = $${mainQueryParams.length + 1} `
+      mainQueryParams.push(filters.category_id)
+      countQueryParams.push(filters.category_id)
+    }
+
+    if (filters.tag_id) {
+      whereClause += ` AND a.id IN (
+      SELECT article_id
+      FROM article_tags
+      WHERE tag_id = $${mainQueryParams.length + 1}
+    ) `
+      mainQueryParams.push(filters.tag_id)
+      countQueryParams.push(filters.tag_id)
+    }
+
+    if (filters.is_premium) {
+      whereClause += ` AND a.is_premium = $${mainQueryParams.length + 1} `
+      mainQueryParams.push(filters.is_premium)
+      countQueryParams.push(filters.is_premium)
+    }
+
+    if (filters.keyword) {
+      const formattedKeyword = filters.keyword.trim().replace(/\s+/g, ' & ')
+      whereClause += ` AND a.search_vector @@ to_tsquery('english', $${mainQueryParams.length + 1}) `
+      mainQueryParams.push(formattedKeyword)
+      countQueryParams.push(formattedKeyword)
+    }
+
+    // Build the main query
+    const query = `
+    SELECT
+      a.*,
+      u.full_name AS author_name,
+      c.name AS category_name,
+      ${
+        filters.keyword
+          ? `ts_rank_cd(a.search_vector, to_tsquery('english', $${mainQueryParams.length})) AS rank`
+          : '0 AS rank'
+      }
+    FROM articles a
+    LEFT JOIN users u ON a.author_id = u.id
+    LEFT JOIN categories c ON a.category_id = c.id
+    ${whereClause}
+    ORDER BY ${filters.keyword ? 'rank DESC,' : ''} ${options.orderBy || 'a.published_at DESC'}
+    LIMIT $${mainQueryParams.length + 1}
+    OFFSET $${mainQueryParams.length + 2}
+  `
+    mainQueryParams.push(options.limit || 10)
+    mainQueryParams.push(options.offset || 0)
+
+    // Build the count query
+    const countQuery = `
+    SELECT COUNT(*) AS total
+    FROM articles a
+    ${whereClause}
+  `
+
+    // Execute queries
+    const countResult = await db.query(countQuery, countQueryParams)
+    const { rows } = await db.query(query, mainQueryParams)
+
+    return {
+      articles: rows,
+      totalArticles: parseInt(countResult.rows[0]?.total || 0, 10),
+    }
+  }
 }
 
 const articleModel = new ArticleModel()

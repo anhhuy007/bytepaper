@@ -33,7 +33,8 @@ class ArticleRejectionsModel extends BaseModel {
   }
 
   async deleteByArticleId(articleId) {
-    return this.delete({ article_id: articleId })
+    const query = 'DELETE FROM article_rejections WHERE article_id = $1'
+    return db.query(query, [articleId])
   }
 
   async deleteByEditorId(editorId) {
@@ -51,7 +52,6 @@ class ArticleRejectionsModel extends BaseModel {
     const { rows } = await db.query(query, [editorId, articleId])
     return rows
   }
-
 }
 
 export default new ArticleRejectionsModel()
