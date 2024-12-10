@@ -13,8 +13,11 @@
     </h2>
     <p class="text-sm text-gray-500 mt-1">
       {{#if category}}
-      <a href="/categories/{{category.id}}" class="link text-primary font-medium hover:underline">
-        {{category.name}}
+      <a
+        href="/articles/categories/{{category_id}}"
+        class="link text-primary font-medium hover:underline"
+      >
+        {{category}}
       </a>
       <span class="mx-2">|</span>
       {{/if}} {{formatDate published_at}}
@@ -23,10 +26,10 @@
     <div class="flex flex-wrap gap-2 mt-4">
       {{#each tags}}
       <a
-        href="/tags/{{this}}"
+        href="tags/{{this.id}}"
         class="badge badge-primary badge-outline hover:bg-primary hover:text-white transition"
       >
-        {{this}}
+        {{this.name}}
       </a>
       {{/each}}
     </div>

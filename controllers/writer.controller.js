@@ -2,26 +2,54 @@
 
 import articleService from '../services/article.service.js'
 import categoryService from '../services/category.service.js'
+import tagService from '../services/tag.service.js'
 const getDashboard = async (req, res, next) => {
   try {
-    const authorId = req.user.id
-
-    // Fetch statistics
-    const stats = await articleService.getArticleStats(authorId)
-
-    // Fetch articles
-    const filters = { author_id: authorId, status: req.query.status || undefined }
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+    // Extract filters and pagination options
+    const author_id = req.user.id
+    const filters = {
+      keyword: req.query.keyword || null,
+      category_id: req.query.category_id || null,
+      tag_id: req.query.tag_id || null,
+      status: req.query.status || null,
+      author_id,
     }
-    const articles = await articleService.getArticles(filters, options)
 
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
+
+    const options = {
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
+    }
+
+    // Fetch articles and related data
+    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+
+    const enhancedArticles = articles.map((article) => ({
+      ...article,
+      canEdit:
+        article.status === 'draft' || article.status === 'pending' || article.status === 'rejected',
+      canDelete: article.status === 'draft',
+    }))
+
+    const stats = await articleService.getArticleStats(author_id)
+
+    // Calculate total pages for pagination
+    const totalPages = Math.ceil(totalArticles / limit)
     res.render('writer/articles', {
+      title: 'Articles Management',
+      layout: 'writer',
       stats,
-      articles,
-      statuses: ['draft', 'pending', 'approved', 'published', 'rejected'],
-      selectedStatus: req.query.status || '',
+      articles: enhancedArticles,
+      statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
+      selectedCategory: filters.category_id, // Preserve selected category
+      selectedStatus: filters.status,
+      query: { ...req.query, limit, page }, // Preserve query params
+      totalPages,
+      currentPage: page,
     })
   } catch (error) {
     next(error)
@@ -30,11 +58,18 @@ const getDashboard = async (req, res, next) => {
 
 const getCreateArticle = async (req, res, next) => {
   try {
-    const categories = await categoryService.getAllCategories()
+    const filters = {}
+    const options = {
+      limit: 100,
+      offset: 0,
+    }
+    const { categories } = await categoryService.getAllCategories(filters, options)
+    const { tags } = await tagService.getAllTags(filters, options)
     res.render('writer/create-article', {
       title: 'Create Article',
       layout: 'writer',
       categories,
+      tags,
     })
   } catch (error) {
     next(error)
@@ -54,7 +89,6 @@ const createArticle = async (req, res, next) => {
 
     // Handle thumbnail upload (if any)
     if (req.file) {
-      console.log(req.file)
       articleData.thumbnail = `/uploads/${req.file.filename}`
     }
 
@@ -65,25 +99,47 @@ const createArticle = async (req, res, next) => {
     if (!articleData.content || articleData.content.trim() === '') {
       return res.status(400).send('Content cannot be empty.')
     }
-    console.log('===========> Article Data:', articleData)
 
-    await articleService.createArticle(articleData, authorId)
-    // res.redirect('/writer/articles')
+    // Create the article
+    const createdArticle = await articleService.createArticle(articleData, authorId)
+
+    // Handle tags
+    if (articleData.tags && Array.isArray(articleData.tags)) {
+      const tagIds = articleData.tags.map(Number)
+      await articleService.addTagsToArticle(createdArticle.id, tagIds)
+    }
+
     res.redirect('/writer/articles')
   } catch (error) {
     next(error)
   }
 }
-
 const getEditArticle = async (req, res, next) => {
   try {
     const article = await articleService.getArticleById(req.params.articleId)
-    const categories = await categoryService.getAllCategories()
+    const filters = {}
+    const options = {
+      limit: 100,
+      offset: 0,
+    }
+    const { categories } = await categoryService.getAllCategories(filters, options)
+    const { tags } = await tagService.getAllTags(filters, options)
+    const articleTagIds = new Set(article.tags.map((tag) => tag.id))
+
+    const tagsWithSelection = tags.map((tag) => ({
+      ...tag,
+      selected: articleTagIds.has(tag.id),
+    }))
+    console.log('=========================> Article Tags: ', article.tags)
     res.render('writer/edit-article', {
       title: 'Edit Article',
       layout: 'writer',
       article,
       categories,
+      tags: tagsWithSelection,
+      canDelete: article.status !== 'pending',
+      canSubmit: article.status !== 'pending',
+      canViewRejections: article.status === 'rejected',
     })
   } catch (error) {
     next(error)
@@ -93,66 +149,57 @@ const getEditArticle = async (req, res, next) => {
 const updateArticle = async (req, res, next) => {
   try {
     const authorId = req.user.id
-    console.log('=================== body:', req.body)
-    // Lấy hành động từ form
-    const { action, ...articleData } = req.body
-    const actionType = action[1]
-    console.log('Action:', actionType)
-    console.log('Article Data:', articleData)
+    const { action, tags, ...articleData } = req.body
 
-    if (actionType === 'save') {
-      await articleService.updateArticle(req.params.articleId, articleData, authorId)
+    console.log('=================== body:', req.body)
+
+    // Normalize tags to an array
+    const normalizedTags = Array.isArray(tags) ? tags : tags ? [tags] : []
+
+    console.log('Article Data:', { ...articleData, tags: normalizedTags })
+
+    if (action === 'edit') {
+      await articleService.updateArticle(req.params.articleId, {
+        ...articleData,
+        tags: normalizedTags,
+      })
       res.redirect('/writer/articles')
-    } else if (actionType === 'submit') {
+    } else if (action === 'submit') {
       await articleService.submitArticleForApproval(req.params.articleId, authorId)
       res.redirect('/writer/articles')
-    } else if (actionType === 'delete') {
+    } else if (action === 'delete') {
       await articleService.deleteArticle(req.params.articleId, authorId)
       res.redirect('/writer/articles')
     } else {
-      res.redirect('/writer/articles/edit/' + req.params.articleId)
+      res.redirect(`/writer/articles/edit/${req.params.articleId}`)
     }
   } catch (error) {
+    console.error(error)
     next(error)
   }
 }
 
-const submitArticleForApproval = async (req, res, next) => {
+const getArticleRejections = async (req, res, next) => {
   try {
-    // Extract the author ID from the request object
-    const authorId = req.user.id
-
-    // Submit the article for approval using the article service
-    await articleService.submitArticleForApproval(req.params.articleId, authorId)
-
-    // Send a success response
-    // res.status(200).json({ success: true, message: 'Article submitted for approval' })
-    res.redirect('/writer/articles')
-  } catch (error) {
-    // Pass any errors to the next middleware function
-    next(error)
-  }
-}
-
-const deleteArticle = async (req, res, next) => {
-  try {
-    const authorId = req.user.id
-    const articleID = req.params.articleId
-    console.log('===========> Article ID:', articleID)
-    await articleService.deleteArticle(articleID, authorId)
-    // res.status(200).json({ success: true, data: article })
-    res.redirect('/writer/articles')
+    const editorId = req.user.id
+    const articleId = req.params.articleId
+    const rejections = await articleService.getArticleRejections(editorId, articleId)
+    res.render('writer/article-rejections', {
+      title: 'Rejected Articles',
+      layout: 'writer',
+      rejections,
+      articleId,
+    })
   } catch (error) {
     next(error)
   }
 }
 
 export default {
+  getArticleRejections,
   getEditArticle,
   getCreateArticle,
   getDashboard,
   createArticle,
-  deleteArticle,
   updateArticle,
-  submitArticleForApproval,
 }

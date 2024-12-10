@@ -52,6 +52,13 @@ export const deleteCacheMiddleware = (cacheKeyGenerator) => {
         throw new Error('Invalid cache key(s) generated.')
       }
 
+      console.log('Deleting cache:', cacheKeys)
+
+      // Add prefix to cache keys
+      cacheKeys.forEach((key, index) => {
+        cacheKeys[index] = `paperly:${key}`
+      })
+
       const results = await Promise.all(cacheKeys.map((key) => redisClient.del(key)))
 
       results.forEach((result, index) => {

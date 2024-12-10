@@ -14,8 +14,7 @@ const getArticleById = async (req, res, next) => {
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
 
-    console.log('=========================> Comments:', comments)
-
+    console.log('=========================> Article:', article)
     // Render the detail view
     return res.render('articles/detail', {
       article,
