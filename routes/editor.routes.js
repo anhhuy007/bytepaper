@@ -14,17 +14,22 @@ router.get('/', (req, res) => {
   res.redirect('/editor/dashboard')
 })
 
-router.get('/dashboard', editorController.renderDashboard)
+router.get('/dashboard', editorController.getDashboard)
 
-router.get('/articles/', editorController.getMyArticles)
+router.get('/articles/', editorController.getArticles)
 
-router.get(
-  '/articles/:articleId',
-  viewRenderer('editor/article-detail', articleController.getArticleById),
-)
+router.get('/articles/:articleId', articleController.getArticleById)
 
-router.put('/articles/:articleId/approve', editorController.approveArticle)
+router.post('/articles/:articleId/approve', editorController.approveArticle)
 
-router.put('/articles/:articleId/reject', editorController.rejectArticle)
+router.post('/articles/:articleId/reject', editorController.rejectArticle)
+
+router.post('/articles/:articleId/publish', editorController.publishArticle)
+
+router.post('/articles/:articleId/unpublish', editorController.unpublishArticle)
+
+router.post('/articles/:articleId/tags/add', editorController.addTag)
+
+router.post('/articles/:articleId/tags/remove', editorController.removeTag)
 
 export default router

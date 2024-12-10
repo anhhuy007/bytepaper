@@ -39,6 +39,12 @@ import db from '../utils/Database.js'
 // CREATE INDEX idx_articles_category_id ON articles(category_id);
 // CREATE INDEX idx_articles_search_vector ON articles USING GIN(search_vector);
 
+// CREATE TABLE editor_categories (
+//   editor_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+//   category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
+//   PRIMARY KEY (editor_id, category_id)
+// );
+
 class ArticleModel extends BaseModel {
   constructor() {
     super('articles')
@@ -344,6 +350,23 @@ class ArticleModel extends BaseModel {
       articles: rows,
       totalArticles: parseInt(countResult.rows[0]?.total || 0, 10),
     }
+  }
+
+  async getArticlesByEditorId(editorId, status = 'published', options = {}) {
+    const query = `
+      SELECT a.*, c.name AS category_name
+      FROM articles a
+      JOIN editor_categories ec ON a.category_id = ec.category_id
+      JOIN categories c ON a.category_id = c.id
+      WHERE ec.editor_id = $1 AND a.status = $2
+      ORDER BY a.published_at DESC
+      LIMIT $3 OFFSET $4
+    `
+
+    const values = [editorId, status, options.limit || 10, options.offset || 0]
+
+    const { rows } = await db.query(query, values)
+    return rows
   }
 }
 

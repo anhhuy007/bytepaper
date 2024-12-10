@@ -173,6 +173,20 @@ class ArticleService {
     })
   }
 
+  async unpublishArticle(id) {
+    // Retrieve the article from the database
+    const article = await articleModel.findById(id)
+    if (!article) {
+      throw new Error('Article not found')
+    }
+
+    // Update the article status to "published" and set the published_at field to the current date
+    return await articleModel.updateArticle(id, {
+      status: 'published',
+      published_at: new Date(),
+    })
+  }
+
   async searchArticles(keyword, options = {}) {
     // Chuẩn hóa từ khóa để sử dụng trong to_tsquery
     const formattedKeyword = keyword
@@ -257,6 +271,14 @@ class ArticleService {
 
   async getArticleRejections(editorId) {
     return await articleRejectionsModel.getArticleRejection(editorId)
+  }
+
+  async addTagToArticle(articleId, tagId) {
+    return await articleTagModel.addTagsToArticle(articleId, [tagId])
+  }
+
+  async removeTagFromArticle(articleId, tagId) {
+    return await articleTagModel.removeTagsFromArticle(articleId, [tagId])
   }
 }
 

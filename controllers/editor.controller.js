@@ -6,7 +6,7 @@ import tagService from '../services/tag.service.js'
 // import categoryService from '../services/category.service.js'
 // import userService from '../services/user.service.js'
 
-const getPendingArticles = async (req, res, next) => {
+const getArticles = async (req, res, next) => {
   try {
     // Extract the editor ID from the request object
     const editorId = req.user.id
@@ -40,7 +40,7 @@ const getPendingArticles = async (req, res, next) => {
   }
 }
 
-const renderDashboard = async (req, res, next) => {
+const getDashboard = async (req, res, next) => {
   try {
     const editorId = req.user.id
     const categories = await adminService.getCategoriesByEditor(editorId)
@@ -53,53 +53,6 @@ const renderDashboard = async (req, res, next) => {
     next(error)
   }
 }
-
-const getMyArticles = async (req, res, next) => {
-  try {
-    const editorId = req.user.id
-    const categories = await adminService.getCategoriesByEditor(editorId)
-    const categoryIds = categories.map((category) => parseInt(category.id, 10))
-    if (!categoryIds.length) {
-      return []
-    }
-    let filters = {
-      category_id: categoryIds,
-    }
-
-    const status = req.query.status || null
-
-    if (!status) {
-      filters.status = 'draft'
-    }
-
-    if (!['draft', 'pending', 'published', 'rejected', 'approved'].includes(status)) {
-      throw new Error('Invalid status')
-    }
-
-    // filters.status = status
-    res.locals.status = status
-
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-    }
-    const articles = await articleService.getArticles(filters, options)
-
-
-    const { tags } = await tagService.getAllTags()
-    res.render('editor/articleDetail', {
-      layout: 'editor',
-      data: articles,
-      options: options,
-      status: res.locals.status,
-      tags: tags,
-      categories: categories,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
 
 const approveArticle = async (req, res, next) => {
   try {
@@ -125,7 +78,6 @@ const approveArticle = async (req, res, next) => {
   }
 }
 
-
 const rejectArticle = async (req, res, next) => {
   try {
     // Extract the editor ID from the request object
@@ -145,10 +97,83 @@ const rejectArticle = async (req, res, next) => {
   }
 }
 
+const publishArticle = async (req, res, next) => {
+  try {
+    // Extract the editor ID from the request object
+    const editorId = req.user.id
+
+    // Publish the article using the article service
+    await articleService.publishArticle(req.params.articleId)
+
+    // Send a success response
+    res.status(200).json({ success: true, message: 'Article published' })
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error)
+  }
+}
+
+const unpublishArticle = async (req, res, next) => {
+  try {
+    // Extract the editor ID from the request object
+    const editorId = req.user.id
+
+    // Unpublish the article using the article service
+    await articleService.unpublishArticle(req.params.articleId)
+
+    // Send a success response
+    res.status(200).json({ success: true, message: 'Article unpublished' })
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error)
+  }
+}
+
+const addTag = async (req, res, next) => {
+  try {
+    // Extract the editor ID from the request object
+    const editorId = req.user.id
+
+    // Extract tag IDs from the request body
+    const { tag_id } = req.body
+
+    // Add tags to the article using the article service
+    await articleService.addTagToArticle(req.params.articleId, tag_id)
+
+    // Send a success response
+    res.status(200).json({ success: true, message: 'Tags added to article' })
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error)
+  }
+}
+
+const removeTag = async (req, res, next) => {
+  try {
+    // Extract the editor ID from the request object
+    const editorId = req.user.id
+
+    // Extract tag IDs from the request body
+    const { tag_id } = req.body
+
+    // Remove tags from the article using the article service
+    await articleService.removeTagFromArticle(req.params.articleId, tag_id)
+
+    // Send a success response
+    res.status(200).json({ success: true, message: 'Tags removed from article' })
+  } catch (error) {
+    // Pass any errors to the next middleware function
+    next(error)
+  }
+}
+
 export default {
-  renderDashboard,
-  getPendingArticles,
-  getMyArticles,
+  getDashboard,
+  getArticles,
   approveArticle,
   rejectArticle,
+  publishArticle,
+  unpublishArticle,
+  addTag,
+  removeTag,
 }
