@@ -136,17 +136,7 @@
         [{ list: 'ordered' }, { list: 'bullet' }],
         ['image'],
       ],
-      imageUploader: {
-        upload: (file) => {
-          return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              resolve(
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/480px-JavaScript-logo.png',
-              )
-            }, 3500)
-          })
-        },
-      },
+      imageUploader: {},
     },
   })
 </script>
