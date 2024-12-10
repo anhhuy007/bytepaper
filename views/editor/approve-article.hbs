@@ -1,0 +1,105 @@
+{{!-- views/editor/approve-article.hbs --}}
+<div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
+  <!-- Page Title -->
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
+      <i data-lucide="check-circle" class="text-primary"></i>
+      <span>Approve Article</span>
+    </h1>
+
+    <!-- Back Button -->
+    <a href="/editor/articles/{{article.id}}" class="btn btn-secondary flex items-center space-x-2">
+      <i data-lucide="arrow-left"></i>
+      <span>Back</span>
+    </a>
+  </div>
+
+  <!-- Approval Form -->
+  <form action="/editor/articles/{{article.id}}/approve" method="POST" class="space-y-6">
+    <!-- Title -->
+    <div class="form-control">
+      <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="type"></i>
+        <span>Title</span>
+      </label>
+      <input
+        type="text"
+        class="input input-bordered w-full bg-gray-100"
+        value="{{article.title}}"
+        disabled
+      />
+    </div>
+
+    <!-- Abstract -->
+    <div class="form-control">
+      <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="align-left"></i>
+        <span>Abstract</span>
+      </label>
+      <textarea
+        class="textarea textarea-bordered w-full bg-gray-100"
+        disabled
+      >{{article.abstract}}</textarea>
+    </div>
+
+    <!-- Category -->
+    <div class="form-control">
+      <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="folder"></i>
+        <span>Category</span>
+      </label>
+      <select name="category_id" class="select select-bordered w-full" required>
+        <option value="" disabled>Select a category</option>
+        {{#each categories}}
+        <option value="{{this.id}}" {{#if (eq ../article.category_id this.id)}}selected{{/if}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <!-- Tags -->
+    <div class="form-control">
+      <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="tag"></i>
+        <span>Tags</span>
+      </label>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {{#each tags}}
+        <div class="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="tag_ids"
+            value="{{this.id}}"
+            id="tag-{{this.id}}"
+            class="checkbox"
+            {{#if this.selected}}checked{{/if}}
+          />
+          <label for="tag-{{this.id}}" class="text-sm text-gray-600">{{this.name}}</label>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <!-- Publish Date -->
+    <div class="form-control">
+      <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="calendar"></i>
+        <span>Publish Date</span>
+      </label>
+      <input
+        type="date"
+        name="published_at"
+        class="input input-bordered w-full"
+        value="{{formatDate article.published_at 'YYYY-MM-DD'}}"
+        required
+      />
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-end space-x-4">
+      <button type="submit" class="btn btn-primary flex items-center space-x-2">
+        <i data-lucide="check-circle"></i>
+        <span>Submit</span>
+      </button>
+    </div>
+  </form>
+</div>
