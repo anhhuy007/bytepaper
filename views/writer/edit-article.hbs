@@ -15,6 +15,20 @@
         <i data-lucide="arrow-left"></i>
         <span>Back</span>
       </a>
+
+      <!-- View Rejections Button -->
+      <!-- View Rejections Button -->
+      {{#if canViewRejections}}
+      <a
+        href="/writer/articles/{{article.id}}/rejections"
+        class="btn btn-warning flex items-center space-x-2"
+      >
+        <i data-lucide="alert-circle"></i>
+        <span>View Rejections</span>
+      </a>
+      {{/if}}
+
+
       <!-- Delete Button -->
       {{#if canDelete}}
       <form
@@ -130,6 +144,32 @@
         <option value="{{this.id}}" {{#if (eq this.id article.category_id)}}selected{{/if}}>{{this.name}}</option>
         {{/each}}
       </select>
+    </div>
+
+    <!-- Tags -->
+    <div class="form-control">
+      <label
+        for="tags"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="tag"></i>
+        <span>Tags</span>
+      </label>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {{#each tags}}
+        <div class="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="tags"
+            value="{{this.id}}"
+            id="tag-{{this.id}}"
+            class="checkbox"
+            {{#if this.selected}}checked{{/if}}
+          />
+          <label for="tag-{{this.id}}" class="text-sm text-gray-600">{{this.name}}</label>
+        </div>
+        {{/each}}
+      </div>
     </div>
 
     <!-- Is Premium -->

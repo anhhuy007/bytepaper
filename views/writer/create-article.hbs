@@ -1,10 +1,22 @@
 {{!-- views/writer/create-article.hbs --}}
 <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
   <!-- Page Title -->
-  <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2 mb-6">
-    <i data-lucide="file-plus" class="text-primary"></i>
-    <span>Create Article</span>
-  </h1>
+  <div class="mb-6 flex justify-between items-center">
+  <!-- Title Section -->
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
+      <i data-lucide="edit-3" class="text-primary"></i>
+      <span>Create Article</span>
+    </h1>
+
+    <!-- Action Buttons Section -->
+    <div class="flex items-center space-x-4">
+      <!-- Back Button -->
+      <a href="/writer/articles" class="btn btn-secondary flex items-center space-x-2">
+        <i data-lucide="arrow-left"></i>
+        <span>Back</span>
+      </a>
+    </div>
+  </div>
 
   <!-- Create Article Form -->
   <form
@@ -97,6 +109,31 @@
         <option value="{{this.id}}">{{this.name}}</option>
         {{/each}}
       </select>
+    </div>
+
+    <!-- Tags -->
+    <div class="form-control">
+      <label
+        for="tags"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="tag"></i>
+        <span>Tags</span>
+      </label>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {{#each tags}}
+        <div class="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="tags"
+            value="{{this.id}}"
+            id="tag-{{this.id}}"
+            class="checkbox"
+          />
+          <label for="tag-{{this.id}}" class="text-sm text-gray-600">{{this.name}}</label>
+        </div>
+        {{/each}}
+      </div>
     </div>
 
     <!-- Is Premium -->
