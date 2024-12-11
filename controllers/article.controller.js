@@ -209,9 +209,6 @@ const getArticlesByCategoryId = async (req, res, next) => {
     const totalPages = Math.ceil(totalArticles / limit)
     const category = await categoryService.getCategoryById(categoryId)
 
-    console.log('=========================> Category:', category)
-    console.log('=========================> Articles:', articles)
-
     res.render('articles/list', {
       articles,
       currentPage: page,
