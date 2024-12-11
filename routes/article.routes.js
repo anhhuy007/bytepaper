@@ -6,16 +6,30 @@ import checkSubscription from '../middlewares/checkSubscription.js'
 import commentController from '../controllers/comment.controller.js'
 import { cacheMiddleware, deleteCacheMiddleware } from '../middlewares/cacheMiddleware.js'
 import { articleCacheKeyGenerator } from '../utils/cacheKeyGenerator.js'
+import categoryService from '../services/category.service.js'
 import viewRenderer from '../utils/viewRenderer.js'
 
 const router = express.Router()
+
+router.use(async (req, res, next) => {
+  try {
+    const categories = await categoryService.getRootCategoriesWithChildren() // Fetch categories
+    res.locals.header_categories = categories // Pass categories to all views
+    res.locals.user = req.user || null // Pass user data if logged in
+    next()
+  } catch (error) {
+    next(error)
+  }
+})
+
+// Root route: /articles
 
 router.get('/', (req, res, next) => {
   res.redirect('/home')
 })
 
 router.get(
-  '/filter?',
+  '/filter',
   cacheMiddleware(articleCacheKeyGenerator.filtered),
   articleController.getArticlesByFilter,
 )
