@@ -41,33 +41,52 @@ const login = async (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       console.error('Server error during login:', err)
-      return res
-        .status(500)
-        .json({ success: false, message: `Invalid username or password. Please try again.` })
+      return res.status(500).json({
+        success: false,
+        message: 'Internal server error. Please try again later.',
+      })
     }
+
     if (!user) {
       console.warn('Invalid login attempt:', info.message)
-      return res
-        .status(401)
-        .json({ success: false, message: info.message || 'Invalid username or password.' })
+      return res.status(401).json({
+        success: false,
+        message: info.message || 'Invalid username or password.',
+      })
     }
 
     req.login(user, (err) => {
       if (err) {
         console.error('Error during login session:', err)
-        return res
-          .status(500)
-          .json({ success: false, message: 'Failed to log in. Please try again.' })
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to log in. Please try again.',
+        })
       }
 
       req.session.save((err) => {
         if (err) {
           console.error('Error saving session:', err)
-          return res
-            .status(500)
-            .json({ success: false, message: 'Session save failed. Please try again.' })
+          return res.status(500).json({
+            success: false,
+            message: 'Session save failed. Please try again.',
+          })
         }
-        res.json({ success: true, redirectUrl: user.role === 'admin' ? '/admin/dashboard' : '/' })
+
+        // Determine redirect URL based on user role
+        const redirectUrl = ['guest', 'subscriber'].includes(user.role)
+          ? '/'
+          : `/${user.role}/dashboard`
+
+        console.info(
+          `User ${user.username} logged in as ${user.role}, redirecting to ${redirectUrl}`,
+        )
+
+        // Redirect the user based on role
+        res.json({
+          success: true,
+          redirectUrl: redirectUrl,
+        })
       })
     })
   })(req, res, next)

@@ -14,7 +14,6 @@ const getArticleById = async (req, res, next) => {
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
 
-    console.log('=========================> Article:', article)
     // Render the detail view
     return res.render('articles/detail', {
       article,
@@ -90,7 +89,7 @@ const getHomepageArticles = async (req, res, next) => {
   try {
     const type = req.query.type
     const homepageData = await articleService.getHomepageArticles(type)
-    
+
     return homepageData
   } catch (error) {
     next(error)
@@ -133,8 +132,6 @@ const getArticlesByFilter = async (req, res, next) => {
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
 
-    console.log('=========================> Article Filters: ', filters)
-    console.log('=========================> Total Articles:', totalArticles)
     // Render view with articles, filters, and pagination
     res.render('articles/search', {
       articles,
@@ -208,9 +205,6 @@ const getArticlesByCategoryId = async (req, res, next) => {
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
     const totalPages = Math.ceil(totalArticles / limit)
     const category = await categoryService.getCategoryById(categoryId)
-
-    console.log('=========================> Category:', category)
-    console.log('=========================> Articles:', articles)
 
     res.render('articles/list', {
       articles,

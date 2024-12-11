@@ -6,7 +6,7 @@ const getUserProfile = async (req, res, next) => {
   try {
     const userId = req.user.id
     const profileData = await userService.getUserProfile(userId)
-    console.log(profileData)
+
     if (!profileData) {
       return res.status(404).render('error/404', { message: 'User not found' })
     }
@@ -14,16 +14,26 @@ const getUserProfile = async (req, res, next) => {
     const { subscription_expiry_date, ...user } = profileData
     const subscription = subscription_expiry_date ? { expiry_date: subscription_expiry_date } : null
 
+    // Define dashboard URLs for specific roles
+    const dashboardUrls = {
+      admin: '/admin/dashboard',
+      editor: '/editor/dashboard',
+      writer: '/writer/dashboard',
+    }
+    const dashboardUrl = dashboardUrls[user.role] || null
+
     res.render('user/profile', {
       title: 'User Profile',
       layout: 'user',
       user,
       subscription,
+      dashboardUrl, // Pass dashboard URL to the view
     })
   } catch (error) {
     next(error)
   }
 }
+
 
 const getEditUserProfile = async (req, res, next) => {
   try {

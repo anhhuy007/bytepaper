@@ -149,6 +149,31 @@ class CategoryModel extends BaseModel {
 
     return { categories, totalCategories: totalCategories.rows[0].total }
   }
+
+  async getRootCategoriesWithChildren() {
+    const query = `
+    SELECT 
+      c1.id AS id,
+      c1.name AS name,
+      COALESCE(
+        json_agg(
+          json_build_object(
+            'id', c2.id,
+            'name', c2.name
+          )
+        ) FILTER (WHERE c2.id IS NOT NULL), 
+        '[]'
+      ) AS children
+    FROM categories c1
+    LEFT JOIN categories c2 ON c1.id = c2.parent_id
+    WHERE c1.parent_id IS NULL
+    GROUP BY c1.id
+    ORDER BY c1.name;
+  `
+
+    const { rows } = await db.query(query)
+    return rows
+  }
 }
 
 const categoryModel = new CategoryModel()

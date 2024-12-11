@@ -5,8 +5,8 @@ import authController from '../controllers/auth.controller.js'
 import viewRenderer from '../utils/viewRenderer.js'
 import { config } from 'dotenv'
 import redirectIfAuthenticated from '../middlewares/redirectIfAuthenticated.js'
-import { cacheMiddleware } from '../middlewares/cacheMiddleware.js'
-import { authCacheKeyGenerator } from '../utils/cacheKeyGenerator.js'
+import { cacheMiddleware, deleteCacheMiddleware } from '../middlewares/cacheMiddleware.js'
+import { authCacheKeyGenerator, articleCacheKeyGenerator } from '../utils/cacheKeyGenerator.js'
 config()
 
 const router = express.Router()
@@ -25,6 +25,7 @@ router.post('/signup', authController.register)
 router.get(
   '/login',
   cacheMiddleware(authCacheKeyGenerator.loginPage),
+  deleteCacheMiddleware(articleCacheKeyGenerator.homepage),
   viewRenderer('auth/login', 'auth'),
 )
 
@@ -45,5 +46,9 @@ router.get('/google', authController.googleLogin)
 
 router.get('/google/callback', authController.googleCallback)
 
-router.get('/logout', authController.logout)
+router.get(
+  '/logout',
+  deleteCacheMiddleware(articleCacheKeyGenerator.homepage),
+  authController.logout,
+)
 export default router

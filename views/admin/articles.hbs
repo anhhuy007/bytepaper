@@ -123,20 +123,31 @@
           <td class="py-2 px-4">{{this.category_name}}</td>
           <td class="py-2 px-4">
             <form
-              action="/admin/articles/status/{{this.id}}"
-              method="POST"
+              id="status-form-{{this.id}}"
               class="flex items-center space-x-2"
-              onsubmit="return confirmStatusChange(event, this)"
+              data-article-id="{{this.id}}"
             >
-              <select name="status" class="select select-bordered select-xs">
-                {{#each ../statuses}}
-                <option value="{{this}}" {{#if (eq ../this.status this)}}selected{{/if}}>{{this}}</option>
-                {{/each}}
+              <select
+                name="status"
+                class="select select-bordered select-xs"
+                {{#unless (or (eq this.status 'draft') (eq this.status 'published'))}}disabled{{/unless}}
+                onchange="handleStatusChange(event, {{this.id}}, '{{this.status}}')"
+              >
+                {{#if (or (eq this.status 'draft') (eq this.status 'published'))}}
+                  <option value="draft" {{#if (eq this.status 'draft')}}selected{{/if}}>Draft</option>
+                  <option value="published" {{#if (eq this.status 'published')}}selected{{/if}}>Published</option>
+                {{else}}
+                  <option value="{{this.status}}" selected>{{this.status}}</option>
+                {{/if}}
               </select>
-              <button type="submit" class="btn btn-sm btn-primary hover:shadow-md flex items-center space-x-1">
+              <button
+                id="status-btn-{{this.id}}"
+                type="button"
+                class="btn btn-sm btn-primary hover:shadow-md flex items-center space-x-1 hidden"
+              >
                 <i data-lucide="check"></i>
-                <span>Save</span>
-                </button>
+                <span></span>
+              </button>
             </form>
           </td>
           <td class="py-2 px-4">{{formatDate this.published_at}}</td>
@@ -166,13 +177,45 @@
 </div>
 
 <script>
-  function confirmStatusChange(event, form) {
-    event.preventDefault();
-    const selectedStatus = form.querySelector("select[name='status']").value;
-    const confirmMessage = `Are you sure you want to change the status to "${selectedStatus}"?`;
+  async function handleStatusChange(event, articleId, currentStatus) {
+    const selectedStatus = event.target.value;
+    const button = document.getElementById(`status-btn-${articleId}`);
 
-    if (confirm(confirmMessage)) {
-      form.submit();
+    // Determine button label and visibility
+    if (selectedStatus !== currentStatus) {
+      button.classList.remove("hidden"); // Show button
+      button.querySelector("span").textContent =
+        selectedStatus === "draft" && currentStatus === "published"
+          ? "Unpublish"
+          : selectedStatus === "published" && currentStatus === "draft"
+          ? "Publish"
+          : "Save";
+
+      // Attach click event listener
+      button.onclick = async () => {
+        const confirmMessage = `Are you sure you want to change the status from "${currentStatus}" to "${selectedStatus}"?`;
+        if (!confirm(confirmMessage)) {
+          // Revert the select dropdown to the current status if canceled
+          event.target.value = currentStatus;
+          return;
+        }
+
+        // Proceed with the status update
+        try {
+          const response = await axios.post(`/admin/articles/status/${articleId}`, {
+            status: selectedStatus,
+          });
+          if (response.status === 200) {
+            alert("Status updated successfully.");
+            window.location.reload(); // Reload to reflect changes
+          }
+        } catch (error) {
+          console.error("Error updating status:", error);
+          alert("Failed to update status. Please try again.");
+        }
+      };
+    } else {
+      button.classList.add("hidden"); // Hide button
     }
   }
 </script>

@@ -61,6 +61,15 @@
                 <span>Extend Subscription</span>
               </a>
             </li>
+            <!-- Logout Button -->
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <form action="/auth/logout" method="GET">
+                <button type="submit" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
+                  <i data-lucide="log-out"></i>
+                  <span>Logout</span>
+                </button>
+              </form>
+            </li>
           </ul>
         </div>
       </aside>
@@ -84,7 +93,7 @@
                 <span>Back to Home</span>
               </a>
             </li>
-            <li>
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/user/profile"
                 class="flex items-center space-x-2 px-4 py-2 text-gray-700 {{#ifActive 'user/profile'}}bg-gray-200 font-semibold{{/ifActive}}"
@@ -93,7 +102,7 @@
                 <span>Profile</span>
               </a>
             </li>
-            <li>
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/user/edit-profile"
                 class="flex items-center space-x-2 px-4 py-2 text-gray-700 {{#ifActive 'user/edit-profile'}}bg-gray-200 font-semibold{{/ifActive}}"
@@ -102,7 +111,7 @@
                 <span>Edit Profile</span>
               </a>
             </li>
-            <li>
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/user/change-password"
                 class="flex items-center space-x-2 px-4 py-2 text-gray-700 {{#ifActive 'user/change-password'}}bg-gray-200 font-semibold{{/ifActive}}"
@@ -111,13 +120,20 @@
                 <span>Change Password</span>
               </a>
             </li>
-            <li>
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a
                 href="/user/extend-subscription"
                 class="flex items-center space-x-2 px-4 py-2 text-gray-700 {{#ifActive 'user/extend-subscription'}}bg-gray-200 font-semibold{{/ifActive}}"
               >
                 <i data-lucide="credit-card"></i>
                 <span>Extend Subscription</span>
+              </a>
+            </li>
+            <!-- Logout Button -->
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a href="/auth/logout" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
+                <i data-lucide="log-out"></i>
+                <span>Logout</span>
               </a>
             </li>
           </ul>

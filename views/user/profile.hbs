@@ -8,7 +8,9 @@
   {{/if}}
 
   <div class="flex justify-center">
-    <div class="card bg-white shadow-xl rounded-lg p-6 hover:shadow-2xl transition-shadow duration-300 w-full max-w-2xl">
+    <div
+      class="card bg-white shadow-xl rounded-lg p-6 hover:shadow-2xl transition-shadow duration-300 w-full max-w-2xl"
+    >
       <div class="card-body">
         <h2 class="text-3xl font-bold text-gray-800 flex items-center space-x-2 mb-4">
           <i data-lucide="user" class="text-primary"></i>
@@ -18,7 +20,8 @@
           <li class="flex items-center space-x-2">
             <i data-lucide="user-circle" class="text-accent"></i>
             <span>
-              <strong class="font-semibold">Username:</strong> {{default user.username 'Username not found'}}
+              <strong class="font-semibold">Username:</strong> {{default user.username 'Username not
+              found'}}
             </span>
           </li>
           <li class="flex items-center space-x-2">
@@ -30,20 +33,20 @@
           <li class="flex items-center space-x-2">
             <i data-lucide="pen-tool" class="text-accent"></i>
             <span>
-              <strong class="font-semibold">Pen Name:</strong> {{default user.pen_name 'Pen name not found'}}
+              <strong class="font-semibold">Pen Name:</strong> {{default user.pen_name 'Pen name not
+              found'}}
             </span>
           </li>
           <li class="flex items-center space-x-2">
             <i data-lucide="calendar" class="text-accent"></i>
             <span>
-              <strong class="font-semibold">Date of Birth:</strong> {{formatDate user.date_of_birth}}
+              <strong class="font-semibold">Date of Birth:</strong> {{formatDate
+              user.date_of_birth}}
             </span>
           </li>
           <li class="flex items-center space-x-2">
             <i data-lucide="shield" class="text-accent"></i>
-            <span>
-              <strong class="font-semibold">Role:</strong> {{capitalize user.role}}
-            </span>
+            <span> <strong class="font-semibold">Role:</strong> {{capitalize user.role}} </span>
           </li>
           <li class="flex items-start space-x-2">
             <i data-lucide="credit-card" class="text-accent mt-1"></i>
@@ -63,7 +66,7 @@
             </div>
           </li>
         </ul>
-        <div class="mt-6 flex justify-center">
+        <div class="mt-6 flex justify-center space-x-4">
           <a
             href="/user/edit-profile"
             class="btn btn-primary flex items-center space-x-2 text-sm font-semibold"
@@ -71,12 +74,18 @@
             <i data-lucide="edit"></i>
             <span>Edit Profile</span>
           </a>
+
+          {{#if dashboardUrl}}
+          <a
+            href="{{dashboardUrl}}"
+            class="btn btn-secondary flex items-center space-x-2 text-sm font-semibold"
+          >
+            <i data-lucide="grid"></i>
+            <span>Go to {{capitalize user.role}} Dashboard</span>
+          </a>
+          {{/if}}
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
-
-

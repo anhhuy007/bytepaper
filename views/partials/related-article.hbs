@@ -1,0 +1,59 @@
+{{!-- views/partials/related-article.hbs --}}
+<article class="flex items-center gap-4 bg-white shadow-sm rounded-lg overflow-hidden hover:shadow-md transition">
+  <!-- Thumbnail -->
+  {{#if thumbnail}}
+  <figure class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 overflow-hidden rounded-lg">
+    <a href="/articles/{{id}}">
+      <img
+        src="{{thumbnail}}"
+        alt="{{default title 'Related Article Thumbnail'}}"
+        class="w-full h-full object-cover"
+      />
+    </a>
+  </figure>
+  {{/if}}
+
+  <!-- Content -->
+  <div class="flex-1 space-y-2">
+    <!-- Title -->
+    <h3 class="text-lg font-semibold text-gray-800 hover:text-primary transition">
+      <a href="/articles/{{id}}" class="hover:underline">{{default title 'Untitled Article'}}</a>
+    </h3>
+
+    <!-- Meta Info -->
+    {{#if category}}
+    <p class="text-sm text-gray-600 flex items-center gap-2">
+      <a
+        href="/articles/categories/{{category_id}}"
+        class="link text-primary font-medium hover:underline flex items-center gap-1"
+      >
+        <i data-lucide="folder"></i> {{category}}
+      </a>
+    </p>
+    {{/if}}
+
+    <!-- Premium Indicator -->
+    {{#if is_premium}}
+    <span class="badge badge-primary flex items-center gap-2 text-sm text-white px-3 py-1">
+      <i data-lucide="star"></i>
+      <span>Premium</span>
+    </span>
+    {{/if}}
+
+    <!-- Tags -->
+    {{#if tags.length}}
+    <div class="flex flex-wrap gap-2">
+      {{#each tags as |tag|}}
+      <a
+        href="/articles/tags/{{tag.id}}"
+        class="badge badge-outline text-sm flex items-center gap-1 hover:bg-primary hover:text-white transition"
+      >
+        <i data-lucide="tag"></i>
+        <span>{{tag.name}}</span>
+      </a>
+      {{/each}}
+    </div>
+    {{/if}}
+  </div>
+</article>
+

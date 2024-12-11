@@ -261,7 +261,12 @@ class ArticleService {
   }
 
   async updateArticleStatus(id, status) {
-    return await articleModel.updateArticle(id, { status })
+    // If status is draft, set published_at to null
+    if (status === 'draft') {
+      return await articleModel.updateArticle(id, { status, published_at: null })
+    }
+    // If status is published, set published_at to current date
+    return await articleModel.updateArticle(id, { status, published_at: new Date() })
   }
 
   async getArticleStats(authorId) {

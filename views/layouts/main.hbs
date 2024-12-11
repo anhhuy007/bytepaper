@@ -1,42 +1,50 @@
 {{!-- views/layouts/main.hbs --}}
-<!doctype html>
-<html lang="en" data-theme="wireframe">
+<!DOCTYPE html>
+<html lang="en" data-theme="emerald">
   <head>
     <meta charset="utf-8" />
-    <title>{{#if title}}{{title}} | {{/if}}Paperly</title>
-    <link rel="stylesheet" href="/output.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{#if title}}{{title}} | {{/if}}Paperly</title>
 
-    {{!-- Include Alpine.js --}}
+    <!-- TailwindCSS -->
+    <link rel="stylesheet" href="/output.css" />
+
+    <!-- Include Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    {{!-- Include Heroicons --}}
-    <script src="https://unpkg.com/heroicons@2.1.5/dist/heroicons.min.js"></script>
-
-    {{!-- Optional: Include AOS for animations --}}
+    <!-- Optional: AOS for animations -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    {{!-- Include Axios for making HTTP requests --}}
+    <!-- Axios for HTTP requests -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </head>
-  <body class="flex flex-col min-h-screen">
-    {{!-- Header Partial --}} {{> header}} {{!-- Main Content --}}
-    <main class="flex-grow container mx-auto my-32 mt-44 px-4 md:px-16 lg:px-32">{{{body}}}</main>
 
-    {{!-- Footer Partial --}} {{> footer}} {{!-- Include your custom script if needed --}}
+    <!-- Lucide Icons -->
+    <script defer src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body class="flex flex-col min-h-screen bg-gray-50 text-gray-900">
+    <!-- Header Section -->
+    {{> header}}
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto py-8 px-4 md:px-16 lg:px-32">
+      {{{body}}}
+    </main>
+
+    <!-- Footer Section -->
+    {{> footer}}
+
+    <!-- Custom Scripts -->
     <script src="/script.js"></script>
 
-    {{!-- Initialize AOS if you're using it --}}
+    <!-- Initialize AOS -->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        AOS.init()
-      })
-    </script>
-
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-      lucide.createIcons()
+        AOS.init();
+        lucide.createIcons(); // Initialize Lucide Icons
+      });
     </script>
   </body>
 </html>
+
