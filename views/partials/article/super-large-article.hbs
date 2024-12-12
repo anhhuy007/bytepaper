@@ -34,6 +34,12 @@
         >
           {{ default article.category "Uncategorized" }}
         </a>
+        <span class="mx-2">|</span>
+        <div class="text-gray-500 text-xs">{{ default article.views 0 }} views</div>
+        {{!-- Premium Indicator --}} {{#if article.is_premium}}
+        <span class="mx-2">|</span>
+        <div class="badge badge-warning">Premium Article</div>
+        {{/if}}
       </div>
     </div>
   </div>

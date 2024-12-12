@@ -16,14 +16,6 @@
     {{> article/layout/basic articles=mostViewedArticles}}
   </section>
 
-  {{!-- Latest Articles --}}
-  <section class="space-y-10">
-    <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
-      Latest Articles
-    </h1>
-    {{> article/layout/basic articles=newestArticles}}
-  </section>
-
   {{!-- Top Categories --}}
   <section class="space-y-10">
     <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
@@ -31,4 +23,7 @@
     </h1>
     {{> article/layout/tab articles=topCategoryArticles}}
   </section>
+
+  {{!-- Latest Articles --}}
+  <section class="space-y-10">{{> article/layout/latest articles=newestArticles}}</section>
 </div>

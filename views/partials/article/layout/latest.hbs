@@ -1,0 +1,22 @@
+<div class="grid grid-cols-[65%_2%_33%]">
+  {{!-- Render 6 large articles here --}}
+  <div class="flex flex-col space-y-14">
+    <h1 class="text-3xl md:text-5xl font-extrabold mb-6">Latest Articles</h1>
+    {{#each articles}} {{#if (between @index 0 5)}}
+    <div class="w-full">{{> article/large-2-article article=this}}</div>
+    {{/if}} {{/each}}
+  </div>
+
+  {{!-- Gap --}}
+  <div></div>
+
+  {{!-- Render 4 small articles here --}}
+  <div class="space-y-4">
+    <h1 class="text-3xl md:text-5xl font-extrabold mb-6">Upcoming Streams</h1>
+    <div class="border-2 p-2 space-y-6">
+      {{#each articles}} {{#if (between @index 6 10)}}
+      <div class="w-full p-1">{{> article/small-carousel-item-article article=this}}</div>
+      {{/if}} {{/each}}
+    </div>
+  </div>
+</div>
