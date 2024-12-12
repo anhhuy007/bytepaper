@@ -18,7 +18,15 @@
         </p>
 
         <div class="flex items-center">
-          <span>{{ formatDate published_at}}</span>
+          <div class="flex gap-2 items-center">
+            <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-4 w-4 fill-gray-500" />
+            <span class="text-gray-500">{{ formatDate published_at}}</span>
+          </div>
+          <span class="mx-6">|</span>
+          <div class="flex items-center gap-2">
+            <img src="/assets/eye.svg" alt="Eye Scan Icon" class="h-4 w-4 fill-gray-500" />
+            <div class="text-gray-500">{{ default article.views 0 }} views</div>
+          </div>
           <span class="mx-6">|</span>
           <a
             href="categories/{{ default article.category_id '#' }}"
@@ -26,12 +34,10 @@
           >
             {{ default article.category "Uncategorized" }}
           </a>
-          <span class="mx-6">|</span>
-          <div class="text-gray-500 text-xs">{{ default article.views 0 }} views</div>
           {{!-- Premium Indicator --}} {{#if article.is_premium}}
           <span class="mx-6">|</span>
 
-          <div class="badge badge-warning">Premium Article</div>
+          <div class="w-24 premium-animation"></div>
           {{/if}}
         </div>
       </div>

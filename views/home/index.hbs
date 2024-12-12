@@ -2,25 +2,19 @@
 <div class="space-y-28 px-24">
   {{!-- Featured Articles Carousel --}}
   <section>
-    <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
-      Featured Articles
-    </h1>
+    <h1 class="header">Featured Articles</h1>
     {{> article/layout/carousel articles=featuredArticles}}
   </section>
 
   {{!-- Most Viewed Articles --}}
   <section class="space-y-10">
-    <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
-      Most Viewed Articles
-    </h1>
+    <h1 class="header">Most Viewed Articles</h1>
     {{> article/layout/basic articles=mostViewedArticles}}
   </section>
 
   {{!-- Top Categories --}}
   <section class="space-y-10">
-    <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 mb-4 border-b-2 border-black">
-      Top Categories
-    </h1>
+    <h1 class="header">Top Categories</h1>
     {{> article/layout/tab articles=topCategoryArticles}}
   </section>
 

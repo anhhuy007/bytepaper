@@ -16,7 +16,10 @@
   <div class="space-y-4">
     {{!-- Metadata --}}
     <div class="flex items-center justify-between text-gray-500 text-xs">
-      <span>{{ formatDate article.published_at }}</span>
+      <div class="flex gap-1 items-center">
+        <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-3 w-3 fill-gray-500" />
+        <span>{{ formatDate article.published_at }}</span>
+      </div>
       <a
         href="/categories/{{ default article.category_id '#' }}"
         class="z-20 text-blue-500 hover:underline"
@@ -29,10 +32,13 @@
       {{ default article.title "Untitled Article" }}
     </h2>
     <div class="flex items-center gap-2">
+      <div class="text-gray-500 text-xs flex items-center gap-1">
+        <img src="/assets/eye.svg" alt="Eye Scan Icon" class="h-3 w-3 fill-gray-500" />
+        {{ default article.views 0 }} views
+      </div>
       {{!-- Premium Indicator --}} {{#if article.is_premium}}
-      <div class="badge badge-warning">Premium Article</div>
+      <div class="w-20 premium-animation"></div>
       {{/if}} {{!-- Views --}}
-      <div class="text-gray-500 text-xs">{{ default article.views 0 }} views</div>
     </div>
   </div>
 </div>

@@ -14,6 +14,20 @@
 
     <div class="my-4">
       {{!-- Title --}}
+      <div class="flex items-center mb-4">
+        {{!-- Premium Indicator --}}
+        <a
+          href="categories/{{ default article.category_id '#' }}"
+          class="text-blue-500 hover:underline z-20"
+        >
+          {{ default article.category "Uncategorized" }}
+        </a>
+        {{#if article.is_premium}}
+        <span class="mx-2">|</span>
+
+        <div class="w-20 premium-animation"></div>
+        {{/if}} {{!-- Views --}}
+      </div>
       <h2 class="text-lg font-bold leading-tight mb-2 group-hover:underline">
         {{ default article.title "Untitled Article" }}
       </h2>
@@ -25,22 +39,19 @@
 
       {{!-- Metadata --}}
       <div class="flex items-center text-gray-500 text-xs">
-        <span>{{ formatDate article.published_at }}</span>
+        {{!-- Published Date --}}
+        <div class="flex gap-1 items-center">
+          <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-3 w-3 fill-gray-500" />
+          <span>{{ formatDate article.published_at }}</span>
+        </div>
         <span class="mx-2">|</span>
-        <a
-          href="/categories/{{ default article.category_id '#' }}"
-          class="z-20 text-blue-500 hover:underline"
-        >
-          {{ default article.category "Uncategorized" }}
-        </a>
+
+        {{!-- Category --}}
+        <div class="text-gray-500 text-xs flex items-center gap-1">
+          <img src="/assets/eye.svg" alt="Eye Scan Icon" class="h-3 w-3 fill-gray-500" />
+          {{ default article.views 0 }} views
+        </div>
       </div>
-      {{!-- Views --}}
-      <div class="flex flex-col mt-2 gap-2">
-        {{!-- Premium Indicator --}} {{#if article.is_premium}}
-        <div class="badge badge-warning">Premium Article</div>
-        <div class="text-gray-500 text-xs">{{ default article.views 0 }} views</div>
-      </div>
-      {{/if}}
     </div>
   </div>
   <div class="border"></div>

@@ -1,8 +1,19 @@
 /* input.css */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-  font-family: "Times New Roman", "Times", "serif" !important;
+  font-family: 'Crimson Text', serif;
+}
+
+.header {
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.4;
+  margin-bottom: 3rem;
+  border-top: 4px solid;
+  padding-top: 8px;
 }

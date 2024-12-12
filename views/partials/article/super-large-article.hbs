@@ -2,7 +2,7 @@
 <div class="relative group">
   <a href="/articles/{{ article.id }}" class="absolute inset-0"></a>
 
-  <div class="grid grid-cols-[59%_2%_39%]">
+  <div class="grid grid-cols-[55%_2%_43%]">
     {{!-- Thumbnail --}}
     <div>
       <img
@@ -25,8 +25,16 @@
       </p>
 
       {{!-- Metadata --}}
-      <div class="flex items-center text-gray-500 text-xs">
-        <span>{{ formatDate article.published_at }}</span>
+      <div class="flex items-center">
+        <div class="flex gap-2 items-center">
+          <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-4 w-4 fill-gray-500" />
+          <span class="text-gray-500">{{ formatDate published_at}}</span>
+        </div>
+        <span class="mx-2">|</span>
+        <div class="flex items-center gap-2">
+          <img src="/assets/eye.svg" alt="Eye Scan Icon" class="h-4 w-4 fill-gray-500" />
+          <div class="text-gray-500">{{ default article.views 0 }} views</div>
+        </div>
         <span class="mx-2">|</span>
         <a
           href="categories/{{ default article.category_id '#' }}"
@@ -34,11 +42,10 @@
         >
           {{ default article.category "Uncategorized" }}
         </a>
-        <span class="mx-2">|</span>
-        <div class="text-gray-500 text-xs">{{ default article.views 0 }} views</div>
         {{!-- Premium Indicator --}} {{#if article.is_premium}}
         <span class="mx-2">|</span>
-        <div class="badge badge-warning">Premium Article</div>
+
+        <div class="w-24 premium-animation"></div>
         {{/if}}
       </div>
     </div>
