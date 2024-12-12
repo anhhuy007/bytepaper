@@ -1,5 +1,7 @@
 {{!-- views/partials/related-article.hbs --}}
-<article class="flex items-center gap-4 bg-white shadow-sm rounded-lg overflow-hidden hover:shadow-md transition">
+<article
+  class="flex items-center gap-4 bg-white shadow-sm rounded-lg overflow-hidden hover:shadow-md transition"
+>
   <!-- Thumbnail -->
   {{#if thumbnail}}
   <figure class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 overflow-hidden rounded-lg">
@@ -22,7 +24,7 @@
 
     <!-- Meta Info -->
     {{#if category}}
-    <p class="text-sm text-gray-600 flex items-center gap-2">
+    <p class="text-base text-gray-600 flex items-center gap-2">
       <a
         href="/articles/categories/{{category_id}}"
         class="link text-primary font-medium hover:underline flex items-center gap-1"
@@ -46,7 +48,7 @@
       {{#each tags as |tag|}}
       <a
         href="/articles/tags/{{tag.id}}"
-        class="badge badge-outline text-sm flex items-center gap-1 hover:bg-primary hover:text-white transition"
+        class="badge badge-outline text-sm flex items-center gap-1 hover:bg-primary hover:text-white transition p-4"
       >
         <i data-lucide="tag"></i>
         <span>{{tag.name}}</span>
@@ -56,4 +58,3 @@
     {{/if}}
   </div>
 </article>
-

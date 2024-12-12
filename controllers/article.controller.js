@@ -4,6 +4,13 @@ import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
+import puppeteer from 'puppeteer'
+import fs from 'fs'
+import path from 'path'
+import os from 'os'
+
+const __dirname = path.resolve()
+
 const getArticleById = async (req, res, next) => {
   try {
     const articleId = req.params.id
@@ -45,46 +52,6 @@ const increaseArticleViewCount = async (req, res, next) => {
   }
 }
 
-const downloadArticle = async (req, res, next) => {
-  try {
-    // Retrieve the article ID from the request parameters
-    const { id } = req.params
-
-    // Retrieve the article from the database
-    const article = await articleService.getArticleById(id)
-
-    // Check if the article is found
-    if (!article) {
-      return res.status(404).json({ success: false, message: 'Article not found' })
-    }
-
-    // Check if the article is premium
-    if (article.is_premium) {
-      return res.status(403).json({ success: false, message: 'Unauthorized' })
-    }
-
-    // Check if the article is published
-    if (article.status !== 'published') {
-      return res.status(403).json({ success: false, message: 'Article not published' })
-    }
-
-    // Download the file associated with the article
-    const file = await articleService.downloadArticle(id)
-
-    // Check if the file is found
-    if (!file) {
-      return res.status(404).json({ success: false, message: 'File not found' })
-    }
-
-    // Send the file as a response
-    res.download(file.path)
-  } catch (error) {
-    // Pass any errors to the next middleware
-    next(error)
-  }
-}
-
-// GET /api/v1/articles/home?type=(featured|most-viewed|newest|top-categories)
 const getHomepageArticles = async (req, res, next) => {
   try {
     const type = req.query.type
@@ -222,7 +189,6 @@ export default {
   getArticlesByFilter,
   getArticleById,
   increaseArticleViewCount,
-  downloadArticle,
   getHomepageArticles,
   getArticlesByTagId,
   getArticlesByCategoryId,

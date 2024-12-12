@@ -1,5 +1,5 @@
 {{!-- views/articles/detail.hbs --}}
-<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8 space-y-12">
+<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8 space-y-12" id="articleDetail">
   <!-- Main Article Section -->
   <div class="flex-1 space-y-12">
     <!-- Article Header -->
@@ -31,7 +31,7 @@
             <span>Premium</span>
           </span>
           <a
-            href="/articles/{{article.id}}/download"
+            href="/download/{{article.id}}"
             class="btn btn-primary flex items-center gap-2"
           >
             <i data-lucide="download"></i>

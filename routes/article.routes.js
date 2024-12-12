@@ -52,17 +52,17 @@ router.get(
   viewRenderer('home', 'main', articleController.getHomepageArticles),
 )
 
+// router.get(
+//   '/download/:id',
+//   // authMiddleware(['subscriber']),
+//   // checkSubscription,
+//   articleController.downloadArticle,
+// )
+
 router.get(
   '/:id',
   cacheMiddleware(articleCacheKeyGenerator.details),
   articleController.getArticleById,
-)
-
-router.get(
-  '/:id/download',
-  authMiddleware(['subscriber']),
-  checkSubscription,
-  articleController.downloadArticle,
 )
 
 router.post('/:id/views', articleController.increaseArticleViewCount)
