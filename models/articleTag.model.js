@@ -35,18 +35,23 @@ class ArticleTagModel extends BaseModel {
   }
 
   async removeTagsFromArticle(articleId, tagIds) {
-    // Create a string of placeholders for the tag IDs
-    const deleteValues = tagIds.map((tagId, idx) => `$${idx + 2}`).join(', ')
-
-    // Build the DELETE query to remove the specified tags from the article
-    const query = `
-      DELETE FROM article_tags
-      WHERE article_id = $1 AND tag_id IN (${deleteValues})
-    `
-
-    // Execute the query with the article ID and tag IDs as parameters
-    const values = [articleId, ...tagIds]
-    await db.query(query, values)
+    if (!tagIds || tagIds.length === 0) {
+      // If no tagIds are provided, delete all tags associated with the article
+      const query = `
+          DELETE FROM article_tags
+          WHERE article_id = $1
+        `
+      await db.query(query, [articleId])
+    } else {
+      // Else, delete only the tags specified in the tagIds array
+      const deleteValues = tagIds.map((tagId, idx) => `$${idx + 2}`).join(', ')
+      const query = `
+          DELETE FROM article_tags
+          WHERE article_id = $1 AND tag_id IN (${deleteValues})
+        `
+      const values = [articleId, ...tagIds]
+      await db.query(query, values)
+    }
   }
 
   async getArticlesByTagId(tagId, options = {}) {

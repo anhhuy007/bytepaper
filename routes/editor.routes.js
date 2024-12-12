@@ -2,36 +2,86 @@
 
 import express from 'express'
 import editorController from '../controllers/editor.controller.js'
-import articleController from '../controllers/article.controller.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
-import viewRenderer from '../utils/viewRenderer.js'
+import { editorCacheKeyGenerator } from '../utils/cacheKeyGenerator.js'
+import { cacheMiddleware, deleteCacheMiddleware } from '../middlewares/cacheMiddleware.js'
 
 const router = express.Router()
 
-// Protected Routes for Editors
 router.use(authMiddleware(['editor']))
 
-// @route   GET /api/v1/editor/
-// @desc    Get editor's profile
-router.get('/', viewRenderer('editor/dashboard'))
+router.get('/', (req, res) => {
+  res.redirect('/editor/dashboard')
+})
 
-// @route   GET /api/v1/editor/articles?status=pending
-// @desc    Get pending articles for editor's categories
-router.get('/articles/', viewRenderer('editor/articles', editorController.getMyArticles))
-
-// @route   GET /api/v1/editor/articles/:articleId
-// @desc    Get article by ID
 router.get(
-  '/articles/:articleId',
-  viewRenderer('editor/article-detail', articleController.getArticleById),
+  '/dashboard',
+  cacheMiddleware(editorCacheKeyGenerator.dashboard),
+  editorController.getDashboard,
 )
 
-// @route   PUT /api/v1/editor/articles/:articleId/approve
-// @desc    Approve an article
-router.put('/articles/:articleId/approve', editorController.approveArticle)
+router.get(
+  '/articles',
+  cacheMiddleware(editorCacheKeyGenerator.articles),
+  editorController.getArticles,
+)
 
-// @route   PUT /api/v1/editor/articles/:articleId/reject
-// @desc    Reject an article
-router.put('/articles/:articleId/reject', editorController.rejectArticle)
+router.get(
+  '/articles/:articleId',
+  cacheMiddleware(editorCacheKeyGenerator.articleDetails),
+  editorController.getArticleById,
+)
+
+router.get(
+  '/articles/:articleId/approve',
+  deleteCacheMiddleware(editorCacheKeyGenerator.approveForm),
+  editorController.getApproveArticle,
+)
+
+router.get(
+  '/articles/:articleId/reject',
+  cacheMiddleware(editorCacheKeyGenerator.rejectForm),
+  editorController.getRejectArticle,
+)
+
+router.post(
+  '/articles/:articleId/approve',
+  deleteCacheMiddleware((req) => [
+    editorCacheKeyGenerator.dashboard(req),
+    editorCacheKeyGenerator.articles(req),
+    editorCacheKeyGenerator.articleDetails(req),
+  ]),
+  editorController.approveArticle,
+)
+
+router.post(
+  '/articles/:articleId/reject',
+  deleteCacheMiddleware((req) => [
+    editorCacheKeyGenerator.dashboard(req),
+    editorCacheKeyGenerator.articles(req),
+    editorCacheKeyGenerator.articleDetails(req),
+  ]),
+  editorController.rejectArticle,
+)
+
+router.post(
+  '/articles/:articleId/publish',
+  deleteCacheMiddleware((req) => [
+    editorCacheKeyGenerator.dashboard(req),
+    editorCacheKeyGenerator.articles(req),
+    editorCacheKeyGenerator.articleDetails(req),
+  ]),
+  editorController.publishArticle,
+)
+
+router.post(
+  '/articles/:articleId/unpublish',
+  deleteCacheMiddleware((req) => [
+    editorCacheKeyGenerator.dashboard(req),
+    editorCacheKeyGenerator.articles(req),
+    editorCacheKeyGenerator.articleDetails(req),
+  ]),
+  editorController.unpublishArticle,
+)
 
 export default router

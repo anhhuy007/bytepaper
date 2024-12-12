@@ -1,31 +1,57 @@
 {{!-- views/admin/dashboard.hbs --}}
 
 <div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+  <!-- Page Header -->
+  <h1 class="text-4xl font-extrabold text-gray-800 mb-12 text-center">Admin Dashboard</h1>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    {{!-- Tổng số người dùng --}}
-    <div class="stat">
-      <div class="stat-title">Total Users</div>
-      <div class="stat-value">{{stats.totalUsers}}</div>
-    </div>
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <!-- Total Users -->
+    <a
+      href="/admin/users"
+      class="block bg-white shadow-lg rounded-lg p-8 text-center hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+    >
+      <div class="mb-4">
+        <i data-lucide="user" class="text-blue-500 text-4xl"></i>
+      </div>
+      <div class="text-xl font-semibold text-gray-600 mb-2">Total Users</div>
+      <div class="text-5xl font-bold text-blue-600">{{stats.totalUsers}}</div>
+    </a>
 
-    {{!-- Tổng số bài viết --}}
-    <div class="stat">
-      <div class="stat-title">Total Articles</div>
-      <div class="stat-value">{{stats.totalArticles}}</div>
-    </div>
+    <!-- Total Articles -->
+    <a
+      href="/admin/articles"
+      class="block bg-white shadow-lg rounded-lg p-8 text-center hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+    >
+      <div class="mb-4">
+        <i data-lucide="file-text" class="text-green-500 text-4xl"></i>
+      </div>
+      <div class="text-xl font-semibold text-gray-600 mb-2">Total Articles</div>
+      <div class="text-5xl font-bold text-green-600">{{stats.totalArticles}}</div>
+    </a>
 
-    {{!-- Tổng số chuyên mục --}}
-    <div class="stat">
-      <div class="stat-title">Total Categories</div>
-      <div class="stat-value">{{stats.totalCategories}}</div>
-    </div>
+    <!-- Total Categories -->
+    <a
+      href="/admin/categories"
+      class="block bg-white shadow-lg rounded-lg p-8 text-center hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+    >
+      <div class="mb-4">
+        <i data-lucide="layers" class="text-purple-500 text-4xl"></i>
+      </div>
+      <div class="text-xl font-semibold text-gray-600 mb-2">Total Categories</div>
+      <div class="text-5xl font-bold text-purple-600">{{stats.totalCategories}}</div>
+    </a>
 
-    {{!-- Tổng số thẻ --}}
-    <div class="stat">
-      <div class="stat-title">Total Tags</div>
-      <div class="stat-value">{{stats.totalTags}}</div>
-    </div>
+    <!-- Total Tags -->
+    <a
+      href="/admin/tags"
+      class="block bg-white shadow-lg rounded-lg p-8 text-center hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+    >
+      <div class="mb-4">
+        <i data-lucide="tag" class="text-yellow-500 text-4xl"></i>
+      </div>
+      <div class="text-xl font-semibold text-gray-600 mb-2">Total Tags</div>
+      <div class="text-5xl font-bold text-yellow-600">{{stats.totalTags}}</div>
+    </a>
   </div>
 </div>

@@ -4,6 +4,13 @@ import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
+import puppeteer from 'puppeteer'
+import fs from 'fs'
+import path from 'path'
+import os from 'os'
+
+const __dirname = path.resolve()
+
 const getArticleById = async (req, res, next) => {
   try {
     const articleId = req.params.id
@@ -13,8 +20,6 @@ const getArticleById = async (req, res, next) => {
     const relatedArticles = await articleService.getRelatedArticles(articleId)
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
-
-    console.log('=========================> Comments:', comments)
 
     // Render the detail view
     return res.render('articles/detail', {
@@ -47,51 +52,11 @@ const increaseArticleViewCount = async (req, res, next) => {
   }
 }
 
-const downloadArticle = async (req, res, next) => {
-  try {
-    // Retrieve the article ID from the request parameters
-    const { id } = req.params
-
-    // Retrieve the article from the database
-    const article = await articleService.getArticleById(id)
-
-    // Check if the article is found
-    if (!article) {
-      return res.status(404).json({ success: false, message: 'Article not found' })
-    }
-
-    // Check if the article is premium
-    if (article.is_premium) {
-      return res.status(403).json({ success: false, message: 'Unauthorized' })
-    }
-
-    // Check if the article is published
-    if (article.status !== 'published') {
-      return res.status(403).json({ success: false, message: 'Article not published' })
-    }
-
-    // Download the file associated with the article
-    const file = await articleService.downloadArticle(id)
-
-    // Check if the file is found
-    if (!file) {
-      return res.status(404).json({ success: false, message: 'File not found' })
-    }
-
-    // Send the file as a response
-    res.download(file.path)
-  } catch (error) {
-    // Pass any errors to the next middleware
-    next(error)
-  }
-}
-
-// GET /api/v1/articles/home?type=(featured|most-viewed|newest|top-categories)
 const getHomepageArticles = async (req, res, next) => {
   try {
     const type = req.query.type
     const homepageData = await articleService.getHomepageArticles(type)
-    
+
     return homepageData
   } catch (error) {
     next(error)
@@ -103,8 +68,8 @@ const getArticlesByFilter = async (req, res, next) => {
     // Extract filters and pagination options
     const filters = {
       keyword: req.query.keyword || null,
-      category_id: req.query.category_id || null,
-      tag_id: req.query.tag_id || null,
+      category_id: parseInt(req.query.category_id, 10) || null,
+      tag_id: parseInt(req.query.tag_id, 10) || null,
       status: req.query.status || 'published',
     }
 
@@ -122,8 +87,14 @@ const getArticlesByFilter = async (req, res, next) => {
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
 
     // Fetch all categories and tags for filtering
-    const { categories } = await categoryService.getAllCategories()
-    const { tags } = await tagService.getAllTags()
+    const allOptions = {
+      limit: 100,
+      offset: 0,
+    }
+
+    const allFilters = {}
+    const { categories } = await categoryService.getAllCategories(allFilters, allOptions)
+    const { tags } = await tagService.getAllTags(allFilters, allOptions)
 
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
@@ -202,9 +173,6 @@ const getArticlesByCategoryId = async (req, res, next) => {
     const totalPages = Math.ceil(totalArticles / limit)
     const category = await categoryService.getCategoryById(categoryId)
 
-    console.log('=========================> Category:', category)
-    console.log('=========================> Articles:', articles)
-
     res.render('articles/list', {
       articles,
       currentPage: page,
@@ -221,7 +189,6 @@ export default {
   getArticlesByFilter,
   getArticleById,
   increaseArticleViewCount,
-  downloadArticle,
   getHomepageArticles,
   getArticlesByTagId,
   getArticlesByCategoryId,

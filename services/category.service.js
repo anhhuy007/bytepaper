@@ -3,9 +3,9 @@
 import categoryModel from '../models/category.model.js'
 import editorCategoryModel from '../models/editorCategory.model.js'
 class CategoryService {
-  async getAllCategories() {
+  async getAllCategories(filters = {}, options = {}) {
     // Fetch all categories from the category model
-    return await categoryModel.getAllCategories()
+    return await categoryModel.getAllCategories(filters, options)
   }
 
   async getCategoryById(id) {
@@ -70,6 +70,10 @@ class CategoryService {
 
   async getAvailableCategories(filters, options) {
     return await categoryModel.getAvailableCategories(filters, options)
+  }
+
+  async getRootCategoriesWithChildren() {
+    return await categoryModel.getRootCategoriesWithChildren()
   }
 }
 export default new CategoryService()
