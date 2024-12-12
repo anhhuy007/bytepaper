@@ -21,9 +21,7 @@
         {{!-- Tags --}}
         <div class="flex flex-wrap gap-2 mb-4 z-20">
           {{#if article.tags}} {{#each article.tags}}
-          <a href="/tags/{{ this.id }}" class="btn-sm btn btn-outline text-xl"
-            >#{{ this.name }}</a
-          >
+          <a href="/tags/{{ this.id }}" class="btn-sm btn btn-outline text-xl">#{{ this.name }}</a>
           {{/each}} {{else}}
           <span class="text-gray-500 text-sm">No tags available.</span>
           {{/if}}
@@ -44,8 +42,8 @@
       {{!-- Thumbnail --}} {{#if thumbnail}}
       <div>
         <img
-          src="{{thumbnail}}"
-          alt="{{title}}"
+          src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
+          alt="{{ default article.title 'Untitled Article' }}"
           class="w-full h-64 aspect-[16/9] object-cover rounded-lg border-2"
         />
       </div>

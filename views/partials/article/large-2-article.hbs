@@ -38,15 +38,12 @@
 
       <div></div>
 
-      {{!-- Thumbnail --}} {{#if thumbnail}}
-      <div>
-        <img
-          src="{{thumbnail}}"
-          alt="{{title}}"
-          class="w-full h-64 aspect-[16/9] object-cover rounded-lg border-2"
-        />
-      </div>
-      {{/if}}
+      {{!-- Thumbnail --}}
+      <img
+        src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
+        alt="{{ default article.title 'Untitled Article' }}"
+        class="w-full h-64 aspect-[16/9] object-cover rounded-lg border-2"
+      />
     </div>
   </div>
   <div class="border"></div>

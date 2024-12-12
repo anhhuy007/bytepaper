@@ -5,13 +5,11 @@
 
     <div class="grid grid-cols-1 bg-white overflow-hidden rounded-lg">
       {{!-- Thumbnail --}}
-      <div>
-        <img
-          src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
-          alt="{{ default article.title 'Untitled Article' }}"
-          class="w-full h-48 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg transition-transform duration-300 group-hover:filter group-hover:brightness-75"
-        />
-      </div>
+      <img
+        src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
+        alt="{{ default article.title 'Untitled Article' }}"
+        class="w-full h-48 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg transition-transform duration-300 group-hover:filter group-hover:brightness-75"
+      />
 
       <div class="my-4 flex flex-col justify-between">
         {{!-- Title --}}
