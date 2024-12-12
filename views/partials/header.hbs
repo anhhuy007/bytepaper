@@ -45,45 +45,42 @@
 
   <!-- Category Navigation -->
   <nav class="bg-gray-100 shadow-sm">
-    <div class="container mx-auto px-4 md:px-16 lg:px-32 py-2">
+    <div class="flex justify-center">
       <!-- Root Categories -->
-      <ul class="flex items-center gap-6">
+      <ul class="flex items-center gap-5">
         {{#each header_categories}}
-        <li class="relative">
+        <li class="dropdown dropdown-hover p-4 hover:border-b-2 border-primary box-border">
           <!-- Root Category -->
-          <a
-            href="javascript:void(0)"
-            class="hover:text-primary flex items-center gap-2 transition"
-            onclick="toggleDropdown(this)"
-            data-dropdown="false"
-          >
-            <span>{{this.name}}</span>
-            {{#if this.children.length}}
-            <i data-lucide="chevron-down" class="h-4 w-4"></i>
-            {{/if}}
+          <a href="/articles/categories/{{this.id}}">
+            <div
+              tabindex="{{@index}}"
+              style="display: flex; align-items: center"
+              class="hover:cursor-pointer"
+            >
+              <span class="whitespace-nowrap">{{this.name}}</span>
+              {{#if this.children.length}}
+              <i data-lucide="chevron-down" class="h-4 w-4" style="margin-left: 5px"></i>
+              {{/if}}
+            </div>
           </a>
-
           <!-- Child Categories -->
           {{#if this.children.length}}
-          <div
-            class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible transform transition duration-150 ease-in-out z-10 pointer-events-none"
+          <ul
+            class="dropdown-content menu mt-[18px] bg-white border border-gray-200 rounded-lg shadow-lg w-48 p-2 z-10"
           >
-            <ul class="space-y-2">
-              {{#each this.children}}
-              <li>
-                <a
-                  href="/articles/categories/{{this.id}}"
-                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-primary transition"
-                >
-                  {{this.name}}
-                </a>
-              </li>
-              {{/each}}
-            </ul>
-          </div>
+            {{#each this.children}}
+            <li>
+              <a
+                href="/articles/categories/{{this.id}}"
+                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-primary transition"
+              >
+                {{this.name}}
+              </a>
+            </li>
+            {{/each}}
+          </ul>
           {{/if}}
         </li>
-
         {{/each}}
       </ul>
     </div>
