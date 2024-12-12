@@ -26,9 +26,15 @@
         </a>
       </div>
       {{!-- Title --}}
-      <h2 class="text-lg font-bold leading-tight mb-2 group-hover:underline">
+      <h2 class="font-semibold leading-tight mb-2 group-hover:underline">
         {{ default article.title "Untitled Article" }}
       </h2>
+      <div class="flex items-center gap-2">
+        {{!-- Premium Indicator --}} {{#if article.is_premium}}
+        <div class="badge badge-warning">Premium Article</div>
+        {{/if}} {{!-- Views --}}
+        <div class="text-gray-500 text-xs">{{ default article.views 0 }} views</div>
+      </div>
     </div>
   </div>
   <div class="border"></div>

@@ -34,6 +34,13 @@
           {{ default article.category "Uncategorized" }}
         </a>
       </div>
+      {{!-- Views --}}
+      <div class="flex flex-col mt-2 gap-2">
+        {{!-- Premium Indicator --}} {{#if article.is_premium}}
+        <div class="badge badge-warning">Premium Article</div>
+        <div class="text-gray-500 text-xs">{{ default article.views 0 }} views</div>
+      </div>
+      {{/if}}
     </div>
   </div>
   <div class="border"></div>
