@@ -1,0 +1,38 @@
+<div class="relative group border-2">
+  <a href="/articles/{{ article.id }}" class="absolute inset-0 z-10"></a>
+
+  <div class="relative h-full">
+    {{!-- Thumbnail --}}
+    <img
+      src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
+      alt="{{ default article.title 'Untitled Article' }}"
+      class="w-full h-full object-cover rounded-xl group-hover:opacity-95"
+    />
+
+    <div
+      class="absolute inset-0 flex flex-col justify-end items-center text-center text-white bg-black bg-opacity-50 p-6"
+    >
+      {{!-- Title --}}
+      <h2 class="text-2xl font-bold mb-4 group-hover:underline">
+        {{ default article.title "Untitled Article" }}
+      </h2>
+
+      {{!-- Abstract --}}
+      <p class="text-gray-300 mb-6">
+        {{ default article.abstract "No summary available for this article." }}
+      </p>
+
+      {{!-- Metadata --}}
+      <div class="flex justify-center items-center text-xs">
+        <span>{{ formatDate article.published_at }}</span>
+        <span class="mx-2">|</span>
+        <a
+          href="categories/{{ default article.category_id '#' }}"
+          class="text-blue-500 hover:underline"
+        >
+          {{ default article.category "Uncategorized" }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

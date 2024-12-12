@@ -45,6 +45,10 @@ Handlebars.registerHelper('subtract', function (a, b) {
   return a - b
 })
 
+Handlebars.registerHelper('and', function (a, b) {
+  return a && b
+})
+
 Handlebars.registerHelper('formatDate', function (dateString, format) {
   if (!dateString) return ''
 
