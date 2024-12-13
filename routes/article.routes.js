@@ -4,23 +4,17 @@ import articleController from '../controllers/article.controller.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import checkSubscription from '../middlewares/checkSubscription.js'
 import commentController from '../controllers/comment.controller.js'
-import { cacheMiddleware, deleteCacheMiddleware } from '../middlewares/cacheMiddleware.js'
+import {
+  cacheHeaderCategories,
+  cacheMiddleware,
+  deleteCacheMiddleware,
+} from '../middlewares/cacheMiddleware.js'
 import { articleCacheKeyGenerator } from '../utils/cacheKeyGenerator.js'
-import categoryService from '../services/category.service.js'
 import viewRenderer from '../utils/viewRenderer.js'
 
 const router = express.Router()
 
-router.use(async (req, res, next) => {
-  try {
-    const categories = await categoryService.getRootCategoriesWithChildren() // Fetch categories
-    res.locals.header_categories = categories // Pass categories to all views
-    res.locals.user = req.user || null // Pass user data if logged in
-    next()
-  } catch (error) {
-    next(error)
-  }
-})
+router.use(cacheHeaderCategories)
 
 // Root route: /articles
 

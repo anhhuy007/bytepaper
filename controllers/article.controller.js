@@ -4,12 +4,6 @@ import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
-import puppeteer from 'puppeteer'
-import fs from 'fs'
-import path from 'path'
-import os from 'os'
-
-const __dirname = path.resolve()
 
 const getArticleById = async (req, res, next) => {
   try {
