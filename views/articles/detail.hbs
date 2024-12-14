@@ -3,7 +3,7 @@
   <!-- Main Article Section -->
   <div class="flex-1 space-y-12">
     <!-- Back Button -->
-    <a href="/articles" class="link text-primary flex items-center gap-2">
+    <a href="/articles/filter" class="link text-primary flex items-center gap-2">
       <i data-lucide="arrow-left"></i>
       <span>Back to Articles</span>
     </a>
@@ -78,10 +78,10 @@
 
     <!-- Article Content -->
     <section class="prose lg:prose-lg max-w-none text-gray-700 space-y-6">
-      {{#if article.content}} {{#each (split article.content '\n') as |paragraph|}}
-      <p>{{paragraph}}</p>
-      {{/each}} {{else}}
-      <p>No content available.</p>
+      {{#if article.content}}
+        {{{article.content}}}
+      {{else}}
+        <p>No content available.</p>
       {{/if}}
     </section>
 

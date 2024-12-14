@@ -4,6 +4,29 @@ import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
+import sanitizeHtml from 'sanitize-html'
+
+const processArticleContent = (content) => {
+  if (!content) return '<p>No content available.</p>'
+
+  // Kiểm tra nếu content đã có thẻ HTML
+  const isHtmlContent = /<\/?[a-z][\s\S]*>/i.test(content)
+
+  if (isHtmlContent) {
+    // Sanitize nội dung HTML để bảo mật
+    return sanitizeHtml(content, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'h3']),
+      allowedAttributes: {
+        '*': ['style', 'class', 'id'],
+        a: ['href', 'name', 'target'],
+        img: ['src', 'alt'],
+      },
+    })
+  }
+
+  // Nếu không có thẻ HTML, bọc nội dung bằng <p>
+  return `<p>${sanitizeHtml(content)}</p>`
+}
 
 const getArticleById = async (req, res, next) => {
   try {
@@ -14,6 +37,8 @@ const getArticleById = async (req, res, next) => {
     const relatedArticles = await articleService.getRelatedArticles(articleId)
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
+
+    article.content = processArticleContent(article.content)
 
     // Render the detail view
     return res.render('articles/detail', {
