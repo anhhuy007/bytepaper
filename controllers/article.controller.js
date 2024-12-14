@@ -4,6 +4,8 @@ import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
+import viewRenderer from '../utils/viewRenderer.js'
+
 const getArticleById = async (req, res, next) => {
   try {
     const articleId = req.params.id
@@ -14,14 +16,13 @@ const getArticleById = async (req, res, next) => {
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
 
-    console.log('=========================> Comments:', comments)
-
     // Render the detail view
-    return res.render('articles/detail', {
+    return res.render('articles/article', {
       article,
       relatedArticles,
       comments,
       user,
+      layout: 'article',
     })
   } catch (error) {
     next(error)

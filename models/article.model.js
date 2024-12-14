@@ -160,7 +160,7 @@ class ArticleModel extends BaseModel {
 
   async getRelatedArticles(categoryId, excludeArticleId, limit = 5) {
     const query = `
-      SELECT a.id, a.title, a.thumbnail, c.name as category, c.id as category_id
+      SELECT a.*, c.name as category, c.id as category_id
       FROM articles a
       LEFT JOIN categories c ON a.category_id = c.id
       WHERE a.category_id = $1 AND a.id != $2 AND status = 'published'

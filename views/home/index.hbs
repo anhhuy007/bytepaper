@@ -1,20 +1,20 @@
 {{!-- views/home/index.hbs --}}
 <div class="space-y-28 px-24">
   {{!-- Featured Articles Carousel --}}
-  <section>
+  <div>
     <h1 class="header">Featured Articles</h1>
     {{> article/layout/carousel articles=featuredArticles}}
-  </section>
+  </div>
 
   {{!-- Most Viewed Articles --}}
   <section class="space-y-10">
-    <h1 class="header">Most Viewed Articles</h1>
+    <h1>Most Viewed Articles</h1>
     {{> article/layout/basic articles=mostViewedArticles}}
   </section>
 
   {{!-- Top Categories --}}
   <section class="space-y-10">
-    <h1 class="header">Top Categories</h1>
+    <h1>Top Categories</h1>
     {{> article/layout/tab articles=topCategoryArticles}}
   </section>
 
