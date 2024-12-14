@@ -1,7 +1,12 @@
 {{!-- views/articles/detail.hbs --}}
-<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8 space-y-12">
+<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8 space-y-12" id="articleDetail">
   <!-- Main Article Section -->
   <div class="flex-1 space-y-12">
+    <!-- Back Button -->
+    <a href="/articles/filter" class="link text-primary flex items-center gap-2">
+      <i data-lucide="arrow-left"></i>
+      <span>Back to Articles</span>
+    </a>
     <!-- Article Header -->
     <header class="space-y-4">
       <h1 class="text-4xl font-extrabold text-gray-800">
@@ -24,20 +29,26 @@
         <!-- Premium Indicator and Download -->
         <div class="flex items-center gap-2">
           {{#if article.is_premium}}
-          <span
-            class="badge badge-primary flex items-center gap-2 px-3 py-3 text-white text-sm"
-          >
+          <span class="badge badge-primary flex items-center gap-2 px-3 py-3 text-white text-sm">
             <i data-lucide="star"></i>
             <span>Premium</span>
           </span>
-          <a
-            href="/articles/{{article.id}}/download"
-            class="btn btn-primary flex items-center gap-2"
-          >
+          {{#if user}} {{#if (eq user.role "subscriber")}}
+          <a href="/download/{{article.id}}" class="btn btn-primary flex items-center gap-2">
             <i data-lucide="download"></i>
             <span>Download</span>
           </a>
-          {{/if}}
+          {{else}}
+          <a href="/user/extend-subscription" class="btn btn-secondary flex items-center gap-2">
+            <i data-lucide="arrow-up-circle"></i>
+            <span>Subscribe to Download</span>
+          </a>
+          {{/if}} {{else}}
+          <a href="/auth/login" class="btn btn-secondary flex items-center gap-2">
+            <i data-lucide="log-in"></i>
+            <span>Login to Download</span>
+          </a>
+          {{/if}} {{/if}}
         </div>
       </div>
 
@@ -67,12 +78,10 @@
 
     <!-- Article Content -->
     <section class="prose lg:prose-lg max-w-none text-gray-700 space-y-6">
-      {{#if article.content}} 
-        {{#each (split article.content '\n') as |paragraph|}}
-        <p>{{paragraph}}</p>
-        {{/each}} 
+      {{#if article.content}}
+        {{{article.content}}}
       {{else}}
-      <p>No content available.</p>
+        <p>No content available.</p>
       {{/if}}
     </section>
 
@@ -116,9 +125,7 @@
 
       <!-- Comments List -->
       <div class="space-y-4">
-        {{#each comments as |comment|}} 
-          {{> comment-item comment}} 
-        {{else}}
+        {{#each comments as |comment|}} {{> comment-item comment}} {{else}}
         <p class="text-gray-500">No comments yet. Be the first to comment!</p>
         {{/each}}
       </div>

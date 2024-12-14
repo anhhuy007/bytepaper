@@ -14,8 +14,6 @@ import subscriptionRoutes from './subscription.routes.js'
 
 const router = express.Router()
 
-
-
 // Public Routes
 router.use('/auth', authRoutes)
 router.use('/articles', articleRoutes)
@@ -33,5 +31,6 @@ router.use('/admin', adminRoutes)
 router.get('/', (req, res) => {
   res.redirect('/articles/home')
 })
+
 
 export default router

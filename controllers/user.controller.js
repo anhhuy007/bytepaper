@@ -34,7 +34,6 @@ const getUserProfile = async (req, res, next) => {
   }
 }
 
-
 const getEditUserProfile = async (req, res, next) => {
   try {
     const userId = req.user.id
@@ -125,7 +124,6 @@ const extendSubscription = async (req, res, next) => {
 
     // Call service to update subscription
     await subscriptionService.createOrUpdateSubscription(userId, days)
-
     res.status(200).json({
       success: true,
       message: `Subscription extended by ${days} days successfully!`,
