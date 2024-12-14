@@ -16,15 +16,11 @@
         <div class="flex items-center text-lg mb-4">
           <a
             href="categories/{{ default article.category_id '#' }}"
-            class="text-blue-500 hover:underline z-20"
+            class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded transition-all duration-300 ease-in-out hover:bg-blue-900 hover:text-white hover:scale-105 hover:shadow-md"
           >
             {{ default article.category "Uncategorized" }}
           </a>
-          {{!-- Premium Indicator --}} {{#if article.is_premium}}
-          <span class="mx-2">|</span>
-
-          <div class="w-24 premium-animation"></div>
-          {{/if}} {{!-- Views --}}
+          {{!-- Premium Indicator --}} {{#if article.is_premium}} {{/if}} {{!-- Views --}}
         </div>
         <h2 class="text-xl font-bold leading-tight mb-3 group-hover:underline">
           {{ default article.title "Untitled Article" }}
@@ -35,19 +31,23 @@
           {{ default article.abstract "No summary available for this article." }}
         </p>
 
-        <div class="flex items-center text-xs text-gray-500 font-bold">
+        <div class="flex items-center justify-between text-xs text-gray-500 font-semibold">
           {{!-- Published Date --}}
-          <div class="flex gap-1 items-center">
-            <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-3 w-3 fill-gray-500" />
-            <span>{{ formatDate article.published_at }}</span>
-          </div>
-          <span class="mx-2">|</span>
+          <div class="flex flex-row">
+            <div class="flex gap-1 items-center">
+              <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-3 w-3 fill-gray-500" />
+              <span>{{ formatDate article.published_at }}</span>
+            </div>
+            <span class="mx-2">|</span>
 
-          {{!-- Views --}}
-          <div class="text-xs flex items-center gap-1">
-            <img src="/assets/eye.svg" alt="Eye Scan Icon" class="h-3 w-3 fill-gray-500" />
-            {{ default article.views 0 }} views
+            {{!-- Views --}}
+            <div class="text-xs flex items-center gap-1">
+              <img src="/assets/eye.svg" alt="Eye Scan Icon" class="h-3 w-3 fill-gray-500" />
+              {{ default article.views 0 }} views
+            </div>
           </div>
+
+          <div class="ml-4 w-20 premium-animation"></div>
         </div>
       </div>
     </div>
