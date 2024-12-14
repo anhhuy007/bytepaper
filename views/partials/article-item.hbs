@@ -16,8 +16,7 @@
         <i data-lucide="folder"></i> {{category_name}}
       </a>
       <span>|</span>
-      {{/if}}
-      {{formatDate published_at}}
+      {{/if}} {{formatDate published_at}}
     </p>
     <!-- Abstract -->
     <p class="text-gray-700 text-base line-clamp-3">{{abstract}}</p>
@@ -35,10 +34,12 @@
   {{#if thumbnail}}
   <figure class="w-48 flex-shrink-0 overflow-hidden p-4">
     <a href="/articles/{{id}}" class="block">
-      <img src="{{thumbnail}}" alt="{{title}}" class="object-cover w-full h-full rounded-lg shadow-md" />
+      <img
+        src="{{thumbnail}}"
+        alt="{{title}}"
+        class="object-cover w-full h-full rounded-lg shadow-md"
+      />
     </a>
   </figure>
   {{/if}}
 </article>
-
-

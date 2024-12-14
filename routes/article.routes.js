@@ -54,7 +54,7 @@ router.get(
 
 router.get(
   '/:id',
-  cacheMiddleware(articleCacheKeyGenerator.details),
+  // cacheMiddleware(articleCacheKeyGenerator.details),
   articleController.getArticleById,
 )
 
