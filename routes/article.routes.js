@@ -2,7 +2,6 @@
 import express from 'express'
 import articleController from '../controllers/article.controller.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
-import checkSubscription from '../middlewares/checkSubscription.js'
 import commentController from '../controllers/comment.controller.js'
 import {
   cacheHeaderCategories,

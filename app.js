@@ -23,6 +23,8 @@ import passport from './config/passport.js'
 import redisClient from './utils/redisClient.js'
 import * as helpers from './utils/handlebars.js'
 import { downloadArticle } from './utils/download.js'
+import authMiddleware from './middlewares/authMiddleware.js'
+import checkSubscription from './middlewares/checkSubscription.js'
 // Load environment variables
 dotenv.config()
 
@@ -34,8 +36,6 @@ const isDevelopment = process.env.NODE_ENV === 'dev'
 
 // Initialize Express app
 const app = express()
-
-app.get('/download/:id', downloadArticle)
 
 // Core Middleware
 app.use(express.json())
@@ -75,6 +75,8 @@ app.use(morgan(isDevelopment ? 'dev' : 'combined'))
 // Passport Initialization
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.get('/download/:id', authMiddleware(['subscriber']), checkSubscription, downloadArticle)
 
 app.use('/uploads', express.static('uploads'))
 
