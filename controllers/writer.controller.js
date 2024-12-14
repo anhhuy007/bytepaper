@@ -3,6 +3,41 @@
 import articleService from '../services/article.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
+import sanitizeHtml from 'sanitize-html'
+const processContent = (content) => {
+  if (!content) return null
+
+  // Sanitize nội dung để loại bỏ các mã độc
+  const sanitizedContent = sanitizeHtml(content, {
+    allowedTags: [
+      'p',
+      'b',
+      'i',
+      'u',
+      'a',
+      'img',
+      'iframe',
+      'strong',
+      'em',
+      'ul',
+      'ol',
+      'li',
+      'h1',
+      'h2',
+      'h3',
+      'br',
+    ],
+    allowedAttributes: {
+      a: ['href', 'target', 'rel'],
+      img: ['src', 'alt'],
+      iframe: ['src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen'],
+    },
+    allowedSchemes: ['http', 'https'],
+  })
+
+  return sanitizedContent
+}
+
 const getDashboard = async (req, res, next) => {
   try {
     // Extract filters and pagination options
@@ -81,6 +116,7 @@ const createArticle = async (req, res, next) => {
     const authorId = req.user.id
     const articleData = req.body
 
+    console.log('=== Raw Content Received (Before Processing) ===', articleData.content)
     // Validate category_id
     const category = await categoryService.getCategoryById(articleData.category_id)
     if (!category) {
@@ -99,7 +135,10 @@ const createArticle = async (req, res, next) => {
     if (!articleData.content || articleData.content.trim() === '') {
       return res.status(400).send('Content cannot be empty.')
     }
-
+    console.log('=== Content Before Sanitize ===', articleData.content)
+    // Process content
+    articleData.content = processContent(articleData.content)
+    console.log('=== Content After Sanitize ===', articleData.content)
     // Create the article
     const createdArticle = await articleService.createArticle(articleData, authorId)
 

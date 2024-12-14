@@ -2,7 +2,7 @@
 <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
   <!-- Page Title -->
   <div class="mb-6 flex justify-between items-center">
-  <!-- Title Section -->
+    <!-- Title Section -->
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
       <i data-lucide="edit-3" class="text-primary"></i>
       <span>Create Article</span>
@@ -167,18 +167,48 @@
 <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/quill-image-uploader/dist/quill.imageUploader.min.js"></script>
 <script>
+  // Register custom button handlers for image and video insertion
+  const toolbarOptions = [
+    ['bold', 'italic', 'underline'], // Text formatting
+    [{ header: [1, 2, 3, false] }], // Headers
+    [{ list: 'ordered' }, { list: 'bullet' }], // Lists
+    ['image', 'video'], // Image and video buttons
+  ]
+
   Quill.register('modules/imageUploader', window.ImageUploader)
   const quill = new Quill('#content', {
     theme: 'snow',
     modules: {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ header: [1, 2, 3, false] }],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['image'],
-      ],
-      imageUploader: {},
+      toolbar: toolbarOptions,
     },
+  })
+
+  // Custom handler for image
+  document.querySelector('.ql-image').addEventListener('click', function (event) {
+    event.preventDefault() // Ngăn chặn hành vi mặc định
+    const imageUrl = prompt('Enter the image URL:')
+    if (imageUrl) {
+      const range = quill.getSelection()
+      quill.insertEmbed(range.index, 'image', imageUrl)
+    }
+  })
+
+  // Custom handler for video
+  document.querySelector('.ql-video').addEventListener('click', function (event) {
+    event.preventDefault() // Ngăn hành vi mặc định
+    const videoUrl = prompt('Enter the YouTube video URL:')
+    if (videoUrl) {
+      const youtubeRegex = /https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/
+      const match = videoUrl.match(youtubeRegex)
+
+      if (match) {
+        const youtubeEmbedUrl = `https://www.youtube.com/embed/${match[1]}`
+        const range = quill.getSelection()
+        quill.insertEmbed(range.index, 'video', youtubeEmbedUrl)
+      } else {
+        alert('Invalid YouTube URL. Please enter a valid URL.')
+      }
+    }
   })
 </script>
 

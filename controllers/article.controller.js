@@ -15,12 +15,21 @@ const processArticleContent = (content) => {
   if (isHtmlContent) {
     // Sanitize nội dung HTML để bảo mật
     return sanitizeHtml(content, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'h3']),
+      allowedTags: [
+        ...sanitizeHtml.defaults.allowedTags,
+        'iframe', // Thêm iframe vào danh sách thẻ được phép
+        'img',
+        'h1',
+        'h2',
+        'h3',
+      ],
       allowedAttributes: {
-        '*': ['style', 'class', 'id'],
-        a: ['href', 'name', 'target'],
-        img: ['src', 'alt'],
+        '*': ['style', 'class', 'id'], // Giữ lại các thuộc tính chung
+        a: ['href', 'name', 'target'], // Thuộc tính cho thẻ <a>
+        img: ['src', 'alt'], // Thuộc tính cho thẻ <img>
+        iframe: ['src', 'frameborder', 'allowfullscreen', 'class'], // Thuộc tính cho <iframe>
       },
+      allowedSchemes: ['http', 'https'], // Chỉ cho phép các URL bắt đầu bằng http/https
     })
   }
 
