@@ -124,7 +124,7 @@ router.post(
 
 router.get(
   '/articles',
-  cacheMiddleware(adminCacheKeyGenerator.articleList),
+  // cacheMiddleware(adminCacheKeyGenerator.articleList),
   adminController.getAllArticles,
 )
 

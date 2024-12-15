@@ -22,7 +22,9 @@ import errorHandler from './middlewares/errorHandler.js'
 import passport from './config/passport.js'
 import redisClient from './utils/redisClient.js'
 import * as helpers from './utils/handlebars.js'
-
+import { downloadArticle } from './utils/download.js'
+import authMiddleware from './middlewares/authMiddleware.js'
+import checkSubscription from './middlewares/checkSubscription.js'
 // Load environment variables
 dotenv.config()
 
@@ -31,7 +33,6 @@ const PORT = process.env.PORT || 3000
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const isDevelopment = process.env.NODE_ENV === 'dev'
-const maxAge = parseInt(process.env.JWT_EXPIRY, 10) || 1000 * 60 * 60 * 24 * 7 // Default to 7 days
 
 // Initialize Express app
 const app = express()
@@ -74,6 +75,8 @@ app.use(morgan(isDevelopment ? 'dev' : 'combined'))
 // Passport Initialization
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.get('/download/:id', authMiddleware(['subscriber']), checkSubscription, downloadArticle)
 
 app.use('/uploads', express.static('uploads'))
 

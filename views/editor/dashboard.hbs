@@ -1,35 +1,81 @@
 {{!-- views/editor/dashboard.hbs --}}
-{{#extend "layouts/editor"}}
+<div class="container mx-auto p-6 bg-white rounded-lg shadow-lg">
+  <!-- Page Title -->
+  <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
+    <i data-lucide="bar-chart" class="text-primary"></i>
+    <span>Editor Dashboard</span>
+  </h1>
 
-  {{#content "title"}}Editor Dashboard{{/content}}
-
-  {{#content "body"}}
-    <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-6">Editor Dashboard</h1>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {{!-- Bài viết đang chờ duyệt --}}
-        <div class="stat">
-          <div class="stat-title">Pending Articles</div>
-          <div class="stat-value">{{stats.pendingArticles}}</div>
-          <div class="stat-desc">Articles awaiting review</div>
-        </div>
-
-        {{!-- Bài viết đã duyệt --}}
-        <div class="stat">
-          <div class="stat-title">Approved Articles</div>
-          <div class="stat-value">{{stats.approvedArticles}}</div>
-          <div class="stat-desc">Articles you approved</div>
-        </div>
-
-        {{!-- Bài viết bị từ chối --}}
-        <div class="stat">
-          <div class="stat-title">Rejected Articles</div>
-          <div class="stat-value">{{stats.rejectedArticles}}</div>
-          <div class="stat-desc">Articles you rejected</div>
-        </div>
+  <!-- Stats Section -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+    <!-- Pending Articles -->
+    <div class="stat bg-gray-50 shadow rounded-lg p-4">
+      <div class="stat-title text-sm text-gray-600 flex items-center space-x-2">
+        <i data-lucide="clock" class="text-yellow-500"></i>
+        <span>Pending Articles</span>
       </div>
+      <div class="stat-value text-3xl font-bold text-gray-800">
+        {{default stats.pending_articles 0}}
+      </div>
+      <div class="stat-desc text-gray-500">Awaiting approval</div>
     </div>
-  {{/content}}
 
-{{/extend}}
+    <!-- Approved Articles -->
+    <div class="stat bg-gray-50 shadow rounded-lg p-4">
+      <div class="stat-title text-sm text-gray-600 flex items-center space-x-2">
+        <i data-lucide="check-circle" class="text-green-500"></i>
+        <span>Approved Articles</span>
+      </div>
+      <div class="stat-value text-3xl font-bold text-gray-800">
+        {{default stats.approved_articles 0}}
+      </div>
+      <div class="stat-desc text-gray-500">Approved and published</div>
+    </div>
+
+    <!-- Rejected Articles -->
+    <div class="stat bg-gray-50 shadow rounded-lg p-4">
+      <div class="stat-title text-sm text-gray-600 flex items-center space-x-2">
+        <i data-lucide="x-circle" class="text-red-500"></i>
+        <span>Rejected Articles</span>
+      </div>
+      <div class="stat-value text-3xl font-bold text-gray-800">
+        {{default stats.rejected_articles 0}}
+      </div>
+      <div class="stat-desc text-gray-500">Sent back for revision</div>
+    </div>
+
+    <!-- Published Articles -->
+    <div class="stat bg-gray-50 shadow rounded-lg p-4">
+      <div class="stat-title text-sm text-gray-600 flex items-center space-x-2">
+        <i data-lucide="file-text" class="text-blue-500"></i>
+        <span>Published Articles</span>
+      </div>
+      <div class="stat-value text-3xl font-bold text-gray-800">
+        {{default stats.published_articles 0}}
+      </div>
+      <div class="stat-desc text-gray-500">Currently live</div>
+    </div>
+  </div>
+
+  <!-- Categories Section -->
+  <div class="mt-8">
+    <h2 class="text-2xl font-semibold text-gray-700 flex items-center space-x-2">
+      <i data-lucide="folder"></i>
+      <span>Categories Managed</span>
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+      {{#each categories}}
+      <div class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between">
+        <span class="text-gray-700 text-lg font-medium">{{this.name}}</span>
+        <a
+          href="/editor/articles?category_id={{this.id}}"
+          class="btn btn-sm btn-primary flex items-center space-x-1"
+        >
+          <i data-lucide="list"></i>
+          <span>View Articles</span>
+        </a>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</div>

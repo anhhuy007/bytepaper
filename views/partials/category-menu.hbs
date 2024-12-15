@@ -12,7 +12,7 @@
     </a>
     {{#each categories}}
     <a
-      href="/categories/{{ id }}"
+      href="/articles/categories/categoryId={{id}}"
       class="btn btn-ghost text-lg font-bold {{#if (or (eq id ../currentCategoryId) (hasSubCategorySelected subCategories ../currentCategoryId))}} border-b-4 border-b-black {{/if}}"
     >
       {{ category }}
@@ -26,7 +26,7 @@
   <div class="flex gap-4 justify-center items-center">
     {{#each subCategories}}
     <a
-      href="/categories/{{ subId }}"
+      href="/articles/categories/categoryId={{subId}}"
       class="btn btn-ghost text-base font-medium {{#if (eq subId ../../currentCategoryId)}} border-b-4 border-b-red-500 {{/if}}"
     >
       {{ name }}

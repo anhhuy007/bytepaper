@@ -33,11 +33,33 @@ export const articleCacheKeyGenerator = {
   details: (req) => `articles:details:${req.params.id}`, // Cache article details
 }
 
-export const userCacheKeyGenerator = {}
+export const userCacheKeyGenerator = {
+  profile: (req) => `user:${req.user.id}:profile`, // Cache key for user profile
+  editProfile: (req) => `user:${req.user.id}:edit-profile`, // Cache key for edit profile
+  changePassword: (req) => `user:change-password`, // Cache key for change password
+  subscription: (req) => `user:subscription`, // Cache key for subscription
+}
+
+export const writerCacheKeyGenerator = {
+  dashboard: (req) => `writer:${req.user.id}:dashboard:${JSON.stringify(req.query)}`, // Cache key for dashboard
+  createArticle: (req) => `writer:${req.user.id}:create-article`, // Cache key for create article page
+  editArticle: (req) => `writer:${req.user.id}:edit-article:${req.params.articleId}`, // Cache key for edit article page
+  articleRejections: (req) => `writer:${req.user.id}:article-rejections:${req.params.articleId}`, // Cache key for article rejections
+}
+
+export const editorCacheKeyGenerator = {
+  dashboard: (req) => `editor:${req.user.id}:dashboard`,
+  articles: (req) => `editor:${req.user.id}:articles:${JSON.stringify(req.query)}`, // Cache by filters and pagination
+  articleDetails: (req) => `editor:${req.user.id}:article:${req.params.articleId}`,
+  approveForm: (req) => `editor:${req.user.id}:article:${req.params.articleId}:approve`,
+  rejectForm: (req) => `editor:${req.user.id}:article:${req.params.articleId}:reject`,
+}
 
 export default {
   adminCacheKeyGenerator,
   authCacheKeyGenerator,
   articleCacheKeyGenerator,
   userCacheKeyGenerator,
+  writerCacheKeyGenerator,
+  editorCacheKeyGenerator,
 }

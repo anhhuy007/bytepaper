@@ -1,6 +1,6 @@
 // middlewares/cacheMiddleware.js
 import redisClient from '../utils/redisClient.js'
-
+import categoryService from '../services/category.service.js'
 export function cacheMiddleware(cacheKeyGenerator, expiration = 600) {
   return async (req, res, next) => {
     try {
@@ -52,6 +52,13 @@ export const deleteCacheMiddleware = (cacheKeyGenerator) => {
         throw new Error('Invalid cache key(s) generated.')
       }
 
+      console.log('Deleting cache:', cacheKeys)
+
+      // Add prefix to cache keys
+      cacheKeys.forEach((key, index) => {
+        cacheKeys[index] = `paperly:${key}`
+      })
+
       const results = await Promise.all(cacheKeys.map((key) => redisClient.del(key)))
 
       results.forEach((result, index) => {
@@ -70,7 +77,35 @@ export const deleteCacheMiddleware = (cacheKeyGenerator) => {
   }
 }
 
+export const cacheHeaderCategories = async (req, res, next) => {
+  try {
+    const cacheKey = 'header:categories'
+    const cachedCategories = await redisClient.get(cacheKey)
+
+    if (cachedCategories) {
+      // Use cached categories
+      res.locals.header_categories = JSON.parse(cachedCategories)
+      console.log('Cache hit for header categories')
+    } else {
+      // Fetch categories from the database
+      const categories = await categoryService.getRootCategoriesWithChildren()
+      res.locals.header_categories = categories
+
+      // Cache the categories
+      await redisClient.setEx(cacheKey, 3600, JSON.stringify(categories)) // Cache for 1 hour
+      console.log('Cache miss for header categories. Categories fetched and cached.')
+    }
+
+    res.locals.user = req.user || null // Pass user data if logged in
+    next()
+  } catch (error) {
+    console.error('Error fetching header categories:', error)
+    next(error)
+  }
+}
+
 export default {
   cacheMiddleware,
   deleteCacheMiddleware,
+  cacheHeaderCategories,
 }

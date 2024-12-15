@@ -2,8 +2,9 @@
 
 import articleModel from '../models/article.model.js'
 import articleTagModel from '../models/articleTag.model.js'
-import categoryService from './category.service.js'
 import tagService from './tag.service.js'
+import categoryService from './category.service.js'
+import articleRejectionsModel from '../models/articleRejections.model.js'
 class ArticleService {
   async getArticles(filters = {}, options = {}) {
     return await articleModel.getArticles(filters, options)
@@ -15,7 +16,9 @@ class ArticleService {
       throw new Error('Article not found')
     }
     const tags = await articleTagModel.getTagsByArticleId(id)
+    const category = await categoryService.getCategoryById(article.category_id)
     article.tags = tags
+    article.category = category
     return article
   }
 
@@ -37,24 +40,27 @@ class ArticleService {
     return createdArticle
   }
 
-  async updateArticle(id, articleData, authorId) {
+  async updateArticle(id, articleData) {
     const article = await articleModel.findById(id)
     if (!article) {
       throw new Error('Article not found')
     }
 
-    if (article.author_id !== authorId) {
-      throw new Error('Unauthorized')
-    }
+    // if (article.author_id !== authorId) {
+    //   throw new Error('Unauthorized')
+    // }
 
-    // Extract the tag IDs from the article data and update the article
-    const { tag_ids, ...updateData } = articleData
+    const { tags, ...updateData } = articleData
+
+    updateData.status = 'draft'
+
     const updatedArticle = await articleModel.updateArticle(id, updateData)
 
-    // If there are tag IDs, remove them from the article and re-add them
-    if (tag_ids) {
-      await articleTagModel.removeTagsFromArticle(id, tag_ids)
-      await articleTagModel.addTagsToArticle(id, tag_ids)
+    // Xử lý tags
+    if (tags && tags.length > 0) {
+      await articleTagModel.removeTagsFromArticle(id)
+
+      await articleTagModel.addTagsToArticle(id, tags)
     }
 
     return updatedArticle
@@ -97,7 +103,7 @@ class ArticleService {
     return await articleModel.updateArticle(id, { status: 'pending' })
   }
 
-  async approveArticle(id, editorId, categoryId, tagIds) {
+  async approveArticle(id, editorId, categoryId, tagIds, publishedAt) {
     // Retrieve the article from the database
     const article = await articleModel.findById(id)
     if (!article) {
@@ -109,7 +115,8 @@ class ArticleService {
       throw new Error('Article is not pending approval')
     }
 
-    if (tagIds.length > 0) {
+    if (tagIds && tagIds.length > 0) {
+      await articleTagModel.removeTagsFromArticle(id)
       await articleTagModel.addTagsToArticle(id, tagIds)
     }
 
@@ -117,11 +124,14 @@ class ArticleService {
     // TODO: Implement the logic to check if the editor has the rights to approve the article
 
     // Update the article status to "published" and set the published_at field to the current date
-    return await articleModel.updateArticle(id, {
-      status: 'approved',
-      editor_id: editorId,
+    await articleModel.updateArticle(id, {
+      status: publishedAt ? 'published' : 'approved',
+      published_at: publishedAt ? new Date(publishedAt) : null,
       category_id: categoryId,
     })
+
+    // Update the article rejections table to remove any previous rejections
+    return await articleRejectionsModel.deleteByArticleId(id)
   }
 
   async rejectArticle(id, editorId, rejectionReason) {
@@ -139,11 +149,13 @@ class ArticleService {
     // Additional logic to check if editor has rights to reject this article
 
     // Update the article status to "rejected" and set the rejection_reason field to the provided reason
-    return await articleModel.updateArticle(id, {
+    await articleModel.updateArticle(id, {
       status: 'rejected',
-      rejection_reason: rejectionReason,
       editor_id: editorId,
     })
+
+    // Update the article rejections table with the rejection details
+    return await articleRejectionsModel.rejectArticle(id, editorId, rejectionReason)
   }
 
   async publishArticle(id) {
@@ -157,6 +169,20 @@ class ArticleService {
     return await articleModel.updateArticle(id, {
       status: 'published',
       published_at: new Date(),
+    })
+  }
+
+  async unpublishArticle(id) {
+    // Retrieve the article from the database
+    const article = await articleModel.findById(id)
+    if (!article) {
+      throw new Error('Article not found')
+    }
+
+    // Update the article status to "published" and set the published_at field to the current date
+    return await articleModel.updateArticle(id, {
+      status: 'approved',
+      published_at: null,
     })
   }
 
@@ -183,7 +209,15 @@ class ArticleService {
     }
 
     // Retrieve related articles using the article model
-    return await articleModel.getRelatedArticles(article.category_id, articleId)
+    const articles = await articleModel.getRelatedArticles(article.category_id, articleId)
+
+    // Get tags for each related article
+    for (const article of articles) {
+      const tags = await articleTagModel.getTagsByArticleId(article.id)
+      article.tags = tags
+    }
+
+    return articles
   }
 
   async increaseArticleViewCount(id) {
@@ -227,11 +261,40 @@ class ArticleService {
   }
 
   async updateArticleStatus(id, status) {
-    return await articleModel.updateArticle(id, { status })
+    // If status is draft, set published_at to null
+    if (status === 'draft') {
+      return await articleModel.updateArticle(id, { status, published_at: null })
+    }
+    // If status is published, set published_at to current date
+    return await articleModel.updateArticle(id, { status, published_at: new Date() })
   }
 
   async getArticleStats(authorId) {
     return await articleModel.getArticleStats(authorId)
+  }
+
+  async getArticleRejections(editorId, articleId) {
+    return await articleRejectionsModel.getArticleRejections(editorId, articleId)
+  }
+
+  async addTagsToArticle(articleId, tagIds) {
+    return await articleTagModel.addTagsToArticle(articleId, tagIds)
+  }
+
+  async addTagToArticle(articleId, tagId) {
+    return await articleTagModel.addTagsToArticle(articleId, [tagId])
+  }
+
+  async removeTagFromArticle(articleId, tagId) {
+    return await articleTagModel.removeTagsFromArticle(articleId, [tagId])
+  }
+
+  async getArticleStatsByEditor(editorId) {
+    return await articleModel.getArticleStatsByEditorId(editorId)
+  }
+
+  async getArticlesForEditor(editorId, filters = {}, options = {}) {
+    return await articleModel.getArticlesForEditor(editorId, filters, options)
   }
 }
 

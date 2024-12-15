@@ -11,7 +11,7 @@ import writerRoutes from './writer.routes.js'
 import editorRoutes from './editor.routes.js'
 import adminRoutes from './admin.routes.js'
 import subscriptionRoutes from './subscription.routes.js'
-import { articles } from '../utils/categories.js'
+
 const router = express.Router()
 
 // Public Routes
@@ -31,5 +31,6 @@ router.use('/admin', adminRoutes)
 router.get('/', (req, res) => {
   res.redirect('/articles/home')
 })
+
 
 export default router

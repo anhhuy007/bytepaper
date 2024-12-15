@@ -4,7 +4,38 @@ import articleService from '../services/article.service.js'
 import commentService from '../services/comment.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
-import viewRenderer from '../utils/viewRenderer.js'
+import sanitizeHtml from 'sanitize-html'
+
+const processArticleContent = (content) => {
+  if (!content) return '<p>No content available.</p>'
+
+  // Kiểm tra nếu content đã có thẻ HTML
+  const isHtmlContent = /<\/?[a-z][\s\S]*>/i.test(content)
+
+  if (isHtmlContent) {
+    // Sanitize nội dung HTML để bảo mật
+    return sanitizeHtml(content, {
+      allowedTags: [
+        ...sanitizeHtml.defaults.allowedTags,
+        'iframe', // Thêm iframe vào danh sách thẻ được phép
+        'img',
+        'h1',
+        'h2',
+        'h3',
+      ],
+      allowedAttributes: {
+        '*': ['style', 'class', 'id'], // Giữ lại các thuộc tính chung
+        a: ['href', 'name', 'target'], // Thuộc tính cho thẻ <a>
+        img: ['src', 'alt'], // Thuộc tính cho thẻ <img>
+        iframe: ['src', 'frameborder', 'allowfullscreen', 'class'], // Thuộc tính cho <iframe>
+      },
+      allowedSchemes: ['http', 'https'], // Chỉ cho phép các URL bắt đầu bằng http/https
+    })
+  }
+
+  // Nếu không có thẻ HTML, bọc nội dung bằng <p>
+  return `<p>${sanitizeHtml(content)}</p>`
+}
 
 const getArticleById = async (req, res, next) => {
   try {
@@ -15,6 +46,8 @@ const getArticleById = async (req, res, next) => {
     const relatedArticles = await articleService.getRelatedArticles(articleId)
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
+
+    article.content = processArticleContent(article.content)
 
     // Render the detail view
     return res.render('articles/article', {
@@ -48,51 +81,11 @@ const increaseArticleViewCount = async (req, res, next) => {
   }
 }
 
-const downloadArticle = async (req, res, next) => {
-  try {
-    // Retrieve the article ID from the request parameters
-    const { id } = req.params
-
-    // Retrieve the article from the database
-    const article = await articleService.getArticleById(id)
-
-    // Check if the article is found
-    if (!article) {
-      return res.status(404).json({ success: false, message: 'Article not found' })
-    }
-
-    // Check if the article is premium
-    if (article.is_premium) {
-      return res.status(403).json({ success: false, message: 'Unauthorized' })
-    }
-
-    // Check if the article is published
-    if (article.status !== 'published') {
-      return res.status(403).json({ success: false, message: 'Article not published' })
-    }
-
-    // Download the file associated with the article
-    const file = await articleService.downloadArticle(id)
-
-    // Check if the file is found
-    if (!file) {
-      return res.status(404).json({ success: false, message: 'File not found' })
-    }
-
-    // Send the file as a response
-    res.download(file.path)
-  } catch (error) {
-    // Pass any errors to the next middleware
-    next(error)
-  }
-}
-
-// GET /api/v1/articles/home?type=(featured|most-viewed|newest|top-categories)
 const getHomepageArticles = async (req, res, next) => {
   try {
     const type = req.query.type
     const homepageData = await articleService.getHomepageArticles(type)
-    
+
     return homepageData
   } catch (error) {
     next(error)
@@ -135,8 +128,6 @@ const getArticlesByFilter = async (req, res, next) => {
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
 
-    console.log('=========================> Article Filters: ', filters)
-    console.log('=========================> Total Articles:', totalArticles)
     // Render view with articles, filters, and pagination
     res.render('articles/search', {
       articles,
@@ -211,9 +202,6 @@ const getArticlesByCategoryId = async (req, res, next) => {
     const totalPages = Math.ceil(totalArticles / limit)
     const category = await categoryService.getCategoryById(categoryId)
 
-    console.log('=========================> Category:', category)
-    console.log('=========================> Articles:', articles)
-
     res.render('articles/list', {
       articles,
       currentPage: page,
@@ -230,7 +218,6 @@ export default {
   getArticlesByFilter,
   getArticleById,
   increaseArticleViewCount,
-  downloadArticle,
   getHomepageArticles,
   getArticlesByTagId,
   getArticlesByCategoryId,
