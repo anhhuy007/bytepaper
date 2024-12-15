@@ -19,6 +19,7 @@ class ArticleService {
     const category = await categoryService.getCategoryById(article.category_id)
     article.tags = tags
     article.category = category
+
     return article
   }
 

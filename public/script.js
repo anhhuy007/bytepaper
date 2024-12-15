@@ -70,3 +70,17 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   })
 })
+
+document.addEventListener('DOMContentLoaded', () => {
+  const lottieContainers = document.querySelectorAll('.premium-animation') // Lấy tất cả các container có class .lottie-animation
+
+  lottieContainers.forEach((container) => {
+    lottie.loadAnimation({
+      container: container,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '/assets/animations/premium.json',
+    })
+  })
+})

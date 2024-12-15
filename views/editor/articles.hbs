@@ -1,85 +1,66 @@
-{{!-- views/editor/articles.hbs --}}
 <div class="container mx-auto px-4 py-8">
   <!-- Page Header -->
   <div class="flex justify-between items-center mb-8">
-    <h1 class="text-4xl font-extrabold text-gray-800 flex items-center space-x-2">
+    <h1 class="text-3xl font-bold text-gray-800 flex items-center space-x-2">
       <i data-lucide="file-text" class="text-blue-500"></i>
       <span>Articles Management</span>
     </h1>
   </div>
 
   <!-- Filter Section -->
-  <div class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
-    <form method="GET" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+  <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
+    <form method="GET" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 items-end">
       <!-- Keyword Filter -->
-      <div class="col-span-2 lg:col-span-2">
-        <label for="keyword" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
-          <i data-lucide="search"></i>
-          <span>Search Articles</span>
+      <div class="col-span-2">
+        <label for="keyword" class="text-sm font-medium text-gray-700">
+          <i data-lucide="search" class="inline-block mr-1"></i> Search Articles
         </label>
-        <input
-          type="text"
-          id="keyword"
-          name="keyword"
-          class="input input-bordered w-full"
-          placeholder="Keyword"
-          value="{{query.keyword}}"
-        />
+        <input type="text" id="keyword" name="keyword" class="input input-bordered w-full" placeholder="Keyword" value="{{query.keyword}}" />
       </div>
 
       <!-- Category Filter -->
       <div>
-        <label for="category_id" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
-          <i data-lucide="folder"></i>
-          <span>Category</span>
+        <label for="category_id" class="text-sm font-medium text-gray-700">
+          <i data-lucide="folder" class="inline-block mr-1"></i> Category
         </label>
         <select id="category_id" name="category_id" class="select select-bordered w-full">
           <option value="">All Categories</option>
           {{#each categories}}
-          <option value="{{this.id}}" {{#if (eq ../selectedCategory this.id)}}selected{{/if}}>
-            {{this.name}}
-          </option>
+          <option value="{{this.id}}" {{#if (eq ../selectedCategory this.id)}}selected{{/if}}>{{this.name}}</option>
           {{/each}}
         </select>
       </div>
 
       <!-- Tag Filter -->
       <div>
-        <label for="tag_id" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
-          <i data-lucide="tag"></i>
-          <span>Tag</span>
+        <label for="tag_id" class="text-sm font-medium text-gray-700">
+          <i data-lucide="tag" class="inline-block mr-1"></i> Tag
         </label>
         <select id="tag_id" name="tag_id" class="select select-bordered w-full">
           <option value="">All Tags</option>
           {{#each tags}}
-          <option value="{{this.id}}" {{#if (eq ../selectedTag this.id)}}selected{{/if}}>
-            {{this.name}}
-          </option>
+          <option value="{{this.id}}" {{#if (eq ../selectedTag this.id)}}selected{{/if}}>{{this.name}}</option>
           {{/each}}
         </select>
       </div>
 
       <!-- Status Filter -->
       <div>
-        <label for="status" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
-          <i data-lucide="check-circle"></i>
-          <span>Status</span>
+        <label for="status" class="text-sm font-medium text-gray-700">
+          <i data-lucide="check-circle" class="inline-block mr-1"></i> Status
         </label>
         <select id="status" name="status" class="select select-bordered w-full">
           <option value="">All Statuses</option>
           {{#each statuses}}
-          <option value="{{this}}" {{#if (eq ../query.status this)}}selected{{/if}}>
-            {{this}}
-          </option>
+          <option value="{{this}}" {{#if (eq ../query.status this)}}selected{{/if}}>{{this}}</option>
           {{/each}}
         </select>
       </div>
 
       <!-- Order By -->
       <div>
-        <label for="orderBy" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
-          <i data-lucide="sort-desc"></i>
-          <span>Sort By</span>
+        <label for="orderBy" class="text-sm font-medium text-gray-700">
+          <i data-lucide="sort-desc" class="inline-block mr-1"></i> Sort By
         </label>
         <select id="orderBy" name="orderBy" class="select select-bordered w-full">
           <option value="published_at DESC" {{#if (eq query.orderBy "published_at DESC")}}selected{{/if}}>Newest</option>
@@ -88,12 +69,12 @@
       </div>
 
       <!-- Buttons -->
-      <div class="flex items-end space-x-4 col-span-3 lg:col-span-1 justify-end">
-        <button type="submit" class="btn btn-primary hover:shadow-md flex items-center space-x-2">
+      <div class="flex w-full items-center space-x-4">
+        <button type="submit" class="btn btn-primary w-full flex items-center justify-center hover:shadow-lg">
           <i data-lucide="filter"></i>
           <span>Apply</span>
         </button>
-        <a href="/editor/articles" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
+        <a href="/editor/articles" class="btn btn-outline w-full flex items-center justify-center hover:shadow-md">
           <i data-lucide="refresh-cw"></i>
           <span>Reset</span>
         </a>
@@ -102,50 +83,47 @@
   </div>
 
   <!-- Articles Table -->
-  <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-    <table class="table w-full border-collapse border border-gray-300">
-      <thead class="bg-gray-200 text-gray-700">
+  <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+    <table class="table-auto w-full text-sm text-gray-700">
+      <thead class="bg-gray-100 border-b">
         <tr>
-          <th class="py-3 px-4">Title</th>
-          <th class="py-3 px-4">Author</th>
-          <th class="py-3 px-4">Category</th>
-          <th class="py-3 px-4">Status</th>
-          <th class="py-3 px-4">Last Updated</th>
-          <th class="py-3 px-4">Actions</th>
+          <th class="py-3 px-4 text-left">Title</th>
+          <th class="py-3 px-4 text-left">Author</th>
+          <th class="py-3 px-4 text-left">Category</th>
+          <th class="py-3 px-4 text-left">Status</th>
+          <th class="py-3 px-4 text-left">Last Updated</th>
+          <th class="py-3 px-4 text-left">Actions</th>
         </tr>
       </thead>
-      <tbody class="text-gray-600">
+      <tbody class="divide-y">
         {{#each articles}}
-        <tr class="hover:bg-gray-100">
-          <td class="py-2 px-4">{{this.title}}</td>
-          <td class="py-2 px-4">{{this.author_name}}</td>
-          <td class="py-2 px-4">{{this.category_name}}</td>
-          <td class="py-2 px-4">
+        <tr class="hover:bg-gray-50">
+          <td class="py-3 px-4">{{this.title}}</td>
+          <td class="py-3 px-4">{{this.author_name}}</td>
+          <td class="py-3 px-4">{{this.category_name}}</td>
+          <td class="py-3 px-4">
             <span class="badge badge-{{this.status}}">{{this.status}}</span>
           </td>
-          <td class="py-2 px-4">{{formatDate this.updated_at}}</td>
-          <td class="py-2 px-4 flex space-x-2">
+          <td class="py-3 px-4">{{formatDate this.updated_at}}</td>
+          <td class="py-3 px-4 flex items-center space-x-2">
             {{#if this.canReview}}
-            <a href="/editor/articles/{{this.id}}" class="btn btn-primary btn-sm flex items-center space-x-1">
-              <i data-lucide="eye"></i>
-              <span>Review</span>
+            <a href="/editor/articles/{{this.id}}" class="btn btn-sm btn-primary">
+              <i data-lucide="eye"></i> Review
             </a>
             {{/if}}
 
             {{#if this.canPublish}}
             <form action="/editor/articles/{{this.id}}/publish" method="POST">
-              <button type="submit" class="btn btn-success btn-sm flex items-center space-x-1">
-                <i data-lucide="check-circle"></i>
-                <span>Publish</span>
+              <button type="submit" class="btn btn-sm btn-success">
+                <i data-lucide="check-circle"></i> Publish
               </button>
             </form>
             {{/if}}
 
             {{#if this.canUnpublish}}
             <form action="/editor/articles/{{this.id}}/unpublish" method="POST">
-              <button type="submit" class="btn btn-warning btn-sm flex items-center space-x-1">
-                <i data-lucide="refresh-cw"></i>
-                <span>Unpublish</span>
+              <button type="submit" class="btn btn-sm btn-warning">
+                <i data-lucide="refresh-cw"></i> Unpublish
               </button>
             </form>
             {{/if}}

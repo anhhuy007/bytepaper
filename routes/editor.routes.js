@@ -16,13 +16,13 @@ router.get('/', (req, res) => {
 
 router.get(
   '/dashboard',
-  cacheMiddleware(editorCacheKeyGenerator.dashboard),
+  // cacheMiddleware(editorCacheKeyGenerator.dashboard),
   editorController.getDashboard,
 )
 
 router.get(
   '/articles',
-  cacheMiddleware(editorCacheKeyGenerator.articles),
+  // cacheMiddleware(editorCacheKeyGenerator.articles),
   editorController.getArticles,
 )
 
