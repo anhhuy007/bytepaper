@@ -1,23 +1,13 @@
-<div class="grid grid-cols-[65%_2%_33%]">
+<div class="container mx-auto w-full
+  {{!-- Featured Articles Carousel --}}
   {{!-- Render 6 large articles here --}}
   <div class="flex flex-col">
-    <h1 class="header">Latest Articles</h1>
+    <h1 class="text-3xl font-bold space-y-10">Latest Articles</h1>
+    <div class="w-full h-[1px] bg-black mb-7"></div>
+
     <div class="space-y-8">
       {{#each articles}} {{#if (between @index 0 5)}}
       <div class="w-full">{{> article/large-2-article article=this}}</div>
-      {{/if}} {{/each}}
-    </div>
-  </div>
-
-  {{!-- Gap --}}
-  <div></div>
-
-  {{!-- Render 4 small articles here --}}
-  <div class="space-y-4">
-    <h1 class="header">Upcoming Streams</h1>
-    <div class="border-2 p-2 space-y-6">
-      {{#each articles}} {{#if (between @index 6 10)}}
-      <div class="w-full p-1">{{> article/small-carousel-item-article article=this}}</div>
       {{/if}} {{/each}}
     </div>
   </div>

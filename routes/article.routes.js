@@ -34,13 +34,13 @@ router.get(
 
 router.get(
   '/home',
-  cacheMiddleware(articleCacheKeyGenerator.homepage),
+  // cacheMiddleware(articleCacheKeyGenerator.homepage),
   viewRenderer('home', 'main', articleController.getHomepageArticles),
 )
 
 router.get(
   '/:id',
-  cacheMiddleware(articleCacheKeyGenerator.details),
+  // cacheMiddleware(articleCacheKeyGenerator.details),
   articleController.getArticleById,
 )
 
