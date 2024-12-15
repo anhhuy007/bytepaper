@@ -73,6 +73,33 @@ Handlebars.registerHelper('formatDate', (date, formatString = 'yyyy-MM-dd') => {
   }
 })
 
+Handlebars.registerHelper('formatDateTime', (date, formatString = 'yyyy-MM-dd HH:mm:ss') => {
+  try {
+    console.log('==> Received date:', date)
+
+    // Parse date and validate
+    const parsedDate = new Date(date)
+    if (!isValid(parsedDate)) {
+      console.error('Invalid date:', date)
+      return 'Invalid date'
+    }
+
+    // Ensure formatString is a valid string
+    if (typeof formatString !== 'string') {
+      console.warn(`Invalid formatString: ${formatString}. Using default 'yyyy-MM-dd HH:mm:ss'.`)
+      formatString = 'yyyy-MM-dd HH:mm:ss'
+    }
+
+    // Format and return the date
+    const formattedDate = format(parsedDate, formatString)
+    console.log('Formatted date:', formattedDate)
+    return formattedDate
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return 'Error formatting date'
+  }
+})
+
 Handlebars.registerHelper('paginationPages', function (currentPage, totalPages) {
   const pages = []
   const startPage = Math.max(1, currentPage - 2)

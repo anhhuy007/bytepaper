@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/output.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100">
     <div class="min-h-screen flex">
@@ -14,13 +15,13 @@
       <aside class="w-64 bg-white shadow-lg hidden md:block">
         <div class="p-6">
           <!-- Sidebar Title -->
-          <h2 class="text-2xl font-bold flex items-center space-x-2 text-gray-800 mb-6">
-            <i data-lucide="feather" class="text-primary"></i>
-            <span>Editor Panel</span>
-          </h2>
+          <a href="/" class="flex items-center mx-auto">
+            <img src="/assets/logo.png" alt="Paperly" class="h-8 w-8" />
+            <span class="text-2xl font-bold text-orange-500">Paperly</span>
+          </a>
 
           <!-- Navigation Links -->
-          <ul class="space-y-4">
+          <ul class="space-y-4 mt-10">
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
               <a href="/" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
                 <i data-lucide="home"></i>
@@ -100,10 +101,7 @@
               </a>
             </li>
             <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a
-                href="/writer/profile"
-                class="px-4 py-2 flex items-center space-x-2 text-gray-700"
-              >
+              <a href="/writer/profile" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
                 <i data-lucide="user"></i>
                 <span>Profile</span>
               </a>
