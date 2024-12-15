@@ -13,7 +13,7 @@
                   >{{article.category.name}}</a
                 >
                 {{/if}}
-                <time datetime="{{article.published_at}}">Publish Date: {{formatDate article.published_at}}</time>
+                <time datetime="{{article.published_at}}">Publish Date: {{formatDateTime article.published_at}}</time>
               </div>
               <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold pt-5 text-gray-900">
                 {{default article.title 'Untitled Article'}}
