@@ -1,0 +1,171 @@
+{{!-- views/auth/login.hbs --}}
+<div class="min-h-screen w-full p-4 flex items-center justify-center">
+  <div class="flex mx-auto min-h-[600px] max-w-4xl">
+    <div class="w-full overflow-hidden rounded-3xl">
+      <div class="grid md:grid-cols-2 p-2 bg-slate-100">
+        <!-- Left: Illustration -->
+        <div class="flex items-center justify-center p-12">
+          <img
+            src="/assets/login-fellows.png"
+            alt="Login illustration"
+            class="w-80 h-80 object-cover"
+          />
+        </div>
+
+        <!-- Right: Login Form -->
+        <div class="flex-grow flex items-center justify-center p-2">
+          <div class="w-full max-w-md">
+            <div class="bg-white shadow-xl rounded-3xl p-12">
+              <!-- Error Feedback -->
+              <div id="formError" class="hidden bg-red-100 text-red-800 p-4 rounded mb-4"></div>
+
+              <!-- Welcome Message -->
+              <div class="space-y-2 text-center pb-10">
+                <h1 class="text-2xl font-bold tracking-tight">Welcome back!</h1>
+                <p class="text-sm text-zinc-500">Please enter your details to login.</p>
+              </div>
+
+              <!-- Login Form -->
+              <form id="loginForm" class="space-y-4" method="POST" action="/auth/login">
+                <!-- Username -->
+                <div>
+                  <label for="username" class="block text-sm font-medium text-gray-700"
+                    >Username</label
+                  >
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    placeholder="Enter your username"
+                    required
+                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800"
+                  />
+                </div>
+
+                <!-- Password -->
+                <div>
+                  <label for="password" class="block text-sm font-medium text-gray-700"
+                    >Password</label
+                  >
+                  <div class="relative">
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      required
+                      class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800"
+                    />
+                    <button
+                      type="button"
+                      onclick="togglePasswordVisibility()"
+                      class="absolute inset-y-0 right-0 px-2 flex items-center"
+                    >
+                      <span id="eye-show" class="block">{{> icons/eye }}</span>
+                      <span id="eye-hide" class="hidden">{{> icons/eye-slash }}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Forgot Password Link -->
+                <div class="flex justify-end py-5">
+                  <a href="/auth/forgot-password" class="text-sm text-zinc-800 hover:underline"
+                    >Forgot Password?</a
+                  >
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                  type="submit"
+                  id="submitButton"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-800"
+                >
+                  Log In
+                </button>
+              </form>
+
+              <!-- Divider -->
+              <div class="mt-6">
+                <div class="relative">
+                  <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                  </div>
+                  <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Social Login -->
+              <div class="mt-6">
+                <button
+                  type="button"
+                  onclick="window.location.href='/auth/google'"
+                  class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                >
+                  {{> icons/google }} Google
+                </button>
+              </div>
+
+              <!-- Sign Up -->
+              <div class="mt-6 text-center text-sm">
+                Don't have an account?
+                <a href="/auth/signup" class="font-medium text-blue-600 hover:text-blue-500"
+                  >Sign up</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toggle Password Visibility -->
+<script>
+  function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password')
+    const eyeShow = document.getElementById('eye-show')
+    const eyeHide = document.getElementById('eye-hide')
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text'
+      eyeShow.classList.add('hidden')
+      eyeHide.classList.remove('hidden')
+    } else {
+      passwordInput.type = 'password'
+      eyeShow.classList.remove('hidden')
+      eyeHide.classList.add('hidden')
+    }
+  }
+</script>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+
+    try {
+      const response = await axios.post('/auth/login', Object.fromEntries(formData))
+      if (response.data.success) {
+        // Redirect nếu login thành công
+        window.location.href = response.data.redirectUrl
+      } else {
+        // Hiển thị lỗi lên giao diện nếu login thất bại
+        displayError(response.data.message || 'An unexpected error occurred.')
+      }
+    } catch (error) {
+      // Xử lý lỗi bất ngờ từ server
+      displayError(error.response?.data?.message || 'A server error occurred. Please try again.')
+    }
+  })
+
+  // Hàm hiển thị lỗi lên giao diện
+  function displayError(message) {
+    const errorDiv = document.querySelector('#formError')
+    if (errorDiv) {
+      errorDiv.textContent = message
+      errorDiv.classList.remove('hidden')
+    }
+  }
+</script>

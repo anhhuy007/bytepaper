@@ -1,0 +1,139 @@
+{{!-- views/editor/review-article.hbs --}}
+<div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
+  <!-- Page Title -->
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
+      <i data-lucide="eye" class="text-primary"></i>
+      <span>Review Article</span>
+    </h1>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center space-x-4">
+      <!-- Back Button -->
+      <a href="/editor/articles" class="btn btn-secondary flex items-center space-x-2">
+        <i data-lucide="arrow-left"></i>
+        <span>Back</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Article Content -->
+  <div class="space-y-6">
+    <!-- Title -->
+    <div class="form-control">
+      <label for="title" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="type"></i>
+        <span>Title</span>
+      </label>
+      <input
+        type="text"
+        id="title"
+        class="input input-bordered w-full bg-gray-100"
+        value="{{article.title}}"
+        disabled
+      />
+    </div>
+
+    <!-- Abstract -->
+    <div class="form-control">
+      <label for="abstract" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="align-left"></i>
+        <span>Abstract</span>
+      </label>
+      <textarea
+        id="abstract"
+        class="textarea textarea-bordered w-full bg-gray-100"
+        disabled
+      >{{article.abstract}}</textarea>
+    </div>
+
+    <!-- Content -->
+    <div class="form-control">
+      <label for="content" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="file-text"></i>
+        <span>Content</span>
+      </label>
+      <div id="content" class="quill-editor bg-gray-50 border border-gray-300 rounded-md p-4">
+        {{{article.content}}}
+      </div>
+    </div>
+
+    <!-- Thumbnail -->
+    <div class="form-control">
+      <label for="thumbnail" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="image"></i>
+        <span>Thumbnail</span>
+      </label>
+      <img src="{{article.thumbnail}}" alt="Thumbnail" class="max-w-[200px] h-auto rounded-lg shadow-md" />
+    </div>
+
+    <!-- Category -->
+    <div class="form-control">
+      <label for="category" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="folder"></i>
+        <span>Category</span>
+      </label>
+      <input
+        type="text"
+        id="category"
+        class="input input-bordered w-full bg-gray-100"
+        value="{{article.category_name}}"
+        disabled
+      />
+    </div>
+
+    <!-- Tags -->
+    <div class="form-control">
+      <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
+        <i data-lucide="tag"></i>
+        <span>Tags</span>
+      </label>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {{#each tags}}
+        <div class="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="tag-{{this.id}}"
+            class="checkbox"
+            {{#if this.selected}}checked{{/if}}
+            disabled
+          />
+          <label for="tag-{{this.id}}" class="text-sm text-gray-600">{{this.name}}</label>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-center space-x-4">
+      <!-- Approve Button -->
+      <form action="/editor/articles/{{article.id}}/approve" method="GET">
+        <button type="submit" class="btn btn-success flex items-center space-x-2">
+          <i data-lucide="check-circle"></i>
+          <span>Approve</span>
+        </button>
+      </form>
+
+      <!-- Reject Button -->
+      <form action="/editor/articles/{{article.id}}/reject" method="GET">
+        <button type="submit" class="btn btn-error flex items-center space-x-2">
+          <i data-lucide="x-circle"></i>
+          <span>Reject</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+<script>
+  Quill.register('modules/imageUploader', window.ImageUploader);
+  const quill = new Quill('#content', {
+    theme: 'snow',
+    readOnly: true,
+    modules: {
+      toolbar: false,
+    },
+  });
+</script>

@@ -1,12 +1,50 @@
-<html data-theme="light">
-    <head>
-        <meta charset="utf-8" />
-        <title>Example App</title>
-        <link rel="stylesheet" href="output.css" />
-    </head>
-    <body>
+{{!-- views/layouts/main.hbs --}}
+<!DOCTYPE html>
+<html lang="en" data-theme="emerald">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{#if title}}{{title}} | {{/if}}Paperly</title>
 
-        {{{body}}}
+    <!-- TailwindCSS -->
+    <link rel="stylesheet" href="/output.css" />
 
-    </body>
+    <!-- Include Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Optional: AOS for animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Axios for HTTP requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script defer src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body class="flex flex-col min-h-screen bg-gray-50 text-gray-900">
+    <!-- Header Section -->
+    {{> header}}
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto py-8 px-4 md:px-16 lg:px-32">
+      {{{body}}}
+    </main>
+
+    <!-- Footer Section -->
+    {{> footer}}
+
+    <!-- Custom Scripts -->
+    <script src="/script.js"></script>
+
+    <!-- Initialize AOS -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        AOS.init();
+        lucide.createIcons(); // Initialize Lucide Icons
+      });
+    </script>
+  </body>
 </html>
+

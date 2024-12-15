@@ -1,0 +1,147 @@
+{{!-- views/articles/detail.hbs --}}
+<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8 space-y-12" id="articleDetail">
+  <!-- Main Article Section -->
+  <div class="flex-1 space-y-12">
+    <!-- Back Button -->
+    <a href="/articles/filter" class="link text-primary flex items-center gap-2">
+      <i data-lucide="arrow-left"></i>
+      <span>Back to Articles</span>
+    </a>
+    <!-- Article Header -->
+    <header class="space-y-4">
+      <h1 class="text-4xl font-extrabold text-gray-800">
+        {{default article.title 'Untitled Article'}}
+      </h1>
+      <div class="flex justify-between items-center">
+        <!-- Metadata -->
+        <div class="flex items-center gap-4 text-gray-600">
+          <span>{{formatDate article.published_at}}</span>
+          {{#if article.category}}
+          <a
+            href="/articles/categories/{{article.category.id}}"
+            class="link text-primary font-medium hover:underline flex items-center gap-1"
+          >
+            <i data-lucide="folder"></i> {{article.category.name}}
+          </a>
+          {{/if}}
+        </div>
+
+        <!-- Premium Indicator and Download -->
+        <div class="flex items-center gap-2">
+          {{#if article.is_premium}}
+          <span class="badge badge-primary flex items-center gap-2 px-3 py-3 text-white text-sm">
+            <i data-lucide="star"></i>
+            <span>Premium</span>
+          </span>
+          {{#if user}} {{#if (eq user.role "subscriber")}}
+          <a href="/download/{{article.id}}" class="btn btn-primary flex items-center gap-2">
+            <i data-lucide="download"></i>
+            <span>Download</span>
+          </a>
+          {{else}}
+          <a href="/user/extend-subscription" class="btn btn-secondary flex items-center gap-2">
+            <i data-lucide="arrow-up-circle"></i>
+            <span>Subscribe to Download</span>
+          </a>
+          {{/if}} {{else}}
+          <a href="/auth/login" class="btn btn-secondary flex items-center gap-2">
+            <i data-lucide="log-in"></i>
+            <span>Login to Download</span>
+          </a>
+          {{/if}} {{/if}}
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2">
+        {{#each article.tags as |tag|}}
+        <a
+          href="/articles/tags/{{tag.id}}"
+          class="badge badge-outline text-sm flex items-center gap-1 hover:bg-primary hover:text-white transition p-4"
+        >
+          <i data-lucide="tag"></i> {{tag.name}}
+        </a>
+        {{/each}}
+      </div>
+    </header>
+
+    <!-- Article Thumbnail -->
+    {{#if article.thumbnail}}
+    <figure class="w-full rounded-lg overflow-hidden shadow-md">
+      <img
+        src="{{article.thumbnail}}"
+        alt="{{default article.title 'Article Thumbnail'}}"
+        class="w-full h-auto object-cover"
+      />
+    </figure>
+    {{/if}}
+
+    <!-- Article Content -->
+    <section class="prose lg:prose-lg max-w-none text-gray-700 space-y-6">
+      {{#if article.content}}
+        {{{article.content}}}
+      {{else}}
+        <p>No content available.</p>
+      {{/if}}
+    </section>
+
+    <!-- Comments Section -->
+    <section id="comments" class="space-y-6">
+      <h2 class="text-2xl font-bold flex items-center gap-2">
+        <i data-lucide="message-square"></i>
+        <span>Comments</span>
+      </h2>
+
+      <!-- Comment Form -->
+      {{#if user}}
+      <form
+        id="comment-form"
+        action="/articles/{{article.id}}/comments"
+        method="POST"
+        class="space-y-4"
+      >
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Your Comment</span>
+          </label>
+          <textarea
+            name="content"
+            class="textarea textarea-bordered w-full"
+            placeholder="Write your comment here..."
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary flex items-center gap-2">
+          <i data-lucide="send"></i>
+          <span>Submit</span>
+        </button>
+      </form>
+      {{else}}
+      <p class="text-gray-500">
+        <a href="/auth/login" class="link text-primary">Login</a> or
+        <a href="/auth/register" class="link text-primary">Register</a> to post a comment.
+      </p>
+      {{/if}}
+
+      <!-- Comments List -->
+      <div class="space-y-4">
+        {{#each comments as |comment|}} {{> comment-item comment}} {{else}}
+        <p class="text-gray-500">No comments yet. Be the first to comment!</p>
+        {{/each}}
+      </div>
+    </section>
+  </div>
+
+  <!-- Related Articles -->
+  <section class="space-y-6">
+    <h2 class="text-2xl font-bold flex items-center gap-2">
+      <i data-lucide="book-open"></i>
+      <span>Related Articles</span>
+    </h2>
+    <div class="grid grid-cols-1 gap-6">
+      {{#each relatedArticles}} {{> related-article article=this}} {{else}}
+      <p class="text-gray-500">No related articles available.</p>
+      {{/each}}
+    </div>
+  </section>
+</div>

@@ -1,0 +1,57 @@
+{{!-- views/admin/dashboard.hbs --}}
+
+<div class="container mx-auto px-4 py-8">
+  <!-- Page Header -->
+  <h1 class="text-4xl font-extrabold text-gray-800 mb-12 text-center">Admin Dashboard</h1>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <!-- Total Users -->
+    <a
+      href="/admin/users"
+      class="block bg-white shadow-lg rounded-lg p-8 text-center hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+    >
+      <div class="mb-4">
+        <i data-lucide="user" class="text-blue-500 text-4xl"></i>
+      </div>
+      <div class="text-xl font-semibold text-gray-600 mb-2">Total Users</div>
+      <div class="text-5xl font-bold text-blue-600">{{stats.totalUsers}}</div>
+    </a>
+
+    <!-- Total Articles -->
+    <a
+      href="/admin/articles"
+      class="block bg-white shadow-lg rounded-lg p-8 text-center hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+    >
+      <div class="mb-4">
+        <i data-lucide="file-text" class="text-green-500 text-4xl"></i>
+      </div>
+      <div class="text-xl font-semibold text-gray-600 mb-2">Total Articles</div>
+      <div class="text-5xl font-bold text-green-600">{{stats.totalArticles}}</div>
+    </a>
+
+    <!-- Total Categories -->
+    <a
+      href="/admin/categories"
+      class="block bg-white shadow-lg rounded-lg p-8 text-center hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+    >
+      <div class="mb-4">
+        <i data-lucide="layers" class="text-purple-500 text-4xl"></i>
+      </div>
+      <div class="text-xl font-semibold text-gray-600 mb-2">Total Categories</div>
+      <div class="text-5xl font-bold text-purple-600">{{stats.totalCategories}}</div>
+    </a>
+
+    <!-- Total Tags -->
+    <a
+      href="/admin/tags"
+      class="block bg-white shadow-lg rounded-lg p-8 text-center hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+    >
+      <div class="mb-4">
+        <i data-lucide="tag" class="text-yellow-500 text-4xl"></i>
+      </div>
+      <div class="text-xl font-semibold text-gray-600 mb-2">Total Tags</div>
+      <div class="text-5xl font-bold text-yellow-600">{{stats.totalTags}}</div>
+    </a>
+  </div>
+</div>

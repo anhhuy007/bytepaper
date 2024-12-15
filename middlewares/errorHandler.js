@@ -1,28 +1,23 @@
 // middlewares/errorHandler.js
 
-/**
- * Express.js error handling middleware.
- *
- * This middleware function handles errors that occur during request processing.
- * It logs the error and sends an error response back to the client.
- *
- * @param {Error} err - The error object representing the error that occurred.
- * @param {Object} req - The Express.js request object.
- * @param {Object} res - The Express.js response object.
- * @param {Function} next - The Express.js next middleware function.
- */
 const errorHandler = (err, req, res, next) => {
-  // Log the error for debugging purposes
-  console.error(err);
+  console.error(err)
+  const statusCode = err.statusCode || 500
+  const message = err.message || 'Internal Server Error'
 
-  // Set the response status code (default to 500 for server errors)
-  const statusCode = err.statusCode || 500;
+  if (req.xhr || req.headers.accept?.indexOf('json') > -1) {
+    return res.status(statusCode).json({ 
+      success: false, 
+      message 
+    })
+  }
 
-  // Send a JSON response containing the error message
-  res.status(statusCode).json({
-    success: false,
-    message: err.message || "Internal Server Error",
-  });
-};
+  res.status(statusCode).render('errors/error', {
+    layout: 'main',
+    statusCode,
+    message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : null
+  })
+}
 
-export default errorHandler;
+export default errorHandler

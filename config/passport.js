@@ -1,75 +1,76 @@
 // config/passport.js
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import dotenv from "dotenv";
-import userService from "../services/userService.js";
+import passport from 'passport'
+import { Strategy as LocalStrategy } from 'passport-local'
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
+import dotenv from 'dotenv'
+import userService from '../services/user.service.js'
 
-dotenv.config();
+dotenv.config()
 
 // Local Strategy for username/password authentication
 passport.use(
   new LocalStrategy(
-    {
-      usernameField: "username",
-      passwordField: "password",
-    },
+    { usernameField: 'username', passwordField: 'password' },
     async (username, password, done) => {
       try {
-        const user = await userService.authenticateUser({
-          username,
-          password,
-        });
+        console.log('Authenticating user:', username)
+        const user = await userService.authenticateUser({ username, password })
         if (!user) {
-          return done(null, false, { message: "Invalid credentials" });
+          console.warn('Invalid credentials for username:', username)
+          return done(null, false, { message: 'Invalid username or password' })
         }
-        return done(null, user);
+        return done(null, user)
       } catch (error) {
-        return done(error);
+        console.error('Error during user authentication:', error)
+        return done(error)
       }
+    },
+  ),
+)
+
+// Serialize user for session
+passport.serializeUser((user, done) => {
+  if (!user || !user.id) {
+    console.error('User object is invalid:', user)
+    return done(new Error('Failed to serialize user'))
+  }
+  done(null, user.id) // Store user ID in session
+})
+
+// Deserialize user from session
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await userService.getUserById(id) // Ensure this function works as expected
+    if (!user) {
+      console.warn('No user found with id:', id) // Debug log
+      return done(new Error('User not found'))
     }
-  )
-);
+    done(null, user)
+  } catch (error) {
+    console.error('Error in deserializing user:', error) // Debug log
+    done(error, null)
+  }
+})
 
-// JWT Strategy for token authentication
-const opts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET || "your_jwt_secret",
-};
-
+// Google Strategy for OAuth authentication
 passport.use(
-  new JwtStrategy(opts, async (jwt_payload, done) => {
-    try {
-      const user = await userService.getUserById(jwt_payload.id);
-      if (user) {
-        return done(null, user);
-      } else {
-        return done(null, false);
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: 'http://localhost:3000/auth/google/callback',
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const user = await userService.findOrCreateByGoogle(profile)
+        console.log('Google user authenticated:', user) // Debug log
+        return done(null, user)
+      } catch (error) {
+        console.error('Error in Google strategy:', error)
+        return done(error, false)
       }
-    } catch (error) {
-      return done(error, false);
-    }
-  })
-);
+    },
+  ),
+)
 
-// TODO: Google Strategy for OAuth authentication
-// passport.use(
-//   new GoogleStrategy(
-//     {
-//       clientID: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//       callbackURL: "/api/auth/google/callback",
-//     },
-//     async (accessToken, refreshToken, profile, done) => {
-//       try {
-//         const user = await userService.findOrCreateByGoogle(profile);
-//         return done(null, user);
-//       } catch (error) {
-//         return done(error, false);
-//       }
-//     }
-//   )
-// );
-
-export default passport;
+export default passport

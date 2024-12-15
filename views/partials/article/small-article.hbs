@@ -1,0 +1,40 @@
+{{!-- views/partials/article/small-article.hbs --}}
+<div class="flex flex-col">
+  <div class="relative group bg-white overflow-hidden">
+    <a href="/articles/{{ article.id }}" class="absolute inset-0"></a>
+
+    {{!-- Thumbnail --}}
+    <div>
+      <img
+        src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
+        alt="{{ default article.title 'Untitled Article' }}"
+        class="w-full h-40 object-cover transition-transform duration-300 group-hover:filter group-hover:brightness-75"
+      />
+    </div>
+
+    <div class="my-4">
+      {{!-- Title --}}
+      <h2 class="text-lg font-bold leading-tight mb-2 group-hover:underline">
+        {{ default article.title "Untitled Article" }}
+      </h2>
+
+      {{!-- Abstract --}}
+      <p class="text-gray-700 text-sm leading-relaxed mb-4">
+        {{ default article.abstract "No summary available." }}
+      </p>
+
+      {{!-- Metadata --}}
+      <div class="flex items-center text-gray-500 text-xs">
+        <span>{{ formatDate article.published_at }}</span>
+        <span class="mx-2">|</span>
+        <a
+          href="/categories/{{ default article.category_id '#' }}"
+          class="z-20 text-blue-500 hover:underline"
+        >
+          {{ default article.category "Uncategorized" }}
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="border"></div>
+</div>

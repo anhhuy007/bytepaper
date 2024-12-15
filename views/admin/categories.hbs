@@ -1,0 +1,134 @@
+{{!-- views/admin/categories.hbs --}}
+{{!-- views/admin/categories.hbs --}}
+<div class="container mx-auto px-4 py-8">
+  <!-- Page Header -->
+  <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
+      <i data-lucide="folder" class="text-blue-500"></i>
+      <span>Categories Management</span>
+    </h1>
+    <a href="/admin/categories/add" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
+      <i data-lucide="plus-circle"></i>
+      <span>Add Category</span>
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
+    <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" method="GET">
+      <!-- Sort By -->
+      <div>
+        <label for="orderBy" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+          <i data-lucide="sort-desc" class="text-gray-500"></i>
+          <span>Sort By</span>
+        </label>
+        <select id="orderBy" name="orderBy" class="select select-bordered w-full">
+          <option value="name ASC" {{#if (eq query.orderBy "name ASC")}}selected{{/if}}>Name A-Z</option>
+          <option value="name DESC" {{#if (eq query.orderBy "name DESC")}}selected{{/if}}>Name Z-A</option>
+        </select>
+      </div>
+
+      <!-- Limit -->
+      <div>
+        <label for="limit" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+          <i data-lucide="list" class="text-gray-500"></i>
+          <span>Items per Page</span>
+        </label>
+        <input
+          type="number"
+          id="limit"
+          name="limit"
+          class="input input-bordered w-full"
+          placeholder="Items per page"
+          min="1"
+          value="{{query.limit}}"
+        />
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex items-end space-x-4 col-span-2 lg:col-span-1 justify-end">
+        <button type="submit" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
+          <i data-lucide="filter"></i>
+          <span>Apply</span>
+        </button>
+        <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
+          <i data-lucide="refresh-cw"></i>
+          <span>Reset</span>
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Categories Table -->
+  {{#if categories.length}}
+  <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+      <table class="table w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
+    <thead class="bg-gray-100 text-gray-700">
+      <tr>
+        <th class="py-3 px-6 text-left space-x-2">
+          <span class="font-semibold text-lg">Category Name</span>
+        </th>
+        <th class="py-3 px-6 text-left space-x-2">
+          <span class="font-semibold text-lg">Parent Category</span>
+        </th>
+        <th class="py-3 px-6 text-left space-x-2">
+          <span class="font-semibold text-lg">Actions</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="text-gray-600 divide-y divide-gray-200">
+      {{#each categories}}
+      <tr class="hover:bg-gray-50">
+        <td class="py-3 px-6 text-sm font-medium">{{this.name}}</td>
+        <td class="py-3 px-6 text-sm font-medium">{{default this.parent_name 'None'}}</td>
+        <td class="py-3 px-6 flex items-center space-x-3">
+          <!-- Edit Button -->
+          <a
+            href="/admin/categories/edit/{{this.id}}"
+            class="btn btn-sm btn-warning flex items-center space-x-2 hover:bg-yellow-400"
+          >
+            <i data-lucide="edit" class="w-4 h-4"></i>
+            <span>Edit</span>
+          </a>
+
+          <!-- Delete Button -->
+          <form
+            action="/admin/categories/delete/{{this.id}}"
+            method="POST"
+            onsubmit="return confirmDelete('{{this.name}}')"
+            class="inline-block"
+          >
+            <button
+              type="submit"
+              class="btn btn-sm btn-error flex items-center space-x-2 hover:bg-red-500"
+            >
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              <span>Delete</span>
+            </button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
+  {{else}}
+  <div class="text-center text-gray-500 mt-8">No categories found.</div>
+  {{/if}}
+</div>
+
+<script>
+  function confirmDelete(categoryName) {
+    return confirm(`Are you sure you want to delete category "${categoryName}"?`);
+  }
+</script>
+
+
+
+

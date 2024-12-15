@@ -1,0 +1,157 @@
+{{!-- views/admin/users.hbs --}}
+<div class="container mx-auto px-4 py-8">
+  <!-- Page Header -->
+  <div class="flex flex-wrap justify-between items-center mb-8 gap-4">
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
+      <i data-lucide="users" class="text-blue-500"></i>
+      <span>Users Management</span>
+    </h1>
+    <a href="/admin/users/add" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
+      <i data-lucide="user-plus"></i>
+      <span>Add User</span>
+    </a>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
+    <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" method="GET">
+      <!-- Username Filter -->
+      <div>
+        <label for="username" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+          <i data-lucide="search" class="text-gray-500"></i>
+          <span>Search by Username</span>
+        </label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="input input-bordered w-full"
+          placeholder="Username"
+          value="{{query.username}}"
+        />
+      </div>
+
+      <!-- Role Filter -->
+      <div>
+        <label for="role" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+          <i data-lucide="briefcase" class="text-gray-500"></i>
+          <span>Role</span>
+        </label>
+        <select id="role" name="role" class="select select-bordered w-full">
+          <option value="">All Roles</option>
+          {{#each roles}}
+          <option value="{{this}}" {{#if (eq this ../query.role)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <!-- Sort By -->
+      <div>
+        <label for="orderBy" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+          <i data-lucide="sort-asc" class="text-gray-500"></i>
+          <span>Sort By</span>
+        </label>
+        <select id="orderBy" name="orderBy" class="select select-bordered w-full">
+          <option value="created_at DESC" {{#if (eq query.orderBy "created_at DESC")}}selected{{/if}}>Newest</option>
+          <option value="created_at ASC" {{#if (eq query.orderBy "created_at ASC")}}selected{{/if}}>Oldest</option>
+          <option value="username ASC" {{#if (eq query.orderBy "username ASC")}}selected{{/if}}>Username A-Z</option>
+          <option value="username DESC" {{#if (eq query.orderBy "username DESC")}}selected{{/if}}>Username Z-A</option>
+        </select>
+      </div>
+
+      <!-- Limit -->
+      <div>
+        <label for="limit" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+          <i data-lucide="list" class="text-gray-500"></i>
+          <span>Items per Page</span>
+        </label>
+        <input
+          type="number"
+          id="limit"
+          name="limit"
+          class="input input-bordered w-full"
+          placeholder="Items per page"
+          min="1"
+          value="{{query.limit}}"
+        />
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex items-start space-x-4 col-span-2 lg:col-span-1 ">
+        <button type="submit" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
+          <i data-lucide="filter"></i>
+          <span>Apply</span>
+        </button>
+        <a href="/admin/users" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
+          <i data-lucide="refresh-cw"></i>
+          <span>Reset</span>
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Users Table -->
+  {{#if users.length}}
+  <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    <table class="table w-full border-collapse border border-gray-300">
+      <thead class="bg-gray-200 text-gray-700">
+        <tr>
+          <th class="py-3 px-4 text-left font-semibold">Username</th>
+          <th class="py-3 px-4 text-left font-semibold">Full Name</th>
+          <th class="py-3 px-4 text-left font-semibold">Email</th>
+          <th class="py-3 px-4 text-left font-semibold">Role</th>
+          <th class="py-3 px-4 text-left font-semibold">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-600 divide-y divide-gray-200">
+        {{#each users}}
+        <tr class="hover:bg-gray-50">
+          <td class="py-3 px-4">{{this.username}}</td>
+          <td class="py-3 px-4">{{this.full_name}}</td>
+          <td class="py-3 px-4">{{this.email}}</td>
+          <td class="py-3 px-4 capitalize">{{this.role}}</td>
+          <td class="py-3 px-4 flex items-center space-x-4">
+            <a
+              href="/admin/users/edit/{{this.id}}"
+              class="btn btn-sm btn-warning hover:shadow-md flex items-center space-x-2"
+            >
+              <i data-lucide="edit"></i>
+              <span>Edit</span>
+            </a>
+            <form
+              action="/admin/users/delete/{{this.id}}"
+              method="POST"
+              onsubmit="return confirmDelete('{{this.username}}')"
+              class="inline-block"
+            >
+              <button
+                type="submit"
+                class="btn btn-sm btn-error hover:shadow-md flex items-center space-x-2"
+              >
+                <i data-lucide="trash-2"></i>
+                <span>Delete</span>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
+  </div>
+  {{else}}
+  <div class="text-center text-gray-500 mt-8">No users found.</div>
+  {{/if}}
+</div>
+
+<script>
+  function confirmDelete(userName) {
+    return confirm(`Are you sure you want to delete user "${userName}"?`);
+  }
+</script>
+
+

@@ -24,19 +24,19 @@
  */
 export const buildSelectQuery = ({
   table,
-  columns = ["*"],
-  where = "",
-  orderBy = "",
-  limit = "",
-  offset = "",
+  columns = ['*'],
+  where = '',
+  orderBy = '',
+  limit = '',
+  offset = '',
 }) => {
-  let query = `SELECT ${columns.join(", ")} FROM ${table}`;
-  if (where) query += ` WHERE ${where}`;
-  if (orderBy) query += ` ORDER BY ${orderBy}`;
-  if (limit) query += ` LIMIT ${limit}`;
-  if (offset) query += ` OFFSET ${offset}`;
-  return query;
-};
+  let query = `SELECT ${columns.join(', ')} FROM ${table}`
+  if (where) query += ` WHERE ${where}`
+  if (orderBy) query += ` ORDER BY ${orderBy}`
+  if (limit) query += ` LIMIT ${limit}`
+  if (offset) query += ` OFFSET ${offset}`
+  return query
+}
 
 /**
  * Builds an INSERT query based on the provided options
@@ -57,12 +57,12 @@ export const buildSelectQuery = ({
  * // }
  */
 export const buildInsertQuery = ({ table, data }) => {
-  const columns = Object.keys(data);
-  const values = columns.map((col, idx) => `$${idx + 1}`);
-  const query = `INSERT INTO ${table} (${columns.join(", ")}) VALUES (${values.join(", ")}) RETURNING *`;
-  const params = Object.values(data);
-  return { query, params };
-};
+  const columns = Object.keys(data)
+  const values = columns.map((col, idx) => `$${idx + 1}`)
+  const query = `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${values.join(', ')}) RETURNING *`
+  const params = Object.values(data)
+  return { query, params }
+}
 
 /**
  * Builds an UPDATE query based on the provided options
@@ -85,17 +85,15 @@ export const buildInsertQuery = ({ table, data }) => {
  */
 export const buildUpdateQuery = ({ table, data, where }) => {
   // Get the columns to update
-  const columns = Object.keys(data);
+  const columns = Object.keys(data)
   // Construct the SET clause for the query
-  const setClause = columns
-    .map((col, idx) => `${col} = $${idx + 1}`)
-    .join(", ");
+  const setClause = columns.map((col, idx) => `${col} = $${idx + 1}`).join(', ')
   // Construct the full UPDATE query
-  const query = `UPDATE ${table} SET ${setClause} WHERE ${where} RETURNING *`;
+  const query = `UPDATE ${table} SET ${setClause} WHERE ${where} RETURNING *`
   // Get the parameter values for the query
-  const params = Object.values(data);
-  return { query, params };
-};
+  const params = Object.values(data)
+  return { query, params }
+}
 
 /**
  * Builds a DELETE query based on the provided options.
@@ -115,10 +113,10 @@ export const buildUpdateQuery = ({ table, data, where }) => {
  */
 export const buildDeleteQuery = ({ table, where }) => {
   // Construct the DELETE query string
-  const query = `DELETE FROM ${table} WHERE ${where} RETURNING *`;
+  const query = `DELETE FROM ${table} WHERE ${where} RETURNING *`
   // Return the constructed query
-  return query;
-};
+  return query
+}
 
 /**
  * Builds a WHERE clause based on the provided filters.
@@ -139,31 +137,33 @@ export const buildDeleteQuery = ({ table, where }) => {
  * // [1, "John Doe", [18, 65]]
  */
 export const buildWhereClause = (filters, startingIndex = 1) => {
-  const conditions = [];
-  const values = [];
-  let index = startingIndex;
+  const conditions = []
+  const values = []
+  let index = startingIndex
 
   for (const [key, value] of Object.entries(filters)) {
-    if (key === "$or") {
+    // Exclude null or undefined values
+    if (value === null || value === undefined || value === '') continue
+    if (key === '$or') {
       // Handle OR conditions
       const orConditions = value.map((condition) => {
-        const subConditions = [];
+        const subConditions = []
         for (const [subKey, subValue] of Object.entries(condition)) {
-          subConditions.push(`${subKey} = $${index}`);
-          values.push(subValue);
-          index++;
+          subConditions.push(`${subKey} = $${index}`)
+          values.push(subValue)
+          index++
         }
-        return `(${subConditions.join(" AND ")})`;
-      });
-      conditions.push(`(${orConditions.join(" OR ")})`);
+        return `(${subConditions.join(' AND ')})`
+      })
+      conditions.push(`(${orConditions.join(' OR ')})`)
     } else {
       // Handle standard conditions
-      conditions.push(`${key} = $${index}`);
-      values.push(value);
-      index++;
+      conditions.push(`${key} = $${index}`)
+      values.push(value)
+      index++
     }
   }
 
-  const whereClause = conditions.length ? conditions.join(" AND ") : "1=1";
-  return { whereClause, values };
-};
+  const whereClause = conditions.length ? conditions.join(' AND ') : '1=1'
+  return { whereClause, values }
+}

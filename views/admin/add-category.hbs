@@ -1,0 +1,80 @@
+{{!-- views/admin/add-category.hbs --}}
+<div class="container mx-auto px-4 py-8">
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
+      <i data-lucide="plus-circle" class="text-green-500"></i>
+      <span>Add Category</span>
+    </h1>
+    <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
+      <i data-lucide="arrow-left" class="text-gray-700"></i>
+      <span>Back to Categories</span>
+    </a>
+  </div>
+
+  <!-- Error/Success Message -->
+  <div id="responseMessage" class="hidden mt-4"></div>
+
+  <!-- Add Form -->
+  <form id="addCategoryForm" class="space-y-6">
+    <!-- Name Input -->
+    <div class="form-control">
+      <label class="label font-semibold text-gray-700">Name</label>
+      <input
+        type="text"
+        name="name"
+        class="input input-bordered"
+        placeholder="Enter category name"
+        required
+      />
+    </div>
+
+    <!-- Parent Category -->
+    <div class="form-control">
+      <label class="label font-semibold text-gray-700">Parent Category</label>
+      <select name="parent_id" class="select select-bordered">
+        <option value="">None</option>
+        {{#each categories}}
+        <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end space-x-4">
+      <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
+        <i data-lucide="x-circle"></i>
+        <span>Cancel</span>
+      </a>
+      <button type="submit" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
+        <i data-lucide="check-circle"></i>
+        <span>Add Category</span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('addCategoryForm');
+  const responseMessage = document.getElementById('responseMessage');
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      await axios.post('/admin/categories/add', data);
+      responseMessage.className = 'alert alert-success shadow-lg mt-4';
+      responseMessage.textContent = 'Category added successfully!';
+      responseMessage.hidden = false;
+      form.reset();
+      setTimeout(() => (window.location.href = '/admin/categories'), 2000);
+    } catch (error) {
+      responseMessage.className = 'alert alert-error shadow-lg mt-4';
+      responseMessage.textContent = error.response?.data?.message || 'Failed to add category.';
+      responseMessage.hidden = false;
+    }
+  });
+</script>
+

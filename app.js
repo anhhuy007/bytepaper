@@ -1,84 +1,118 @@
-import express from "express";
-import dotenv from "dotenv";
-import morgan from "morgan";
-import helmet from "helmet";
-import cors from "cors";
-import routes from "./routes/index.js";
-import errorHandler from "./middlewares/errorHandler.js";
-import passport from "./config/passport.js";
-import session from "express-session";
+// app.js
+// Core modules
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-import path from "path";
-import { fileURLToPath } from "url";
-import { engine } from "express-handlebars";
-import livereload from "livereload";
-import connectLivereload from "connect-livereload";
+// Third-party libraries
+import express from 'express'
+import dotenv from 'dotenv'
+import morgan from 'morgan'
+import helmet from 'helmet'
+import cors from 'cors'
+import session from 'express-session'
+import livereload from 'livereload'
+import connectLivereload from 'connect-livereload'
+import { engine } from 'express-handlebars'
+import { RedisStore } from 'connect-redis'
+import cookieParser from 'cookie-parser'
+import methodOverride from 'method-override'
+// Custom modules
+import routes from './routes/index.routes.js'
+import errorHandler from './middlewares/errorHandler.js'
+import passport from './config/passport.js'
+import redisClient from './utils/redisClient.js'
+import * as helpers from './utils/handlebars.js'
+import { downloadArticle } from './utils/download.js'
+import authMiddleware from './middlewares/authMiddleware.js'
+import checkSubscription from './middlewares/checkSubscription.js'
+// Load environment variables
+dotenv.config()
 
-dotenv.config();
+// Application Constants
+const PORT = process.env.PORT || 3000
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const isDevelopment = process.env.NODE_ENV === 'dev'
 
-const app = express();
+// Initialize Express app
+const app = express()
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(helmet());
-app.use(morgan("dev"));
+// Core Middleware
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static(path.join(__dirname, 'public')))
+app.use('/uploads', express.static('uploads'))
 
-// Session setup (if needed for strategies like OAuth)
+// Security Middleware
+app.use(
+  helmet({
+    contentSecurityPolicy: isDevelopment ? false : undefined,
+  }),
+)
+app.use(cors())
+
+// Session Management
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "your_session_secret",
+    store: new RedisStore({ client: redisClient }),
+    secret: process.env.SESSION_SECRET || 'your_session_secret',
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // Allow in dev
+      maxAge: 1000 * 60 * 30, // 30 minutes,
+    },
+  }),
+)
+
+app.use(cookieParser())
+
+// Logging Middleware
+app.use(morgan(isDevelopment ? 'dev' : 'combined'))
+
+// Passport Initialization
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.get('/download/:id', authMiddleware(['subscriber']), checkSubscription, downloadArticle)
+
+app.use('/uploads', express.static('uploads'))
+
+/* ---------- Handlebars Setup ---------- */
+app.engine(
+  'hbs',
+  engine({
+    extname: 'hbs',
+    partialsDir: path.join(__dirname, 'views', 'partials'),
+    helpers: { ...helpers },
+    cache: !isDevelopment, // Enable cache in production
+  }),
+)
+app.set('view engine', 'hbs')
+app.set('views', path.join(__dirname, 'views'))
+
+/* ---------- Live Reload for Development ---------- */
+function setupLiveReload(app) {
+  const liveReloadServer = livereload.createServer()
+  liveReloadServer.watch(path.join(__dirname, 'views'))
+  app.use(connectLivereload())
+  liveReloadServer.server.once('connection', () => {
+    setTimeout(() => {
+      liveReloadServer.refresh('/')
+    }, 100)
   })
-);
-
-// Initialize Passport and restore authentication state, if any, from the session
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Static files (if needed)
-app.use("/uploads", express.static("uploads")); // Serve uploaded files
-
-// Use routes
-app.use("/api/v1", routes);
-
-// Error Handler Middleware
-app.use(errorHandler);
-
-// Start Server
-const PORT = process.env.PORT || 3000;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-console.log(process.env.NODE_ENV);
-
-// By default hot reload for views isn't supported, so using this instead
-if (process.env.NODE_ENV === "dev") {
-    const liveReloadServer = livereload.createServer();
-    liveReloadServer.watch(path.join(__dirname, "views"));
-
-    app.use(connectLivereload());
-
-    // Timeout to prevent premature reloads
-    liveReloadServer.server.once("connection", () => {
-        setTimeout(() => {
-            liveReloadServer.refresh("/");
-        }, 100);
-    });
 }
 
-app.engine("hbs", engine({ extname: "hbs" }));
-app.set("view engine", "hbs");
-app.set("views", path.join(__dirname, "views"));
+if (isDevelopment) setupLiveReload(app)
 
-app.use(express.static(path.join(__dirname, "public")));
+// Routes
+app.use(methodOverride('_method'))
+app.use('/', routes)
+app.use(errorHandler)
 
-app.get("/", (req, res) => {
-    res.render("home");
-});
-
+/* ---------- Start Server ---------- */
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+  console.log(`Server is running on port ${PORT}`)
+})

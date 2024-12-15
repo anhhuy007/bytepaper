@@ -1,3 +1,6 @@
 .env
 gpt
 node_modules/*
+public/output.css
+todo.txt
+public/output.css
