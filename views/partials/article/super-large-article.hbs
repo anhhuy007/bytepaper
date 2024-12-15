@@ -2,7 +2,7 @@
 <div class="relative group">
   <a href="/articles/{{ article.id }}" class="absolute inset-0"></a>
 
-  <div class="grid grid-cols-[59%_2%_39%]">
+  <div class="grid grid-cols-[55%_2%_43%]">
     {{!-- Thumbnail --}}
     <div>
       <img
@@ -25,15 +25,28 @@
       </p>
 
       {{!-- Metadata --}}
-      <div class="flex items-center text-gray-500 text-xs">
-        <span>{{ formatDate article.published_at }}</span>
+      <div class="flex items-center">
+        <div class="flex gap-2 items-center">
+          <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-4 w-4 fill-gray-500" />
+          <span class="text-gray-500">{{ formatDate published_at}}</span>
+        </div>
+        <span class="mx-2">|</span>
+        <div class="flex items-center gap-2">
+          <img src="/assets/eye.svg" alt="Eye Scan Icon" class="h-4 w-4 fill-gray-500" />
+          <div class="text-gray-500">{{ default article.views 0 }} views</div>
+        </div>
         <span class="mx-2">|</span>
         <a
           href="categories/{{ default article.category_id '#' }}"
-          class="z-20 text-blue-500 hover:underline"
+          class="z-10 bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded transition-all duration-300 ease-in-out hover:bg-blue-900 hover:text-white hover:scale-105 hover:shadow-md"
         >
           {{ default article.category "Uncategorized" }}
         </a>
+        {{!-- Premium Indicator --}} {{#if article.is_premium}}
+        <span class="mx-2">|</span>
+
+        <div class="w-24 premium-animation"></div>
+        {{/if}}
       </div>
     </div>
   </div>

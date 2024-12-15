@@ -46,7 +46,7 @@ Handlebars.registerHelper('subtract', function (a, b) {
   return a - b
 })
 
-Handlebars.registerHelper('formatDate', (date, formatString = 'yyyy-MM-dd') => {
+Handlebars.registerHelper('formatDate', (date, formatString = 'dd/MM/yyyy') => {
   try {
     console.log('==> Received date:', date)
 
@@ -59,14 +59,42 @@ Handlebars.registerHelper('formatDate', (date, formatString = 'yyyy-MM-dd') => {
 
     // Ensure formatString is a valid string
     if (typeof formatString !== 'string') {
-      console.warn(`Invalid formatString: ${formatString}. Using default 'yyyy-MM-dd'.`)
-      formatString = 'yyyy-MM-dd'
+      console.warn(`Invalid formatString: ${formatString}. Using default 'dd/MM/yyyy'.`)
+      formatString = 'dd/MM/yyyy'
     }
 
     // Format and return the date
     const formattedDate = format(parsedDate, formatString)
     console.log('Formatted date:', formattedDate)
     return formattedDate
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return 'Error formatting date'
+  }
+})
+
+// return: dd/MM/yyyy HH:mm
+Handlebars.registerHelper('formatDateTime', (date, formatString = 'dd/MM/yyyy HH:mm') => {
+  try {
+    console.log('==> Received date:', date)
+
+    // Parse date and validate
+    const parsedDate = new Date(date)
+    if (!isValid(parsedDate)) {
+      console.error('Invalid date:', date)
+      return 'Invalid date'
+    }
+
+    // Ensure formatString is a valid string
+    if (typeof formatString !== 'string') {
+      console.warn(`Invalid formatString: ${formatString}. Using default 'dd/MM/yyyy HH:mm'.`)
+      formatString = 'dd/MM/yyyy HH:mm'
+    }
+
+    // Format and return the date
+    const formattedDate = format(parsedDate, formatString)
+    console.log('Formatted date:', formattedDate)
+    return formattedDate + ' (GMT+7)'
   } catch (error) {
     console.error('Error formatting date:', error)
     return 'Error formatting date'

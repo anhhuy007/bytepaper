@@ -1,0 +1,47 @@
+<div class="relative group border-2">
+  <a href="/articles/{{ article.id }}" class="absolute inset-0 z-10"></a>
+
+  <div class="relative h-full">
+    {{!-- Thumbnail --}}
+    <img
+      src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
+      alt="{{ default article.title 'Untitled Article' }}"
+      class="w-full h-full object-cover rounded-xl group-hover:opacity-95"
+    />
+
+    <div class="absolute inset-0 flex flex-col justify-end text-white bg-black bg-opacity-50 p-6">
+      {{!-- Title --}}
+      <h2 class="text-2xl font-extrabold group-hover:underline">
+        {{ default article.title "Untitled Article" }}
+      </h2>
+
+      <p class="text-gray-300 mb-6 text-lg max-w-[70%] flex-shrink-0">
+        {{ default article.abstract "No summary available for this article." }}
+      </p>
+
+      {{!-- Metadata --}}
+      <div class="flex text-xs items-center">
+        <div class="flex gap-2 items-center">
+          <span>{{ formatDate article.published_at }}</span>
+        </div>
+        <span class="mx-2">|</span>
+        <div class="flex items-center gap-2">
+          <div class="">{{ default article.views 0 }} views</div>
+        </div>
+        <span class="mx-2">|</span>
+        <a
+          href="categories/{{ default article.category_id '#' }}"
+          class="z-10 bg-blue-300 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded transition-all duration-300 ease-in-out hover:bg-blue-900 hover:text-white hover:scale-105 hover:shadow-md"
+        >
+          {{ default article.category "Uncategorized" }}
+        </a>
+
+        {{!-- Premium Indicator --}} {{#if article.is_premium}}
+        <span class="mx-2">|</span>
+
+        <div class="w-20 premium-animation"></div>
+        {{/if}} {{!-- Views --}}
+      </div>
+    </div>
+  </div>
+</div>

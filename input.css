@@ -1,8 +1,18 @@
 /* input.css */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-  font-family: "Times New Roman", "Times", "serif" !important;
+  font-family: "Nunito", sans-serif;
+}
+
+.header {
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.4;
+  margin-bottom: 3rem;
+  border-top: 4px solid;
+  padding-top: 8px;
 }
