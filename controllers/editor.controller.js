@@ -2,188 +2,253 @@
 
 import articleService from '../services/article.service.js'
 import adminService from '../services/admin.service.js'
+import tagService from '../services/tag.service.js'
+import categoryService from '../services/category.service.js'
+// import userService from '../services/user.service.js'
 
-/**
- * Retrieves a list of pending articles assigned to the current editor, based on
- * the categories they are assigned to.
- *
- * @param {Object} req - The Express.js request object.
- * @param {Object} res - The Express.js response object.
- * @param {Function} next - The Express.js next middleware function for error
- *   handling.
- *
- * @returns {Promise<void>} A promise that resolves when the middleware has
- *   finished executing.
- * @throws {Error} If there is an error retrieving the articles.
- * @example
- * const response = await editorController.getPendingArticles(
- *   req,
- *   res,
- *   next
- * );
- * console.log(response);
- * {
- *   success: true,
- *   data: [
- *     {
- *       id: 1,
- *       title: "Example Article",
- *       abstract: "This is an example article.",
- *       content: "<p>This is the article content.</p>",
- *       thumbnail: null,
- *       author_id: 1,
- *       category_id: null,
- *       status: "pending",
- *       published_at: null,
- *       views: 0,
- *       is_premium: false,
- *       search_vector: null,
- *       created_at: "2021-01-01T00:00:00.000Z",
- *       updated_at: "2021-01-01T00:00:00.000Z",
- *       author_name: "John Doe",
- *       category_name: null,
- *     },
- *   ]
- * }
- */
-const getPendingArticles = async (req, res, next) => {
-  try {
-    // Extract the editor ID from the request object
-    const editorId = req.user.id
-
-    // Retrieve categories assigned to the current editor
-    const categories = await adminService.getCategoriesByEditor(editorId)
-
-    // Map category IDs for filtering articles
-    const categoryIds = categories.map((category) => category.id)
-
-    // Define filters for pending articles within assigned categories
-    const filters = {
-      status: 'pending',
-      category_id: categoryIds,
-    }
-
-    // Define options for pagination
-    const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
-    }
-
-    // Retrieve pending articles using the defined filters and options
-    const articles = await articleService.getAllArticles(filters, options)
-
-    // Send the retrieved articles as a JSON response
-    res.status(200).json({ success: true, data: articles })
-  } catch (error) {
-    // Pass any errors to the next middleware function
-    next(error)
-  }
-}
-
-const getMyArticles = async (req, res, next) => {
+const getArticles = async (req, res, next) => {
   try {
     const editorId = req.user.id
-    const categories = await adminService.getCategoriesByEditor(editorId)
-    const categoryIds = categories.map((category) => parseInt(category.id, 10))
-    if (!categoryIds.length) {
-      return []
-    }
+
+    // Extract filters and pagination options
     const filters = {
-      category_id: categoryIds,
+      keyword: req.query.keyword || null,
+      category_id: req.query.category_id || null,
+      tag_id: req.query.tag_id || null,
+      status: req.query.status || null,
     }
 
-    const status = req.query.status
-
-    if (!status) {
-      filters.status = 'pending'
-    }
-
-    if (!['draft', 'pending', 'published', 'rejected', 'approved'].includes(status)) {
-      throw new Error('Invalid status')
-    }
-
-    filters.status = status
+    const limit = Math.max(parseInt(req.query.limit, 10) || 10, 1) // Default: 10, min: 1
+    const page = parseInt(req.query.page, 10) || 1 // Default: page 1
+    const offset = (page - 1) * limit
 
     const options = {
-      limit: parseInt(req.query.limit) || 10,
-      offset: parseInt(req.query.offset) || 0,
+      limit,
+      offset,
+      orderBy: req.query.orderBy || 'published_at DESC',
     }
-    const articles = await articleService.getAllArticles(filters, options)
-    // res.status(200).json({ success: true, data: articles });
-    return { articles }
+
+    // Fetch articles and related data
+    const { articles, totalArticles } = await articleService.getArticlesForEditor(
+      editorId,
+      filters,
+      options,
+    )
+    const { categories } = await categoryService.getAllCategories()
+    const { tags } = await tagService.getAllTags()
+
+    // Enhance articles with conditional action properties
+    const enhancedArticles = articles.map((article) => ({
+      ...article,
+      canReview: article.status === 'pending',
+      canPublish: article.status === 'approved',
+      canUnpublish: article.status === 'published',
+    }))
+
+    // Calculate total pages for pagination
+    const totalPages = Math.ceil(totalArticles / limit)
+
+    res.render('editor/articles', {
+      title: 'Articles Management',
+      layout: 'editor',
+      articles: enhancedArticles,
+      categories,
+      tags,
+      statuses: ['pending', 'published', 'approved', 'rejected'],
+      selectedCategory: filters.category_id,
+      selectedTag: filters.tag_id,
+      selectedStatus: filters.status,
+      query: { ...req.query, limit, page }, // Preserve query params
+      totalPages,
+      currentPage: page,
+    })
   } catch (error) {
     next(error)
   }
 }
 
-/**
- * Approves an article for publication.
- *
- * This function handles the request to approve an article. It uses the article
- * service to perform the approval and sends a confirmation response back to the client.
- *
- * @param {Object} req - The Express.js request object containing the editor's ID in the user property and the article ID in the URL parameters.
- * @param {Object} res - The Express.js response object used to send the confirmation response.
- * @param {Function} next - The Express.js next middleware function for error handling.
- *
- * @returns {Promise<void>} A promise that resolves when the article has been approved and the response is sent.
- *
- * @throws {Error} If there is an error approving the article.
- */
+const getDashboard = async (req, res, next) => {
+  try {
+    const editorId = req.user.id
+    const categories = await adminService.getCategoriesByEditor(editorId)
+    const stats = await articleService.getArticleStatsByEditor(editorId)
+    res.render('editor/dashboard', {
+      layout: 'editor',
+      stats,
+      categories,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const approveArticle = async (req, res, next) => {
   try {
-    // Extract the editor ID from the request object
     const editorId = req.user.id
+    const { published_at, category_id, tag_ids = [] } = req.body
 
-    const { categoryId, tagIds = [] } = req.body
+    // Ensure tags are handled as an array
+    const normalizedTagIds = Array.isArray(tag_ids) ? tag_ids : tag_ids ? [tag_ids] : []
 
-    // Approve the article using the article service
-    await articleService.approveArticle(req.params.articleId, editorId, categoryId, tagIds)
+    // Approve the article
+    await articleService.approveArticle(
+      req.params.articleId,
+      editorId,
+      category_id,
+      normalizedTagIds,
+      published_at,
+    )
+
+    res.redirect('/editor/articles')
+  } catch (error) {
+    next(error)
+  }
+}
+
+const rejectArticle = async (req, res, next) => {
+  try {
+    const editorId = req.user.id
+    const { rejection_reason } = req.body
+
+    // Reject the article
+    await articleService.rejectArticle(req.params.articleId, editorId, rejection_reason)
+
+    // Redirect to the articles list
+    res.redirect('/editor/articles')
+  } catch (error) {
+    next(error)
+  }
+}
+
+const publishArticle = async (req, res, next) => {
+  try {
+    // Publish the article using the article service
+    await articleService.publishArticle(req.params.articleId)
 
     // Send a success response
-    res.status(200).json({ success: true, message: 'Article approved' })
+    // res.status(200).json({ success: true, message: 'Article published' })
+    res.redirect('/editor/articles')
   } catch (error) {
     // Pass any errors to the next middleware function
     next(error)
   }
 }
 
-/**
- * Rejects an article for publication.
- *
- * This function handles the request to reject an article. It uses the article
- * service to perform the rejection and sends a confirmation response back to the client.
- *
- * @param {Object} req - The Express.js request object containing the editor's ID in the user property and the article ID in the URL parameters, and the rejection reason in the request body.
- * @param {Object} res - The Express.js response object used to send the confirmation response.
- * @param {Function} next - The Express.js next middleware function for error handling.
- *
- * @returns {Promise<void>} A promise that resolves when the article has been rejected and the response is sent.
- *
- * @throws {Error} If there is an error rejecting the article.
- */
-const rejectArticle = async (req, res, next) => {
+const unpublishArticle = async (req, res, next) => {
   try {
-    // Extract the editor ID from the request object
-    const editorId = req.user.id
-
-    // Extract the rejection reason from the request body
-    const { rejectionReason } = req.body
-
-    // Reject the article using the article service
-    await articleService.rejectArticle(req.params.articleId, editorId, rejectionReason)
+    // Unpublish the article using the article service
+    await articleService.unpublishArticle(req.params.articleId)
 
     // Send a success response
-    res.status(200).json({ success: true, message: 'Article rejected' })
+    // res.status(200).json({ success: true, message: 'Article unpublished' })
+    res.redirect('/editor/articles')
   } catch (error) {
     // Pass any errors to the next middleware function
+    next(error)
+  }
+}
+
+const getApproveArticle = async (req, res, next) => {
+  try {
+    const articleId = req.params.articleId
+
+    // Fetch article details
+    const article = await articleService.getArticleById(articleId)
+
+    // Fetch available tags and categories
+    const filters = {}
+    const options = {
+      limit: 100,
+      offset: 0,
+    }
+    const { categories } = await categoryService.getAllCategories(filters, options)
+    const { tags } = await tagService.getAllTags(filters, options)
+
+    const articleTagIds = new Set(article.tags.map((tag) => tag.id))
+    const tagsWithSelection = tags.map((tag) => ({
+      ...tag,
+      selected: articleTagIds.has(tag.id),
+    }))
+
+    res.render('editor/approve-article', {
+      title: 'Approve Article',
+      layout: 'editor',
+      article,
+      categories,
+      tags: tagsWithSelection,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getRejectArticle = async (req, res, next) => {
+  try {
+    const articleId = req.params.articleId
+
+    // Fetch the article details
+    const article = await articleService.getArticleById(articleId)
+
+    if (!article) {
+      throw new Error('Article not found')
+    }
+
+    if (article.status !== 'pending') {
+      throw new Error('Only articles in pending status can be rejected')
+    }
+
+    res.render('editor/reject-article', {
+      title: 'Reject Article',
+      layout: 'editor',
+      article,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getArticleById = async (req, res, next) => {
+  try {
+    const articleId = req.params.articleId
+
+    // Fetch the article details
+    const article = await articleService.getArticleById(articleId)
+
+    // Fetch tags and categories (optional display purposes)
+    const filters = {}
+    const options = {
+      limit: 100,
+      offset: 0,
+    }
+    const { tags } = await tagService.getAllTags(filters, options)
+    const { categories } = await categoryService.getAllCategories(filters, options)
+
+    const articleTagIds = new Set(article.tags.map((tag) => tag.id))
+    const tagsWithSelection = tags.map((tag) => ({
+      ...tag,
+      selected: articleTagIds.has(tag.id),
+    }))
+
+    res.render('editor/review-article', {
+      title: 'Review Article',
+      layout: 'editor',
+      article,
+      tags: tagsWithSelection,
+      categories,
+    })
+  } catch (error) {
     next(error)
   }
 }
 
 export default {
-  getPendingArticles,
-  getMyArticles,
+  getArticleById,
+  getDashboard,
+  getArticles,
   approveArticle,
   rejectArticle,
+  publishArticle,
+  unpublishArticle,
+  getApproveArticle,
+  getRejectArticle,
 }

@@ -1,4 +1,4 @@
-{{!-- views/admin/articles.hbs --}}
+{{!-- views/editor/articles.hbs --}}
 <div class="container mx-auto px-4 py-8">
   <!-- Page Header -->
   <div class="flex justify-between items-center mb-8">
@@ -43,6 +43,22 @@
         </select>
       </div>
 
+      <!-- Tag Filter -->
+      <div>
+        <label for="tag_id" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
+          <i data-lucide="tag"></i>
+          <span>Tag</span>
+        </label>
+        <select id="tag_id" name="tag_id" class="select select-bordered w-full">
+          <option value="">All Tags</option>
+          {{#each tags}}
+          <option value="{{this.id}}" {{#if (eq ../selectedTag this.id)}}selected{{/if}}>
+            {{this.name}}
+          </option>
+          {{/each}}
+        </select>
+      </div>
+
       <!-- Status Filter -->
       <div>
         <label for="status" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
@@ -59,7 +75,7 @@
         </select>
       </div>
 
-      <!-- Sort By -->
+      <!-- Order By -->
       <div>
         <label for="orderBy" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="sort-desc"></i>
@@ -71,30 +87,13 @@
         </select>
       </div>
 
-      <!-- Limit -->
-      <div>
-        <label for="limit" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
-          <i data-lucide="list"></i>
-          <span>Items per Page</span>
-        </label>
-        <input
-          type="number"
-          id="limit"
-          name="limit"
-          class="input input-bordered w-full"
-          placeholder="Items per page"
-          min="1"
-          value="{{query.limit}}"
-        />
-      </div>
-
       <!-- Buttons -->
       <div class="flex items-end space-x-4 col-span-3 lg:col-span-1 justify-end">
         <button type="submit" class="btn btn-primary hover:shadow-md flex items-center space-x-2">
           <i data-lucide="filter"></i>
           <span>Apply</span>
         </button>
-        <a href="/admin/articles" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
+        <a href="/editor/articles" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
           <i data-lucide="refresh-cw"></i>
           <span>Reset</span>
         </a>
@@ -111,7 +110,7 @@
           <th class="py-3 px-4">Author</th>
           <th class="py-3 px-4">Category</th>
           <th class="py-3 px-4">Status</th>
-          <th class="py-3 px-4">Published At</th>
+          <th class="py-3 px-4">Last Updated</th>
           <th class="py-3 px-4">Actions</th>
         </tr>
       </thead>
@@ -122,47 +121,34 @@
           <td class="py-2 px-4">{{this.author_name}}</td>
           <td class="py-2 px-4">{{this.category_name}}</td>
           <td class="py-2 px-4">
-            <form
-              id="status-form-{{this.id}}"
-              class="flex items-center space-x-2"
-              data-article-id="{{this.id}}"
-            >
-              <select
-                name="status"
-                class="select select-bordered select-xs"
-                {{#unless (or (eq this.status 'draft') (eq this.status 'published'))}}disabled{{/unless}}
-                onchange="handleStatusChange(event, {{this.id}}, '{{this.status}}')"
-              >
-                {{#if (or (eq this.status 'draft') (eq this.status 'published'))}}
-                  <option value="draft" {{#if (eq this.status 'draft')}}selected{{/if}}>Draft</option>
-                  <option value="published" {{#if (eq this.status 'published')}}selected{{/if}}>Published</option>
-                {{else}}
-                  <option value="{{this.status}}" selected>{{this.status}}</option>
-                {{/if}}
-              </select>
-              <button
-                id="status-btn-{{this.id}}"
-                type="button"
-                class="btn btn-sm btn-primary hover:shadow-md flex items-center space-x-1 hidden"
-              >
-                <i data-lucide="check"></i>
-                <span></span>
-              </button>
-            </form>
+            <span class="badge badge-{{this.status}}">{{this.status}}</span>
           </td>
-          <td class="py-2 px-4">{{formatDate this.published_at}}</td>
-          <td class="py-2 px-4">
-            <form
-              action="/admin/articles/delete/{{this.id}}"
-              method="POST"
-              style="display: inline-block"
-              onsubmit="return confirm('Are you sure you want to delete this article?');"
-            >
-              <button type="submit" class="btn btn-sm btn-error hover:shadow-md flex items-center space-x-2">
-                <i data-lucide="trash-2"></i>
-                <span>Delete</span>
+          <td class="py-2 px-4">{{formatDate this.updated_at}}</td>
+          <td class="py-2 px-4 flex space-x-2">
+            {{#if this.canReview}}
+            <a href="/editor/articles/{{this.id}}" class="btn btn-primary btn-sm flex items-center space-x-1">
+              <i data-lucide="eye"></i>
+              <span>Review</span>
+            </a>
+            {{/if}}
+
+            {{#if this.canPublish}}
+            <form action="/editor/articles/{{this.id}}/publish" method="POST">
+              <button type="submit" class="btn btn-success btn-sm flex items-center space-x-1">
+                <i data-lucide="check-circle"></i>
+                <span>Publish</span>
               </button>
             </form>
+            {{/if}}
+
+            {{#if this.canUnpublish}}
+            <form action="/editor/articles/{{this.id}}/unpublish" method="POST">
+              <button type="submit" class="btn btn-warning btn-sm flex items-center space-x-1">
+                <i data-lucide="refresh-cw"></i>
+                <span>Unpublish</span>
+              </button>
+            </form>
+            {{/if}}
           </td>
         </tr>
         {{/each}}
@@ -175,51 +161,3 @@
     {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
   </div>
 </div>
-
-<script>
-  async function handleStatusChange(event, articleId, currentStatus) {
-    const selectedStatus = event.target.value;
-    const button = document.getElementById(`status-btn-${articleId}`);
-
-    // Determine button label and visibility
-    if (selectedStatus !== currentStatus) {
-      button.classList.remove("hidden"); // Show button
-      button.querySelector("span").textContent =
-        selectedStatus === "draft" && currentStatus === "published"
-          ? "Unpublish"
-          : selectedStatus === "published" && currentStatus === "draft"
-          ? "Publish"
-          : "Save";
-
-      // Attach click event listener
-      button.onclick = async () => {
-        const confirmMessage = `Are you sure you want to change the status from "${currentStatus}" to "${selectedStatus}"?`;
-        if (!confirm(confirmMessage)) {
-          // Revert the select dropdown to the current status if canceled
-          event.target.value = currentStatus;
-          return;
-        }
-
-        // Proceed with the status update
-        try {
-          const response = await axios.post(`/admin/articles/status/${articleId}`, {
-            status: selectedStatus,
-          });
-          if (response.status === 200) {
-            alert("Status updated successfully.");
-            window.location.reload(); // Reload to reflect changes
-          }
-        } catch (error) {
-          console.error("Error updating status:", error);
-          alert("Failed to update status. Please try again.");
-        }
-      };
-    } else {
-      button.classList.add("hidden"); // Hide button
-    }
-  }
-</script>
-
-
-
-

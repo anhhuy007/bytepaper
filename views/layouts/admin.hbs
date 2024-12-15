@@ -7,17 +7,9 @@
     <link rel="stylesheet" href="/output.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Include Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
     <!-- Include Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <!-- Include Font Awesome -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <div class="min-h-screen flex">
@@ -87,6 +79,19 @@
               >
                 <i data-lucide="edit"></i>
                 <span>Editors</span>
+              </a>
+            </li>
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a href="/user/profile" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
+                <i data-lucide="user"></i>
+                <span>Profile</span>
+              </a>
+            </li>
+            <!-- Logout Button -->
+            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+              <a href="/auth/logout" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
+                <i data-lucide="log-out"></i>
+                <span>Logout</span>
               </a>
             </li>
           </ul>

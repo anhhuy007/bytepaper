@@ -1,32 +1,29 @@
 {{!-- views/home/index.hbs --}}
 <div class="space-y-28 px-24">
   {{!-- Featured Articles Carousel --}}
-  <section class="space-y-10">
+  <section class="space-y-5">
     <div>
-      <h1 class="text-3xl font-bold space-y-10">Featured Articles</h1>
-      <div class="w-full h-[1px] bg-black"></div>
+      <h1 class="text-3xl font-bold text-orange-600">Featured Articles</h1>
     </div>
     {{> article/layout/carousel articles=featuredArticles}}
   </section>
 
   {{!-- Most Viewed Articles --}}
-  <section class="space-y-10">
+  <section class="space-y-7">
     <div>
-      <h1 class="text-3xl font-bold space-y-10">Most Viewed Articles</h1>
-      <div class="w-full h-[1px] bg-black"></div>
+      <h1 class="text-3xl font-bold text-orange-600">Most Viewed Articles</h1>
     </div>
     {{> article/layout/basic articles=mostViewedArticles}}
   </section>
 
-  {{!-- Latest Articles --}}
-  <section class="space-y-10">{{> article/layout/latest articles=newestArticles}}</section>
-
   {{!-- Top Categories --}}
-  <section class="space-y-10">
+  <section class="space-y-5">
     <div>
-      <h1 class="text-3xl font-bold space-y-10">Top Categories</h1>
-      <div class="w-full h-[1px] bg-black"></div>
+      <h1 class="text-3xl font-bold text-orange-600">Top Categories</h1>
     </div>
     {{> article/layout/tab articles=topCategoryArticles}}
   </section>
+
+  {{!-- Latest Articles --}}
+  <section class="space-y-5">{{> article/layout/latest articles=newestArticles}}</section>
 </div>

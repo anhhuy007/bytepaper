@@ -353,8 +353,6 @@ const getAllArticles = async (req, res, next) => {
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
     const { categories } = await categoryService.getAllCategories(all_filters, all_options) // Fetch all categories for filtering
 
-    console.log('=========================> categories.length:', categories.length)
-
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
     res.render('admin/articles', {
@@ -362,7 +360,7 @@ const getAllArticles = async (req, res, next) => {
       layout: 'admin',
       articles,
       categories,
-      statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
+      statuses: ['draft', 'published', 'pending', 'rejected', 'approved'],
       selectedCategory: filters.category_id, // Preserve selected category
       selectedStatus: filters.status,
       query: { ...req.query, limit, page }, // Preserve query params

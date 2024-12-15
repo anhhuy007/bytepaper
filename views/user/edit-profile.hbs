@@ -2,21 +2,27 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="max-w-xl mx-auto bg-white shadow-lg rounded-lg p-8">
     <!-- Page Title -->
-    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Edit Profile</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 flex justify-center items-center space-x-2">
+      <i data-lucide="edit" class="text-primary"></i>
+      <span>Edit Profile</span>
+    </h1>
 
     <!-- Alerts -->
-    <div id="formSuccess" class="hidden alert alert-success shadow-lg mb-4">
-      Profile updated successfully! Redirecting...
+    <div id="formSuccess" class="hidden alert alert-success shadow-lg mb-4 flex items-center space-x-2">
+      <i data-lucide="check-circle" class="text-green-500"></i>
+      <span>Profile updated successfully! Redirecting...</span>
     </div>
-    <div id="formError" class="hidden alert alert-error shadow-lg mb-4">
-      An error occurred. Please try again.
+    <div id="formError" class="hidden alert alert-error shadow-lg mb-4 flex items-center space-x-2">
+      <i data-lucide="alert-triangle" class="text-red-500"></i>
+      <span>An error occurred. Please try again.</span>
     </div>
 
     <!-- Form -->
     <form id="editProfileForm" class="space-y-6">
       <!-- Full Name -->
       <div class="form-control">
-        <label for="fullName" class="label font-semibold text-gray-600">
+        <label for="fullName" class="label font-semibold text-gray-600 flex items-center space-x-2">
+          <i data-lucide="user" class="text-accent"></i>
           <span class="label-text">Full Name</span>
         </label>
         <input
@@ -32,7 +38,8 @@
 
       <!-- Pen Name -->
       <div class="form-control">
-        <label for="penName" class="label font-semibold text-gray-600">
+        <label for="penName" class="label font-semibold text-gray-600 flex items-center space-x-2">
+          <i data-lucide="pen-tool" class="text-accent"></i>
           <span class="label-text">Pen Name (optional)</span>
         </label>
         <input
@@ -47,14 +54,15 @@
 
       <!-- Date of Birth -->
       <div class="form-control">
-        <label for="dateOfBirth" class="label font-semibold text-gray-600">
+        <label for="dateOfBirth" class="label font-semibold text-gray-600 flex items-center space-x-2">
+          <i data-lucide="calendar" class="text-accent"></i>
           <span class="label-text">Date of Birth</span>
         </label>
         <input
           type="date"
           id="dateOfBirth"
           name="date_of_birth"
-          value="{{formatDate user.date_of_birth 'YYYY-MM-DD'}}"
+          value="{{formatDate user.date_of_birth}}"
           class="input input-bordered w-full"
           required
         />
@@ -62,7 +70,13 @@
 
       <!-- Submit Button -->
       <div class="flex justify-center">
-        <button type="submit" class="btn btn-primary w-full sm:w-auto">Save Changes</button>
+        <button
+          type="submit"
+          class="btn btn-primary flex items-center space-x-2 w-full sm:w-auto"
+        >
+          <i data-lucide="save"></i>
+          <span>Save Changes</span>
+        </button>
       </div>
     </form>
   </div>
@@ -70,38 +84,37 @@
 
 <script>
   document.getElementById('editProfileForm').addEventListener('submit', async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const formSuccess = document.getElementById('formSuccess')
-    const formError = document.getElementById('formError')
-    const fullName = document.getElementById('fullName').value.trim()
-    const penName = document.getElementById('penName').value.trim()
-    const dateOfBirth = document.getElementById('dateOfBirth').value
+    const formSuccess = document.getElementById('formSuccess');
+    const formError = document.getElementById('formError');
+    const fullName = document.getElementById('fullName').value.trim();
+    const penName = document.getElementById('penName').value.trim();
+    const dateOfBirth = document.getElementById('dateOfBirth').value;
 
     // Reset alerts
-    formSuccess.classList.add('hidden')
-    formError.classList.add('hidden')
+    formSuccess.classList.add('hidden');
+    formError.classList.add('hidden');
 
     try {
       const response = await axios.post('/user/edit-profile', {
         full_name: fullName,
         pen_name: penName,
         date_of_birth: dateOfBirth,
-      })
+      });
 
       if (response.data.success) {
-        formSuccess.textContent = 'Profile updated successfully! Redirecting...'
-        formSuccess.classList.remove('hidden')
-
+        formSuccess.classList.remove('hidden');
         setTimeout(() => {
-          window.location.href = '/user/profile'
-        }, 2000)
+          window.location.href = '/user/profile';
+        }, 2000);
       } else {
-        throw new Error(response.data.message || 'Failed to update profile.')
+        throw new Error(response.data.message || 'Failed to update profile.');
       }
     } catch (error) {
-      formError.textContent = error.response?.data?.message || `An error occurred: ${error.message}`
-      formError.classList.remove('hidden')
+      formError.textContent = error.response?.data?.message || `An error occurred: ${error.message}`;
+      formError.classList.remove('hidden');
     }
-  })
+  });
 </script>
+

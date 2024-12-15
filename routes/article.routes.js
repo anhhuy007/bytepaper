@@ -2,20 +2,27 @@
 import express from 'express'
 import articleController from '../controllers/article.controller.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
-import checkSubscription from '../middlewares/checkSubscription.js'
 import commentController from '../controllers/comment.controller.js'
-import { cacheMiddleware, deleteCacheMiddleware } from '../middlewares/cacheMiddleware.js'
+import {
+  cacheHeaderCategories,
+  cacheMiddleware,
+  deleteCacheMiddleware,
+} from '../middlewares/cacheMiddleware.js'
 import { articleCacheKeyGenerator } from '../utils/cacheKeyGenerator.js'
 import viewRenderer from '../utils/viewRenderer.js'
 
 const router = express.Router()
+
+router.use(cacheHeaderCategories)
+
+// Root route: /articles
 
 router.get('/', (req, res, next) => {
   res.redirect('/home')
 })
 
 router.get(
-  '/filter?',
+  '/filter',
   cacheMiddleware(articleCacheKeyGenerator.filtered),
   articleController.getArticlesByFilter,
 )
@@ -38,17 +45,18 @@ router.get(
   viewRenderer('home', 'main', articleController.getHomepageArticles),
 )
 
+// router.get(
+//   '/download/:id',
+//   // authMiddleware(['subscriber']),
+//   // checkSubscription,
+//   articleController.downloadArticle,
+// )
+
 router.get(
   '/:id',
   // cacheMiddleware(articleCacheKeyGenerator.details),
+  // cacheMiddleware(articleCacheKeyGenerator.details),
   articleController.getArticleById,
-)
-
-router.get(
-  '/:id/download',
-  authMiddleware(['subscriber']),
-  checkSubscription,
-  articleController.downloadArticle,
 )
 
 router.post('/:id/views', articleController.increaseArticleViewCount)
