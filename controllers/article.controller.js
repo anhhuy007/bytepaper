@@ -50,7 +50,7 @@ const getArticleById = async (req, res, next) => {
     article.content = processArticleContent(article.content)
 
     // Render the detail view
-    return res.render('articles/article', {
+    return res.render('articles/detail', {
       article,
       relatedArticles,
       comments,
