@@ -23,19 +23,19 @@ router.get('/', (req, res, next) => {
 
 router.get(
   '/filter',
-  cacheMiddleware(articleCacheKeyGenerator.filtered),
+  // cacheMiddleware(articleCacheKeyGenerator.filtered),
   articleController.getArticlesByFilter,
 )
 
 router.get(
   '/tags/:tagId',
-  cacheMiddleware(articleCacheKeyGenerator.byTag),
+  // cacheMiddleware(articleCacheKeyGenerator.byTag),
   articleController.getArticlesByTagId,
 )
 
 router.get(
   '/categories/:categoryId',
-  cacheMiddleware(articleCacheKeyGenerator.byCategory),
+  // cacheMiddleware(articleCacheKeyGenerator.byCategory),
   articleController.getArticlesByCategoryId,
 )
 

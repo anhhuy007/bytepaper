@@ -202,6 +202,7 @@ const getArticlesByCategoryId = async (req, res, next) => {
     const category = await categoryService.getCategoryById(categoryId)
 
     res.render('articles/list', {
+      currentCategoryId: categoryId,
       articles,
       currentPage: page,
       totalPages,

@@ -3,6 +3,7 @@
   <!-- Top Navigation -->
   <div class="navbar bg-base-100 px-10 py-4 items-center border-b-2">
     <div class="navbar-start space-x-4">
+      {{> navbar categories=header_categories currentCategoryId=currentCategoryId}}
       <form action="/articles/filter" method="GET" class="grow max-w-[300px] items-start">
         <label class="input input-bordered flex items-center gap-2">
           <input type="text" name="keyword" placeholder="Search..." class="grow" value="" />

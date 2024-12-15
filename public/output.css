@@ -4491,6 +4491,10 @@ html:has(.drawer-toggle:checked) {
   border-top-width: 2px;
 }
 
+.border-none {
+  border-style: none;
+}
+
 .border-base-300 {
   --tw-border-opacity: 1;
   border-color: var(--fallback-b3,oklch(var(--b3)/var(--tw-border-opacity, 1)));
@@ -4543,6 +4547,21 @@ html:has(.drawer-toggle:checked) {
 .border-l-red-600 {
   --tw-border-opacity: 1;
   border-left-color: rgb(220 38 38 / var(--tw-border-opacity, 1));
+}
+
+.border-l-primary {
+  --tw-border-opacity: 1;
+  border-left-color: var(--fallback-p,oklch(var(--p)/var(--tw-border-opacity, 1)));
+}
+
+.border-l-info {
+  --tw-border-opacity: 1;
+  border-left-color: var(--fallback-in,oklch(var(--in)/var(--tw-border-opacity, 1)));
+}
+
+.border-l-info-content {
+  --tw-border-opacity: 1;
+  border-left-color: var(--fallback-inc,oklch(var(--inc)/var(--tw-border-opacity, 1)));
 }
 
 .bg-accent {
