@@ -8,41 +8,37 @@
     <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"> </label>
     <div class="menu bg-base-100 text-base-content min-h-full w-80">
       <a class="btn btn-outline text-xl bg-black text-white my-8" href="/">Paperly</a>
-      <a
-        href="/"
-        class="border-b-2 hover:bg-primary hover:text-primary-content text-xl font-bold p-4 
-                {{#if (eq currentCategoryId -1)}}
-                  border-l-8 border-l-red-600
-                {{/if}}"
-      >
-        Trang chủ
-      </a>
       {{#each categories}}
       <div class="collapse collapse-arrow group rounded-none">
         <input type="checkbox" class="peer" />
         <div
           class="rounded-none collapse-title border-b-2 group-hover:bg-primary group-hover:text-primary-content text-xl font-bold p-4
-                  {{#if (eq id ../currentCategoryId)}} 
-                    border-l-8 border-l-red-600 
-                  {{else if (hasSubCategorySelected subCategories ../currentCategoryId)}} 
-                    border-l-8 border-l-red-600 
-                  {{/if}}"
+             {{#if (or (eq (toNumber id) (toNumber ../currentCategoryId)) (hasSubCategorySelected children ../currentCategoryId))}}
+                    border-l-info border-l-8
+                {{/if}}"
         >
-          {{ category }}
+          {{ name }}
         </div>
         <div class="collapse-content p-0">
           <div class="flex flex-col w-full">
             <a href="/articles/categories/{{ id }}" class="w-full">
               <div
-                class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-base {{#if (eq id ../currentCategoryId)}} border-l-8 border-l-black {{/if}}"
+                class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-lg
+            {{#if (eq (toNumber id) (toNumber ../currentCategoryId))}} 
+              border-l-8 border-l-info-content font-bold
+            {{/if}}"
               >
-                {{ category }}
+                {{ name }}
               </div>
             </a>
-            {{#each subCategories}}
-            <a href="/articles/categories/{{ subId }}" class="w-full">
+
+            {{#each children}}
+            <a href="/articles/categories/{{ id }}" class="w-full">
               <div
-                class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-base {{#if (eq subId ../../currentCategoryId)}} border-l-8 border-l-black text-lg font-bold{{/if}}"
+                class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-lg
+              {{#if (eq (toNumber id) (toNumber ../../currentCategoryId))}} 
+                border-l-8 border-l-info-content text-lg font-bold
+              {{/if}}"
               >
                 {{ name }}
               </div>
