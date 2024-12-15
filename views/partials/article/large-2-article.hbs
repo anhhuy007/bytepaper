@@ -7,11 +7,7 @@
       {{!-- Published Date --}}
 
       <div class="flex flex-col h-full">
-        {{!-- Title --}}
-        <h2 class="text-2xl font-bold mb-1 group-hover:underline">
-          {{ default title "Untitled Article" }}
-        </h2>
-
+        {{!-- Category --}}
         <div class="flex flex-row mb-6">
           <a
             href="categories/{{ default article.category_id '#' }}"
@@ -19,12 +15,15 @@
           >
             {{ default article.category "Uncategorized" }}
           </a>
-
-          
         </div>
 
+        {{!-- Title --}}
+        <h2 class="text-2xl font-bold mb-1 group-hover:underline">
+          {{ default title "Untitled Article" }}
+        </h2>
+
         {{!-- Abstract --}}
-        <p class="text-gray-700 mb-6 text-xl">
+        <p class="text-gray-700 mb-6 text-base mt-5">
           {{ default abstract "No summary available for this article." }}
         </p>
 
