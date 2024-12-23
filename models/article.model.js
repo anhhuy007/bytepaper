@@ -291,6 +291,15 @@ class ArticleModel extends BaseModel {
       whereClause += `AND a.category_id = $${queryParams.length} `
     }
 
+    if (filters.category_ids && filters.category_ids.length > 0) {
+      const placeholders = filters.category_ids
+        .map((_, index) => `$${queryParams.length + index + 1}`)
+        .join(', ')
+      whereClause += `AND a.category_id IN (${placeholders}) `
+      queryParams.push(...filters.category_ids)
+      countParams.push(...filters.category_ids) // Add all category_ids to countParams
+    }
+
     if (filters.tag_id) {
       whereClause += `AND a.id IN (
           SELECT article_id

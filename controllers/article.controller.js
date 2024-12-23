@@ -194,13 +194,28 @@ const getArticlesByCategoryId = async (req, res, next) => {
       orderBy: req.query.orderBy || 'published_at DESC',
     }
 
-    const filters = {
-      category_id: categoryId,
-      status: 'published',
+    const category = await categoryService.getCategoryById(categoryId)
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' })
     }
+
+    let filters = { status: 'published' }
+
+    // Check if the category is a parent or child
+    if (!category.parent_id) {
+      // Parent category: Get all child categories
+      const childCategories = await categoryService.getChildCategories(categoryId)
+      const childCategoryIds = childCategories.map((child) => child.id)
+
+      // Filter articles belonging to any of the child categories
+      filters.category_ids = childCategoryIds
+    } else {
+      // Child category: Filter articles belonging to this category
+      filters.category_id = categoryId
+    }
+    console.log(filters)
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
     const totalPages = Math.ceil(totalArticles / limit)
-    const category = await categoryService.getCategoryById(categoryId)
 
     res.render('articles/list', {
       currentCategoryId: categoryId,

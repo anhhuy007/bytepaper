@@ -9,7 +9,7 @@
             <header class="space-y-4">
               <div class="flex flex-row w-full items-center justify-between gap-4 text-base text-gray-600">
                 {{#if article.category}}
-                <a href="/categories/{{article.category.id}}" class="hover:underline text-blue-600"
+                <a href="/articles/categories/{{article.category.id}}" class="hover:underline text-blue-600"
                   >{{article.category.name}}</a
                 >
                 {{/if}}
@@ -21,7 +21,7 @@
               <div class="flex flex-wrap gap-2">
                 {{#each article.tags as |tag|}}
                 <a
-                  href="filter?tagId={{tag.id}}"
+                  href="/articles/tags/{{tag.id}}"
                   class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition"
                   >#{{tag.name}}</a
                 >
