@@ -7,7 +7,6 @@ import sanitizeHtml from 'sanitize-html'
 const processContent = (content) => {
   if (!content) return null
 
-  // Sanitize nội dung để loại bỏ các mã độc
   const sanitizedContent = sanitizeHtml(content, {
     allowedTags: [
       'p',

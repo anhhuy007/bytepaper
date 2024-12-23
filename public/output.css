@@ -3902,6 +3902,10 @@ html:has(.drawer-toggle:checked){
   margin-top: 2rem;
 }
 
+.mt-\[18px\] {
+  margin-top: 18px;
+}
+
 .line-clamp-2{
   overflow: hidden;
   display: -webkit-box;
