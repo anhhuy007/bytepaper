@@ -49,6 +49,19 @@ const getArticleById = async (req, res, next) => {
 
     article.content = processArticleContent(article.content)
 
+    // Determine the action button logic
+    let actionButton = null
+    if (article.is_premium) {
+      if (user) {
+        if (user.role === 'subscriber') {
+          actionButton = { label: 'Download', href: '/download/' + articleId }
+        } else {
+          actionButton = { label: 'Extend Subscription', href: '/user/extend-subscription' }
+        }
+      } else {
+        actionButton = { label: 'Login to Download', href: '/auth/login' }
+      }
+    }
     // Render the detail view
     return res.render('articles/detail', {
       article,
@@ -56,6 +69,7 @@ const getArticleById = async (req, res, next) => {
       comments,
       user,
       layout: 'article',
+      actionButton, // Pass action button data to the template
     })
   } catch (error) {
     next(error)
@@ -97,7 +111,7 @@ const getArticlesByFilter = async (req, res, next) => {
     // Extract filters and pagination options
     const filters = {
       keyword: req.query.keyword || null,
-      category_id: parseInt(req.query.category_id, 10) || null,
+      category_id: req.query.category_id || null,
       tag_id: parseInt(req.query.tag_id, 10) || null,
       status: req.query.status || 'published',
     }
@@ -128,6 +142,10 @@ const getArticlesByFilter = async (req, res, next) => {
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
 
+    // console.log('===================> query:', req.query)
+    // console.log('===================> selectedCategory:', filters.category_id)
+    // console.log('===================> selectedTag:', filters.tag_id)
+    // console.log('===================> categories:', categories)
     // Render view with articles, filters, and pagination
     res.render('articles/search', {
       articles,

@@ -1,3 +1,4 @@
+{{!-- views/articles/detail.hbs --}}
 <div class="flex flex-col min-h-screen">
   <div class="container mx-auto py-8 px-4 md:px-6 lg:px-8 w-full">
     <div class="flex flex-col lg:flex-row gap-8">
@@ -5,6 +6,10 @@
       <div class="lg:w-2/3">
         <article class="rounded-lg overflow-hidden">
           <div class="p-6 md:p-8 space-y-6">
+            <a href="/articles/filter" class="link text-primary flex items-center gap-2">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Articles</span>
+            </a>
             <!-- Article Header -->
             <header class="space-y-4">
               <div class="flex flex-row w-full items-center justify-between gap-4 text-base text-gray-600">
@@ -43,7 +48,7 @@
             <!-- Content -->
             <div class="prose max-w-none text-gray-800 text-justify">
               {{#if article.content}} {{#each (split article.content '\n') as |paragraph|}}
-              <p class="mb-4">{{paragraph}}</p>
+              <p class="mb-4">{{{paragraph}}}</p>
               {{/each}} {{else}}
               <p>No content available.</p>
               {{/if}}
@@ -63,20 +68,9 @@
 
             <!-- Action Buttons -->
             <div class="flex justify-end space-x-4 pt-6">
-              <button
-                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path>
-                </svg>
-                Save
-              </button>
-              <button
+            {{#if actionButton}}
+              <a
+                href="{{actionButton.href}}"
                 class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 <svg
@@ -86,12 +80,13 @@
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"
+                    d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"
                   ></path>
                 </svg>
-                Share
-              </button>
-            </div>
+                {{actionButton.label}}
+              </a>
+            {{/if}}
+          </div>
           </div>
         </article>
       </div>
