@@ -1,16 +1,29 @@
-{{!-- views/partials/article/layout/carousel.hbs --}}
-<div class="carousel w-full mt-10 shadow-xl py-8 border-2 rounded-xl" id="carousel">
-  {{#each articles}}
-  <div id="slide{{@index}}" class="carousel-item relative w-full">
-    <div class="px-24">
-      {{!-- Render super-large article in each carousel slide --}} {{> article/super-large-article
-      article=this}}
+{{!-- views/partials/article/layout/carousel.hbs --}} {{!-- Include Bootstrap CSS --}}
+<div class="grid grid-cols-[68%_2%_30%]">
+  <div class="carousel h-full items-center rounded-xl" id="carousel">
+    {{#each articles}}
+    <div id="slide{{@index}}" class="carousel-item relative h-full w-full">
+      <a href="/articles/{{articles.id}}" class="">
+        {{!-- Render super-large article in each carousel slide --}} {{>
+        article/carousel-item-article article=this}}
+      </a>
+      <div
+        class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between z-50"
+      >
+        {{!-- Navigation Buttons --}}
+        <a href="#slide{{subtract @index 1}}" class="btn btn-ghost btn-circle goTo text-white">❮</a>
+        <a href="#slide{{add @index 1}}" class="btn btn-ghost btn-circle goTo text-white">❯</a>
+      </div>
     </div>
-    <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-      {{!-- Navigation Buttons --}}
-      <a href="#slide{{subtract @index 1}}" class="btn btn-ghost btn-circle goTo">❮</a>
-      <a href="#slide{{add @index 1}}" class="btn btn-ghost btn-circle goTo">❯</a>
-    </div>
+    {{/each}}
   </div>
-  {{/each}}
+
+  <div></div>
+
+  <div class="space-y-4">
+    {{!-- Render base articles for indices 4 to 5 --}} {{#each articles}}
+    <div class="w-full">{{> article/small-carousel-item-article article=this}}</div>
+    {{/each}}
+  </div>
 </div>
+{{!-- views/partials/article/layout/carousel.hbs --}}

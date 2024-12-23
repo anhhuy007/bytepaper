@@ -55,6 +55,7 @@ const getArticleById = async (req, res, next) => {
       relatedArticles,
       comments,
       user,
+      layout: 'article',
     })
   } catch (error) {
     next(error)

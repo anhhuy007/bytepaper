@@ -1,147 +1,145 @@
-{{!-- views/articles/detail.hbs --}}
-<div class="container mx-auto px-4 md:px-8 lg:px-16 py-8 space-y-12" id="articleDetail">
-  <!-- Main Article Section -->
-  <div class="flex-1 space-y-12">
-    <!-- Back Button -->
-    <a href="/articles/filter" class="link text-primary flex items-center gap-2">
-      <i data-lucide="arrow-left"></i>
-      <span>Back to Articles</span>
-    </a>
-    <!-- Article Header -->
-    <header class="space-y-4">
-      <h1 class="text-4xl font-extrabold text-gray-800">
-        {{default article.title 'Untitled Article'}}
-      </h1>
-      <div class="flex justify-between items-center">
-        <!-- Metadata -->
-        <div class="flex items-center gap-4 text-gray-600">
-          <span>{{formatDate article.published_at}}</span>
-          {{#if article.category}}
-          <a
-            href="/articles/categories/{{article.category.id}}"
-            class="link text-primary font-medium hover:underline flex items-center gap-1"
-          >
-            <i data-lucide="folder"></i> {{article.category.name}}
-          </a>
-          {{/if}}
-        </div>
+<div class="flex flex-col min-h-screen">
+  <div class="container mx-auto py-8 px-4 md:px-6 lg:px-8 w-full">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Main Article -->
+      <div class="lg:w-2/3">
+        <article class="rounded-lg overflow-hidden">
+          <div class="p-6 md:p-8 space-y-6">
+            <!-- Article Header -->
+            <header class="space-y-4">
+              <div class="flex flex-row w-full items-center justify-between gap-4 text-base text-gray-600">
+                {{#if article.category}}
+                <a href="/categories/{{article.category.id}}" class="hover:underline text-blue-600"
+                  >{{article.category.name}}</a
+                >
+                {{/if}}
+                <time datetime="{{article.published_at}}">Publish Date: {{formatDateTime article.published_at}}</time>
+              </div>
+              <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold pt-5 text-gray-900">
+                {{default article.title 'Untitled Article'}}
+              </h1>
+              <div class="flex flex-wrap gap-2">
+                {{#each article.tags as |tag|}}
+                <a
+                  href="filter?tagId={{tag.id}}"
+                  class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition"
+                  >#{{tag.name}}</a
+                >
+                {{/each}}
+              </div>
+            </header>
 
-        <!-- Premium Indicator and Download -->
-        <div class="flex items-center gap-2">
-          {{#if article.is_premium}}
-          <span class="badge badge-primary flex items-center gap-2 px-3 py-3 text-white text-sm">
-            <i data-lucide="star"></i>
-            <span>Premium</span>
-          </span>
-          {{#if user}} {{#if (eq user.role "subscriber")}}
-          <a href="/download/{{article.id}}" class="btn btn-primary flex items-center gap-2">
-            <i data-lucide="download"></i>
-            <span>Download</span>
-          </a>
-          {{else}}
-          <a href="/user/extend-subscription" class="btn btn-secondary flex items-center gap-2">
-            <i data-lucide="arrow-up-circle"></i>
-            <span>Subscribe to Download</span>
-          </a>
-          {{/if}} {{else}}
-          <a href="/auth/login" class="btn btn-secondary flex items-center gap-2">
-            <i data-lucide="log-in"></i>
-            <span>Login to Download</span>
-          </a>
-          {{/if}} {{/if}}
-        </div>
+            <!-- Thumbnail -->
+            {{#if article.thumbnail}}
+            <figure class="relative aspect-video overflow-hidden rounded-lg">
+              <img
+                src="{{article.thumbnail}}"
+                alt="{{default article.title 'Article Thumbnail'}}"
+                class="w-full h-full object-cover transition duration-300 hover:scale-105"
+              />
+            </figure>
+            {{/if}}
+
+            <!-- Content -->
+            <div class="prose max-w-none text-gray-800 text-justify">
+              {{#if article.content}} {{#each (split article.content '\n') as |paragraph|}}
+              <p class="mb-4">{{paragraph}}</p>
+              {{/each}} {{else}}
+              <p>No content available.</p>
+              {{/if}}
+            </div>
+
+            <!-- Author name -->
+            <div class="flex w-full justify-end text-xl space-x-4">
+              <i>
+                - Written By 
+                {{#if article.author_name}}
+                  {{article.author_name}}
+                {{else}}
+                  Anonymous
+                {{/if}}
+              </i>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end space-x-4 pt-6">
+              <button
+                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path>
+                </svg>
+                Save
+              </button>
+              <button
+                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"
+                  ></path>
+                </svg>
+                Share
+              </button>
+            </div>
+          </div>
+        </article>
       </div>
 
-      <!-- Tags -->
-      <div class="flex flex-wrap gap-2">
-        {{#each article.tags as |tag|}}
-        <a
-          href="/articles/tags/{{tag.id}}"
-          class="badge badge-outline text-sm flex items-center gap-1 hover:bg-primary hover:text-white transition p-4"
-        >
-          <i data-lucide="tag"></i> {{tag.name}}
-        </a>
-        {{/each}}
-      </div>
-    </header>
+      <!-- Related Articles -->
+        <aside class="lg:w-1/3 hidden lg:block pb-7">
+            <div class="sticky top-44 overflow-y-auto max-h-[calc(100vh-180px)]">
+                <section>
+                <h2 class="text-3xl font-semibold mb-14">Related Articles</h2>
+                <div class="space-y-4 pr-4">
+                    {{#each relatedArticles}}
+                        {{> article/tag-article this}}
+                        {{else}}
+                        <p class="text-gray-500">No related articles available.</p>
+                    {{/each}}
+                </div>
+                </section>
+            </div>
+        </aside>
+    </div>
 
-    <!-- Article Thumbnail -->
-    {{#if article.thumbnail}}
-    <figure class="w-full rounded-lg overflow-hidden shadow-md">
-      <img
-        src="{{article.thumbnail}}"
-        alt="{{default article.title 'Article Thumbnail'}}"
-        class="w-full h-auto object-cover"
-      />
-    </figure>
+    {{!-- Comments Section --}}
+  <section id="comments" class="space-y-6">
+    <div class="border-2 border-black"></div>
+    <h2 class="text-4xl font-bold">Comments</h2>
+    {{#if user}}
+      {{!-- Comment Form --}}
+      <form id="comment-form" action="/articles/{{article.id}}/comments" method="POST" class="space-y-4">
+        <div class="form-control">
+          <label class="label"><span class="label-text text-base">Your Comment</span></label>
+          <textarea name="content" class="textarea textarea-bordered w-full" placeholder="Write your comment here..." required></textarea>
+        </div>
+        <div class="flex w-full justify-end">
+          <button type="submit" class="btn btn-primary">Submit Comment</button>
+        </div>
+      </form>
+    {{else}}
+      <p><a href="/auth/login" class="link">Login</a> or <a href="/auth/register" class="link">Register</a> to post a comment.</p>
     {{/if}}
 
-    <!-- Article Content -->
-    <section class="prose lg:prose-lg max-w-none text-gray-700 space-y-6">
-      {{#if article.content}}
-        {{{article.content}}}
+    {{!-- Comment List --}}
+    <div class="space-y-4">
+      {{#each comments as |comment|}}
+        {{> comment-item comment}}
       {{else}}
-        <p>No content available.</p>
-      {{/if}}
-    </section>
-
-    <!-- Comments Section -->
-    <section id="comments" class="space-y-6">
-      <h2 class="text-2xl font-bold flex items-center gap-2">
-        <i data-lucide="message-square"></i>
-        <span>Comments</span>
-      </h2>
-
-      <!-- Comment Form -->
-      {{#if user}}
-      <form
-        id="comment-form"
-        action="/articles/{{article.id}}/comments"
-        method="POST"
-        class="space-y-4"
-      >
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Your Comment</span>
-          </label>
-          <textarea
-            name="content"
-            class="textarea textarea-bordered w-full"
-            placeholder="Write your comment here..."
-            required
-          ></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary flex items-center gap-2">
-          <i data-lucide="send"></i>
-          <span>Submit</span>
-        </button>
-      </form>
-      {{else}}
-      <p class="text-gray-500">
-        <a href="/auth/login" class="link text-primary">Login</a> or
-        <a href="/auth/register" class="link text-primary">Register</a> to post a comment.
-      </p>
-      {{/if}}
-
-      <!-- Comments List -->
-      <div class="space-y-4">
-        {{#each comments as |comment|}} {{> comment-item comment}} {{else}}
         <p class="text-gray-500">No comments yet. Be the first to comment!</p>
-        {{/each}}
-      </div>
-    </section>
-  </div>
-
-  <!-- Related Articles -->
-  <section class="space-y-6">
-    <h2 class="text-2xl font-bold flex items-center gap-2">
-      <i data-lucide="book-open"></i>
-      <span>Related Articles</span>
-    </h2>
-    <div class="grid grid-cols-1 gap-6">
-      {{#each relatedArticles}} {{> related-article article=this}} {{else}}
-      <p class="text-gray-500">No related articles available.</p>
       {{/each}}
     </div>
   </section>
-</div>
+  </div>
+</body>
