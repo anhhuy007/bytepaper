@@ -49,6 +49,19 @@ const getArticleById = async (req, res, next) => {
 
     article.content = processArticleContent(article.content)
 
+    // Determine the action button logic
+    let actionButton = null
+    if (article.is_premium) {
+      if (user) {
+        if (user.role === 'subscriber') {
+          actionButton = { label: 'Download', href: '/download/' + articleId }
+        } else {
+          actionButton = { label: 'Extend Subscription', href: '/user/extend-subscription' }
+        }
+      } else {
+        actionButton = { label: 'Login to Download', href: '/auth/login' }
+      }
+    }
     // Render the detail view
     return res.render('articles/detail', {
       article,
@@ -56,6 +69,7 @@ const getArticleById = async (req, res, next) => {
       comments,
       user,
       layout: 'article',
+      actionButton, // Pass action button data to the template
     })
   } catch (error) {
     next(error)
@@ -97,7 +111,7 @@ const getArticlesByFilter = async (req, res, next) => {
     // Extract filters and pagination options
     const filters = {
       keyword: req.query.keyword || null,
-      category_id: parseInt(req.query.category_id, 10) || null,
+      category_id: req.query.category_id || null,
       tag_id: parseInt(req.query.tag_id, 10) || null,
       status: req.query.status || 'published',
     }
@@ -128,6 +142,10 @@ const getArticlesByFilter = async (req, res, next) => {
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
 
+    // console.log('===================> query:', req.query)
+    // console.log('===================> selectedCategory:', filters.category_id)
+    // console.log('===================> selectedTag:', filters.tag_id)
+    // console.log('===================> categories:', categories)
     // Render view with articles, filters, and pagination
     res.render('articles/search', {
       articles,
@@ -194,15 +212,31 @@ const getArticlesByCategoryId = async (req, res, next) => {
       orderBy: req.query.orderBy || 'published_at DESC',
     }
 
-    const filters = {
-      category_id: categoryId,
-      status: 'published',
+    const category = await categoryService.getCategoryById(categoryId)
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' })
     }
+
+    let filters = { status: 'published' }
+
+    // Check if the category is a parent or child
+    if (!category.parent_id) {
+      // Parent category: Get all child categories
+      const childCategories = await categoryService.getChildCategories(categoryId)
+      const childCategoryIds = childCategories.map((child) => child.id)
+
+      // Filter articles belonging to any of the child categories
+      filters.category_ids = childCategoryIds
+    } else {
+      // Child category: Filter articles belonging to this category
+      filters.category_id = categoryId
+    }
+    console.log(filters)
     const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
     const totalPages = Math.ceil(totalArticles / limit)
-    const category = await categoryService.getCategoryById(categoryId)
 
     res.render('articles/list', {
+      currentCategoryId: categoryId,
       articles,
       currentPage: page,
       totalPages,

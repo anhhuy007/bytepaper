@@ -26,8 +26,10 @@ Handlebars.registerHelper('lte', function (a, b) {
   return a <= b
 })
 
-Handlebars.registerHelper('hasSubCategorySelected', function (subCategories, currentCategoryId) {
-  return subCategories.some((subCategory) => subCategory.subId === currentCategoryId)
+Handlebars.registerHelper('hasSubCategorySelected', function (children, currentCategoryId) {
+  return children.some(function (child) {
+    return parseInt(child.id, 10) === parseInt(currentCategoryId, 10)
+  })
 })
 
 Handlebars.registerHelper('or', function (a, b) {
@@ -40,6 +42,10 @@ Handlebars.registerHelper('between', function (value, min, max) {
 
 Handlebars.registerHelper('add', function (a, b) {
   return a + b
+})
+
+Handlebars.registerHelper('toNumber', function (str) {
+  return parseInt(str, 10)
 })
 
 Handlebars.registerHelper('subtract', function (a, b) {
@@ -188,4 +194,42 @@ Handlebars.registerHelper('ifActive', function (path, options) {
 Handlebars.registerHelper('split', function (input, delimiter) {
   if (typeof input !== 'string') return []
   return input.split(delimiter)
+})
+
+Handlebars.registerHelper('math', function (a, b, operator) {
+  switch (operator) {
+    case '+':
+      return a + b
+    case '-':
+      return a - b
+    case '*':
+      return a * b
+    case '/':
+      return b !== 0 ? a / b : 'Error (divide by zero)'
+    default:
+      return 'Invalid operator'
+  }
+})
+
+Handlebars.registerHelper('compare2', function (a, b, operator) {
+  switch (operator) {
+    case '==':
+      return a == b
+    case '===':
+      return a === b
+    case '!=':
+      return a != b
+    case '!==':
+      return a !== b
+    case '>':
+      return a > b
+    case '<':
+      return a < b
+    case '>=':
+      return a >= b
+    case '<=':
+      return a <= b
+    default:
+      return false
+  }
 })
