@@ -26,7 +26,7 @@ router.get('/users', cacheMiddleware(adminCacheKeyGenerator.userList), adminCont
 
 router.get(
   '/users/add',
-  deleteCacheMiddleware(adminCacheKeyGenerator.addUser),
+  cacheMiddleware(adminCacheKeyGenerator.addUser),
   adminController.getAddUser,
 )
 

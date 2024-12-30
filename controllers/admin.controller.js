@@ -54,7 +54,7 @@ const getUserById = async (req, res, next) => {
       title: 'Edit User',
       layout: 'admin',
       user,
-      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+      roles: ['editor', 'guest', 'subscriber', 'writer'],
     })
   } catch (error) {
     next(error)
@@ -66,7 +66,7 @@ const getAddUser = async (req, res, next) => {
     res.render('admin/add-user', {
       title: 'Add User',
       layout: 'admin',
-      roles: ['admin', 'editor', 'guest', 'subscriber', 'writer'],
+      roles: ['editor', 'guest', 'subscriber', 'writer'],
     })
   } catch (error) {
     next(error)
@@ -76,6 +76,8 @@ const getAddUser = async (req, res, next) => {
 const createUser = async (req, res, next) => {
   try {
     const data = req.body
+
+    console.log(data)
 
     // Input validation (optional: consider using libraries like Joi or express-validator)
     if (!data.username || !data.password || !data.email || !data.full_name) {
@@ -99,7 +101,7 @@ const createUser = async (req, res, next) => {
 const getEditors = async (req, res, next) => {
   try {
     const editors = await adminService.getEditorsWithCategories()
-
+    console.log(JSON.stringify(editors, null, 2))
     res.render('admin/editors', {
       title: 'Assign Categories',
       layout: 'admin',
@@ -293,7 +295,13 @@ const getDashboard = async (req, res, next) => {
 
 const getAddCategory = async (req, res, next) => {
   try {
-    const { categories } = await categoryService.getAllCategories()
+    const allOptions = {
+      limit: 100,
+      offset: 0,
+    }
+
+    const allFilters = {}
+    const { categories } = await categoryService.getAllCategories(allFilters, allOptions)
     res.render('admin/add-category', {
       title: 'Add Category',
       layout: 'admin',

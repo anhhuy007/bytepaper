@@ -9,7 +9,7 @@ import crypto from 'crypto'
 import { decorateSendMail } from '../utils/mailDecorator.js'
 class UserService {
   async registerUser(userData) {
-    const { username, email, password, full_name } = userData
+    const { username, email, password, full_name, role } = userData
 
     // Check if username or email already exists in the database
     const existingUserEmail = await userModel.findByEmail(email)
@@ -32,6 +32,7 @@ class UserService {
       email,
       password_hash: hashedPassword,
       full_name,
+      role: role || 'guest', // Default role is guest
     }
 
     // Create the new user in the database

@@ -152,7 +152,6 @@ class ArticleService {
     // Update the article status to "rejected" and set the rejection_reason field to the provided reason
     await articleModel.updateArticle(id, {
       status: 'rejected',
-      editor_id: editorId,
     })
 
     // Update the article rejections table with the rejection details
@@ -274,8 +273,8 @@ class ArticleService {
     return await articleModel.getArticleStats(authorId)
   }
 
-  async getArticleRejections(editorId, articleId) {
-    return await articleRejectionsModel.getArticleRejections(editorId, articleId)
+  async getArticleRejections(articleId) {
+    return await articleRejectionsModel.getArticleRejections(articleId)
   }
 
   async addTagsToArticle(articleId, tagIds) {
