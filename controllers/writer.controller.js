@@ -4,6 +4,9 @@ import articleService from '../services/article.service.js'
 import categoryService from '../services/category.service.js'
 import tagService from '../services/tag.service.js'
 import sanitizeHtml from 'sanitize-html'
+import dotenv from 'dotenv'
+dotenv.config()
+
 const processContent = (content) => {
   if (!content) return null
 
@@ -104,6 +107,7 @@ const getCreateArticle = async (req, res, next) => {
       layout: 'writer',
       categories,
       tags,
+      imgbbApiKey: process.env.IMGBB_API_KEY,
     })
   } catch (error) {
     next(error)
@@ -178,6 +182,7 @@ const getEditArticle = async (req, res, next) => {
       canDelete: article.status !== 'pending',
       canSubmit: article.status !== 'pending',
       canViewRejections: article.status === 'rejected',
+      imgbbApiKey: process.env.IMGBB_API_KEY,
     })
   } catch (error) {
     next(error)
