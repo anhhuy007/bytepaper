@@ -10,9 +10,9 @@
 
       <div class="lg:w-1/3 p-6 lg:p-8 flex flex-col justify-between">
         <div class="flex items-center gap-2 mb-3">
-          <a href="categories/{{ default category_id '#' }}"
+          <a href="/articles/categories/{{ default category_id '#' }}"
             class="ml-1 z-10 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded transition-all duration-300 ease-in-out hover:bg-blue-900 hover:text-white hover:scale-105 hover:shadow-md">
-            {{ default category "Uncategorized" }}
+            {{ default category "Không có thể loại" }}
           </a>
           <span class="text-sm text-gray-500 font-semibold">{{ formatDate published_at }}</span>
         </div>
@@ -35,7 +35,7 @@
               <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
               <circle cx="12" cy="12" r="3" />
             </svg>
-            {{views}} views
+            {{views}} lượt xem
           </div>
 
           <span

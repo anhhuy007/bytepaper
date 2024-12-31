@@ -3,7 +3,7 @@
   <!-- Page Title -->
   <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center flex items-center space-x-2">
     <i data-lucide="search" class="text-blue-500"></i>
-    <span>Search Articles</span>
+    <span>Tìm kiếm bài báo</span>
   </h1>
 
   <!-- Filter Section -->
@@ -13,28 +13,23 @@
       <div class="form-control">
         <label for="keyword" class="label text-sm font-medium text-gray-600 flex items-center space-x-2">
           <i data-lucide="type"></i>
-          <span>Keyword</span>
+          <span>Từ khóa</span>
         </label>
-        <input
-          type="text"
-          id="keyword"
-          name="keyword"
-          class="input input-bordered w-full"
-          placeholder="Search articles..."
-          value="{{query.keyword}}"
-        />
+        <input type="text" id="keyword" name="keyword" class="input input-bordered w-full"
+          placeholder="Tìm kiếm bài báo..." value="{{query.keyword}}" />
       </div>
 
       <!-- Category Filter -->
       <div class="form-control">
         <label for="category_id" class="label text-sm font-medium text-gray-600 flex items-center space-x-2">
           <i data-lucide="folder"></i>
-          <span>Category</span>
+          <span>Chuyên mục</span>
         </label>
         <select id="category_id" name="category_id" class="select select-bordered w-full">
-          <option value="" {{#if (compare2 query.category_id "" '==')}}selected{{/if}}>All Categories</option>
+          <option value="" {{#if (compare2 query.category_id "" '==' )}}selected{{/if}}>Tất cả chuyên mục</option>
           {{#each categories}}
-          <option value="{{this.id}}" {{#if (compare2 ../selectedCategory this.id '==')}}selected{{/if}}>{{this.name}}</option>
+          <option value="{{this.id}}" {{#if (compare2 ../selectedCategory this.id '==' )}}selected{{/if}}>{{this.name}}
+          </option>
           {{/each}}
         </select>
       </div>
@@ -43,10 +38,10 @@
       <div class="form-control">
         <label for="tag_id" class="label text-sm font-medium text-gray-600 flex items-center space-x-2">
           <i data-lucide="tag"></i>
-          <span>Tag</span>
+          <span>Nhãn</span>
         </label>
         <select id="tag_id" name="tag_id" class="select select-bordered w-full">
-           <option value="" {{#if (eq query.tag_id "" )}}selected{{/if}}>All Tags</option>
+          <option value="" {{#if (eq query.tag_id "" )}}selected{{/if}}>Tất cả các nhãn</option>
           {{#each tags}}
           <option value="{{this.id}}" {{#if (eq ../selectedTag this.id)}}selected{{/if}}>{{this.name}}</option>
           {{/each}}
@@ -57,13 +52,15 @@
       <div class="form-control">
         <label for="orderBy" class="label text-sm font-medium text-gray-600 flex items-center space-x-2">
           <i data-lucide="sort-desc"></i>
-          <span>Sort By</span>
+          <span>Sắp xếp theo</span>
         </label>
         <select id="orderBy" name="orderBy" class="select select-bordered w-full">
-          <option value="published_at DESC" {{#if (eq query.orderBy "published_at DESC")}}selected{{/if}}>Newest</option>
-          <option value="published_at ASC" {{#if (eq query.orderBy "published_at ASC")}}selected{{/if}}>Oldest</option>
-          <option value="name ASC" {{#if (eq query.orderBy "name ASC")}}selected{{/if}}>Name A-Z</option>
-          <option value="name DESC" {{#if (eq query.orderBy "name DESC")}}selected{{/if}}>Name Z-A</option>
+          <option value="published_at DESC" {{#if (eq query.orderBy "published_at DESC" )}}selected{{/if}}>Mới nhất
+          </option>
+          <option value="published_at ASC" {{#if (eq query.orderBy "published_at ASC" )}}selected{{/if}}>Cũ nhất
+          </option>
+          <option value="name ASC" {{#if (eq query.orderBy "name ASC" )}}selected{{/if}}>Từ A - Z</option>
+          <option value="name DESC" {{#if (eq query.orderBy "name DESC" )}}selected{{/if}}>Từ Z - A</option>
         </select>
       </div>
 
@@ -71,11 +68,11 @@
       <div class="flex items-center justify-end space-x-4 col-span-1 md:col-span-2 lg:col-span-4">
         <button type="submit" class="btn btn-primary flex items-center space-x-2">
           <i data-lucide="filter"></i>
-          <span>Apply</span>
+          <span>Áp dụng</span>
         </button>
         <a href="/articles/filter" class="btn btn-secondary flex items-center space-x-2">
           <i data-lucide="refresh-cw"></i>
-          <span>Reset</span>
+          <span>Đặt lại</span>
         </a>
       </div>
     </form>
