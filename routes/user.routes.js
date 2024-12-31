@@ -12,7 +12,7 @@ router.use(authMiddleware())
 
 router.get(
   '/profile',
-  cacheMiddleware(userCacheKeyGenerator.profile),
+  // cacheMiddleware(userCacheKeyGenerator.profile),
   userController.getUserProfile,
 )
 

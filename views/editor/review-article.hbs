@@ -104,6 +104,25 @@
       </div>
     </div>
 
+    <!-- Is Premium -->
+    <div class="form-control flex items-center">
+      <label
+        for="is_premium"
+        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
+      >
+        <i data-lucide="star"></i>
+        <span>Is Premium</span>
+      </label>
+      <input
+        type="checkbox"
+        name="is_premium"
+        id="is_premium"
+        class="checkbox checkbox-primary ml-4"
+        {{#if article.is_premium}}checked{{/if}}
+        disabled
+      />
+    </div>
+
     <!-- Action Buttons -->
     <div class="flex justify-center space-x-4">
       <!-- Approve Button -->

@@ -47,6 +47,13 @@ const getArticleById = async (req, res, next) => {
     const comments = await commentService.getCommentsByArticleId(articleId)
     const user = req.user
 
+    // Restrict access to premium content
+    if (article.is_premium && (!user || user.role !== 'subscriber')) {
+      return res.status(403).render('errors/403', {
+        message: 'This content is only available to subscribers. Please subscribe to access.',
+      })
+    }
+
     article.content = processArticleContent(article.content)
 
     // Determine the action button logic
@@ -62,6 +69,8 @@ const getArticleById = async (req, res, next) => {
         actionButton = { label: 'Login to Download', href: '/auth/login' }
       }
     }
+    // Increase the article's view count
+    await articleService.increaseArticleViewCount(articleId)
     // Render the detail view
     return res.render('articles/detail', {
       article,

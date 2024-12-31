@@ -13,17 +13,6 @@ class SubscriptionModel extends BaseModel {
   constructor() {
     super('subscriptions')
   }
-  /**
-   * Retrieves the subscription record for the given user ID.
-   *
-   * @param {number} userId - The ID of the user.
-   * @returns {Promise<Object>} The subscription record for the user, or null if no record
-   * exists.
-   * @example
-   * const subscription = await subscriptionModel.findByUserId(1);
-   * console.log(subscription);
-   * // { user_id: 1, expiry_date: "...", created_at: "...", updated_at: "..." }
-   */
   async findByUserId(userId) {
     const query = `
       SELECT * FROM subscriptions
@@ -33,20 +22,6 @@ class SubscriptionModel extends BaseModel {
     return rows[0]
   }
 
-  /**
-   * Inserts or updates a subscription record for the given user ID.
-   *
-   * This method uses an UPSERT query to either insert a new subscription record
-   * or update an existing one if the user ID already exists in the database.
-   *
-   * @param {number} userId - The ID of the user.
-   * @param {Date} expiryDate - The expiry date of the subscription.
-   * @returns {Promise<Object>} The newly inserted or updated subscription record.
-   * @example
-   * const subscription = await subscriptionModel.upsert(1, new Date());
-   * console.log(subscription);
-   * // { user_id: 1, expiry_date: "...", created_at: "...", updated_at: "..." }
-   */
   async upsert(userId, expiryDate) {
     // Define the SQL query to insert or update the subscription record
     const query = `
@@ -62,19 +37,6 @@ class SubscriptionModel extends BaseModel {
     return rows[0]
   }
 
-  /**
-   * Deletes a subscription record for the given user ID.
-   *
-   * This method will remove the subscription record associated with the
-   * specified user ID from the database and return the deleted record.
-   *
-   * @param {number} userId - The ID of the user whose subscription is to be deleted.
-   * @returns {Promise<Object>} The deleted subscription record.
-   * @example
-   * const deletedSubscription = await subscriptionModel.deleteSubscription(1);
-   * console.log(deletedSubscription);
-   * // { user_id: 1, expiry_date: "...", created_at: "...", updated_at: "..." }
-   */
   async deleteSubscription(userId) {
     const query = `
       DELETE FROM subscriptions
@@ -84,9 +46,5 @@ class SubscriptionModel extends BaseModel {
     const { rows } = await db.query(query, [userId])
     return rows[0]
   }
-
-  // Another methods related to subscriptions...
 }
-
-const subscriptionModel = new SubscriptionModel()
-export default subscriptionModel
+export default new SubscriptionModel()

@@ -188,6 +188,9 @@ const updateArticle = async (req, res, next) => {
   try {
     const authorId = req.user.id
     const { action, tags, ...articleData } = req.body
+    const { is_premium } = articleData
+
+    articleData.is_premium = is_premium === 'on' ? true : false
 
     console.log('=================== body:', req.body)
 
@@ -219,15 +222,25 @@ const updateArticle = async (req, res, next) => {
 
 const getArticleRejections = async (req, res, next) => {
   try {
-    const editorId = req.user.id
     const articleId = req.params.articleId
-    const rejections = await articleService.getArticleRejections(editorId, articleId)
+    console.log('=========================> Article ID: ', articleId)
+    const rejections = await articleService.getArticleRejections(articleId)
     res.render('writer/article-rejections', {
       title: 'Rejected Articles',
       layout: 'writer',
       rejections,
       articleId,
     })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const deleteArticle = async (req, res, next) => {
+  try {
+    const authorId = req.user.id
+    await articleService.deleteArticle(req.params.articleId, authorId)
+    res.redirect('/writer/articles')
   } catch (error) {
     next(error)
   }
@@ -240,4 +253,5 @@ export default {
   getDashboard,
   createArticle,
   updateArticle,
+  deleteArticle,
 }

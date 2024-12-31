@@ -10,6 +10,8 @@ import {
 } from '../middlewares/cacheMiddleware.js'
 import { articleCacheKeyGenerator } from '../utils/cacheKeyGenerator.js'
 import viewRenderer from '../utils/viewRenderer.js'
+import checkSubscription from '../middlewares/checkSubscription.js'
+import articleService from '../services/article.service.js'
 
 const router = express.Router()
 
@@ -54,7 +56,20 @@ router.get(
 
 router.get(
   '/:id',
-  // cacheMiddleware(articleCacheKeyGenerator.details),
+  async (req, res, next) => {
+    try {
+      const articleId = req.params.id
+      const article = await articleService.getArticleById(articleId)
+      if (article.is_premium) {
+        // If the article is premium, validate the user's subscription
+        return checkSubscription(req, res, next)
+      }
+      // Proceed if the article is not premium
+      next()
+    } catch (error) {
+      next(error)
+    }
+  },
   // cacheMiddleware(articleCacheKeyGenerator.details),
   articleController.getArticleById,
 )
