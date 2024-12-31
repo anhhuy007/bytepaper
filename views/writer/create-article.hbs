@@ -87,11 +87,11 @@
       </label>
       <input
         type="file"
-        name="thumbnail"
-        id="thumbnail"
+        id="thumbnailInput"
         class="file-input file-input-bordered w-full"
         accept="image/*"
       />
+      <input type="text" name="thumbnail" id="thumbnail" class="hidden" />
     </div>
 
     <!-- Category -->
@@ -215,20 +215,74 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#createArticleForm')
-    console.log('Form:', form)
+    const thumbnailInput = document.querySelector('#thumbnailInput')
+    const previewDiv = document.createElement('div')
+    thumbnailInput.parentElement.appendChild(previewDiv) // Add preview container after input
+
+    let uploadedImageUrl = null // Store the uploaded image URL
+
+    // Handle local preview of the selected image
+    thumbnailInput.addEventListener('change', (event) => {
+      const file = event.target.files[0]
+
+      if (file) {
+        // Show local image preview
+        const reader = new FileReader()
+        reader.onload = function (e) {
+          previewDiv.innerHTML = `<img src="${e.target.result}" alt="Thumbnail Preview" class="w-32 h-32 object-cover mt-4 rounded-md" />`
+        }
+        reader.readAsDataURL(file)
+      }
+    })
+
+    // Handle form submission
     if (form) {
       form.addEventListener('submit', async function (event) {
         event.preventDefault()
 
-        const content = quill.root.innerHTML.trim()
-        document.querySelector('#hiddenContent').value = content
+        const file = thumbnailInput.files[0]
+        if (!file) {
+          alert('Please select a thumbnail image.')
+          return
+        }
 
-        console.log('=== Quill Content ===', content)
+        const formData = new FormData()
+        formData.append('image', file)
 
-        this.submit()
+        const apiKey = '{{imgbbApiKey}}'
+        console.log(apiKey)
+        const url = `https://api.imgbb.com/1/upload?key=${apiKey}`
+        let canSubmit = false
+        try {
+          // Upload image to ImgBB
+          const response = await fetch(url, {
+            method: 'POST',
+            body: formData,
+          })
+
+          const result = await response.json()
+          if (result.success) {
+            uploadedImageUrl = result.data.url
+            console.log('Uploaded 111 URL:', uploadedImageUrl)
+            const content = quill.root.innerHTML.trim()
+            document.querySelector('#hiddenContent').value = content
+            document.querySelector('#thumbnail').value = uploadedImageUrl
+
+            const formDatatmp = new FormData(form)
+            console.log(formDatatmp.forEach((value, key) => console.log(key, value)))
+            canSubmit = true
+          } else {
+            console.error('Image upload failed:', result)
+            alert('Failed to upload image. Please try again.')
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error)
+          alert('An error occurred during the upload.')
+        }
+        if (canSubmit) {
+          this.submit()
+        }
       })
-    } else {
-      console.error('Form element not found.')
     }
   })
 </script>
