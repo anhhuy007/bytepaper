@@ -1,6 +1,6 @@
 {{!-- views/partials/article/small-carousel-item-article.hbs --}}
 <div class="relative grid grid-cols-[40%_2%_58%] group bg-white overflow-hidden">
-  <a href="/articles/{{ id }}" class="absolute inset-0"></a>
+  <a href="/articles/categories/{{ id }}" class="absolute inset-0"></a>
 
   {{!-- Thumbnail --}}
   <div>
@@ -21,7 +21,7 @@
         <span>{{ formatDate published_at }}</span>
       </div>
       <a
-        href="/categories/{{ default category_id '#' }}"
+        href="/articles/categories/{{ default category_id '#' }}"
         class="p-1 z-10 text-blue-500 hover:underline"
       >
         {{ default category "Uncategorized" }}

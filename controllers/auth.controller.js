@@ -43,7 +43,7 @@ const login = async (req, res, next) => {
       console.error('Server error during login:', err)
       return res.status(500).json({
         success: false,
-        message: 'Internal server error. Please try again later.',
+        message: `${err.message}. Please try again.`,
       })
     }
 

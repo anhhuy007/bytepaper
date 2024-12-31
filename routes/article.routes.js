@@ -47,12 +47,6 @@ router.get(
   viewRenderer('home', 'main', articleController.getHomepageArticles),
 )
 
-// router.get(
-//   '/download/:id',
-//   // authMiddleware(['subscriber']),
-//   // checkSubscription,
-//   articleController.downloadArticle,
-// )
 
 router.get(
   '/:id',
