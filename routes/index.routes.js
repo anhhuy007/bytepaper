@@ -32,5 +32,4 @@ router.get('/', (req, res) => {
   res.redirect('/articles/home')
 })
 
-
 export default router

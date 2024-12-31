@@ -7,9 +7,7 @@
         {{!-- Render super-large article in each carousel slide --}} {{>
         article/carousel-item-article article=this}}
       </a>
-      <div
-        class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between z-50"
-      >
+      <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between z-50">
         {{!-- Navigation Buttons --}}
         <a href="#slide{{subtract @index 1}}" class="btn btn-ghost btn-circle goTo text-white">❮</a>
         <a href="#slide{{add @index 1}}" class="btn btn-ghost btn-circle goTo text-white">❯</a>

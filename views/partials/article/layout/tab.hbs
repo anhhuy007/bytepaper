@@ -3,31 +3,22 @@
     <div class="mb-6 border-b border-gray-200">
       <div class="flex overflow-x-auto scrollbar-hide -mb-px" role="tablist">
         {{#each articles}} {{#if (lt @index 10)}}
-        <button
-          id="tab-{{@index}}"
-          role="tab"
-          aria-controls="tabpanel-{{@index}}"
-          aria-selected="{{#if @first}}true{{else}}false{{/if}}"
-          class="inline-flex items-center px-6 py-3 text-sm font-medium whitespace-nowrap transition-all border-b-2 hover:text-orange-500 focus:outline-none focus:ring-0
+        <button id="tab-{{@index}}" role="tab" aria-controls="tabpanel-{{@index}}"
+          aria-selected="{{#if @first}}true{{else}}false{{/if}}" class="inline-flex items-center px-6 py-3 text-sm font-medium whitespace-nowrap transition-all border-b-2 hover:text-orange-500 focus:outline-none focus:ring-0
               {{#if @first}}
                 border-orange-500 text-orange-500
               {{else}}
                 border-transparent text-gray-600 hover:border-orange-300
-              {{/if}}"
-        >
-          {{ default this.category 'Uncategorized' }}
+              {{/if}}">
+          {{ default this.category 'Không có thể loại' }}
         </button>
         {{/if}} {{/each}}
       </div>
     </div>
 
     {{#each articles}} {{#if (lt @index 10)}}
-    <div
-      id="tabpanel-{{@index}}"
-      role="tabpanel"
-      aria-labelledby="tab-{{@index}}"
-      class="{{#unless @first}}hidden{{/unless}}"
-    >
+    <div id="tabpanel-{{@index}}" role="tabpanel" aria-labelledby="tab-{{@index}}"
+      class="{{#unless @first}}hidden{{/unless}}">
       {{> article/tab-item-article this}}
     </div>
     {{/if}} {{/each}}
@@ -38,10 +29,12 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .border-b-2 {
     transition: border-color 0.2s ease;
   }

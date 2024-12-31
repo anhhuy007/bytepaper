@@ -203,7 +203,7 @@ const getArticlesByTagId = async (req, res, next) => {
       articles,
       currentPage: page,
       totalPages,
-      title: `Articles with Tag: ${tag.name}`,
+      title: `Nhãn: ${tag.name}`,
       query: req.query,
     })
   } catch (error) {
@@ -253,7 +253,7 @@ const getArticlesByCategoryId = async (req, res, next) => {
       articles,
       currentPage: page,
       totalPages,
-      title: `Articles in Category: ${category.name}`,
+      title: `Chuyên mục: ${category.name}`,
       query: req.query,
     })
   } catch (error) {
