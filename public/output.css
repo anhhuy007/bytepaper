@@ -1733,6 +1733,33 @@ html{
   justify-self: end;
 }
 
+.navbar{
+  display: flex;
+  align-items: center;
+  padding: var(--navbar-padding, 0.5rem);
+  min-height: 4rem;
+  width: 100%;
+}
+
+:where(.navbar > *:not(script, style)){
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar-start{
+  width: 50%;
+  justify-content: flex-start;
+}
+
+.navbar-center{
+  flex-shrink: 0;
+}
+
+.navbar-end{
+  width: 50%;
+  justify-content: flex-end;
+}
+
 .range{
   height: 1.5rem;
   width: 100%;
@@ -3751,6 +3778,10 @@ html:has(.drawer-toggle:checked){
   z-index: 50;
 }
 
+.z-20{
+  z-index: 20;
+}
+
 .col-span-1{
   grid-column: span 1 / span 1;
 }
@@ -3796,6 +3827,11 @@ html:has(.drawer-toggle:checked){
 .my-8{
   margin-top: 2rem;
   margin-bottom: 2rem;
+}
+
+.my-6{
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .-mb-px{
@@ -3967,10 +4003,6 @@ html:has(.drawer-toggle:checked){
 
 .h-12{
   height: 3rem;
-}
-
-.h-16{
-  height: 4rem;
 }
 
 .h-24{
@@ -4172,6 +4204,10 @@ html:has(.drawer-toggle:checked){
 
 .flex-grow{
   flex-grow: 1;
+}
+
+.table-auto{
+  table-layout: auto;
 }
 
 .border-collapse{
@@ -4525,14 +4561,14 @@ html:has(.drawer-toggle:checked){
   border-bottom-color: rgb(239 68 68 / var(--tw-border-opacity, 1));
 }
 
-.border-l-black{
+.border-l-orange-400{
   --tw-border-opacity: 1;
-  border-left-color: rgb(0 0 0 / var(--tw-border-opacity, 1));
+  border-left-color: rgb(251 146 60 / var(--tw-border-opacity, 1));
 }
 
-.border-l-red-600{
+.border-l-orange-600{
   --tw-border-opacity: 1;
-  border-left-color: rgb(220 38 38 / var(--tw-border-opacity, 1));
+  border-left-color: rgb(234 88 12 / var(--tw-border-opacity, 1));
 }
 
 .bg-\[\#1f2937\]{
@@ -4640,10 +4676,6 @@ html:has(.drawer-toggle:checked){
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
-.bg-white\/95{
-  background-color: rgb(255 255 255 / 0.95);
-}
-
 .bg-opacity-50{
   --tw-bg-opacity: 0.5;
 }
@@ -4695,6 +4727,11 @@ html:has(.drawer-toggle:checked){
 
 .p-8{
   padding: 2rem;
+}
+
+.px-10{
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
 }
 
 .px-2{
@@ -5120,12 +5157,6 @@ html:has(.drawer-toggle:checked){
 
 .filter{
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-}
-
-.backdrop-blur-md{
-  --tw-backdrop-blur: blur(12px);
-  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
-  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
 
 .transition{

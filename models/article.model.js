@@ -327,18 +327,22 @@ class ArticleModel extends BaseModel {
 
     // Build main query
     const query = `
-      SELECT 
-        a.*, 
-        u.full_name AS author_name, 
-        c.name AS category_name, 
-        ${filters.keyword ? "ts_rank_cd(a.search_vector, to_tsquery('english', $1))" : '0'} AS rank
-      FROM articles a
-      LEFT JOIN users u ON a.author_id = u.id
-      LEFT JOIN categories c ON a.category_id = c.id
-      ${whereClause}
-      ORDER BY ${filters.keyword ? 'rank DESC,' : ''} ${options.orderBy || 'a.published_at DESC'}
-      LIMIT $${queryParams.length + 1}
-      OFFSET $${queryParams.length + 2}
+    SELECT 
+  a.*, 
+  u.full_name AS author_name, 
+  c.name AS category_name, 
+  ${filters.keyword ? "ts_rank_cd(a.search_vector, to_tsquery('english', $1))" : '0'} AS rank,
+  ARRAY_AGG(jsonb_build_object('id', t.id, 'name', t.name)) AS tags 
+  FROM articles a
+  LEFT JOIN users u ON a.author_id = u.id
+  LEFT JOIN categories c ON a.category_id = c.id
+  LEFT JOIN article_tags at ON a.id = at.article_id
+  LEFT JOIN tags t ON at.tag_id = t.id
+  ${whereClause}
+  GROUP BY a.id, u.id, c.id
+  ORDER BY ${filters.keyword ? 'rank DESC,' : ''} ${options.orderBy || 'a.published_at DESC'}
+  LIMIT $${queryParams.length + 1}
+  OFFSET $${queryParams.length + 2}
     `
     queryParams.push(options.limit || 10)
     queryParams.push(options.offset || 0)

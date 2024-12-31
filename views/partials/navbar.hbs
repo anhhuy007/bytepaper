@@ -7,14 +7,17 @@
   <div class="drawer-side z-50">
     <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"> </label>
     <div class="menu bg-base-100 text-base-content min-h-full w-80">
-      <a class="btn btn-outline text-xl bg-black text-white my-8" href="/">Paperly</a>
+      <a href="/" class="flex items-center space-x-2 my-8 mx-auto btn btn-ghost">
+        <img src="/assets/logo.png" alt="Paperly" class="h-8 w-8" />
+        <span class="text-2xl font-bold text-orange-500">Paperly</span>
+      </a>
       {{#each categories}}
       <div class="collapse collapse-arrow group rounded-none">
         <input type="checkbox" class="peer" />
         <div
           class="rounded-none collapse-title border-b-2 group-hover:bg-primary group-hover:text-primary-content text-xl font-bold p-4
              {{#if (or (eq (toNumber id) (toNumber ../currentCategoryId)) (hasSubCategorySelected children ../currentCategoryId))}}
-                    border-l-info border-l-8
+                    border-l-orange-600 border-l-8
                 {{/if}}"
         >
           {{ name }}
@@ -25,7 +28,7 @@
               <div
                 class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-lg
             {{#if (eq (toNumber id) (toNumber ../currentCategoryId))}} 
-              border-l-8 border-l-info-content font-bold
+              border-l-8 border-l-orange-400 font-bold
             {{/if}}"
               >
                 {{ name }}
@@ -37,7 +40,7 @@
               <div
                 class="pl-10 bg-base-100 w-full cursor-pointer p-4 hover:bg-primary hover:text-primary-content text-lg
               {{#if (eq (toNumber id) (toNumber ../../currentCategoryId))}} 
-                border-l-8 border-l-info-content text-lg font-bold
+                border-l-8 border-l-orange-400 text-lg font-bold
               {{/if}}"
               >
                 {{ name }}
