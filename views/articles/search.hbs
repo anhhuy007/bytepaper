@@ -32,9 +32,9 @@
           <span>Category</span>
         </label>
         <select id="category_id" name="category_id" class="select select-bordered w-full">
-          <option value="">All Categories</option>
+          <option value="" {{#if (compare2 query.category_id "" '==')}}selected{{/if}}>All Categories</option>
           {{#each categories}}
-          <option value="{{this.id}}" {{#if (eq ../query.category_id this.id)}}selected{{/if}}>{{this.name}}</option>
+          <option value="{{this.id}}" {{#if (compare2 ../selectedCategory this.id '==')}}selected{{/if}}>{{this.name}}</option>
           {{/each}}
         </select>
       </div>
@@ -46,9 +46,9 @@
           <span>Tag</span>
         </label>
         <select id="tag_id" name="tag_id" class="select select-bordered w-full">
-          <option value="">All Tags</option>
+           <option value="" {{#if (eq query.tag_id "" )}}selected{{/if}}>All Tags</option>
           {{#each tags}}
-          <option value="{{this.id}}" {{#if (eq ../query.tag_id this.id)}}selected{{/if}}>{{this.name}}</option>
+          <option value="{{this.id}}" {{#if (eq ../selectedTag this.id)}}selected{{/if}}>{{this.name}}</option>
           {{/each}}
         </select>
       </div>

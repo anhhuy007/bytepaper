@@ -2,7 +2,6 @@
 
 import articleModel from '../models/article.model.js'
 import articleTagModel from '../models/articleTag.model.js'
-import tagService from './tag.service.js'
 import categoryService from './category.service.js'
 import articleRejectionsModel from '../models/articleRejections.model.js'
 class ArticleService {
@@ -152,7 +151,6 @@ class ArticleService {
     // Update the article status to "rejected" and set the rejection_reason field to the provided reason
     await articleModel.updateArticle(id, {
       status: 'rejected',
-      editor_id: editorId,
     })
 
     // Update the article rejections table with the rejection details
@@ -226,10 +224,6 @@ class ArticleService {
     return await articleModel.increaseViewCount(id)
   }
 
-  async downloadArticle(id) {
-    // TODO: Implement the download article functionality
-  }
-
   async deleteArticleByUserID(user_id) {
     await articleModel.deleteArticleByUserID(user_id)
   }
@@ -274,8 +268,8 @@ class ArticleService {
     return await articleModel.getArticleStats(authorId)
   }
 
-  async getArticleRejections(editorId, articleId) {
-    return await articleRejectionsModel.getArticleRejections(editorId, articleId)
+  async getArticleRejections(articleId) {
+    return await articleRejectionsModel.getArticleRejections(articleId)
   }
 
   async addTagsToArticle(articleId, tagIds) {

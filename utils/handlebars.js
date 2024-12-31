@@ -195,3 +195,41 @@ Handlebars.registerHelper('split', function (input, delimiter) {
   if (typeof input !== 'string') return []
   return input.split(delimiter)
 })
+
+Handlebars.registerHelper('math', function (a, b, operator) {
+  switch (operator) {
+    case '+':
+      return a + b
+    case '-':
+      return a - b
+    case '*':
+      return a * b
+    case '/':
+      return b !== 0 ? a / b : 'Error (divide by zero)'
+    default:
+      return 'Invalid operator'
+  }
+})
+
+Handlebars.registerHelper('compare2', function (a, b, operator) {
+  switch (operator) {
+    case '==':
+      return a == b
+    case '===':
+      return a === b
+    case '!=':
+      return a != b
+    case '!==':
+      return a !== b
+    case '>':
+      return a > b
+    case '<':
+      return a < b
+    case '>=':
+      return a >= b
+    case '<=':
+      return a <= b
+    default:
+      return false
+  }
+})

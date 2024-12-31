@@ -16,7 +16,7 @@ class ArticleRejectionsModel extends BaseModel {
   }
 
   async rejectArticle(articleId, editorId, reason) {
-    return this.insert({
+    return this.create({
       article_id: articleId,
       editor_id: editorId,
       reason,
@@ -41,15 +41,15 @@ class ArticleRejectionsModel extends BaseModel {
     return this.delete({ editor_id: editorId })
   }
 
-  async getArticleRejections(editorId, articleId) {
+  async getArticleRejections(articleId) {
     const query = `
       SELECT ar.article_id, ar.reason, ar.rejected_at, a.title
       FROM article_rejections ar
       JOIN articles a ON ar.article_id = a.id
-      WHERE ar.editor_id = $1 AND ar.article_id = $2
+      WHERE ar.article_id = $1
       ORDER BY ar.rejected_at DESC;
     `
-    const { rows } = await db.query(query, [editorId, articleId])
+    const { rows } = await db.query(query, [articleId])
     return rows
   }
 }

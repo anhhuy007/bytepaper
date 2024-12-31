@@ -203,7 +203,7 @@ class ArticleModel extends BaseModel {
       SELECT a.*, c.name AS category
       FROM articles a
       LEFT JOIN categories c ON a.category_id = c.id
-      WHERE status = 'published' 
+      WHERE status = 'published' AND published_at <= NOW()
       ORDER BY views DESC 
       LIMIT 4
     `
@@ -216,7 +216,7 @@ class ArticleModel extends BaseModel {
       SELECT a.*, c.name AS category
       FROM articles a
       LEFT JOIN categories c ON a.category_id = c.id
-      WHERE status = 'published' 
+      WHERE status = 'published' AND published_at <= NOW()
       ORDER BY views DESC 
       LIMIT 10
     `
@@ -229,7 +229,7 @@ class ArticleModel extends BaseModel {
       SELECT a.*, c.name AS category
       FROM articles a
       LEFT JOIN categories c ON a.category_id = c.id
-      WHERE status = 'published' 
+      WHERE status = 'published' AND published_at <= NOW()
       ORDER BY published_at DESC 
       LIMIT 10
     `
@@ -242,7 +242,7 @@ class ArticleModel extends BaseModel {
       SELECT DISTINCT ON (category_id) a.*, c.name AS category
       FROM articles a
       LEFT JOIN categories c ON a.category_id = c.id
-      WHERE status = 'published' 
+      WHERE status = 'published' AND published_at <= NOW()
       ORDER BY category_id, published_at DESC
       LIMIT 10
     `
@@ -291,6 +291,15 @@ class ArticleModel extends BaseModel {
       whereClause += `AND a.category_id = $${queryParams.length} `
     }
 
+    if (filters.category_ids && filters.category_ids.length > 0) {
+      const placeholders = filters.category_ids
+        .map((_, index) => `$${queryParams.length + index + 1}`)
+        .join(', ')
+      whereClause += `AND a.category_id IN (${placeholders}) `
+      queryParams.push(...filters.category_ids)
+      countParams.push(...filters.category_ids) // Add all category_ids to countParams
+    }
+
     if (filters.tag_id) {
       whereClause += `AND a.id IN (
           SELECT article_id
@@ -305,6 +314,9 @@ class ArticleModel extends BaseModel {
       queryParams.push(filters.status)
       countParams.push(filters.status)
       whereClause += `AND a.status = $${queryParams.length} `
+      if (filters.status === 'published') {
+        whereClause += `AND a.published_at <= NOW() `
+      }
     }
 
     if (filters.is_premium) {

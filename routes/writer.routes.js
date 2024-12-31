@@ -52,6 +52,12 @@ router.post(
   writerController.updateArticle,
 )
 
+router.post(
+  '/articles/delete/:articleId',
+  deleteCacheMiddleware(writerCacheKeyGenerator.dashboard),
+  writerController.deleteArticle,
+)
+
 router.get(
   '/articles/:articleId/rejections',
   cacheMiddleware(writerCacheKeyGenerator.articleRejections),

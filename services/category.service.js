@@ -75,5 +75,9 @@ class CategoryService {
   async getRootCategoriesWithChildren() {
     return await categoryModel.getRootCategoriesWithChildren()
   }
+
+  async getChildCategories(parentId) {
+    return await categoryModel.getChildCategories(parentId)
+  }
 }
 export default new CategoryService()
