@@ -1,7 +1,7 @@
 // models/tag.model.js
 import BaseModel from './Base.model.js'
 import db from '../utils/Database.js'
-import { buildSelectQuery, buildWhereClause } from '../utils/QueryBuilder.js'
+import { buildSelectQuery, buildWhereClause } from '../utils/queryBuilder.js'
 // CREATE TABLE tags (
 //   id SERIAL PRIMARY KEY,
 //   name VARCHAR(50) UNIQUE NOT NULL,
