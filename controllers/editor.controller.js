@@ -54,7 +54,7 @@ const getArticles = async (req, res, next) => {
       articles: enhancedArticles,
       categories,
       tags,
-      statuses: ['pending', 'published', 'approved', 'rejected'],
+      statuses: ['draft', 'pending', 'published', 'approved', 'rejected'],
       selectedCategory: filters.category_id,
       selectedTag: filters.tag_id,
       selectedStatus: filters.status,
