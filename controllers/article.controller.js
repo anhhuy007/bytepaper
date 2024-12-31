@@ -137,6 +137,7 @@ const getArticlesByFilter = async (req, res, next) => {
 
     // Fetch filtered articles and total count
     let { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    let { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
 
     // Fetch all categories and tags for filtering
     const allOptions = {
@@ -150,13 +151,16 @@ const getArticlesByFilter = async (req, res, next) => {
 
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
-    const user = req.user
+
     // If user is a subscriber, prioritize showing premium articles
+    const user = req.user
     if (user && user.role === 'subscriber') {
       const premiumArticles = articles.filter((article) => article.is_premium)
       const freeArticles = articles.filter((article) => !article.is_premium)
       articles = [...premiumArticles, ...freeArticles]
     }
+
+    // Render view with articles, filters, and pagination
     res.render('articles/search', {
       articles,
       categories,
@@ -206,7 +210,7 @@ const getArticlesByTagId = async (req, res, next) => {
       articles,
       currentPage: page,
       totalPages,
-      title: `Articles with Tag: ${tag.name}`,
+      title: `Nhãn: ${tag.name}`,
       query: req.query,
     })
   } catch (error) {
@@ -263,7 +267,7 @@ const getArticlesByCategoryId = async (req, res, next) => {
       articles,
       currentPage: page,
       totalPages,
-      title: `Articles in Category: ${category.name}`,
+      title: `Chuyên mục: ${category.name}`,
       query: req.query,
     })
   } catch (error) {

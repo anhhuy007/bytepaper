@@ -4,11 +4,9 @@
 
   {{!-- Thumbnail --}}
   <div>
-    <img
-      src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
-      alt="{{ default article.title 'Untitled Article' }}"
-      class="w-full h-32 object-cover transition-transform duration-300 group-hover:filter group-hover:brightness-75"
-    />
+    <img src="{{ default article.thumbnail '/images/default-thumbnail.jpg' }}"
+      alt="{{ default article.title 'Không có tiêu đề' }}"
+      class="w-full h-32 object-cover transition-transform duration-300 group-hover:filter group-hover:brightness-75" />
   </div>
 
   <div></div>
@@ -20,21 +18,19 @@
         <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-3 w-3 fill-gray-500" />
         <span>{{ formatDate article.published_at }}</span>
       </div>
-      <a
-        href="/articles/categories/{{ default article.category_id '#' }}"
-        class="z-10 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded transition-all duration-300 ease-in-out hover:bg-blue-900 hover:text-white hover:scale-105 hover:shadow-md"
-      >
-        {{ default article.category "Uncategorized" }}
+      <a href="/articles/categories/{{ default article.category_id '#' }}"
+        class="z-10 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded transition-all duration-300 ease-in-out hover:bg-blue-900 hover:text-white hover:scale-105 hover:shadow-md">
+        {{ default article.category "Không có thể loại" }}
       </a>
     </div>
     {{!-- Title --}}
     <h2 class="font-semibold leading-tight mb-2 group-hover:underline line-clamp-2">
-      {{ default article.title "Untitled Article" }}
+      {{ default article.title "Không có tiêu đề" }}
     </h2>
     <div class="flex justify-between items-center gap-2">
       <div class="text-gray-500 text-xs flex items-center gap-1">
         <img src="/assets/eye.svg" alt="Eye Scan Icon" class="h-3 w-3 fill-gray-500" />
-        {{ default article.views 0 }} views
+        {{ default article.views 0 }} lượt xem
       </div>
       {{!-- Premium Indicator --}} {{#if article.is_premium}}
       <div class="w-16 premium-animation"></div>

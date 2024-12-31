@@ -6,26 +6,23 @@
       <div class="lg:w-2/3">
         <article class="rounded-lg overflow-hidden">
           <div class="p-6 md:p-8 space-y-6">
+
             <!-- Article Header -->
             <header class="space-y-4">
               <div class="flex flex-row w-full items-center justify-between gap-4 text-base text-gray-600">
                 {{#if article.category}}
-                <a href="/articles/categories/{{article.category.id}}" class="hover:underline text-blue-600"
-                  >{{article.category.name}}</a
-                >
+                <a href="/articles/categories/{{article.category.id}}"
+                  class="hover:underline text-blue-600">{{article.category.name}}</a>
                 {{/if}}
-                <time datetime="{{article.published_at}}">Publish Date: {{formatDateTime article.published_at}}</time>
+                <time datetime="{{article.published_at}}">Ngày xuất bản: {{formatDateTime article.published_at}}</time>
               </div>
               <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold pt-5 text-gray-900">
                 {{default article.title 'Untitled Article'}}
               </h1>
               <div class="flex flex-wrap gap-2">
                 {{#each article.tags as |tag|}}
-                <a
-                  href="/articles/tags/{{tag.id}}"
-                  class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition"
-                  >#{{tag.name}}</a
-                >
+                <a href="/articles/tags/{{tag.id}}"
+                  class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition">#{{tag.name}}</a>
                 {{/each}}
               </div>
             </header>
@@ -33,11 +30,8 @@
             <!-- Thumbnail -->
             {{#if article.thumbnail}}
             <figure class="relative aspect-video overflow-hidden rounded-lg">
-              <img
-                src="{{article.thumbnail}}"
-                alt="{{default article.title 'Article Thumbnail'}}"
-                class="w-full h-full object-cover transition duration-300 hover:scale-105"
-              />
+              <img src="{{article.thumbnail}}" alt="{{default article.title 'Article Thumbnail'}}"
+                class="w-full h-full object-cover transition duration-300 hover:scale-105" />
             </figure>
             {{/if}}
 
@@ -53,84 +47,77 @@
             <!-- Author name -->
             <div class="flex w-full justify-end text-xl space-x-4">
               <i>
-                - Written By 
+                - Written By
                 {{#if article.author_name}}
-                  {{article.author_name}}
+                {{article.author_name}}
                 {{else}}
-                  Anonymous
+                Anonymous
                 {{/if}}
               </i>
             </div>
 
             <!-- Action Buttons -->
             <div class="flex justify-end space-x-4 pt-6">
-            {{#if actionButton}}
-              <a
-                href="{{actionButton.href}}"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"
-                  ></path>
+              {{#if actionButton}}
+              <a href="{{actionButton.href}}"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path>
                 </svg>
                 {{actionButton.label}}
               </a>
-            {{/if}}
-          </div>
+              {{/if}}
+            </div>
           </div>
         </article>
       </div>
 
       <!-- Related Articles -->
-        <aside class="lg:w-1/3 hidden lg:block pb-7">
-            <div class="sticky top-44 overflow-y-auto max-h-[calc(100vh-180px)]">
-                <section>
-                <h2 class="text-3xl font-semibold mb-14">Related Articles</h2>
-                <div class="space-y-4 pr-4">
-                    {{#each relatedArticles}}
-                        {{> article/tag-article this}}
-                        {{else}}
-                        <p class="text-gray-500">No related articles available.</p>
-                    {{/each}}
-                </div>
-                </section>
+      <aside class="lg:w-1/3 hidden lg:block pb-7">
+        <div class="sticky top-44 overflow-y-auto max-h-[calc(100vh-180px)]">
+          <section>
+            <h2 class="text-3xl font-semibold mb-14 whitespace-nowrap">Bài viết cùng chuyên mục</h2>
+            <div class="space-y-4 pr-4">
+              {{#each relatedArticles}}
+              {{> article/tag-article this}}
+              {{else}}
+              <p class="text-gray-500">Không có bài viết cùng chuyên mục</p>
+              {{/each}}
             </div>
-        </aside>
+          </section>
+        </div>
+      </aside>
     </div>
 
     {{!-- Comments Section --}}
-  <section id="comments" class="space-y-6">
-    <div class="border-2 border-black"></div>
-    <h2 class="text-4xl font-bold">Comments</h2>
-    {{#if user}}
+    <section id="comments" class="space-y-6">
+      <div class="border-2 border-black"></div>
+      <h2 class="text-4xl font-bold">Bình luận</h2>
+      {{#if user}}
       {{!-- Comment Form --}}
       <form id="comment-form" action="/articles/{{article.id}}/comments" method="POST" class="space-y-4">
         <div class="form-control">
-          <label class="label"><span class="label-text text-base">Your Comment</span></label>
-          <textarea name="content" class="textarea textarea-bordered w-full" placeholder="Write your comment here..." required></textarea>
+          <label class="label"><span class="label-text text-base">Bình luận của bạn</span></label>
+          <textarea name="content" class="textarea textarea-bordered w-full" required
+            placeholder="Viết bình luận của bạn ở đây..."></textarea>
         </div>
         <div class="flex w-full justify-end">
-          <button type="submit" class="btn btn-primary">Submit Comment</button>
+          <button type="submit" class="btn btn-primary">Gửi bình luận</button>
         </div>
       </form>
-    {{else}}
-      <p><a href="/auth/login" class="link">Login</a> or <a href="/auth/register" class="link">Register</a> to post a comment.</p>
-    {{/if}}
-
-    {{!-- Comment List --}}
-    <div class="space-y-4">
-      {{#each comments as |comment|}}
-        {{> comment-item comment}}
       {{else}}
-        <p class="text-gray-500">No comments yet. Be the first to comment!</p>
-      {{/each}}
-    </div>
-  </section>
+      <p><a href="/auth/login" class="link">Đăng nhập</a> hoặc <a href="/auth/register" class="link">Đăng kí</a> để có
+        thể bình luận</p>
+      {{/if}}
+
+      {{!-- Comment List --}}
+      <div class="space-y-4">
+        {{#each comments as |comment|}}
+        {{> comment-item comment}}
+        {{else}}
+        <p class="text-gray-500">Bài viết hiện chưa có ai bình luận. Hãy là người đầu tiên bình luận bài viết này !</p>
+        {{/each}}
+      </div>
+    </section>
   </div>
-</body>
+  </body>

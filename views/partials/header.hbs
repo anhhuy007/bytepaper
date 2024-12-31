@@ -14,34 +14,19 @@
     <!-- Search bar -->
     <div class="navbar-center hidden lg:block">
       <form action="/articles/filter" method="GET" class="flex max-w-md flex-1 items-center px-4">
-        <div class="relative w-full">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-search absolute left-2 top-2.5 h-4 w-4 text-gray-400"
-          >
+        <div class="relative w-full flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-search absolute left-2 top-2.5 h-4 w-4 text-gray-400">
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.3-4.3" />
           </svg>
-          <input
-            type="text"
-            name="keyword"
-            placeholder="Search articles..."
-            class="w-full rounded-md border border-gray-300 py-2 pl-8 pr-4 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
-          />
+          <input type="text" name="keyword" placeholder="Tìm bài báo..."
+            class="w-full rounded-md border border-gray-300 py-2 pl-8 pr-4 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500" />
         </div>
-        <button
-          type="submit"
-          class="ml-2 rounded-md bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-        >
-          Search
+        <button type="submit"
+          class="ml-2 rounded-md bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 whitespace-nowrap">
+          Tìm kiếm
         </button>
       </form>
     </div>
@@ -49,94 +34,50 @@
     <!-- User Actions -->
     <div class="flex items-center gap-4 navbar-end">
       {{#if user}}
-      <a
-        href="/user/profile"
-        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-user mr-2 h-4 w-4"
-        >
+      <a href="/user/profile"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-user mr-2 h-4 w-4">
           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
           <circle cx="12" cy="7" r="4" />
         </svg>
         {{user.username}}
       </a>
-      <a
-        href="/auth/logout"
-        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-orange-500 text-primary-foreground shadow hover:bg-orange-500/90 h-9 px-4 py-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-log-out mr-2 h-4 w-4"
-        >
+      <a href="/auth/logout"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-orange-500 text-primary-foreground shadow hover:bg-orange-500/90 h-9 px-4 py-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-log-out mr-2 h-4 w-4">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
           <polyline points="16 17 21 12 16 7" />
           <line x1="21" x2="9" y1="12" y2="12" />
         </svg>
-        Logout
+        Đăng xuất
       </a>
       {{else}}
-      <a
-        href="/auth/login"
-        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-log-in mr-2 h-4 w-4"
-        >
+      <a href="/auth/login"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-log-in mr-2 h-4 w-4">
           <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
           <polyline points="10 17 15 12 10 7" />
           <line x1="15" x2="3" y1="12" y2="12" />
         </svg>
-        Login
+        Đăng nhập
       </a>
-      <a
-        href="/auth/register"
-        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-orange-500 text-primary-foreground shadow hover:bg-orange-500/90 h-9 px-4 py-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-user-plus mr-2 h-4 w-4"
-        >
+      <a href="/auth/register"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-orange-500 text-primary-foreground shadow hover:bg-orange-500/90 h-9 px-4 py-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-user-plus mr-2 h-4 w-4">
           <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <line x1="19" x2="19" y1="8" y2="14" />
           <line x1="22" x2="16" y1="11" y2="11" />
         </svg>
-        Register
+        Đăng kí
       </a>
       {{/if}}
     </div>
@@ -150,45 +91,25 @@
         <ul class="flex flex-wrap">
           {{#each header_categories}}
           <li class="relative group">
-            <a
-              href="/articles/categories/{{this.id}}"
-              class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-orange-500 hover:bg-gray-100"
-            >
+            <a href="/articles/categories/{{this.id}}"
+              class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-orange-500 hover:bg-gray-100">
               <span>{{this.name}}</span>
               {{#if this.children.length}}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-chevron-down ml-1 h-4 w-4"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-chevron-down ml-1 h-4 w-4">
                 <path d="m6 9 6 6 6-6" />
               </svg>
               {{/if}}
             </a>
             {{#if this.children.length}}
             <div
-              class="absolute left-0 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
-            >
-              <div
-                class="py-1"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="options-menu"
-              >
+              class="absolute left-0 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                 {{#each this.children}}
-                <a
-                  href="/articles/categories/{{this.id}}"
+                <a href="/articles/categories/{{this.id}}"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-orange-500"
-                  role="menuitem"
-                  >{{this.name}}</a
-                >
+                  role="menuitem">{{this.name}}</a>
                 {{/each}}
               </div>
             </div>

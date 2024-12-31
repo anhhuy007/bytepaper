@@ -4,11 +4,8 @@
 
   {{!-- Thumbnail --}}
   <div>
-    <img
-      src="{{ default thumbnail '/images/default-thumbnail.jpg' }}"
-      alt="{{ default title 'Untitled Article' }}"
-      class="w-full h-32 object-cover transition-transform duration-300 group-hover:filter group-hover:brightness-75"
-    />
+    <img src="{{ default thumbnail '/images/default-thumbnail.jpg' }}" alt="{{ default title 'Untitled Article' }}"
+      class="w-full h-32 object-cover transition-transform duration-300 group-hover:filter group-hover:brightness-75" />
   </div>
 
   <div></div>
@@ -20,11 +17,8 @@
         <img src="/assets/calendar.svg" alt="Calendar Icon" class="h-3 w-3 fill-gray-500" />
         <span>{{ formatDate published_at }}</span>
       </div>
-      <a
-        href="/articles/categories/{{ default category_id '#' }}"
-        class="p-1 z-10 text-blue-500 hover:underline"
-      >
-        {{ default category "Uncategorized" }}
+      <a href="/articles/categories/{{ default category_id '#' }}" class="p-1 z-10 text-blue-500 hover:underline">
+        {{ default category "Không có thể loại" }}
       </a>
     </div>
     {{!-- Title --}}
