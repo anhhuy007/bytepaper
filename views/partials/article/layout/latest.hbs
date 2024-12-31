@@ -5,7 +5,7 @@
     <h1 class="text-3xl font-bold mb-7 text-orange-600">Latest Articles</h1>
 
     <div class="space-y-8">
-      {{#each articles}} {{#if (between @index 0 5)}}
+      {{#each articles}} {{#if (between @index 0 9)}}
       <div class="w-full">{{> article/large-2-article article=this}}</div>
       {{/if}} {{/each}}
     </div>
