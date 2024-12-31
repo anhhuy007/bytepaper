@@ -12,24 +12,7 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-/**
- * Sends an email using the configured transporter.
- *
- * @function sendMail
- * @param {string} to - The recipient's email address.
- * @param {string} subject - The subject of the email.
- * @param {string} html - The HTML content of the email.
- * @returns {Promise<void>} A promise that resolves when the email is sent.
- *
- * @example
- * import sendMail from "./mailer";
- * // Send an email to the user
- * sendMail(
- *   "user@example.com",
- *   "Hello from Node.js",
- *   `<p>Hello!</p><p>This is a message sent from Node.js.</p>`
- * );
- */
+
 const sendMail = async ({ to, subject, html }) => {
   if (!to || typeof to !== 'string' || to.trim() === '') {
     throw new Error('Recipient email address is missing or invalid.')

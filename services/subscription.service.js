@@ -1,6 +1,7 @@
 // services/subscription.service.js
 
 import subscriptionModel from '../models/subscription.model.js'
+import subscriptionRequestModel from '../models/subscriptionRequest.model.js'
 import userModel from '../models/user.model.js'
 class SubscriptionService {
   async getSubscriptionByUserId(userId) {
@@ -25,20 +26,6 @@ class SubscriptionService {
     return await subscriptionModel.upsert(userId, newExpiryDate)
   }
 
-  /**
-   * Checks if a user's subscription is valid.
-   *
-   * This method retrieves a user's subscription record from the database and
-   * checks if the expiry date is in the future. If the subscription record does
-   * not exist or the expiry date is in the past, the method returns false.
-   *
-   * @param {number} userId - The ID of the user.
-   * @returns {Promise<boolean>} True if the subscription is valid, false otherwise.
-   * @example
-   * const isValid = await subscriptionService.checkSubscriptionValidity(1);
-   * console.log(isValid);
-   * // true or false
-   */
   async checkSubscriptionValidity(userId) {
     const subscription = await subscriptionModel.findByUserId(userId)
     if (!subscription) {
@@ -47,22 +34,48 @@ class SubscriptionService {
     return new Date(subscription.expiry_date) > new Date()
   }
 
-  /**
-   * Cancels a subscription for a user.
-   *
-   * This method will delete the subscription record associated with the
-   * specified user ID from the database and return the deleted record.
-   *
-   * @param {number} userId - The ID of the user whose subscription is to be
-   * deleted.
-   * @returns {Promise<Object>} The deleted subscription record.
-   * @example
-   * const deletedSubscription = await subscriptionService.cancelSubscription(1);
-   * console.log(deletedSubscription);
-   * // { user_id: 1, expiry_date: "...", created_at: "...", updated_at: "..." }
-   */
   async cancelSubscription(userId) {
     return await subscriptionModel.deleteSubscription(userId)
+  }
+
+  async createSubscriptionRequest(userId, days) {
+    await subscriptionRequestModel.createOne(userId, days)
+  }
+
+  async getAllSubscriptionRequests() {
+    return await subscriptionRequestModel.getAll()
+  }
+
+  async approveSubscriptionRequest(requestId) {
+    const request = await subscriptionRequestModel.findById(requestId)
+    if (!request || request.status !== 'pending') {
+      throw new Error('Invalid or already processed request.')
+    }
+
+    // Update the user's subscription
+    const newExpiryDate = await this.calculateNewExpiryDate(request.user_id, request.days)
+    await subscriptionModel.upsert(request.user_id, newExpiryDate)
+
+    // Mark request as approved
+    await subscriptionRequestModel.updateStatus(requestId, 'approved')
+
+    await userModel.update(request.user_id, { role: 'subscriber' })
+  }
+
+  async rejectSubscriptionRequest(requestId) {
+    const request = await subscriptionRequestModel.findById(requestId)
+    if (!request || request.status !== 'pending') {
+      throw new Error('Invalid or already processed request.')
+    }
+
+    // Mark request as rejected
+    await subscriptionRequestModel.updateStatus(requestId, 'rejected')
+  }
+
+  async calculateNewExpiryDate(userId, days) {
+    const currentSubscription = await subscriptionModel.findByUserId(userId)
+    const currentExpiryDate = currentSubscription?.expiry_date || new Date()
+    return new Date(currentExpiryDate.getTime() + days * 24 * 60 * 60 * 1000)
   }
 }
 

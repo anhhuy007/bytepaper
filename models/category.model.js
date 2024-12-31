@@ -1,7 +1,6 @@
-// models/categoryModel.js
+// models/category.model.js
 import BaseModel from './Base.model.js'
 import db from '../utils/Database.js'
-import { buildSelectQuery, buildWhereClause } from '../utils/queryBuilder.js'
 // CREATE TABLE categories (
 //   id SERIAL PRIMARY KEY,
 //   name VARCHAR(100) NOT NULL,
@@ -172,6 +171,16 @@ class CategoryModel extends BaseModel {
   `
 
     const { rows } = await db.query(query)
+    return rows
+  }
+
+  async getChildCategories(parentId) {
+    const query = `
+      SELECT *
+      FROM categories
+      WHERE parent_id = $1
+    `
+    const { rows } = await db.query(query, [parentId])
     return rows
   }
 }
