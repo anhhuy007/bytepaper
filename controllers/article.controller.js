@@ -137,7 +137,6 @@ const getArticlesByFilter = async (req, res, next) => {
 
     // Fetch filtered articles and total count
     let { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
-    let { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
 
     // Fetch all categories and tags for filtering
     const allOptions = {
