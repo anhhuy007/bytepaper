@@ -95,24 +95,30 @@ class EditorCategoryModel extends BaseModel {
   // Add another methods related to editor_categories...
   async getEditorsWithCategories() {
     const query = `
-      SELECT 
-        u.id AS editor_id, 
-        u.full_name, 
-        u.email, 
-        json_agg(json_build_object('id', c.id, 'name', c.name)) AS assignedCategories
-      FROM users u
-      LEFT JOIN editor_categories ec ON u.id = ec.editor_id
-      LEFT JOIN categories c ON ec.category_id = c.id
-      WHERE u.role = 'editor'
-      GROUP BY u.id
-      ORDER BY u.full_name ASC
-    `
+    SELECT 
+      u.id AS editor_id, 
+      u.full_name, 
+      u.email, 
+      json_agg(
+        CASE 
+          WHEN c.id IS NOT NULL THEN json_build_object('id', c.id, 'name', c.name)
+        END
+      ) AS assignedCategories
+    FROM users u
+    LEFT JOIN editor_categories ec ON u.id = ec.editor_id
+    LEFT JOIN categories c ON ec.category_id = c.id
+    WHERE u.role = 'editor'
+    GROUP BY u.id
+    ORDER BY u.full_name ASC
+  `
     const { rows } = await db.query(query)
     return rows.map((row) => ({
       id: row.editor_id,
       full_name: row.full_name,
       email: row.email,
-      assignedCategories: row.assignedcategories.filter(Boolean), // Filter out null values
+      assignedCategories: row.assignedcategories.filter(
+        (category) => category && category.id !== null,
+      ),
     }))
   }
 }

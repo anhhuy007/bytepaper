@@ -122,11 +122,12 @@ const extendSubscription = async (req, res, next) => {
       })
     }
 
-    // Call service to update subscription
-    await subscriptionService.createOrUpdateSubscription(userId, days)
+    // Create a subscription request
+    await subscriptionService.createSubscriptionRequest(userId, days)
+
     res.status(200).json({
       success: true,
-      message: `Subscription extended by ${days} days successfully!`,
+      message: 'Your subscription request has been submitted and is awaiting admin approval.',
     })
   } catch (error) {
     next(error)
