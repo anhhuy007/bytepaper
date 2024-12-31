@@ -166,4 +166,15 @@ router.post(
   adminController.unassignCategory,
 )
 
+// Subscription Management
+
+router.get('/subscriptions/requests', adminController.getAllSubscriptionRequests)
+
+router.post(
+  '/subscriptions/requests/:requestId/approve',
+  adminController.approveSubscriptionRequest,
+)
+
+router.post('/subscriptions/requests/:requestId/reject', adminController.rejectSubscriptionRequest)
+
 export default router

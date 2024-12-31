@@ -2,11 +2,9 @@
 
 import userModel from '../models/user.model.js'
 import subscriptionModel from '../models/subscription.model.js'
-import otpModel from '../models/otp.model.js'
 import bcrypt from 'bcrypt'
 import sendEmail from '../utils/mailer.js'
 import crypto from 'crypto'
-import { decorateSendMail } from '../utils/mailDecorator.js'
 class UserService {
   async registerUser(userData) {
     const { username, email, password, full_name, role } = userData

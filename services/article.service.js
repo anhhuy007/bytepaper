@@ -2,7 +2,6 @@
 
 import articleModel from '../models/article.model.js'
 import articleTagModel from '../models/articleTag.model.js'
-import tagService from './tag.service.js'
 import categoryService from './category.service.js'
 import articleRejectionsModel from '../models/articleRejections.model.js'
 class ArticleService {
@@ -223,10 +222,6 @@ class ArticleService {
   async increaseArticleViewCount(id) {
     // Delegate the request to the article model to increase the view count
     return await articleModel.increaseViewCount(id)
-  }
-
-  async downloadArticle(id) {
-    // TODO: Implement the download article functionality
   }
 
   async deleteArticleByUserID(user_id) {

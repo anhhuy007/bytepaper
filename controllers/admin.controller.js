@@ -3,7 +3,7 @@
 import adminService from '../services/admin.service.js'
 import userService from '../services/user.service.js'
 import categoryService from '../services/category.service.js'
-import tagService from '../services/tag.service.js'
+import subscriptionService from '../services/subscription.service.js'
 import articleService from '../services/article.service.js'
 
 const getAllUsers = async (req, res, next) => {
@@ -390,6 +390,48 @@ const updateArticleStatus = async (req, res, next) => {
   }
 }
 
+const getAllSubscriptionRequests = async (req, res, next) => {
+  try {
+    const requests = await subscriptionService.getAllSubscriptionRequests()
+    res.render('admin/subscription-requests', { requests, layout: 'admin' })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const approveSubscriptionRequest = async (req, res, next) => {
+  try {
+    const requestId = req.params.requestId
+
+    // Approve subscription request
+    await subscriptionService.approveSubscriptionRequest(requestId)
+
+    // res.status(200).json({
+    //   success: true,
+    //   message: 'Subscription request approved successfully.',
+    // })
+    res.redirect('/admin/subscriptions/requests')
+  } catch (error) {
+    next(error)
+  }
+}
+
+const rejectSubscriptionRequest = async (req, res, next) => {
+  try {
+    const requestId = req.params.requestId
+
+    // Reject subscription request
+    await subscriptionService.rejectSubscriptionRequest(requestId)
+
+    res.status(200).json({
+      success: true,
+      message: 'Subscription request rejected successfully.',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   // Dashboard
   getDashboard,
@@ -415,4 +457,8 @@ export default {
   getEditorCategories,
   assignCategory,
   unassignCategory,
+  // Subscription Management
+  getAllSubscriptionRequests,
+  approveSubscriptionRequest,
+  rejectSubscriptionRequest,
 }
