@@ -19,6 +19,20 @@
           placeholder="Tìm kiếm bài báo..." value="{{query.keyword}}" />
       </div>
 
+      <!-- Search Field -->
+      <div class="form-control">
+        <label for="searchField" class="label text-sm font-medium text-gray-600 flex items-center space-x-2">
+          <i data-lucide="search"></i>
+          <span>Trường tìm kiếm</span>
+        </label>
+        <select id="searchField" name="searchField" class="select select-bordered w-full">
+          <option value="all" {{#if (eq query.searchField "all")}}selected{{/if}}>Tất cả</option>
+          <option value="title" {{#if (eq query.searchField "title")}}selected{{/if}}>Tiêu đề</option>
+          <option value="abstract" {{#if (eq query.searchField "abstract")}}selected{{/if}}>Mô tả</option>
+          <option value="content" {{#if (eq query.searchField "content")}}selected{{/if}}>Nội dung</option>
+        </select>
+      </div>
+
       <!-- Category Filter -->
       <div class="form-control">
         <label for="category_id" class="label text-sm font-medium text-gray-600 flex items-center space-x-2">

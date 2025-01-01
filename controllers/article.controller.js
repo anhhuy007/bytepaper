@@ -120,6 +120,7 @@ const getArticlesByFilter = async (req, res, next) => {
     // Extract filters and pagination options
     const filters = {
       keyword: req.query.keyword || null,
+      searchField: req.query.searchField || 'all', // Default to search all fields
       category_id: req.query.category_id || null,
       tag_id: parseInt(req.query.tag_id, 10) || null,
       status: req.query.status || 'published',
