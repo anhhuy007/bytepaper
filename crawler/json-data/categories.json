@@ -1,0 +1,115 @@
+[
+  {
+    "category": "Kinh doanh",
+    "subcategories": [
+      "Doanh nghiệp",
+      "Quốc tế",
+      "Chứng khoán",
+      "Vĩ mô",
+      "Hàng hóa"
+    ]
+  },
+  {
+    "category": "Thể thao",
+    "subcategories": [
+      "Bóng đá",
+      "Bóng đá",
+      "Tennis",
+      "Lịch thi đấu",
+      "Các môn khác",
+      "Esports"
+    ]
+  },
+  {
+    "category": "Du lịch",
+    "subcategories": [
+      "Tin tức",
+      "Điểm đến", 
+      "Ẩm thực",
+      "Tư vấn", 
+      "Cẩm nang"
+    ]
+  },
+  {
+    "category": "Sức khỏe",
+    "subcategories": [
+      "Các bệnh",
+      "Vaccine",
+      "Tin tức",
+      "Sống khỏe"
+    ]
+  },
+  {
+    "category": "Thế giới",
+    "subcategories": [
+      "Tin tức quốc tế",
+      "Phân tích",
+      "Cuộc sống đó đây",
+      "Quân sự",
+      "Tư liệu"
+    ]
+  },
+  {
+    "category": "Giáo dục",
+    "subcategories": [
+      "Trắc nghiệm",
+      "Tin tức",
+      "Tuyển sinh",
+      "Du học",
+      "Thảo luận",
+      "Giáo dục 4.0"
+    ]
+  },
+  {
+    "category": "Giải trí",
+    "subcategories": [
+      "Thời trang",
+      "Sách",
+      "Video",
+      "Phim",
+      "Nhạc", 
+      "Làm đẹp"
+    ]
+  },
+  {
+    "category": "Đời sống",
+    "subcategories": [
+      "Tổ ấm",
+      "Bài học sống",
+      "Nhịp sống"
+    ]
+  },
+  {
+    "category": "Ý kiến",
+    "subcategories": [
+      "Thời sự",
+      "Đời sống"
+    ]
+  },
+  {
+    "category": "Số hóa",
+    "subcategories": [
+      "Công nghệ",
+      "Sản phẩm",
+      "Blockchain"
+    ]
+  },
+  {
+    "category": "Thời sự",
+    "subcategories": [
+      "Chính trị",
+      "Nhân sinh",
+      "Lao động việc làm",
+      "Giao thông"
+    ]
+  },
+  {
+    "category": "Bất động sản",
+    "subcategories": [
+      "Chính sách",
+      "Dự án",
+      "Thị trường",
+      "Không gian sống"
+    ]
+  }
+]

@@ -1,0 +1,338 @@
+[
+    {
+        "id": 1,
+        "article_id": 1,
+        "user_id": 2,
+        "content": "Bài viết rất hay, tôi đã học được nhiều điều mới.",
+        "created_at": "2024-11-21 15:04:34.571867+00",
+        "updated_at": "2024-11-21 15:04:34"
+    },
+    {
+        "id": 2,
+        "article_id": 2,
+        "user_id": 2,
+        "content": "Gà kia ai rán mà giòn quá",
+        "created_at": "2024-11-21 15:04:34.571867+00",
+        "updated_at": "2024-11-21 15:04:34"
+    },
+    {
+        "id": 3,
+        "article_id": 5,
+        "user_id": 3,
+        "content": "Bài viết rất thú vị, tôi đã học được nhiều điều mới",
+        "created_at": "2024-11-21 16:30:12.982345+00",
+        "updated_at": "2024-11-21 16:30:12"
+    },
+    {
+        "id": 4,
+        "article_id": 1,
+        "user_id": 4,
+        "content": "Cảm ơn tác giả đã chia sẻ bài viết này. Rất hữu ích!",
+        "created_at": "2024-11-22 09:15:23.456789+00",
+        "updated_at": "2024-11-22 09:15:23"
+    },
+    {
+        "id": 5,
+        "article_id": 2,
+        "user_id": 5,
+        "content": "Bài viết rất chi tiết và dễ hiểu. Tôi đánh giá cao!",
+        "created_at": "2024-11-22 12:45:00.000000+00",
+        "updated_at": "2024-11-22 12:45:00"
+    },
+    {
+        "id": 6,
+        "article_id": 5,
+        "user_id": 6,
+        "content": "Tôi hoàn toàn đồng ý với quan điểm trong bài viết.",
+        "created_at": "2024-11-22 15:20:30.111222+00",
+        "updated_at": "2024-11-22 15:20:30"
+    },
+    {
+        "id": 7,
+        "article_id": 4,
+        "user_id": 7,
+        "content": "Rất hữu ích, tôi sẽ áp dụng những kiến thức này vào công việc.",
+        "created_at": "2024-11-23 08:00:00.333444+00",
+        "updated_at": "2024-11-23 08:00:00"
+    },
+    {
+        "id": 8,
+        "article_id": 1,
+        "user_id": 8,
+        "content": "Tôi cũng đã gặp vấn đề tương tự. Bài viết đã giúp tôi giải quyết được.",
+        "created_at": "2024-11-23 14:45:15.555666+00",
+        "updated_at": "2024-11-23 14:45:15"
+    },
+    {
+        "id": 9,
+        "article_id": 2,
+        "user_id": 9,
+        "content": "Thông tin rất chi tiết và bổ ích. Tôi rất ấn tượng!",
+        "created_at": "2024-11-24 10:30:45.777888+00",
+        "updated_at": "2024-11-24 10:30:45"
+    },
+    {
+        "id": 10,
+        "article_id": 5,
+        "user_id": 10,
+        "content": "Rất hay, tôi đã học được nhiều điều mới từ bài viết này.",
+        "created_at": "2024-11-24 16:00:00.999000+00",
+        "updated_at": "2024-11-24 16:00:00"
+    },
+    {
+        "id": 11,
+        "article_id": 1,
+        "user_id": 11,
+        "content": "Bài viết rất chi tiết và dễ hiểu. Tôi đánh giá cao nỗ lực của tác giả!",
+        "created_at": "2024-11-25 09:15:30.111222+00",
+        "updated_at": "2024-11-25 09:15:30"
+    },
+    {
+        "id": 12,
+        "article_id": 4,
+        "user_id": 12,
+        "content": "Thông tin rất bổ ích, tôi sẽ chia sẻ bài viết này với bạn bè.",
+        "created_at": "2024-11-25 13:45:00.222333+00",
+        "updated_at": "2024-11-25 13:45:00"
+    },
+    {
+        "id": 13,
+        "article_id": 9,
+        "user_id": 13,
+        "content": "Rất hữu ích, tôi đã áp dụng được những kiến thức này vào công việc.",
+        "created_at": "2024-11-26 07:30:00.333444+00",
+        "updated_at": "2024-11-26 07:30:00"
+    },
+    {
+        "id": 14,
+        "article_id": 16,
+        "user_id": 14,
+        "content": "Tôi cảm thấy bài viết rất chuyên nghiệp và đáng tin cậy.",
+        "created_at": "2024-11-26 14:00:15.444555+00",
+        "updated_at": "2024-11-26 14:00:15"
+    },
+    {
+        "id": 15,
+        "article_id": 22,
+        "user_id": 15,
+        "content": "Rất hay, tôi đã học được nhiều điều mới từ bài viết này.",
+        "created_at": "2024-11-27 10:45:30.555666+00",
+        "updated_at": "2024-11-27 10:45:30"
+    },
+    {
+        "id": 16,
+        "article_id": 13,
+        "user_id": 16,
+        "content": "Thông tin rất chi tiết và bổ ích. Tôi rất ấn tượng!",
+        "created_at": "2024-11-27 15:20:00.666777+00",
+        "updated_at": "2024-11-27 15:20:00"
+    },
+    {
+        "id": 17,
+        "article_id": 15,
+        "user_id": 17,
+        "content": "Tôi hoàn toàn đồng ý với quan điểm trong bài viết.",
+        "created_at": "2024-11-28 08:00:45.777888+00",
+        "updated_at": "2024-11-28 08:00:45"
+    },
+    {
+        "id": 18,
+        "article_id": 5,
+        "user_id": 18,
+        "content": "Bài viết rất hay, tôi đã học được nhiều điều mới.",
+        "created_at": "2024-11-28 12:30:00.888999+00",
+        "updated_at": "2024-11-28 12:30:00"
+    },
+    {
+        "id": 19,
+        "article_id": 7,
+        "user_id": 19,
+        "content": "Rất hữu ích, tôi sẽ áp dụng những kiến thức này vào công việc.",
+        "created_at": "2024-11-29 09:00:15.000111+00",
+        "updated_at": "2024-11-29 09:00:15"
+    },
+    {
+        "id": 20,
+        "article_id": 25,
+        "user_id": 20,
+        "content": "Bài viết rất chi tiết và dễ hiểu. Tôi đánh giá cao!",
+        "created_at": "2024-11-29 15:45:30.111222+00",
+        "updated_at": "2024-11-29 15:45:30"
+    },
+    {
+        "id": 21,
+        "article_id": 32,
+        "user_id": 21,
+        "content": "Tôi cũng đã gặp vấn đề tương tự. Bài viết đã giúp tôi giải quyết được.",
+        "created_at": "2024-11-30 11:00:00.222333+00",
+        "updated_at": "2024-11-30 11:00:00"
+    },
+    {
+        "id": 22,
+        "article_id": 11,
+        "user_id": 22,
+        "content": "Thông tin rất bổ ích, tôi sẽ chia sẻ bài viết này với bạn bè.",
+        "created_at": "2024-11-30 16:30:45.333444+00",
+        "updated_at": "2024-11-30 16:30:45"
+    },
+    {
+        "id": 1,
+        "article_id": 1,
+        "user_id": 1,
+        "content": "Ôi bài viết này đúng là cứu cánh cho đời tui, cảm ơn tác giả nha!",
+        "created_at": "2024-12-07T08:00:00Z",
+        "updated_at": "2024-12-07T08:00:00Z"
+    },
+    {
+        "id": 2,
+        "article_id": 1,
+        "user_id": 2,
+        "content": "Đọc xong bài này mà cười đau cả bụng, đúng là trời ban nội dung chất lượng.",
+        "created_at": "2024-12-07T08:05:00Z",
+        "updated_at": "2024-12-07T08:05:00Z"
+    },
+    {
+        "id": 3,
+        "article_id": 2,
+        "user_id": 3,
+        "content": "Tui chỉ ước có thời gian để đọc hết các bài thế này, đáng giá thật sự.",
+        "created_at": "2024-12-07T08:10:00Z",
+        "updated_at": "2024-12-07T08:10:00Z"
+    },
+    {
+        "id": 4,
+        "article_id": 2,
+        "user_id": 4,
+        "content": "Ủa mà sao tui cảm giác tác giả đang kể chuyện về tui vậy?",
+        "created_at": "2024-12-07T08:15:00Z",
+        "updated_at": "2024-12-07T08:15:00Z"
+    },
+    {
+        "id": 5,
+        "article_id": 3,
+        "user_id": 5,
+        "content": "Đỉnh cao của bài viết, không đọc thì uổng cả đời!",
+        "created_at": "2024-12-07T08:20:00Z",
+        "updated_at": "2024-12-07T08:20:00Z"
+    },
+    {
+        "id": 6,
+        "article_id": 3,
+        "user_id": 6,
+        "content": "Chấm bài: 11/10! Lần sau nhớ viết thêm nha.",
+        "created_at": "2024-12-07T08:25:00Z",
+        "updated_at": "2024-12-07T08:25:00Z"
+    },
+    {
+        "id": 7,
+        "article_id": 4,
+        "user_id": 7,
+        "content": "Ai nghĩ ra bài này đúng là thiên tài. Like mạnh!!!",
+        "created_at": "2024-12-07T08:30:00Z",
+        "updated_at": "2024-12-07T08:30:00Z"
+    },
+    {
+        "id": 8,
+        "article_id": 4,
+        "user_id": 8,
+        "content": "Bài viết hay nhưng còn thiếu tí muối, thêm mặn chút là hoàn hảo!",
+        "created_at": "2024-12-07T08:35:00Z",
+        "updated_at": "2024-12-07T08:35:00Z"
+    },
+    {
+        "id": 9,
+        "article_id": 5,
+        "user_id": 9,
+        "content": "Đọc mà thấy ấm lòng ghê, cảm ơn tác giả nhiều nha!",
+        "created_at": "2024-12-07T08:40:00Z",
+        "updated_at": "2024-12-07T08:40:00Z"
+    },
+    {
+        "id": 10,
+        "article_id": 5,
+        "user_id": 10,
+        "content": "Cái này đúng chất viral rồi, share ngay thôi.",
+        "created_at": "2024-12-07T08:45:00Z",
+        "updated_at": "2024-12-07T08:45:00Z"
+    },
+    {
+        "id": 11,
+        "article_id": 6,
+        "user_id": 11,
+        "content": "Hóng phần tiếp theo của bài viết quá!",
+        "created_at": "2024-12-07T08:50:00Z",
+        "updated_at": "2024-12-07T08:50:00Z"
+    },
+    {
+        "id": 12,
+        "article_id": 6,
+        "user_id": 12,
+        "content": "Không ngờ bài viết này lại hợp gu tui vậy, yêu thích luôn.",
+        "created_at": "2024-12-07T08:55:00Z",
+        "updated_at": "2024-12-07T08:55:00Z"
+    },
+    {
+        "id": 13,
+        "article_id": 7,
+        "user_id": 13,
+        "content": "Ủa vậy là xong bài hả? Tui còn muốn đọc nữa mà!",
+        "created_at": "2024-12-07T09:00:00Z",
+        "updated_at": "2024-12-07T09:00:00Z"
+    },
+    {
+        "id": 14,
+        "article_id": 7,
+        "user_id": 14,
+        "content": "Bài viết chất lượng quá, mình phải bookmark ngay.",
+        "created_at": "2024-12-07T09:05:00Z",
+        "updated_at": "2024-12-07T09:05:00Z"
+    },
+    {
+        "id": 15,
+        "article_id": 8,
+        "user_id": 15,
+        "content": "Đây là lý do tại sao mình thích đọc tin tức ở đây, lúc nào cũng hài!",
+        "created_at": "2024-12-07T09:10:00Z",
+        "updated_at": "2024-12-07T09:10:00Z"
+    },
+    {
+        "id": 16,
+        "article_id": 8,
+        "user_id": 16,
+        "content": "Tác giả viết thêm về chủ đề này đi, mình chắc chắn sẽ đọc!",
+        "created_at": "2024-12-07T09:15:00Z",
+        "updated_at": "2024-12-07T09:15:00Z"
+    },
+    {
+        "id": 17,
+        "article_id": 9,
+        "user_id": 17,
+        "content": "Tui cười xỉu với đoạn mô tả cuối, thật sự xuất sắc!",
+        "created_at": "2024-12-07T09:20:00Z",
+        "updated_at": "2024-12-07T09:20:00Z"
+    },
+    {
+        "id": 18,
+        "article_id": 9,
+        "user_id": 18,
+        "content": "Bài này đúng kiểu đánh trúng tim đen của tui luôn.",
+        "created_at": "2024-12-07T09:25:00Z",
+        "updated_at": "2024-12-07T09:25:00Z"
+    },
+    {
+        "id": 19,
+        "article_id": 10,
+        "user_id": 19,
+        "content": "Cười bể bụng với đoạn đầu, đoạn sau thì thấy cảm động ghê.",
+        "created_at": "2024-12-07T09:30:00Z",
+        "updated_at": "2024-12-07T09:30:00Z"
+    },
+    {
+        "id": 20,
+        "article_id": 10,
+        "user_id": 20,
+        "content": "Cái này đáng để share cho cả thế giới biết luôn á!",
+        "created_at": "2024-12-07T09:35:00Z",
+        "updated_at": "2024-12-07T09:35:00Z"
+    }
+]
