@@ -273,7 +273,24 @@ class ArticleModel extends BaseModel {
     // Add search query if a keyword is provided
     if (filters.keyword) {
       const formattedKeyword = filters.keyword.trim().replace(/\s+/g, ' & ')
-      whereClause += `AND a.search_vector @@ to_tsquery('english', $${queryParams.length + 1}) `
+
+      if (filters.searchField === 'title') {
+        whereClause += `AND a.title_vector @@ to_tsquery('english', $${queryParams.length + 1}) `
+      } else if (filters.searchField === 'abstract') {
+        whereClause += `AND a.abstract_vector @@ to_tsquery('english', $${queryParams.length + 1}) `
+      } else if (filters.searchField === 'content') {
+        whereClause += `AND a.content_vector @@ to_tsquery('english', $${queryParams.length + 1}) `
+      } else {
+        // Default: search all fields
+        whereClause += `
+      AND (
+        a.title_vector @@ to_tsquery('english', $${queryParams.length + 1}) OR
+        a.abstract_vector @@ to_tsquery('english', $${queryParams.length + 1}) OR
+        a.content_vector @@ to_tsquery('english', $${queryParams.length + 1})
+      )
+    `
+      }
+
       queryParams.push(formattedKeyword)
       countParams.push(formattedKeyword)
     }
