@@ -343,4 +343,4 @@ async function uploadEditorCategories() {
   await client.end();
 }
 
-uploadEditorCategories();
+// uploadEditorCategories();
