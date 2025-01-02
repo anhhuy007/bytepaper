@@ -105,6 +105,11 @@
                     </button>
                   </div>
                 </div>
+
+                <!-- Google reCAPTCHA -->
+                <div class="form-control">
+                  <div class="g-recaptcha" data-sitekey="{{siteKey}}"></div>
+                </div>
                 <!-- Forgot password -->
                 <div class="flex justify-end">
                   <a href="/auth/forgot-password" class="text-sm text-zinc-800 hover:underline"
@@ -153,6 +158,8 @@
     </div>
   </div>
 </div>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 {{!-- Handle password visibility --}}
 <script>

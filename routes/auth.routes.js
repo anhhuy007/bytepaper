@@ -17,9 +17,10 @@ router.use(redirectIfAuthenticated())
 
 router.get(
   '/signup',
-  cacheMiddleware(authCacheKeyGenerator.signupPage),
-  viewRenderer('auth/signup', 'auth'),
+  // cacheMiddleware(authCacheKeyGenerator.signupPage),
+  authController.getSignup,
 )
+
 router.post('/signup', authController.register)
 
 router.get(

@@ -2,11 +2,55 @@
 
 import userService from '../services/user.service.js'
 import passport from 'passport'
+import axios from 'axios'
+import { config } from 'dotenv'
+
+config()
+
+const getSignup = (req, res, next) => {
+  const siteKey = process.env.GOOGLE_RECAPTCHA_SITE_KEY
+
+  if (!siteKey) {
+    return res.status(500).json({ success: false, message: 'Google reCAPTCHA site key not found.' })
+  }
+
+  res.render('auth/signup', {
+    title: 'Sign Up',
+    layout: 'auth',
+    siteKey,
+  })
+}
 
 const register = async (req, res, next) => {
   try {
-    const { username, email, password, fullname } = req.body
+    const {
+      username,
+      email,
+      password,
+      fullname,
+      'g-recaptcha-response': captchaResponse,
+    } = req.body
 
+    // Validate CAPTCHA
+    if (!captchaResponse) {
+      return res.status(400).json({ success: false, message: 'CAPTCHA is required.' })
+    }
+
+    const secretKey = process.env.GOOGLE_RECAPTCHA_SECRET_KEY
+    if (!secretKey) {
+      return res
+        .status(500)
+        .json({ success: false, message: 'Google reCAPTCHA secret key not found.' })
+    }
+
+    const captchaVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaResponse}`
+
+    const captchaVerifyResponse = await axios.post(captchaVerifyUrl)
+    if (!captchaVerifyResponse.data.success) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'CAPTCHA verification failed. Please try again.' })
+    }
     // Validate input
     if (!username || !email || !password) {
       return res.status(400).json({
@@ -229,4 +273,5 @@ export default {
   resetPassword,
   logout,
   getResetPassword,
+  getSignup,
 }
