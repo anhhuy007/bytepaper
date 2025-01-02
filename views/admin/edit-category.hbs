@@ -4,11 +4,11 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
       <i data-lucide="edit-3" class="text-blue-500"></i>
-      <span>Edit Category</span>
+      <span>Chỉnh sửa danh mục</span>
     </h1>
     <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
       <i data-lucide="arrow-left" class="text-gray-700"></i>
-      <span>Back to Categories</span>
+      <span>Quay lại danh mục</span>
     </a>
   </div>
 
@@ -19,22 +19,16 @@
   <form id="editCategoryForm" class="space-y-6">
     <!-- Name Input -->
     <div class="form-control">
-      <label class="label font-semibold text-gray-700">Name</label>
-      <input
-        type="text"
-        name="name"
-        class="input input-bordered"
-        value="{{category.name}}"
-        placeholder="Enter category name"
-        required
-      />
+      <label class="label font-semibold text-gray-700">Tên</label>
+      <input type="text" name="name" class="input input-bordered" value="{{category.name}}"
+        placeholder="Nhập tên danh mục" required />
     </div>
 
     <!-- Parent Category -->
     <div class="form-control">
-      <label class="label font-semibold text-gray-700">Parent Category</label>
+      <label class="label font-semibold text-gray-700">Danh mục cha</label>
       <select name="parent_id" class="select select-bordered">
-        <option value="">None</option>
+        <option value="">Không có</option>
         {{#each categories}}
         <option value="{{this.id}}" {{#if (eq this.id ../category.parent_id)}}selected{{/if}}>
           {{this.name}}
@@ -47,11 +41,11 @@
     <div class="flex justify-end space-x-4">
       <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
         <i data-lucide="x-circle"></i>
-        <span>Cancel</span>
+        <span>Hủy</span>
       </a>
       <button type="submit" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
         <i data-lucide="check-circle"></i>
-        <span>Update Category</span>
+        <span>Cập nhật danh mục</span>
       </button>
     </div>
   </form>
@@ -69,15 +63,13 @@
     try {
       await axios.post(`/admin/categories/edit/{{category.id}}`, data);
       responseMessage.className = 'alert alert-success shadow-lg mt-4';
-      responseMessage.textContent = 'Category updated successfully!';
+      responseMessage.textContent = 'Danh mục đã được cập nhật thành công!';
       responseMessage.hidden = false;
       setTimeout(() => (window.location.href = '/admin/categories'), 2000);
     } catch (error) {
       responseMessage.className = 'alert alert-error shadow-lg mt-4';
-      responseMessage.textContent = error.response?.data?.message || 'Failed to update category.';
+      responseMessage.textContent = error.response?.data?.message || 'Cập nhật danh mục thất bại.';
       responseMessage.hidden = false;
     }
   });
 </script>
-
-

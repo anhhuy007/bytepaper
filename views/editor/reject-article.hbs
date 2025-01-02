@@ -1,16 +1,15 @@
-{{!-- views/editor/reject-article.hbs --}}
 <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
   <!-- Page Title -->
   <div class="mb-6 flex justify-between items-center">
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
       <i data-lucide="x-circle" class="text-red-500"></i>
-      <span>Reject Article</span>
+      <span>Từ chối bài viết</span> <!-- Reject Article -->
     </h1>
 
     <!-- Back Button -->
     <a href="/editor/articles/{{article.id}}" class="btn btn-secondary flex items-center space-x-2">
       <i data-lucide="arrow-left"></i>
-      <span>Back</span>
+      <span>Quay lại</span> <!-- Back -->
     </a>
   </div>
 
@@ -20,40 +19,29 @@
     <div class="form-control">
       <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="type"></i>
-        <span>Title</span>
+        <span>Tiêu đề</span> <!-- Title -->
       </label>
-      <input
-        type="text"
-        class="input input-bordered w-full bg-gray-100"
-        value="{{article.title}}"
-        disabled
-      />
+      <input type="text" class="input input-bordered w-full bg-gray-100" value="{{article.title}}" disabled />
     </div>
 
     <!-- Abstract (Read-Only) -->
     <div class="form-control">
       <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="align-left"></i>
-        <span>Abstract</span>
+        <span>Tóm tắt</span> <!-- Abstract -->
       </label>
       <textarea class="textarea textarea-bordered w-full bg-gray-100" disabled>
-{{article.abstract}}</textarea
-      >
+{{article.abstract}}</textarea>
     </div>
 
     <!-- Rejection Reason -->
     <div class="form-control">
       <label class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="alert-triangle"></i>
-        <span>Rejection Reason</span>
+        <span>Lý do từ chối</span> <!-- Rejection Reason -->
       </label>
-      <textarea
-        name="rejection_reason"
-        id="rejection_reason"
-        class="textarea textarea-bordered w-full"
-        placeholder="Provide the reason for rejection"
-        required
-      ></textarea>
+      <textarea name="rejection_reason" id="rejection_reason" class="textarea textarea-bordered w-full"
+        placeholder="Cung cấp lý do từ chối" required></textarea>
     </div>
 
     <!-- Action Buttons -->
@@ -61,7 +49,7 @@
       <!-- Reject Button -->
       <button type="submit" class="btn btn-error flex items-center space-x-2">
         <i data-lucide="x-circle"></i>
-        <span>Reject</span>
+        <span>Từ chối</span> <!-- Reject -->
       </button>
     </div>
   </form>

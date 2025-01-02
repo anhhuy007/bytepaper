@@ -16,7 +16,7 @@ const checkSubscription = async (req, res, next) => {
 
     if (!isValid) {
       // If subscription is invalid, respond with a 403 status code
-      throw new Error('This content is only available to subscribers. Please subscribe to access.')
+      throw new Error('Nội dung này yêu cầu đăng ký gói dịch vụ để xem.')
     }
 
     // Proceed to the next middleware if the subscription is valid

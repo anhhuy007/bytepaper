@@ -2,10 +2,10 @@
 <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
   <!-- Page Title -->
   <div class="mb-6 flex justify-between items-center">
-  <!-- Title Section -->
+    <!-- Title Section -->
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
       <i data-lucide="edit-3" class="text-primary"></i>
-      <span>Edit Article</span>
+      <span>Chỉnh sửa bài viết</span> <!-- Edit Article -->
     </h1>
 
     <!-- Action Buttons Section -->
@@ -13,100 +13,71 @@
       <!-- Back Button -->
       <a href="/writer/articles" class="btn btn-secondary flex items-center space-x-2">
         <i data-lucide="arrow-left"></i>
-        <span>Back</span>
+        <span>Quay lại</span> <!-- Back -->
       </a>
 
       <!-- View Rejections Button -->
       {{#if canViewRejections}}
-      <a
-        href="/writer/articles/{{article.id}}/rejections"
-        class="btn btn-warning flex items-center space-x-2"
-      >
+      <a href="/writer/articles/{{article.id}}/rejections" class="btn btn-warning flex items-center space-x-2">
         <i data-lucide="alert-circle"></i>
-        <span>View Rejections</span>
+        <span>Xem từ chối</span> <!-- View Rejections -->
       </a>
       {{/if}}
 
-
       <!-- Delete Button -->
       {{#if canDelete}}
-      <form
-        action="/writer/articles/edit/{{article.id}}"
-        method="POST"
-        onsubmit="return confirm('Are you sure you want to delete this article?');"
-        class="inline"
-      >
+      <form action="/writer/articles/edit/{{article.id}}" method="POST"
+        onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');" class="inline">
         <input type="hidden" name="action" value="delete" />
         <button type="submit" class="btn btn-error flex items-center space-x-2">
           <i data-lucide="trash-2"></i>
-          <span>Delete</span>
+          <span>Xóa</span> <!-- Delete -->
         </button>
       </form>
       {{/if}}
 
       <!-- Submit for Approval Button -->
       {{#if canSubmit}}
-      <form
-        action="/writer/articles/edit/{{article.id}}"
-        method="POST"
-        class="inline"
-      >
+      <form action="/writer/articles/edit/{{article.id}}" method="POST" class="inline">
         <input type="hidden" name="action" value="submit" />
         <button type="submit" class="btn btn-primary flex items-center space-x-2">
           <i data-lucide="check-circle"></i>
-          <span>Submit for Approval</span>
+          <span>Gửi phê duyệt</span> <!-- Submit for Approval -->
         </button>
       </form>
       {{/if}}
     </div>
   </div>
 
-
   <!-- Edit Article Form -->
-  <form
-    action="/writer/articles/edit/{{article.id}}"
-    method="POST"
-    class="space-y-6"
-    id="editArticleForm"
-  >
+  <form action="/writer/articles/edit/{{article.id}}" method="POST" class="space-y-6" id="editArticleForm">
     <input type="hidden" name="action" value="edit" />
     <!-- Title -->
     <div class="form-control">
       <label for="title" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="type"></i>
-        <span>Title</span>
+        <span>Tiêu đề</span> <!-- Title -->
       </label>
-      <input
-        type="text"
-        name="title"
-        id="title"
-        class="input input-bordered w-full"
-        value="{{article.title}}"
-        placeholder="Enter the article title"
-        required
-      />
+      <input type="text" name="title" id="title" class="input input-bordered w-full" value="{{article.title}}"
+        placeholder="Nhập tiêu đề bài viết" required /> <!-- Enter the article title -->
     </div>
 
     <!-- Abstract -->
     <div class="form-control">
       <label for="abstract" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="align-left"></i>
-        <span>Abstract</span>
+        <span>Tóm tắt</span> <!-- Abstract -->
       </label>
-      <textarea
-        name="abstract"
-        id="abstract"
-        class="textarea textarea-bordered w-full"
-        placeholder="Provide a brief summary"
-        required
-      >{{article.abstract}}</textarea>
+      <textarea name="abstract" id="abstract" class="textarea textarea-bordered w-full"
+        placeholder="Cung cấp một bản tóm tắt ngắn" required>{{article.abstract}}</textarea>
+      <!-- Provide a brief summary -->
     </div>
 
     <!-- Content -->
     <div class="form-control">
       <label for="content" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="file-text"></i>
-        <span>Content</span>
+        <span>Nội dung</span> <!-- Content -->
       </label>
       <input type="hidden" name="content" id="hiddenContent" value="{{article.content}}" />
       <div id="content" class="quill-editor bg-gray-50 border border-gray-300 rounded-md p-4">
@@ -118,16 +89,10 @@
     <div class="form-control">
       <label for="thumbnail" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="image"></i>
-        <span>Thumbnail</span>
+        <span>Ảnh đại diện</span> <!-- Thumbnail -->
       </label>
-      <input
-        type="text"
-        name="thumbnail"
-        id="thumbnail"
-        class="input input-bordered w-full"
-        value="{{article.thumbnail}}"
-        placeholder="URL of the thumbnail image"
-      />
+      <input type="text" name="thumbnail" id="thumbnail" class="input input-bordered w-full"
+        value="{{article.thumbnail}}" placeholder="URL của hình ảnh đại diện" /> <!-- URL of the thumbnail image -->
       <img src="{{article.thumbnail}}" alt="Thumbnail" class="mt-2 max-w-[200px] h-auto rounded-lg shadow-md" />
     </div>
 
@@ -135,7 +100,7 @@
     <div class="form-control">
       <label for="category" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="folder"></i>
-        <span>Category</span>
+        <span>Danh mục</span> <!-- Category -->
       </label>
       <select name="category_id" id="category" class="select select-bordered w-full" required>
         <option value="{{article.category_id}}">{{article.category_name}}</option>
@@ -147,24 +112,15 @@
 
     <!-- Tags -->
     <div class="form-control">
-      <label
-        for="tags"
-        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
-      >
+      <label for="tags" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="tag"></i>
-        <span>Tags</span>
+        <span>Thẻ</span> <!-- Tags -->
       </label>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {{#each tags}}
         <div class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="tags"
-            value="{{this.id}}"
-            id="tag-{{this.id}}"
-            class="checkbox"
-            {{#if this.selected}}checked{{/if}}
-          />
+          <input type="checkbox" name="tags" value="{{this.id}}" id="tag-{{this.id}}" class="checkbox" {{#if
+            this.selected}}checked{{/if}} />
           <label for="tag-{{this.id}}" class="text-sm text-gray-600">{{this.name}}</label>
         </div>
         {{/each}}
@@ -175,28 +131,22 @@
     <div class="form-control flex items-center">
       <label for="is_premium" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="star"></i>
-        <span>Is Premium</span>
+        <span>Là Premium</span> <!-- Is Premium -->
       </label>
-      <input
-        type="checkbox"
-        name="is_premium"
-        id="is_premium"
-        class="checkbox checkbox-primary ml-4"
-        {{#if article.is_premium}}checked{{/if}}
-      />
+      <input type="checkbox" name="is_premium" id="is_premium" class="checkbox checkbox-primary ml-4" {{#if
+        article.is_premium}}checked{{/if}} />
     </div>
 
     <!-- Submit Button -->
     <div class="flex justify-center space-x-4">
       <button type="submit" class="btn btn-primary flex items-center space-x-2 w-full sm:w-auto">
         <i data-lucide="save"></i>
-        <span>Edit Article</span>
+        <span>Chỉnh sửa bài viết</span> <!-- Edit Article -->
       </button>
     </div>
   </form>
-  
-</div>
 
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />

@@ -4,11 +4,11 @@
   <div class="flex flex-wrap justify-between items-center mb-8 gap-4">
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
       <i data-lucide="users" class="text-blue-500"></i>
-      <span>Users Management</span>
+      <span>Quản lý người dùng</span>
     </h1>
     <a href="/admin/users/add" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
       <i data-lucide="user-plus"></i>
-      <span>Add User</span>
+      <span>Thêm người dùng</span>
     </a>
   </div>
 
@@ -19,26 +19,20 @@
       <div>
         <label for="username" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="search" class="text-gray-500"></i>
-          <span>Search by Username</span>
+          <span>Tìm kiếm theo tên người dùng</span>
         </label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          class="input input-bordered w-full"
-          placeholder="Username"
-          value="{{query.username}}"
-        />
+        <input type="text" id="username" name="username" class="input input-bordered w-full"
+          placeholder="Tên người dùng" value="{{query.username}}" />
       </div>
 
       <!-- Role Filter -->
       <div>
         <label for="role" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="briefcase" class="text-gray-500"></i>
-          <span>Role</span>
+          <span>Vai trò</span>
         </label>
         <select id="role" name="role" class="select select-bordered w-full">
-          <option value="">All Roles</option>
+          <option value="">Tất cả vai trò</option>
           {{#each roles}}
           <option value="{{this}}" {{#if (eq this ../query.role)}}selected{{/if}}>{{this}}</option>
           {{/each}}
@@ -49,13 +43,15 @@
       <div>
         <label for="orderBy" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="sort-asc" class="text-gray-500"></i>
-          <span>Sort By</span>
+          <span>Sắp xếp theo</span>
         </label>
         <select id="orderBy" name="orderBy" class="select select-bordered w-full">
-          <option value="created_at DESC" {{#if (eq query.orderBy "created_at DESC")}}selected{{/if}}>Newest</option>
-          <option value="created_at ASC" {{#if (eq query.orderBy "created_at ASC")}}selected{{/if}}>Oldest</option>
-          <option value="username ASC" {{#if (eq query.orderBy "username ASC")}}selected{{/if}}>Username A-Z</option>
-          <option value="username DESC" {{#if (eq query.orderBy "username DESC")}}selected{{/if}}>Username Z-A</option>
+          <option value="created_at DESC" {{#if (eq query.orderBy "created_at DESC" )}}selected{{/if}}>Mới nhất</option>
+          <option value="created_at ASC" {{#if (eq query.orderBy "created_at ASC" )}}selected{{/if}}>Cũ nhất</option>
+          <option value="username ASC" {{#if (eq query.orderBy "username ASC" )}}selected{{/if}}>Tên người dùng A-Z
+          </option>
+          <option value="username DESC" {{#if (eq query.orderBy "username DESC" )}}selected{{/if}}>Tên người dùng Z-A
+          </option>
         </select>
       </div>
 
@@ -63,28 +59,21 @@
       <div>
         <label for="limit" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="list" class="text-gray-500"></i>
-          <span>Items per Page</span>
+          <span>Số mục trên mỗi trang</span>
         </label>
-        <input
-          type="number"
-          id="limit"
-          name="limit"
-          class="input input-bordered w-full"
-          placeholder="Items per page"
-          min="1"
-          value="{{query.limit}}"
-        />
+        <input type="number" id="limit" name="limit" class="input input-bordered w-full"
+          placeholder="Số mục trên mỗi trang" min="1" value="{{query.limit}}" />
       </div>
 
       <!-- Buttons -->
       <div class="flex items-start space-x-4 col-span-2 lg:col-span-1 ">
         <button type="submit" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
           <i data-lucide="filter"></i>
-          <span>Apply</span>
+          <span>Áp dụng</span>
         </button>
         <a href="/admin/users" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
           <i data-lucide="refresh-cw"></i>
-          <span>Reset</span>
+          <span>Đặt lại</span>
         </a>
       </div>
     </form>
@@ -96,11 +85,11 @@
     <table class="table w-full border-collapse border border-gray-300">
       <thead class="bg-gray-200 text-gray-700">
         <tr>
-          <th class="py-3 px-4 text-left font-semibold">Username</th>
-          <th class="py-3 px-4 text-left font-semibold">Full Name</th>
+          <th class="py-3 px-4 text-left font-semibold">Tên người dùng</th>
+          <th class="py-3 px-4 text-left font-semibold">Họ tên</th>
           <th class="py-3 px-4 text-left font-semibold">Email</th>
-          <th class="py-3 px-4 text-left font-semibold">Role</th>
-          <th class="py-3 px-4 text-left font-semibold">Actions</th>
+          <th class="py-3 px-4 text-left font-semibold">Vai trò</th>
+          <th class="py-3 px-4 text-left font-semibold">Hành động</th>
         </tr>
       </thead>
       <tbody class="text-gray-600 divide-y divide-gray-200">
@@ -111,25 +100,16 @@
           <td class="py-3 px-4">{{this.email}}</td>
           <td class="py-3 px-4 capitalize">{{this.role}}</td>
           <td class="py-3 px-4 flex items-center space-x-4">
-            <a
-              href="/admin/users/edit/{{this.id}}"
-              class="btn btn-sm btn-warning hover:shadow-md flex items-center space-x-2"
-            >
+            <a href="/admin/users/edit/{{this.id}}"
+              class="btn btn-sm btn-warning hover:shadow-md flex items-center space-x-2">
               <i data-lucide="edit"></i>
-              <span>Edit</span>
+              <span>Sửa</span>
             </a>
-            <form
-              action="/admin/users/delete/{{this.id}}"
-              method="POST"
-              onsubmit="return confirmDelete('{{this.username}}')"
-              class="inline-block"
-            >
-              <button
-                type="submit"
-                class="btn btn-sm btn-error hover:shadow-md flex items-center space-x-2"
-              >
+            <form action="/admin/users/delete/{{this.id}}" method="POST"
+              onsubmit="return confirmDelete('{{this.username}}')" class="inline-block">
+              <button type="submit" class="btn btn-sm btn-error hover:shadow-md flex items-center space-x-2">
                 <i data-lucide="trash-2"></i>
-                <span>Delete</span>
+                <span>Xóa</span>
               </button>
             </form>
           </td>
@@ -144,14 +124,12 @@
     {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
   </div>
   {{else}}
-  <div class="text-center text-gray-500 mt-8">No users found.</div>
+  <div class="text-center text-gray-500 mt-8">Không có người dùng nào.</div>
   {{/if}}
 </div>
 
 <script>
   function confirmDelete(userName) {
-    return confirm(`Are you sure you want to delete user "${userName}"?`);
+    return confirm(`Bạn có chắc chắn muốn xóa người dùng "${userName}" không?`);
   }
 </script>
-
-

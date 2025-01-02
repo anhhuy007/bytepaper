@@ -4,7 +4,7 @@
   <div class="mb-6 flex justify-between items-center">
     <h1 class="text-3xl font-bold flex items-center space-x-2">
       <i data-lucide="users" class="text-blue-500"></i>
-      <span>Editors Management</span>
+      <span>Quản lý biên tập viên</span>
     </h1>
   </div>
 
@@ -13,10 +13,10 @@
     <table class="table w-full border border-gray-300">
       <thead class="bg-gray-200 text-gray-700">
         <tr>
-          <th class="py-3 px-4">Name</th>
+          <th class="py-3 px-4">Tên</th>
           <th class="py-3 px-4">Email</th>
-          <th class="py-3 px-4 text-center">Assigned Categories</th>
-          <th class="py-3 px-4 text-center">Actions</th>
+          <th class="py-3 px-4 text-center">Danh mục đã giao</th>
+          <th class="py-3 px-4 text-center">Hành động</th>
         </tr>
       </thead>
       <tbody class="text-gray-600">
@@ -27,17 +27,15 @@
           <td class="py-3 px-4 text-center">
             <span class="bg-blue-100 text-blue-600 font-bold px-2 py-1 rounded-full">
               {{this.assignedCategories.length}} {{#if
-              this.assignedCategories.length}}Categories{{else}}Category{{/if}}
+              this.assignedCategories.length}}Danh mục{{else}}Danh mục{{/if}}
             </span>
           </td>
           <td class="py-3 px-4 text-center">
-            <a
-              href="/admin/editors/{{this.id}}/categories"
+            <a href="/admin/editors/{{this.id}}/categories"
               class="btn btn-sm btn-primary flex items-center justify-center space-x-2 hover:shadow-md"
-              title="Manage categories for {{this.full_name}}"
-            >
+              title="Quản lý danh mục cho {{this.full_name}}">
               <i data-lucide="edit"></i>
-              <span>Manage Categories</span>
+              <span>Quản lý danh mục</span>
             </a>
           </td>
         </tr>

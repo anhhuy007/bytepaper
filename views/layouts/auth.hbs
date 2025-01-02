@@ -27,45 +27,47 @@
           d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
         ></path>
       </svg>
-      Loading...
+      Đang tải...
     </script>
 
-    <script defer>
-      document.addEventListener('DOMContentLoaded', function () {
-        // handle form submission (login and signup)
-        const form = document.getElementById('loginForm') || document.getElementById('signupForm')
-        const submitButton = document.getElementById('submitButton')
-        const loadingTemplate = Handlebars.compile(
-          document.getElementById('loading-template').innerHTML,
-        )
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      // xử lý việc gửi form (đăng nhập và đăng ký)
+      const form = document.getElementById('loginForm') || document.getElementById('signupForm')
+      const submitButton = document.getElementById('submitButton')
+      const loadingTemplate = Handlebars.compile(
+        document.getElementById('loading-template').innerHTML,
+      )
 
-        form.addEventListener('submit', function (e) {
-          // e.preventDefault()
-          submitButton.disabled = true
-          submitButton.innerHTML = loadingTemplate()
+      form.addEventListener('submit', function (e) {
+        // e.preventDefault()
+        submitButton.disabled = true
+        submitButton.innerHTML = loadingTemplate()
 
-          setTimeout(function () {
-            submitButton.disabled = false
-            submitButton.textContent = 'Sign In'
-          }, 2000)
-        })
-
-        // Handlebars helper for current year
-        Handlebars.registerHelper('currentYear', function () {
-          return new Date().getFullYear()
-        })
-
-        // Apply the current year to the footer
-        const footerTemplate = Handlebars.compile(document.querySelector('footer').innerHTML)
-        document.querySelector('footer').innerHTML = footerTemplate()
+        setTimeout(function () {
+          submitButton.disabled = false
+          submitButton.textContent = 'Đăng nhập'
+        }, 2000)
       })
-    </script>
-  </head>
-  <body class="min-h-screen flex flex-col bg-[url('/assets/login-background.jpg')]">
-    <main class="flex-grow">{{{body}}}</main>
 
-    <footer class="p-4 bg-white text-center text-sm text-gray-600">
-      <p>&copy; {{currentYear}} Paperly. All rights reserved.</p>
-    </footer>
-  </body>
+      // Handlebars helper cho năm hiện tại
+      Handlebars.registerHelper('currentYear', function () {
+        return new Date().getFullYear()
+      })
+
+      // Áp dụng năm hiện tại cho phần chân trang
+      const footerTemplate = Handlebars.compile(document.querySelector('footer').innerHTML)
+      document.querySelector('footer').innerHTML = footerTemplate()
+    })
+  </script>
+</head>
+
+<body class="min-h-screen flex flex-col bg-[url('/assets/login-background.jpg')]">
+  <main class="flex-grow">{{{body}}}</main>
+
+  <footer class="p-4 bg-white text-center text-sm text-gray-600">
+    <p>&copy; {{currentYear}} Paperly. Bảo lưu tất cả quyền lợi.</p>
+  </footer>
+</body>
+
 </html>
