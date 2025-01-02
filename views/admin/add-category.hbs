@@ -1,54 +1,48 @@
 {{!-- views/admin/add-category.hbs --}}
 <div class="container mx-auto px-4 py-8">
-  <!-- Page Header -->
+  <!-- Tiêu đề trang -->
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
       <i data-lucide="plus-circle" class="text-green-500"></i>
-      <span>Add Category</span>
+      <span>Thêm danh mục</span>
     </h1>
     <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
       <i data-lucide="arrow-left" class="text-gray-700"></i>
-      <span>Back to Categories</span>
+      <span>Quay lại danh mục</span>
     </a>
   </div>
 
-  <!-- Error/Success Message -->
+  <!-- Thông báo lỗi/ thành công -->
   <div id="responseMessage" class="hidden mt-4"></div>
 
-  <!-- Add Form -->
+  <!-- Form Thêm -->
   <form id="addCategoryForm" class="space-y-6">
-    <!-- Name Input -->
+    <!-- Ô Nhập Tên -->
     <div class="form-control">
-      <label class="label font-semibold text-gray-700">Name</label>
-      <input
-        type="text"
-        name="name"
-        class="input input-bordered"
-        placeholder="Enter category name"
-        required
-      />
+      <label class="label font-semibold text-gray-700">Tên</label>
+      <input type="text" name="name" class="input input-bordered" placeholder="Nhập tên danh mục" required />
     </div>
 
-    <!-- Parent Category -->
+    <!-- Danh mục cha -->
     <div class="form-control">
-      <label class="label font-semibold text-gray-700">Parent Category</label>
+      <label class="label font-semibold text-gray-700">Danh mục cha</label>
       <select name="parent_id" class="select select-bordered">
-        <option value="">None</option>
+        <option value="">Không có</option>
         {{#each categories}}
         <option value="{{this.id}}">{{this.name}}</option>
         {{/each}}
       </select>
     </div>
 
-    <!-- Buttons -->
+    <!-- Nút bấm -->
     <div class="flex justify-end space-x-4">
       <a href="/admin/categories" class="btn btn-secondary hover:shadow-lg flex items-center space-x-2">
         <i data-lucide="x-circle"></i>
-        <span>Cancel</span>
+        <span>Hủy bỏ</span>
       </a>
       <button type="submit" class="btn btn-primary hover:shadow-lg flex items-center space-x-2">
         <i data-lucide="check-circle"></i>
-        <span>Add Category</span>
+        <span>Thêm danh mục</span>
       </button>
     </div>
   </form>
@@ -66,15 +60,14 @@
     try {
       await axios.post('/admin/categories/add', data);
       responseMessage.className = 'alert alert-success shadow-lg mt-4';
-      responseMessage.textContent = 'Category added successfully!';
+      responseMessage.textContent = 'Danh mục đã được thêm thành công!';
       responseMessage.hidden = false;
       form.reset();
       setTimeout(() => (window.location.href = '/admin/categories'), 2000);
     } catch (error) {
       responseMessage.className = 'alert alert-error shadow-lg mt-4';
-      responseMessage.textContent = error.response?.data?.message || 'Failed to add category.';
+      responseMessage.textContent = error.response?.data?.message || 'Không thể thêm danh mục.';
       responseMessage.hidden = false;
     }
   });
 </script>
-

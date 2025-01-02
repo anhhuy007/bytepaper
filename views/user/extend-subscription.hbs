@@ -1,63 +1,53 @@
 {{!-- views/users/extend-subscription.hbs --}}
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="max-w-xl mx-auto bg-white shadow-lg rounded-lg p-8">
-    <!-- Page Title -->
+    <!-- Tiêu đề trang -->
     <h1 class="text-2xl font-bold text-gray-800 mb-6 flex justify-center items-center space-x-2">
       <i data-lucide="calendar-plus" class="text-primary"></i>
-      <span>Extend Subscription</span>
+      <span>Gia hạn gói đăng ký</span>
     </h1>
 
-    <!-- Alerts -->
+    <!-- Thông báo -->
     <div id="formSuccess" class="hidden alert alert-success shadow-lg mb-4 flex items-center space-x-2">
       <i data-lucide="check-circle" class="text-green-500"></i>
-      <span>Subscription extended successfully!</span>
+      <span>Gói đăng ký đã được gia hạn thành công!</span>
     </div>
     <div id="formError" class="hidden alert alert-error shadow-lg mb-4 flex items-center space-x-2">
       <i data-lucide="alert-triangle" class="text-red-500"></i>
-      <span></span>
+      <span>Đã xảy ra lỗi. Vui lòng thử lại.</span>
     </div>
 
-    <!-- Form -->
+    <!-- Biểu mẫu -->
     <form id="extendSubscriptionForm" class="space-y-6">
-      <!-- Subscription Plan -->
+      <!-- Gói đăng ký -->
       <div class="form-control">
         <label for="subscriptionPlan" class="label font-semibold text-gray-600 flex items-center space-x-2">
           <i data-lucide="package"></i>
-          <span>Select Subscription Plan</span>
+          <span>Chọn gói đăng ký</span>
         </label>
-        <select
-          id="subscriptionPlan"
-          class="select select-bordered w-full"
-          aria-label="Subscription Plan"
-          required
-        >
-          <option value="" disabled selected>Choose a plan</option>
-          <option value="7">7 days - $5</option>
-          <option value="30">30 days - $18</option>
-          <option value="90">90 days - $50</option>
+        <select id="subscriptionPlan" class="select select-bordered w-full" aria-label="Gói đăng ký" required>
+          <option value="" disabled selected>Chọn gói</option>
+          <option value="7">7 ngày - $5</option>
+          <option value="30">30 ngày - $18</option>
+          <option value="90">90 ngày - $50</option>
         </select>
       </div>
 
-      <!-- Price -->
+      <!-- Giá -->
       <div class="form-control">
         <label for="priceDisplay" class="label font-semibold text-gray-600 flex items-center space-x-2">
           <i data-lucide="dollar-sign"></i>
-          <span>Price</span>
+          <span>Giá</span>
         </label>
-        <input
-          type="text"
-          id="priceDisplay"
-          class="input input-bordered w-full bg-gray-100"
-          readonly
-          placeholder="Select a plan to see the price"
-        />
+        <input type="text" id="priceDisplay" class="input input-bordered w-full bg-gray-100" readonly
+          placeholder="Chọn gói để xem giá" />
       </div>
 
-      <!-- Submit Button -->
+      <!-- Nút gửi -->
       <div class="flex justify-center">
         <button type="submit" class="btn btn-primary flex items-center space-x-2 w-full sm:w-auto">
           <i data-lucide="arrow-right-circle"></i>
-          <span>Extend Subscription</span>
+          <span>Gia hạn gói đăng ký</span>
         </button>
       </div>
     </form>
@@ -71,18 +61,18 @@
     const formSuccess = document.getElementById('formSuccess');
     const formError = document.getElementById('formError');
     const priceMap = {
-      7: '$5',
-      30: '$18',
-      90: '$50',
+      7: '5 USD',
+      30: '18 USD',
+      90: '50 USD',
     };
 
-    // Update price display when the subscription plan changes
+    // Cập nhật hiển thị giá khi thay đổi gói đăng ký
     subscriptionPlan.addEventListener('change', () => {
       const selectedValue = subscriptionPlan.value;
-      priceDisplay.value = priceMap[selectedValue] || 'Select a plan to see the price';
+      priceDisplay.value = priceMap[selectedValue] || 'Chọn gói để xem giá';
     });
 
-    // Handle form submission
+    // Xử lý gửi biểu mẫu
     document.getElementById('extendSubscriptionForm').addEventListener('submit', async (event) => {
       event.preventDefault();
 
@@ -91,7 +81,7 @@
       const selectedPlan = subscriptionPlan.value;
 
       if (!selectedPlan) {
-        formError.querySelector('span').textContent = 'Please select a subscription plan!';
+        formError.querySelector('span').textContent = 'Vui lòng chọn một gói đăng ký!';
         formError.classList.remove('hidden');
         return;
       }
@@ -100,22 +90,21 @@
         const response = await axios.post('/user/extend-subscription', { days: selectedPlan });
 
         if (response.data.success) {
-          formSuccess.querySelector('span').textContent = 'Subscription extended successfully! Redirecting...';
+          formSuccess.querySelector('span').textContent = 'Gia hạn đăng ký thành công! Đang chuyển hướng...';
           formSuccess.classList.remove('hidden');
 
-          // Redirect after 2 seconds
+          // Chuyển hướng sau 2 giây
           setTimeout(() => {
             window.location.href = '/user/profile';
           }, 2000);
         } else {
-          throw new Error(response.data.message || 'Failed to extend subscription.');
+          throw new Error(response.data.message || 'Gia hạn đăng ký thất bại.');
         }
       } catch (error) {
         formError.querySelector('span').textContent =
-          error.response?.data?.message || `An error occurred. Please try again. ${error.message}`;
+          error.response?.data?.message || `Đã xảy ra lỗi. Vui lòng thử lại. ${error.message}`;
         formError.classList.remove('hidden');
       }
     });
   });
 </script>
-

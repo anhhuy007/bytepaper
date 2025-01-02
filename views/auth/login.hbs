@@ -4,39 +4,23 @@
     <div class="w-full overflow-hidden rounded-3xl">
       {{!-- Back to Home Button --}}
       <div class="absolute top-8 left-8">
-        <a
-          href="/"
-          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 bg-white shadow-md hover:shadow-lg"
-        >
+        <a href="/"
+          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 bg-white shadow-md hover:shadow-lg">
           <span class="inline-block mr-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1em"
-              height="1em"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-              class="h-4 w-4"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              class="h-4 w-4">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </span>
-          <span>Back to Home</span>
+          <span>Quay lại trang chủ</span> <!-- Back to Home -->
         </a>
       </div>
 
       <div class="grid md:grid-cols-2 p-2 bg-slate-100">
         <!-- Left: Illustration -->
         <div class="flex items-center justify-center p-12">
-          <img
-            src="/assets/login-fellows.png"
-            alt="Login illustration"
-            class="w-80 h-80 object-cover"
-          />
+          <img src="/assets/login-fellows.png" alt="Login illustration" class="w-80 h-80 object-cover" />
         </div>
 
         <!-- Right: Login Form -->
@@ -48,46 +32,30 @@
 
               <!-- Welcome Message -->
               <div class="space-y-2 text-center pb-10">
-                <h1 class="text-2xl font-bold tracking-tight">Welcome back!</h1>
-                <p class="text-sm text-zinc-500">Please enter your details to login.</p>
+                <h1 class="text-2xl font-bold tracking-tight">Chào mừng bạn trở lại!</h1> <!-- Welcome back -->
+                <p class="text-sm text-zinc-500">Vui lòng nhập thông tin của bạn để đăng nhập.</p>
+                <!-- Please enter your details to login -->
               </div>
 
               <!-- Login Form -->
               <form id="loginForm" class="space-y-4" method="POST" action="/auth/login">
                 <!-- Username -->
                 <div>
-                  <label for="username" class="block text-sm font-medium text-gray-700"
-                    >Username</label
-                  >
-                  <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    placeholder="Enter your username"
-                    required
-                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800"
-                  />
+                  <label for="username" class="block text-sm font-medium text-gray-700">Tên người dùng</label>
+                  <!-- Username -->
+                  <input id="username" name="username" type="text" placeholder="Nhập tên người dùng của bạn" required
+                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800" />
                 </div>
 
                 <!-- Password -->
                 <div>
-                  <label for="password" class="block text-sm font-medium text-gray-700"
-                    >Password</label
-                  >
+                  <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+                  <!-- Password -->
                   <div class="relative">
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      required
-                      class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800"
-                    />
-                    <button
-                      type="button"
-                      onclick="togglePasswordVisibility()"
-                      class="absolute inset-y-0 right-0 px-2 flex items-center"
-                    >
+                    <input id="password" name="password" type="password" placeholder="Nhập mật khẩu của bạn" required
+                      class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800" />
+                    <button type="button" onclick="togglePasswordVisibility()"
+                      class="absolute inset-y-0 right-0 px-2 flex items-center">
                       <span id="eye-show" class="block">{{> icons/eye }}</span>
                       <span id="eye-hide" class="hidden">{{> icons/eye-slash }}</span>
                     </button>
@@ -96,18 +64,14 @@
 
                 <!-- Forgot Password Link -->
                 <div class="flex justify-end py-5">
-                  <a href="/auth/forgot-password" class="text-sm text-zinc-800 hover:underline"
-                    >Forgot Password?</a
-                  >
+                  <a href="/auth/forgot-password" class="text-sm text-zinc-800 hover:underline">Quên mật khẩu?</a>
+                  <!-- Forgot Password? -->
                 </div>
 
                 <!-- Submit Button -->
-                <button
-                  type="submit"
-                  id="submitButton"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-800"
-                >
-                  Log In
+                <button type="submit" id="submitButton"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-800">
+                  Đăng nhập <!-- Log In -->
                 </button>
               </form>
 
@@ -118,28 +82,24 @@
                     <div class="w-full border-t border-gray-300"></div>
                   </div>
                   <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                    <span class="px-2 bg-white text-gray-500">Hoặc tiếp tục với</span> <!-- Or continue with -->
                   </div>
                 </div>
               </div>
 
               <!-- Social Login -->
               <div class="mt-6">
-                <button
-                  type="button"
-                  onclick="window.location.href='/auth/google'"
-                  class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                >
+                <button type="button" onclick="window.location.href='/auth/google'"
+                  class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                   {{> icons/google }} Google
                 </button>
               </div>
 
               <!-- Sign Up -->
               <div class="mt-6 text-center text-sm">
-                Don't have an account?
-                <a href="/auth/signup" class="font-medium text-blue-600 hover:text-blue-500"
-                  >Sign up</a
-                >
+                Chưa có tài khoản?
+                <a href="/auth/signup" class="font-medium text-blue-600 hover:text-blue-500">Đăng ký</a>
+                <!-- Sign up -->
               </div>
             </div>
           </div>
@@ -179,11 +139,11 @@
         window.location.href = response.data.redirectUrl
       } else {
         // Hiển thị lỗi lên giao diện nếu login thất bại
-        displayError(response.data.message || 'An unexpected error occurred.')
+        displayError(response.data.message || 'Đã xảy ra lỗi không mong muốn.')
       }
     } catch (error) {
       // Xử lý lỗi bất ngờ từ server
-      displayError(error.response?.data?.message || 'A server error occurred. Please try again.')
+      displayError(error.response?.data?.message || 'Đã xảy ra lỗi từ server. Vui lòng thử lại.')
     }
   })
 

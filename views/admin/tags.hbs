@@ -4,65 +4,55 @@
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-3xl font-bold flex items-center space-x-2">
       <i data-lucide="tags" class="text-blue-500"></i>
-      <span>Tags Management</span>
+      <span>Quản lý thẻ</span>
     </h1>
   </div>
 
   <!-- Add Tag Form -->
-  <form id="addTagForm" action="/admin/tags/save" method="POST" class="mb-8 bg-gray-100 p-6 rounded-lg shadow-lg space-y-4">
+  <form id="addTagForm" action="/admin/tags/save" method="POST"
+    class="mb-8 bg-gray-100 p-6 rounded-lg shadow-lg space-y-4">
     <h2 class="text-xl font-semibold flex items-center space-x-2">
       <i data-lucide="plus-circle" class="text-green-500"></i>
-      <span>Add New Tag</span>
+      <span>Thêm thẻ mới</span>
     </h2>
 
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Tag Name</label>
-      <input
-        type="text"
-        name="name"
-        class="input input-bordered w-full"
-        placeholder="Enter tag name"
-        required
-      />
+      <label class="block text-sm font-medium text-gray-600 mb-2">Tên thẻ</label>
+      <input type="text" name="name" class="input input-bordered w-full" placeholder="Nhập tên thẻ" required />
     </div>
 
     <div class="flex justify-end">
       <button type="submit" class="btn btn-primary flex items-center space-x-2">
         <i data-lucide="save"></i>
-        <span>Add Tag</span>
+        <span>Thêm thẻ</span>
       </button>
     </div>
   </form>
 
   <!-- Edit Tag Form -->
-  <form id="editTagForm" action="/admin/tags/update" method="POST" class="mb-8 bg-gray-100 p-6 rounded-lg shadow-lg space-y-4 hidden">
+  <form id="editTagForm" action="/admin/tags/update" method="POST"
+    class="mb-8 bg-gray-100 p-6 rounded-lg shadow-lg space-y-4 hidden">
     <h2 class="text-xl font-semibold flex items-center space-x-2">
       <i data-lucide="edit" class="text-yellow-500"></i>
-      <span>Edit Tag</span>
+      <span>Chỉnh sửa thẻ</span>
     </h2>
 
     <input type="hidden" name="id" id="editTagId" />
 
     <div>
-      <label class="block text-sm font-medium text-gray-600 mb-2">Tag Name</label>
-      <input
-        type="text"
-        name="name"
-        id="editTagName"
-        class="input input-bordered w-full"
-        placeholder="Enter tag name"
-        required
-      />
+      <label class="block text-sm font-medium text-gray-600 mb-2">Tên thẻ</label>
+      <input type="text" name="name" id="editTagName" class="input input-bordered w-full" placeholder="Nhập tên thẻ"
+        required />
     </div>
 
     <div class="flex justify-end space-x-4">
       <button type="submit" class="btn btn-primary flex items-center space-x-2">
         <i data-lucide="save"></i>
-        <span>Update Tag</span>
+        <span>Cập nhật thẻ</span>
       </button>
       <button type="button" class="btn btn-secondary ml-4" onclick="cancelEdit()">
         <i data-lucide="x-circle"></i>
-        <span>Cancel</span></button>
+        <span>Hủy</span></button>
     </div>
   </form>
 
@@ -71,48 +61,37 @@
     <div>
       <label class="text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="search"></i>
-        <span>Search by Tag Name</span>
+        <span>Tìm theo tên thẻ</span>
       </label>
-      <input
-        type="text"
-        name="name"
-        class="input input-bordered w-full"
-        placeholder="Enter tag name"
-        value="{{query.name}}"
-      />
+      <input type="text" name="name" class="input input-bordered w-full" placeholder="Nhập tên thẻ"
+        value="{{query.name}}" />
     </div>
     <div>
       <label class="text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="sort-asc"></i>
-        <span>Sort By</span>
+        <span>Sắp xếp theo</span>
       </label>
       <select name="orderBy" class="select select-bordered w-full">
-        <option value="name ASC" {{#if (eq query.orderBy "name ASC")}}selected{{/if}}>Name A-Z</option>
-        <option value="name DESC" {{#if (eq query.orderBy "name DESC")}}selected{{/if}}>Name Z-A</option>
+        <option value="name ASC" {{#if (eq query.orderBy "name ASC" )}}selected{{/if}}>Tên A-Z</option>
+        <option value="name DESC" {{#if (eq query.orderBy "name DESC" )}}selected{{/if}}>Tên Z-A</option>
       </select>
     </div>
     <div>
       <label class="text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="list"></i>
-        <span>Items per Page</span>
+        <span>Số mục mỗi trang</span>
       </label>
-      <input
-        type="number"
-        name="limit"
-        class="input input-bordered w-full"
-        placeholder="Items per page"
-        min="1"
-        value="{{query.limit}}"
-      />
+      <input type="number" name="limit" class="input input-bordered w-full" placeholder="Số mục mỗi trang" min="1"
+        value="{{query.limit}}" />
     </div>
     <div class="flex items-end space-x-4">
       <button type="submit" class="btn btn-primary flex items-center space-x-2">
         <i data-lucide="filter"></i>
-        <span>Apply</span>
+        <span>Áp dụng</span>
       </button>
       <a href="/admin/tags" class="btn btn-secondary flex items-center space-x-2">
         <i data-lucide="refresh-cw"></i>
-        <span>Reset</span>
+        <span>Đặt lại</span>
       </a>
     </div>
   </form>
@@ -124,21 +103,16 @@
     <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
       <span class="font-medium">{{this.name}}</span>
       <div class="flex space-x-2">
-        <button
-          class="btn btn-sm btn-warning flex items-center space-x-2"
-          onclick="editTag({ id: '{{this.id}}', name: '{{this.name}}' })"
-        >
+        <button class="btn btn-sm btn-warning flex items-center space-x-2"
+          onclick="editTag({ id: '{{this.id}}', name: '{{this.name}}' })">
           <i data-lucide="edit"></i>
-          <span>Edit</span>
+          <span>Chỉnh sửa</span>
         </button>
-        <form
-          action="/admin/tags/delete/{{this.id}}"
-          method="POST"
-          onsubmit="return confirm('Are you sure you want to delete this tag?');"
-        >
+        <form action="/admin/tags/delete/{{this.id}}" method="POST"
+          onsubmit="return confirm('Bạn chắc chắn muốn xóa thẻ này?');">
           <button type="submit" class="btn btn-sm btn-error flex items-center space-x-2">
             <i data-lucide="trash-2"></i>
-            <span>Delete</span>
+            <span>Xóa</span>
           </button>
         </form>
       </div>
@@ -150,7 +124,7 @@
     {{> pagination query=query totalPages=totalPages currentPage=currentPage }}
   </div>
   {{else}}
-  <div class="text-center text-gray-500 mt-8">No tags found.</div>
+  <div class="text-center text-gray-500 mt-8">Không tìm thấy thẻ nào.</div>
   {{/if}}
 </div>
 
@@ -168,5 +142,3 @@
     document.getElementById('editTagForm').classList.add('hidden');
   }
 </script>
-
-

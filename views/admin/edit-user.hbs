@@ -4,11 +4,11 @@
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
       <i data-lucide="user-edit" class="text-blue-500"></i>
-      <span>Edit User</span>
+      <span>Chỉnh sửa người dùng</span>
     </h1>
     <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
       <i data-lucide="arrow-left"></i>
-      <span>Back to Users</span>
+      <span>Quay lại người dùng</span>
     </a>
   </div>
 
@@ -22,30 +22,18 @@
       <div>
         <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
           <i data-lucide="user"></i>
-          <span>Username</span>
+          <span>Tên người dùng</span>
         </label>
-        <input
-          type="text"
-          class="input input-bordered w-full"
-          name="username"
-          value="{{user.username}}"
-          readonly
-        />
+        <input type="text" class="input input-bordered w-full" name="username" value="{{user.username}}" readonly />
       </div>
 
       <!-- Full Name -->
       <div>
         <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
           <i data-lucide="user-check"></i>
-          <span>Full Name</span>
+          <span>Tên đầy đủ</span>
         </label>
-        <input
-          type="text"
-          class="input input-bordered w-full"
-          name="full_name"
-          value="{{user.full_name}}"
-          readonly
-        />
+        <input type="text" class="input input-bordered w-full" name="full_name" value="{{user.full_name}}" readonly />
       </div>
 
       <!-- Email -->
@@ -54,20 +42,14 @@
           <i data-lucide="mail"></i>
           <span>Email</span>
         </label>
-        <input
-          type="email"
-          class="input input-bordered w-full"
-          name="email"
-          value="{{user.email}}"
-          readonly
-        />
+        <input type="email" class="input input-bordered w-full" name="email" value="{{user.email}}" readonly />
       </div>
 
       <!-- Role -->
       <div>
         <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
           <i data-lucide="briefcase"></i>
-          <span>Role</span>
+          <span>Vai trò</span>
         </label>
         <select class="select select-bordered w-full" name="role" required>
           {{#each roles}}
@@ -82,11 +64,11 @@
       <div class="flex justify-end space-x-4">
         <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
           <i data-lucide="x-circle"></i>
-          <span>Cancel</span>
+          <span>Hủy</span>
         </a>
         <button type="submit" class="btn btn-primary hover:shadow-md flex items-center space-x-2">
           <i data-lucide="check-circle"></i>
-          <span>Update User</span>
+          <span>Cập nhật người dùng</span>
         </button>
       </div>
     </form>
@@ -106,7 +88,7 @@
     try {
       const response = await axios.post(`/admin/users/edit/${userId}`, data);
       responseMessage.className = 'alert alert-success shadow-lg mt-4';
-      responseMessage.textContent = 'User updated successfully!';
+      responseMessage.textContent = 'Người dùng đã được cập nhật thành công!';
       responseMessage.hidden = false;
 
       setTimeout(() => {
@@ -115,9 +97,8 @@
     } catch (error) {
       responseMessage.className = 'alert alert-error shadow-lg mt-4';
       responseMessage.textContent =
-        error.response?.data?.message || 'Failed to update user.';
+        error.response?.data?.message || 'Cập nhật người dùng thất bại.';
       responseMessage.hidden = false;
     }
   });
 </script>
-

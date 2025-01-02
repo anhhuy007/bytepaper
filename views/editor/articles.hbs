@@ -3,7 +3,7 @@
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-3xl font-bold text-gray-800 flex items-center space-x-2">
       <i data-lucide="file-text" class="text-blue-500"></i>
-      <span>Articles Management</span>
+      <span>Quản lý bài viết</span> <!-- Articles Management -->
     </h1>
   </div>
 
@@ -13,18 +13,19 @@
       <!-- Keyword Filter -->
       <div class="col-span-2">
         <label for="keyword" class="text-sm font-medium text-gray-700">
-          <i data-lucide="search" class="inline-block mr-1"></i> Search Articles
+          <i data-lucide="search" class="inline-block mr-1"></i> Tìm kiếm bài viết <!-- Search Articles -->
         </label>
-        <input type="text" id="keyword" name="keyword" class="input input-bordered w-full" placeholder="Keyword" value="{{query.keyword}}" />
+        <input type="text" id="keyword" name="keyword" class="input input-bordered w-full" placeholder="Từ khóa"
+          value="{{query.keyword}}" />
       </div>
 
       <!-- Category Filter -->
       <div>
         <label for="category_id" class="text-sm font-medium text-gray-700">
-          <i data-lucide="folder" class="inline-block mr-1"></i> Category
+          <i data-lucide="folder" class="inline-block mr-1"></i> Danh mục <!-- Category -->
         </label>
         <select id="category_id" name="category_id" class="select select-bordered w-full">
-          <option value="">All Categories</option>
+          <option value="">Tất cả danh mục</option> <!-- All Categories -->
           {{#each categories}}
           <option value="{{this.id}}" {{#if (eq ../selectedCategory this.id)}}selected{{/if}}>{{this.name}}</option>
           {{/each}}
@@ -34,10 +35,10 @@
       <!-- Tag Filter -->
       <div>
         <label for="tag_id" class="text-sm font-medium text-gray-700">
-          <i data-lucide="tag" class="inline-block mr-1"></i> Tag
+          <i data-lucide="tag" class="inline-block mr-1"></i> Thẻ <!-- Tag -->
         </label>
         <select id="tag_id" name="tag_id" class="select select-bordered w-full">
-          <option value="">All Tags</option>
+          <option value="">Tất cả thẻ</option> <!-- All Tags -->
           {{#each tags}}
           <option value="{{this.id}}" {{#if (eq ../selectedTag this.id)}}selected{{/if}}>{{this.name}}</option>
           {{/each}}
@@ -47,10 +48,10 @@
       <!-- Status Filter -->
       <div>
         <label for="status" class="text-sm font-medium text-gray-700">
-          <i data-lucide="check-circle" class="inline-block mr-1"></i> Status
+          <i data-lucide="check-circle" class="inline-block mr-1"></i> Trạng thái <!-- Status -->
         </label>
         <select id="status" name="status" class="select select-bordered w-full">
-          <option value="">All Statuses</option>
+          <option value="">Tất cả trạng thái</option> <!-- All Statuses -->
           {{#each statuses}}
           <option value="{{this}}" {{#if (eq ../query.status this)}}selected{{/if}}>{{this}}</option>
           {{/each}}
@@ -60,11 +61,13 @@
       <!-- Order By -->
       <div>
         <label for="orderBy" class="text-sm font-medium text-gray-700">
-          <i data-lucide="sort-desc" class="inline-block mr-1"></i> Sort By
+          <i data-lucide="sort-desc" class="inline-block mr-1"></i> Sắp xếp theo <!-- Sort By -->
         </label>
         <select id="orderBy" name="orderBy" class="select select-bordered w-full">
-          <option value="published_at DESC" {{#if (eq query.orderBy "published_at DESC")}}selected{{/if}}>Newest</option>
-          <option value="published_at ASC" {{#if (eq query.orderBy "published_at ASC")}}selected{{/if}}>Oldest</option>
+          <option value="published_at DESC" {{#if (eq query.orderBy "published_at DESC" )}}selected{{/if}}>Mới nhất
+          </option> <!-- Newest -->
+          <option value="published_at ASC" {{#if (eq query.orderBy "published_at ASC" )}}selected{{/if}}>Cũ nhất
+          </option> <!-- Oldest -->
         </select>
       </div>
 
@@ -72,11 +75,11 @@
       <div class="flex w-full items-center space-x-4">
         <button type="submit" class="btn btn-primary w-full flex items-center justify-center hover:shadow-lg">
           <i data-lucide="filter"></i>
-          <span>Apply</span>
+          <span>Áp dụng</span> <!-- Apply -->
         </button>
         <a href="/editor/articles" class="btn btn-outline w-full flex items-center justify-center hover:shadow-md">
           <i data-lucide="refresh-cw"></i>
-          <span>Reset</span>
+          <span>Đặt lại</span> <!-- Reset -->
         </a>
       </div>
     </form>
@@ -87,12 +90,12 @@
     <table class="table-auto w-full text-sm text-gray-700">
       <thead class="bg-gray-100 border-b">
         <tr>
-          <th class="py-3 px-4 text-left">Title</th>
-          <th class="py-3 px-4 text-left">Author</th>
-          <th class="py-3 px-4 text-left">Category</th>
-          <th class="py-3 px-4 text-left">Status</th>
-          <th class="py-3 px-4 text-left">Last Updated</th>
-          <th class="py-3 px-4 text-left">Actions</th>
+          <th class="py-3 px-4 text-left">Tiêu đề</th> <!-- Title -->
+          <th class="py-3 px-4 text-left">Tác giả</th> <!-- Author -->
+          <th class="py-3 px-4 text-left">Danh mục</th> <!-- Category -->
+          <th class="py-3 px-4 text-left">Trạng thái</th> <!-- Status -->
+          <th class="py-3 px-4 text-left">Cập nhật cuối</th> <!-- Last Updated -->
+          <th class="py-3 px-4 text-left">Thao tác</th> <!-- Actions -->
         </tr>
       </thead>
       <tbody class="divide-y">
@@ -108,14 +111,14 @@
           <td class="py-3 px-4 flex items-center space-x-2">
             {{#if this.canReview}}
             <a href="/editor/articles/{{this.id}}" class="btn btn-sm btn-primary">
-              <i data-lucide="eye"></i> Review
+              <i data-lucide="eye"></i> Duyệt <!-- Review -->
             </a>
             {{/if}}
 
             {{#if this.canPublish}}
             <form action="/editor/articles/{{this.id}}/publish" method="POST">
               <button type="submit" class="btn btn-sm btn-success">
-                <i data-lucide="check-circle"></i> Publish
+                <i data-lucide="check-circle"></i> Xuất bản <!-- Publish -->
               </button>
             </form>
             {{/if}}
@@ -123,7 +126,7 @@
             {{#if this.canUnpublish}}
             <form action="/editor/articles/{{this.id}}/unpublish" method="POST">
               <button type="submit" class="btn btn-sm btn-warning">
-                <i data-lucide="refresh-cw"></i> Unpublish
+                <i data-lucide="refresh-cw"></i> Hủy xuất bản <!-- Unpublish -->
               </button>
             </form>
             {{/if}}

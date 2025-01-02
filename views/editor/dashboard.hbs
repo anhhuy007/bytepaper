@@ -1,78 +1,76 @@
 {{!-- views/editor/dashboard.hbs --}}
+
 <div class="container mx-auto p-6 bg-white rounded-lg shadow-lg">
-  <!-- Page Title -->
+  <!-- Tiêu đề trang -->
   <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
     <i data-lucide="bar-chart" class="text-primary"></i>
-    <span>Editor Dashboard</span>
+    <span>Bảng điều khiển biên tập viên</span> <!-- Editor Dashboard -->
   </h1>
 
-  <!-- Stats Section -->
+  <!-- Phần thống kê -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
-    <!-- Pending Articles -->
+    <!-- Bài viết đang chờ -->
     <div class="stat bg-gray-50 shadow rounded-lg p-4">
       <div class="stat-title text-sm text-gray-600 flex items-center space-x-2">
         <i data-lucide="clock" class="text-yellow-500"></i>
-        <span>Pending Articles</span>
+        <span>Bài viết đang chờ</span> <!-- Pending Articles -->
       </div>
       <div class="stat-value text-3xl font-bold text-gray-800">
         {{default stats.pending_articles 0}}
       </div>
-      <div class="stat-desc text-gray-500">Awaiting approval</div>
+      <div class="stat-desc text-gray-500">Chờ phê duyệt</div> <!-- Awaiting approval -->
     </div>
 
-    <!-- Approved Articles -->
+    <!-- Bài viết được phê duyệt -->
     <div class="stat bg-gray-50 shadow rounded-lg p-4">
       <div class="stat-title text-sm text-gray-600 flex items-center space-x-2">
         <i data-lucide="check-circle" class="text-green-500"></i>
-        <span>Approved Articles</span>
+        <span>Bài viết được phê duyệt</span> <!-- Approved Articles -->
       </div>
       <div class="stat-value text-3xl font-bold text-gray-800">
         {{default stats.approved_articles 0}}
       </div>
-      <div class="stat-desc text-gray-500">Approved and published</div>
+      <div class="stat-desc text-gray-500">Đã được phê duyệt và xuất bản</div> <!-- Approved and published -->
     </div>
 
-    <!-- Rejected Articles -->
+    <!-- Bài viết bị từ chối -->
     <div class="stat bg-gray-50 shadow rounded-lg p-4">
       <div class="stat-title text-sm text-gray-600 flex items-center space-x-2">
         <i data-lucide="x-circle" class="text-red-500"></i>
-        <span>Rejected Articles</span>
+        <span>Bài viết bị từ chối</span> <!-- Rejected Articles -->
       </div>
       <div class="stat-value text-3xl font-bold text-gray-800">
         {{default stats.rejected_articles 0}}
       </div>
-      <div class="stat-desc text-gray-500">Sent back for revision</div>
+      <div class="stat-desc text-gray-500">Đã bị trả lại để sửa đổi</div> <!-- Sent back for revision -->
     </div>
 
-    <!-- Published Articles -->
+    <!-- Bài viết đã xuất bản -->
     <div class="stat bg-gray-50 shadow rounded-lg p-4">
       <div class="stat-title text-sm text-gray-600 flex items-center space-x-2">
         <i data-lucide="file-text" class="text-blue-500"></i>
-        <span>Published Articles</span>
+        <span>Bài viết đã xuất bản</span> <!-- Published Articles -->
       </div>
       <div class="stat-value text-3xl font-bold text-gray-800">
         {{default stats.published_articles 0}}
       </div>
-      <div class="stat-desc text-gray-500">Currently live</div>
+      <div class="stat-desc text-gray-500">Hiện đang trực tuyến</div> <!-- Currently live -->
     </div>
   </div>
 
-  <!-- Categories Section -->
+  <!-- Phần danh mục -->
   <div class="mt-8">
     <h2 class="text-2xl font-semibold text-gray-700 flex items-center space-x-2">
       <i data-lucide="folder"></i>
-      <span>Categories Managed</span>
+      <span>Danh mục quản lý</span> <!-- Categories Managed -->
     </h2>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
       {{#each categories}}
       <div class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between">
         <span class="text-gray-700 text-lg font-medium">{{this.name}}</span>
-        <a
-          href="/editor/articles?category_id={{this.id}}"
-          class="btn btn-sm btn-primary flex items-center space-x-1"
-        >
+        <a href="/editor/articles?category_id={{this.id}}" class="btn btn-sm btn-primary flex items-center space-x-1">
           <i data-lucide="list"></i>
-          <span>View Articles</span>
+          <span>Xem bài viết</span> <!-- View Articles -->
         </a>
       </div>
       {{/each}}

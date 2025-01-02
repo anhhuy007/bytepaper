@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
-  </head>
-  <body>
-    <div class="flex w-full h-full justify-center items-center">
-        <div id="lottie-animation" style="width: 300px; height: 300px"></div>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
 
-    <script>
-      const animation = lottie.loadAnimation({
-        container: document.getElementById('lottie-animation'), // HTML container
-        renderer: 'svg', // Render as SVG
-        loop: true, // Repeat animation
-        autoplay: true, // Start automatically
-        path: '/assets/animations/error-404.json', // Animation JSON file path
-      })
-    </script>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+</head>
+
+<body>
+  <div class="flex w-full h-full justify-center items-center">
+    <div id="lottie-animation" style="width: 300px; height: 300px"></div>
+  </div>
+
+  <script>
+    const animation = lottie.loadAnimation({
+      container: document.getElementById('lottie-animation'), // HTML container
+      renderer: 'svg', // Render as SVG
+      loop: true, // Repeat animation
+      autoplay: true, // Start automatically
+      path: '/assets/animations/error-404.json', // Animation JSON file path
+    })
+  </script>
+</body>
+
 </html>

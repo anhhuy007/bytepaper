@@ -4,7 +4,7 @@
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-4xl font-extrabold text-gray-800 flex items-center space-x-2">
       <i data-lucide="file-text" class="text-blue-500"></i>
-      <span>Articles Management</span>
+      <span>Quản lý bài viết</span>
     </h1>
   </div>
 
@@ -15,26 +15,20 @@
       <div class="col-span-2 lg:col-span-2">
         <label for="keyword" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="search"></i>
-          <span>Search Articles</span>
+          <span>Tìm bài viết</span>
         </label>
-        <input
-          type="text"
-          id="keyword"
-          name="keyword"
-          class="input input-bordered w-full"
-          placeholder="Keyword"
-          value="{{query.keyword}}"
-        />
+        <input type="text" id="keyword" name="keyword" class="input input-bordered w-full" placeholder="Từ khóa"
+          value="{{query.keyword}}" />
       </div>
 
       <!-- Category Filter -->
       <div>
         <label for="category_id" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="folder"></i>
-          <span>Category</span>
+          <span>Danh mục</span>
         </label>
         <select id="category_id" name="category_id" class="select select-bordered w-full">
-          <option value="">All Categories</option>
+          <option value="">Tất cả danh mục</option>
           {{#each categories}}
           <option value="{{this.id}}" {{#if (eq ../selectedCategory this.id)}}selected{{/if}}>
             {{this.name}}
@@ -47,10 +41,10 @@
       <div>
         <label for="status" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="check-circle"></i>
-          <span>Status</span>
+          <span>Trạng thái</span>
         </label>
         <select id="status" name="status" class="select select-bordered w-full">
-          <option value="">All Statuses</option>
+          <option value="">Tất cả trạng thái</option>
           {{#each statuses}}
           <option value="{{this}}" {{#if (eq ../query.status this)}}selected{{/if}}>
             {{this}}
@@ -63,11 +57,13 @@
       <div>
         <label for="orderBy" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="sort-desc"></i>
-          <span>Sort By</span>
+          <span>Sắp xếp theo</span>
         </label>
         <select id="orderBy" name="orderBy" class="select select-bordered w-full">
-          <option value="published_at DESC" {{#if (eq query.orderBy "published_at DESC")}}selected{{/if}}>Newest</option>
-          <option value="published_at ASC" {{#if (eq query.orderBy "published_at ASC")}}selected{{/if}}>Oldest</option>
+          <option value="published_at DESC" {{#if (eq query.orderBy "published_at DESC" )}}selected{{/if}}>Mới nhất
+          </option>
+          <option value="published_at ASC" {{#if (eq query.orderBy "published_at ASC" )}}selected{{/if}}>Cũ nhất
+          </option>
         </select>
       </div>
 
@@ -75,28 +71,21 @@
       <div>
         <label for="limit" class="text-sm font-medium text-gray-600 mb-1 flex items-center space-x-2">
           <i data-lucide="list"></i>
-          <span>Items per Page</span>
+          <span>Số Mục Mỗi Trang</span>
         </label>
-        <input
-          type="number"
-          id="limit"
-          name="limit"
-          class="input input-bordered w-full"
-          placeholder="Items per page"
-          min="1"
-          value="{{query.limit}}"
-        />
+        <input type="number" id="limit" name="limit" class="input input-bordered w-full" placeholder="Số mục mỗi trang"
+          min="1" value="{{query.limit}}" />
       </div>
 
       <!-- Buttons -->
       <div class="flex items-end space-x-4 col-span-3 lg:col-span-1 justify-end">
         <button type="submit" class="btn btn-primary hover:shadow-md flex items-center space-x-2">
           <i data-lucide="filter"></i>
-          <span>Apply</span>
+          <span>Áp dụng</span>
         </button>
         <a href="/admin/articles" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
           <i data-lucide="refresh-cw"></i>
-          <span>Reset</span>
+          <span>Đặt lại</span>
         </a>
       </div>
     </form>
@@ -107,12 +96,12 @@
     <table class="table w-full border-collapse border border-gray-300">
       <thead class="bg-gray-200 text-gray-700">
         <tr>
-          <th class="py-3 px-4">Title</th>
-          <th class="py-3 px-4">Author</th>
-          <th class="py-3 px-4">Category</th>
-          <th class="py-3 px-4">Status</th>
-          <th class="py-3 px-4">Published At</th>
-          <th class="py-3 px-4">Actions</th>
+          <th class="py-3 px-4">Tiêu Đề</th>
+          <th class="py-3 px-4">Tác Giả</th>
+          <th class="py-3 px-4">Danh Mục</th>
+          <th class="py-3 px-4">Trạng Thái</th>
+          <th class="py-3 px-4">Ngày Đăng</th>
+          <th class="py-3 px-4">Hành Động</th>
         </tr>
       </thead>
       <tbody class="text-gray-600">
@@ -122,29 +111,19 @@
           <td class="py-2 px-4">{{this.author_name}}</td>
           <td class="py-2 px-4">{{this.category_name}}</td>
           <td class="py-2 px-4">
-            <form
-              id="status-form-{{this.id}}"
-              class="flex items-center space-x-2"
-              data-article-id="{{this.id}}"
-            >
-              <select
-                name="status"
-                class="select select-bordered select-xs"
-                {{#unless (or (eq this.status 'draft') (eq this.status 'published'))}}disabled{{/unless}}
-                onchange="handleStatusChange(event, {{this.id}}, '{{this.status}}')"
-              >
+            <form id="status-form-{{this.id}}" class="flex items-center space-x-2" data-article-id="{{this.id}}">
+              <select name="status" class="select select-bordered select-xs" {{#unless (or (eq this.status 'draft' ) (eq
+                this.status 'published' ))}}disabled{{/unless}}
+                onchange="handleStatusChange(event, {{this.id}}, '{{this.status}}')">
                 {{#if (or (eq this.status 'draft') (eq this.status 'published'))}}
-                  <option value="draft" {{#if (eq this.status 'draft')}}selected{{/if}}>Draft</option>
-                  <option value="published" {{#if (eq this.status 'published')}}selected{{/if}}>Published</option>
+                <option value="draft" {{#if (eq this.status 'draft' )}}selected{{/if}}>Bản nháp</option>
+                <option value="published" {{#if (eq this.status 'published' )}}selected{{/if}}>Đã xuất bản</option>
                 {{else}}
-                  <option value="{{this.status}}" selected>{{this.status}}</option>
+                <option value="{{this.status}}" selected>{{this.status}}</option>
                 {{/if}}
               </select>
-              <button
-                id="status-btn-{{this.id}}"
-                type="button"
-                class="btn btn-sm btn-primary hover:shadow-md flex items-center space-x-1 hidden"
-              >
+              <button id="status-btn-{{this.id}}" type="button"
+                class="btn btn-sm btn-primary hover:shadow-md flex items-center space-x-1 hidden">
                 <i data-lucide="check"></i>
                 <span></span>
               </button>
@@ -152,15 +131,11 @@
           </td>
           <td class="py-2 px-4">{{formatDate this.published_at}}</td>
           <td class="py-2 px-4">
-            <form
-              action="/admin/articles/delete/{{this.id}}"
-              method="POST"
-              style="display: inline-block"
-              onsubmit="return confirm('Are you sure you want to delete this article?');"
-            >
+            <form action="/admin/articles/delete/{{this.id}}" method="POST" style="display: inline-block"
+              onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
               <button type="submit" class="btn btn-sm btn-error hover:shadow-md flex items-center space-x-2">
                 <i data-lucide="trash-2"></i>
-                <span>Delete</span>
+                <span>Xóa</span>
               </button>
             </form>
           </td>
@@ -186,14 +161,14 @@
       button.classList.remove("hidden"); // Show button
       button.querySelector("span").textContent =
         selectedStatus === "draft" && currentStatus === "published"
-          ? "Unpublish"
+          ? "Hủy Xuất Bản"
           : selectedStatus === "published" && currentStatus === "draft"
-          ? "Publish"
-          : "Save";
+            ? "Xuất Bản"
+            : "Lưu";
 
       // Attach click event listener
       button.onclick = async () => {
-        const confirmMessage = `Are you sure you want to change the status from "${currentStatus}" to "${selectedStatus}"?`;
+        const confirmMessage = `Bạn có chắc chắn muốn thay đổi trạng thái từ "${currentStatus}" sang "${selectedStatus}"?`;
         if (!confirm(confirmMessage)) {
           // Revert the select dropdown to the current status if canceled
           event.target.value = currentStatus;
@@ -206,12 +181,12 @@
             status: selectedStatus,
           });
           if (response.status === 200) {
-            alert("Status updated successfully.");
+            alert("Trạng thái đã được cập nhật.");
             window.location.reload(); // Reload to reflect changes
           }
         } catch (error) {
-          console.error("Error updating status:", error);
-          alert("Failed to update status. Please try again.");
+          console.error("Lỗi khi cập nhật trạng thái:", error);
+          alert("Cập nhật trạng thái thất bại. Vui lòng thử lại.");
         }
       };
     } else {
@@ -219,7 +194,3 @@
     }
   }
 </script>
-
-
-
-
