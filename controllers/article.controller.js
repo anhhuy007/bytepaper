@@ -136,7 +136,7 @@ const getArticlesByFilter = async (req, res, next) => {
     }
 
     // Fetch filtered articles and total count
-    const { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
+    let { articles, totalArticles } = await articleService.getFilteredArticles(filters, options)
 
     // Fetch all categories and tags for filtering
     const allOptions = {
@@ -151,10 +151,14 @@ const getArticlesByFilter = async (req, res, next) => {
     // Calculate total pages for pagination
     const totalPages = Math.ceil(totalArticles / limit)
 
-    // console.log('===================> query:', req.query)
-    // console.log('===================> selectedCategory:', filters.category_id)
-    // console.log('===================> selectedTag:', filters.tag_id)
-    // console.log('===================> categories:', categories)
+    // If user is a subscriber, prioritize showing premium articles
+    const user = req.user
+    if (user && user.role === 'subscriber') {
+      const premiumArticles = articles.filter((article) => article.is_premium)
+      const freeArticles = articles.filter((article) => !article.is_premium)
+      articles = [...premiumArticles, ...freeArticles]
+    }
+
     // Render view with articles, filters, and pagination
     res.render('articles/search', {
       articles,
