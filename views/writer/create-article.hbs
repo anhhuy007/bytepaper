@@ -1,11 +1,10 @@
-{{!-- views/writer/create-article.hbs --}}
 <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
   <!-- Page Title -->
   <div class="mb-6 flex justify-between items-center">
     <!-- Title Section -->
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-2">
       <i data-lucide="edit-3" class="text-primary"></i>
-      <span>Create Article</span>
+      <span>Tạo bài viết</span>
     </h1>
 
     <!-- Action Buttons Section -->
@@ -13,64 +12,39 @@
       <!-- Back Button -->
       <a href="/writer/articles" class="btn btn-secondary flex items-center space-x-2">
         <i data-lucide="arrow-left"></i>
-        <span>Back</span>
+        <span>Quay lại</span>
       </a>
     </div>
   </div>
 
   <!-- Create Article Form -->
-  <form
-    action="/writer/articles/create"
-    method="POST"
-    enctype="multipart/form-data"
-    class="space-y-6"
-    id="createArticleForm"
-  >
+  <form action="/writer/articles/create" method="POST" enctype="multipart/form-data" class="space-y-6"
+    id="createArticleForm">
     <!-- Title -->
     <div class="form-control">
-      <label
-        for="title"
-        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
-      >
+      <label for="title" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="type"></i>
-        <span>Title</span>
+        <span>Tiêu đề</span>
       </label>
-      <input
-        type="text"
-        name="title"
-        id="title"
-        class="input input-bordered w-full"
-        placeholder="Enter the article title"
-        required
-      />
+      <input type="text" name="title" id="title" class="input input-bordered w-full" placeholder="Nhập tiêu đề bài viết"
+        required />
     </div>
 
     <!-- Abstract -->
     <div class="form-control">
-      <label
-        for="abstract"
-        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
-      >
+      <label for="abstract" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="align-left"></i>
-        <span>Abstract</span>
+        <span>Tóm tắt</span>
       </label>
-      <textarea
-        name="abstract"
-        id="abstract"
-        class="textarea textarea-bordered w-full"
-        placeholder="Provide a brief summary"
-        required
-      ></textarea>
+      <textarea name="abstract" id="abstract" class="textarea textarea-bordered w-full"
+        placeholder="Cung cấp một tóm tắt ngắn gọn" required></textarea>
     </div>
 
     <!-- Content -->
     <div class="form-control">
-      <label
-        for="content"
-        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
-      >
+      <label for="content" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="edit"></i>
-        <span>Content</span>
+        <span>Nội dung</span>
       </label>
       <input type="hidden" name="content" id="hiddenContent" />
       <div id="content" class="quill-editor bg-gray-50 border border-gray-300 rounded-md p-4"></div>
@@ -78,33 +52,22 @@
 
     <!-- Thumbnail -->
     <div class="form-control">
-      <label
-        for="thumbnail"
-        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
-      >
+      <label for="thumbnail" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="image"></i>
-        <span>Thumbnail</span>
+        <span>Ảnh đại diện</span>
       </label>
-      <input
-        type="file"
-        name="thumbnail"
-        id="thumbnail"
-        class="file-input file-input-bordered w-full"
-        accept="image/*"
-      />
+      <input type="file" name="thumbnail" id="thumbnail" class="file-input file-input-bordered w-full"
+        accept="image/*" />
     </div>
 
     <!-- Category -->
     <div class="form-control">
-      <label
-        for="category"
-        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
-      >
+      <label for="category" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="folder"></i>
-        <span>Category</span>
+        <span>Danh mục</span>
       </label>
       <select name="category_id" id="category" class="select select-bordered w-full" required>
-        <option value="" disabled selected>Select a category</option>
+        <option value="" disabled selected>Chọn danh mục</option>
         {{#each categories}}
         <option value="{{this.id}}">{{this.name}}</option>
         {{/each}}
@@ -113,23 +76,14 @@
 
     <!-- Tags -->
     <div class="form-control">
-      <label
-        for="tags"
-        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
-      >
+      <label for="tags" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="tag"></i>
-        <span>Tags</span>
+        <span>Thẻ</span>
       </label>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {{#each tags}}
         <div class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="tags"
-            value="{{this.id}}"
-            id="tag-{{this.id}}"
-            class="checkbox"
-          />
+          <input type="checkbox" name="tags" value="{{this.id}}" id="tag-{{this.id}}" class="checkbox" />
           <label for="tag-{{this.id}}" class="text-sm text-gray-600">{{this.name}}</label>
         </div>
         {{/each}}
@@ -138,26 +92,18 @@
 
     <!-- Is Premium -->
     <div class="form-control flex items-center">
-      <label
-        for="is_premium"
-        class="label text-lg font-semibold text-gray-700 flex items-center space-x-2"
-      >
+      <label for="is_premium" class="label text-lg font-semibold text-gray-700 flex items-center space-x-2">
         <i data-lucide="star"></i>
-        <span>Is Premium</span>
+        <span>Có phí</span>
       </label>
-      <input
-        type="checkbox"
-        name="is_premium"
-        id="is_premium"
-        class="checkbox checkbox-primary ml-4"
-      />
+      <input type="checkbox" name="is_premium" id="is_premium" class="checkbox checkbox-primary ml-4" />
     </div>
 
     <!-- Submit Button -->
     <div class="flex justify-center">
       <button type="submit" class="btn btn-primary flex items-center space-x-2 w-full sm:w-auto">
         <i data-lucide="check-circle"></i>
-        <span>Create Article</span>
+        <span>Tạo bài viết</span>
       </button>
     </div>
   </form>
@@ -186,7 +132,7 @@
   // Custom handler for image
   document.querySelector('.ql-image').addEventListener('click', function (event) {
     event.preventDefault() // Ngăn chặn hành vi mặc định
-    const imageUrl = prompt('Enter the image URL:')
+    const imageUrl = prompt('Nhập URL ảnh:')
     if (imageUrl) {
       const range = quill.getSelection()
       quill.insertEmbed(range.index, 'image', imageUrl)
@@ -196,18 +142,18 @@
   // Custom handler for video
   document.querySelector('.ql-video').addEventListener('click', function (event) {
     event.preventDefault() // Ngăn hành vi mặc định
-    const videoUrl = prompt('Enter the YouTube video URL:')
+    const videoUrl = prompt('Nhập URL video YouTube:')
     if (videoUrl) {
-      const youtubeRegex = /https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/
-      const match = videoUrl.match(youtubeRegex)
+      const youtubeRegex = /https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/)
+  const match = videoUrl.match(youtubeRegex)
 
-      if (match) {
-        const youtubeEmbedUrl = `https://www.youtube.com/embed/${match[1]}`
-        const range = quill.getSelection()
-        quill.insertEmbed(range.index, 'video', youtubeEmbedUrl)
-      } else {
-        alert('Invalid YouTube URL. Please enter a valid URL.')
-      }
+  if (match) {
+    const youtubeEmbedUrl = `https://www.youtube.com/embed/${match[1]}`
+    const range = quill.getSelection()
+    quill.insertEmbed(range.index, 'video', youtubeEmbedUrl)
+  } else {
+    alert('URL YouTube không hợp lệ. Vui lòng nhập URL hợp lệ.')
+  }
     }
   })
 </script>
@@ -223,12 +169,12 @@
         const content = quill.root.innerHTML.trim()
         document.querySelector('#hiddenContent').value = content
 
-        console.log('=== Quill Content ===', content)
+        console.log('=== Nội dung Quill ===', content)
 
         this.submit()
       })
     } else {
-      console.error('Form element not found.')
+      console.error('Không tìm thấy phần tử form.')
     }
   })
 </script>

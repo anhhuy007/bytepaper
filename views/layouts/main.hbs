@@ -1,48 +1,51 @@
 {{!-- views/layouts/main.hbs --}}
 <!doctype html>
 <html lang="en" data-theme="wireframe">
-  <head>
-    <meta charset="utf-8" />
-    <title>{{#if title}}{{title}} | {{/if}}Paperly</title>
-    <link rel="stylesheet" href="/output.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {{!-- Include Alpine.js --}}
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <title>{{#if title}}{{title}} | {{/if}}Paperly</title>
+  <link rel="stylesheet" href="/output.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {{!-- Tailwind css --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+  {{!-- Include Alpine.js --}}
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    {{!-- Include Heroicons --}}
-    <script src="https://unpkg.com/heroicons@2.1.5/dist/heroicons.min.js"></script>
+  {{!-- Tailwind css --}}
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    {{!-- Optional: Include AOS for animations --}}
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  {{!-- Include Heroicons --}}
+  <script src="https://unpkg.com/heroicons@2.1.5/dist/heroicons.min.js"></script>
 
-    {{!-- Include Axios for making HTTP requests --}}
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  {{!-- Optional: Include AOS for animations --}}
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    {{!-- Include Lottie for animations --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
-  </head>
-  <body class="flex flex-col min-h-screen">
-    {{!-- Header Partial --}} {{> header}} {{!-- Main Content --}}
-    <main class="flex-grow container mt-10 justify-center mx-auto">{{{body}}}</main>
+  {{!-- Include Axios for making HTTP requests --}}
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    {{!-- Footer Partial --}} {{> footer}} {{!-- Include your custom script if needed --}}
-    <script src="/script.js"></script>
+  {{!-- Include Lottie for animations --}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+</head>
 
-    {{!-- Initialize AOS if you're using it --}}
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        AOS.init()
-      })
-    </script>
+<body class="flex flex-col min-h-screen">
+  {{!-- Header Partial --}} {{> header}} {{!-- Main Content --}}
+  <main class="flex-grow container mt-10 justify-center mx-auto">{{{body}}}</main>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-      lucide.createIcons()
-    </script>
-  </body>
+  {{!-- Footer Partial --}} {{> footer}} {{!-- Include your custom script if needed --}}
+  <script src="/script.js"></script>
+
+  {{!-- Initialize AOS if you're using it --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      AOS.init()
+    })
+  </script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons()
+  </script>
+</body>
+
 </html>

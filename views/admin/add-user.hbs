@@ -4,11 +4,11 @@
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-4xl font-bold text-gray-800 flex items-center space-x-3">
       <i data-lucide="user-plus" class="text-blue-500"></i>
-      <span>Add New User</span>
+      <span>Thêm người dùng mới</span>
     </h1>
     <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
       <i data-lucide="arrow-left"></i>
-      <span>Back to Users</span>
+      <span>Quay lại trang người dùng</span>
     </a>
   </div>
 
@@ -21,30 +21,19 @@
     <div>
       <label class="text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="user"></i>
-        <span>Username</span>
+        <span>Tên người dùng</span>
       </label>
-      <input
-        type="text"
-        name="username"
-        class="input input-bordered w-full"
-        placeholder="Enter username"
-        required
-      />
+      <input type="text" name="username" class="input input-bordered w-full" placeholder="Nhập tên người dùng"
+        required />
     </div>
 
     <!-- Password -->
     <div>
       <label class="text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="lock"></i>
-        <span>Password</span>
+        <span>Mật khẩu</span>
       </label>
-      <input
-        type="password"
-        name="password"
-        class="input input-bordered w-full"
-        placeholder="Enter password"
-        required
-      />
+      <input type="password" name="password" class="input input-bordered w-full" placeholder="Nhập mật khẩu" required />
     </div>
 
     <!-- Email -->
@@ -53,49 +42,32 @@
         <i data-lucide="mail"></i>
         <span>Email</span>
       </label>
-      <input
-        type="email"
-        name="email"
-        class="input input-bordered w-full"
-        placeholder="Enter email"
-        required
-      />
+      <input type="email" name="email" class="input input-bordered w-full" placeholder="Nhập email" required />
     </div>
 
     <!-- Full Name -->
     <div>
       <label class="block text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="user-check"></i>
-        <span>Full Name</span>
+        <span>Họ và tên</span>
       </label>
-      <input
-        type="text"
-        name="full_name"
-        class="input input-bordered w-full"
-        placeholder="Enter full name"
-        required
-      />
+      <input type="text" name="full_name" class="input input-bordered w-full" placeholder="Nhập họ tên" required />
     </div>
 
     <!-- Pen Name -->
     <div>
       <label class="text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="edit"></i>
-        <span>Pen Name (Optional)</span>
+        <span>Bút danh (Tùy Chọn)</span>
       </label>
-      <input
-        type="text"
-        name="pen_name"
-        class="input input-bordered w-full"
-        placeholder="Enter pen name"
-      />
+      <input type="text" name="pen_name" class="input input-bordered w-full" placeholder="Nhập bút danh" />
     </div>
 
     <!-- Date of Birth -->
     <div>
       <label class="text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="calendar"></i>
-        <span>Date of Birth (Optional)</span>
+        <span>Ngày sinh (Tùy Chọn)</span>
       </label>
       <input type="date" name="date_of_birth" class="input input-bordered w-full" />
     </div>
@@ -104,7 +76,7 @@
     <div>
       <label class="text-sm font-medium text-gray-600 mb-2 flex items-center space-x-2">
         <i data-lucide="briefcase"></i>
-        <span>Role</span>
+        <span>Vai trò</span>
       </label>
       <select name="role" class="select select-bordered w-full" required>
         {{#each roles}}
@@ -117,11 +89,11 @@
     <div class="flex justify-end space-x-4">
       <a href="/admin/users" class="btn btn-secondary hover:shadow-md flex items-center space-x-2">
         <i data-lucide="x-circle"></i>
-        <span>Cancel</span>
+        <span>Hủy</span>
       </a>
       <button type="submit" class="btn btn-primary hover:shadow-md flex items-center space-x-2">
         <i data-lucide="check-circle"></i>
-        <span>Add User</span>
+        <span>Thêm người dùng</span>
       </button>
     </div>
   </form>
@@ -139,7 +111,7 @@
     try {
       const response = await axios.post('/admin/users/add', data);
       responseMessage.className = 'alert alert-success shadow-lg mt-4';
-      responseMessage.textContent = 'User added successfully! Redirecting to users page...';
+      responseMessage.textContent = 'Người dùng đã được thêm thành công! Đang chuyển hướng về trang người dùng...';
       responseMessage.hidden = false;
       form.reset(); // Clear the form
 
@@ -148,9 +120,8 @@
       }, 2000);
     } catch (error) {
       responseMessage.className = 'alert alert-error shadow-lg mt-4';
-      responseMessage.textContent = error.response?.data?.message || 'Failed to add user.';
+      responseMessage.textContent = error.response?.data?.message || 'Thêm người dùng thất bại.';
       responseMessage.hidden = false;
     }
   });
 </script>
-

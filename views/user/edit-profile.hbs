@@ -4,17 +4,17 @@
     <!-- Page Title -->
     <h1 class="text-2xl font-bold text-gray-800 mb-6 flex justify-center items-center space-x-2">
       <i data-lucide="edit" class="text-primary"></i>
-      <span>Edit Profile</span>
+      <span>Chỉnh sửa hồ sơ</span>
     </h1>
 
     <!-- Alerts -->
     <div id="formSuccess" class="hidden alert alert-success shadow-lg mb-4 flex items-center space-x-2">
       <i data-lucide="check-circle" class="text-green-500"></i>
-      <span>Profile updated successfully! Redirecting...</span>
+      <span>Cập nhật hồ sơ thành công! Đang chuyển hướng...</span>
     </div>
     <div id="formError" class="hidden alert alert-error shadow-lg mb-4 flex items-center space-x-2">
       <i data-lucide="alert-triangle" class="text-red-500"></i>
-      <span>An error occurred. Please try again.</span>
+      <span>Có lỗi xảy ra. Vui lòng thử lại.</span>
     </div>
 
     <!-- Form -->
@@ -23,59 +23,37 @@
       <div class="form-control">
         <label for="fullName" class="label font-semibold text-gray-600 flex items-center space-x-2">
           <i data-lucide="user" class="text-accent"></i>
-          <span class="label-text">Full Name</span>
+          <span class="label-text">Họ và tên</span>
         </label>
-        <input
-          type="text"
-          id="fullName"
-          name="full_name"
-          value="{{user.full_name}}"
-          class="input input-bordered w-full"
-          placeholder="Enter your full name"
-          required
-        />
+        <input type="text" id="fullName" name="full_name" value="{{user.full_name}}" class="input input-bordered w-full"
+          placeholder="Nhập họ và tên của bạn" required />
       </div>
 
       <!-- Pen Name -->
       <div class="form-control">
         <label for="penName" class="label font-semibold text-gray-600 flex items-center space-x-2">
           <i data-lucide="pen-tool" class="text-accent"></i>
-          <span class="label-text">Pen Name (optional)</span>
+          <span class="label-text">Bút danh (không bắt buộc)</span>
         </label>
-        <input
-          type="text"
-          id="penName"
-          name="pen_name"
-          value="{{user.pen_name}}"
-          class="input input-bordered w-full"
-          placeholder="Enter your pen name"
-        />
+        <input type="text" id="penName" name="pen_name" value="{{user.pen_name}}" class="input input-bordered w-full"
+          placeholder="Nhập bút danh của bạn" />
       </div>
 
       <!-- Date of Birth -->
       <div class="form-control">
         <label for="dateOfBirth" class="label font-semibold text-gray-600 flex items-center space-x-2">
           <i data-lucide="calendar" class="text-accent"></i>
-          <span class="label-text">Date of Birth</span>
+          <span class="label-text">Ngày sinh</span>
         </label>
-        <input
-          type="date"
-          id="dateOfBirth"
-          name="date_of_birth"
-          value="{{formatDate user.date_of_birth}}"
-          class="input input-bordered w-full"
-          required
-        />
+        <input type="date" id="dateOfBirth" name="date_of_birth" value="{{formatDate user.date_of_birth}}"
+          class="input input-bordered w-full" required />
       </div>
 
       <!-- Submit Button -->
       <div class="flex justify-center">
-        <button
-          type="submit"
-          class="btn btn-primary flex items-center space-x-2 w-full sm:w-auto"
-        >
+        <button type="submit" class="btn btn-primary flex items-center space-x-2 w-full sm:w-auto">
           <i data-lucide="save"></i>
-          <span>Save Changes</span>
+          <span>Lưu thay đổi</span>
         </button>
       </div>
     </form>
@@ -92,7 +70,6 @@
     const penName = document.getElementById('penName').value.trim();
     const dateOfBirth = document.getElementById('dateOfBirth').value;
 
-    // Reset alerts
     formSuccess.classList.add('hidden');
     formError.classList.add('hidden');
 
@@ -109,12 +86,12 @@
           window.location.href = '/user/profile';
         }, 2000);
       } else {
-        throw new Error(response.data.message || 'Failed to update profile.');
+        throw new Error(response.data.message || 'Cập nhật thông tin không thành công.');
       }
     } catch (error) {
-      formError.textContent = error.response?.data?.message || `An error occurred: ${error.message}`;
+      formError.textContent =
+        error.response?.data?.message || `Đã xảy ra lỗi: ${error.message}`;
       formError.classList.remove('hidden');
     }
   });
 </script>
-

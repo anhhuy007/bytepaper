@@ -1,3 +1,4 @@
+{{!-- views/editor/articleDetail.hbs --}}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
   function toggleContent(index) {
@@ -5,10 +6,10 @@
     const button = document.getElementById(`toggle-button-${index}`)
     if (content.style.maxHeight) {
       content.style.maxHeight = null
-      button.textContent = 'Show More'
+      button.textContent = 'Xem thêm' <!-- Show More -->
     } else {
       content.style.maxHeight = content.scrollHeight + 'px'
-      button.textContent = 'Hide Content'
+      button.textContent = 'Ẩn nội dung' < !--Hide Content-- >
     }
   }
 </script>
@@ -26,10 +27,10 @@
           tag_ids: tagIds,
         })
         .then((response) => {
-          alert('Article approved successfully!')
+          alert('Bài viết đã được phê duyệt thành công!') <!-- Article approved successfully -->
         })
         .catch((error) => {
-          alert('Error approving article')
+          alert('Lỗi khi phê duyệt bài viết') < !--Error approving article-- >
         })
     } else if (status === 'rejected') {
       const rejectionReason = document.getElementById(`rejection-reason-${index}`).value
@@ -38,10 +39,10 @@
           rejection_reason: rejectionReason,
         })
         .then((response) => {
-          alert('Article rejected successfully!')
+          alert('Bài viết đã bị từ chối thành công!') < !--Article rejected successfully-- >
         })
         .catch((error) => {
-          alert('Error rejecting article')
+          alert('Lỗi khi từ chối bài viết') < !--Error rejecting article-- >
         })
     }
   }
@@ -61,7 +62,7 @@
 <div>{{options.offset}}</div>
 <div>{{status}}</div>
 <div>
-  <h3>Categories:</h3>
+  <h3>Danh mục:</h3> <!-- Categories -->
   <ul>
     {{#each categories}}
     <li>{{this.name}}</li>
@@ -69,7 +70,7 @@
   </ul>
 </div>
 <div>
-  <h3>Tags:</h3>
+  <h3>Thẻ:</h3> <!-- Tags -->
   <ul>
     {{#each tags}}
     <li>{{this.name}}</li>
@@ -87,92 +88,61 @@
       <p class="text-gray-600 text-sm mb-4">{{this.abstract}}</p>
       {{#if (eq ../status "pending")}}
       <div class="mb-4">
-        <label class="block text-gray-600 mb-2">Select Action</label>
-        <select
-          id="status-select-{{@index}}"
-          class="w-full p-2 border border-gray-300 rounded mb-4"
-          onchange="toggleInputs(this.value, {{@index}})"
-        >
-          <option value="">-- Select Action --</option>
-          <option value="approved">Approve</option>
-          <option value="rejected">Reject</option>
+        <label class="block text-gray-600 mb-2">Chọn hành động</label> <!-- Select Action -->
+        <select id="status-select-{{@index}}" class="w-full p-2 border border-gray-300 rounded mb-4"
+          onchange="toggleInputs(this.value, {{@index}})">
+          <option value="">-- Chọn hành động --</option> <!-- -- Select Action -- -->
+          <option value="approved">Phê duyệt</option> <!-- Approve -->
+          <option value="rejected">Từ chối</option> <!-- Reject -->
         </select>
       </div>
       <div id="approve-fields-{{@index}}" style="display: none">
-        <label for="category-id-{{@index}}" class="block text-gray-600 mb-2">Category</label>
-        <input
-          type="text"
-          id="category-id-{{@index}}"
-          class="w-full p-2 border border-gray-300 rounded mb-4"
-          placeholder="Enter category ID"
+        <label for="category-id-{{@index}}" class="block text-gray-600 mb-2">Danh mục</label> <!-- Category -->
+        <input type="text" id="category-id-{{@index}}" class="w-full p-2 border border-gray-300 rounded mb-4"
+          placeholder="Nhập ID danh mục" <!-- Enter category ID -->
         />
-        <label for="tag-ids-{{@index}}" class="block text-gray-600 mb-2"
-          >Tags (comma separated)</label
-        >
-        <input
-          type="text"
-          id="tag-ids-{{@index}}"
-          class="w-full p-2 border border-gray-300 rounded mb-4"
-          placeholder="Enter tag IDs (comma separated)"
+        <label for="tag-ids-{{@index}}" class="block text-gray-600 mb-2">Thẻ (cách nhau bằng dấu phẩy)</label>
+        <!-- Tags (comma separated) -->
+        <input type="text" id="tag-ids-{{@index}}" class="w-full p-2 border border-gray-300 rounded mb-4"
+          placeholder="Nhập ID thẻ (cách nhau bằng dấu phẩy)" <!-- Enter tag IDs (comma separated) -->
         />
-        <label for="published-at-{{@index}}" class="block text-gray-600 mb-2">Published At</label>
-        <input
-          type="datetime-local"
-          id="published-at-{{@index}}"
-          class="w-full p-2 border border-gray-300 rounded mb-4"
-        />
-        <button
-          onclick="handleStatusChange({{@index}}, 'approved')"
-          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 mt-4"
-        >
+        <label for="published-at-{{@index}}" class="block text-gray-600 mb-2">Ngày xuất bản</label>
+        <!-- Published At -->
+        <input type="datetime-local" id="published-at-{{@index}}"
+          class="w-full p-2 border border-gray-300 rounded mb-4" />
+        <button onclick="handleStatusChange({{@index}}, 'approved')"
+          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 mt-4">
           OK
         </button>
       </div>
       <div id="reject-fields-{{@index}}" style="display: none">
-        <label for="rejection-reason-{{@index}}" class="block text-gray-600 mb-2"
-          >Rejection Reason</label
-        >
-        <textarea
-          id="rejection-reason-{{@index}}"
-          class="w-full p-2 border border-gray-300 rounded mb-4"
-          placeholder="Enter rejection reason"
+        <label for="rejection-reason-{{@index}}" class="block text-gray-600 mb-2">Lý do từ chối</label>
+        <!-- Rejection Reason -->
+        <textarea id="rejection-reason-{{@index}}" class="w-full p-2 border border-gray-300 rounded mb-4"
+          placeholder="Nhập lý do từ chối" <!-- Enter rejection reason -->
         ></textarea>
-        <button
-          onclick="handleStatusChange({{@index}}, 'rejected')"
-          class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mt-4"
-        >
-          Reject
+        <button onclick="handleStatusChange({{@index}}, 'rejected')"
+          class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mt-4">
+          Từ chối <!-- Reject -->
         </button>
       </div>
       {{/if}}
-      <div
-        class="overflow-hidden max-h-0 transition-all duration-500 ease-in-out"
-        id="content-{{@index}}"
-      >
+      <div class="overflow-hidden max-h-0 transition-all duration-500 ease-in-out" id="content-{{@index}}">
         <div class="bg-gray-100 p-4 rounded-lg shadow-inner">{{{this.content}}}</div>
       </div>
-      <button
-        id="toggle-button-{{@index}}"
-        onclick="toggleContent({{@index}})"
-        class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2"
-      >
-        Show More
+      <button id="toggle-button-{{@index}}" onclick="toggleContent({{@index}})"
+        class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2">
+        Xem thêm <!-- Show More -->
       </button>
     </div>
   </div>
   {{/each}}
 </div>
 <div class="flex justify-center mt-6">
-  <button
-    onclick="changePage('prev')"
-    class="px-4 py-2 mx-1 text-white bg-blue-500 rounded hover:bg-blue-700"
-  >
-    Previous
+  <button onclick="changePage('prev')" class="px-4 py-2 mx-1 text-white bg-blue-500 rounded hover:bg-blue-700">
+    Trước <!-- Previous -->
   </button>
-  <button
-    onclick="changePage('next')"
-    class="px-4 py-2 mx-1 text-white bg-blue-500 rounded hover:bg-blue-700"
-  >
-    Next
+  <button onclick="changePage('next')" class="px-4 py-2 mx-1 text-white bg-blue-500 rounded hover:bg-blue-700">
+    Tiếp theo <!-- Next -->
   </button>
 </div>

@@ -2,122 +2,77 @@
 <div class="min-h-screen w-full p-4 flex items-center justify-center">
   <div class="flex mx-auto min-h-[600px] max-w-4xl">
     <div class="w-full overflow-hidden rounded-3xl">
-      {{!-- Back to Home Button --}}
+      {{!-- Nút quay lại trang chủ --}}
       <div class="absolute top-8 left-8">
-        <a
-          href="/"
-          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 bg-white shadow-md hover:shadow-lg"
-        >
+        <a href="/"
+          class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 bg-white shadow-md hover:shadow-lg">
           <span class="inline-block mr-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1em"
-              height="1em"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-              class="h-4 w-4"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              class="h-4 w-4">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </span>
-          <span>Back to Home</span>
+          <span>Quay lại trang chủ</span>
         </a>
       </div>
       <div class="grid md:grid-cols-2 p-2 bg-slate-100">
-        {{!-- Left Animated Elements --}}
+        {{!-- Các yếu tố hoạt hình bên trái --}}
         <div class="flex items-center justify-center p-12">
-          <image
-            src="/assets/signup-fellows.png"
-            alt="Login illustration"
-            width="{256}"
-            height="{256}"
-            class="w-80 h-80 object-cover"
-          />
+          <image src="/assets/signup-fellows.png" alt="Hình minh họa Đăng ký" width="{256}" height="{256}"
+            class="w-80 h-80 object-cover" />
         </div>
 
-        {{!-- Right Login Form --}}
+        {{!-- Mẫu đăng ký bên phải --}}
         <div class="flex-grow flex items-center justify-center p-2">
           <div class="w-full max-w-md">
             <div class="bg-white shadow-xl rounded-3xl p-12">
-              <!-- Error Feedback -->
+              <!-- Phản hồi lỗi -->
               <div id="formError" class="hidden bg-red-100 text-red-800 p-4 rounded mb-4"></div>
 
-              <!-- Welcome Message -->
+              <!-- Thông điệp chào mừng -->
               <div class="space-y-2 text-center pb-10">
-                <h1 class="text-2xl font-bold tracking-tight">Hello there!</h1>
+                <h1 class="text-2xl font-bold tracking-tight">Chào bạn!</h1>
                 <p class="text-sm text-zinc-500">
-                  Please fill in your details to sign up for an account.
+                  Vui lòng điền thông tin của bạn để đăng ký tài khoản.
                 </p>
               </div>
 
-              <!-- Signup Form -->
+              <!-- Mẫu đăng ký -->
               <form id="signupForm" class="space-y-4" action="/auth/signup" method="POST">
-                <!-- Username -->
+                <!-- Tên người dùng -->
                 <div>
-                  <label for="username" class="block text-sm font-medium text-gray-700"
-                    >Username</label
-                  >
-                  <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    required
-                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800"
-                  />
+                  <label for="username" class="block text-sm font-medium text-gray-700">Tên người dùng</label>
+                  <input type="text" id="username" name="username" required
+                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800" />
                 </div>
                 <!-- Email -->
                 <div>
                   <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800"
-                  />
+                  <input type="email" id="email" name="email" required
+                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800" />
                 </div>
-                <!-- Password -->
+                <!-- Mật khẩu -->
                 <div>
-                  <label for="password" class="block text-sm font-medium text-gray-700"
-                    >Password</label
-                  >
+                  <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
                   <div class="relative">
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      placeholder="Enter your password"
-                      required
-                      class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800"
-                    />
-                    <button
-                      type="button"
-                      onclick="togglePasswordVisibility()"
-                      class="absolute inset-y-0 right-0 px-2 flex items-center"
-                    >
+                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu của bạn" required
+                      class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-zinc-800" />
+                    <button type="button" onclick="togglePasswordVisibility()"
+                      class="absolute inset-y-0 right-0 px-2 flex items-center">
                       <span id="eye-show" class="block">{{> icons/eye }}</span>
                       <span id="eye-hide" class="hidden">{{> icons/eye-slash }}</span>
                     </button>
                   </div>
                 </div>
-                <!-- Forgot password -->
+                <!-- Quên mật khẩu -->
                 <div class="flex justify-end">
-                  <a href="/auth/forgot-password" class="text-sm text-zinc-800 hover:underline"
-                    >Forgot Password?</a
-                  >
+                  <a href="/auth/forgot-password" class="text-sm text-zinc-800 hover:underline">Quên mật khẩu?</a>
                 </div>
-                <!-- Submit Button -->
-                <button
-                  type="submit"
-                  id="submitButton"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-800"
-                >
-                  Sign Up
+                <!-- Nút đăng ký -->
+                <button type="submit" id="submitButton"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-800">
+                  Đăng ký
                 </button>
               </form>
               <div class="mt-6">
@@ -126,25 +81,20 @@
                     <div class="w-full border-t border-gray-300"></div>
                   </div>
                   <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                    <span class="px-2 bg-white text-gray-500">Hoặc tiếp tục với</span>
                   </div>
                 </div>
                 <div class="mt-6">
-                  <button
-                    type="button"
-                    onclick="window.location.href='/auth/google'"
-                    class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
+                  <button type="button" onclick="window.location.href='/auth/google'"
+                    class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     {{> icons/google }} Google
                   </button>
                 </div>
               </div>
-              <!-- Already Have an Account -->
+              <!-- Đã có tài khoản -->
               <div class="mt-6 text-center text-sm">
-                Already have an account?
-                <a href="/auth/login" class="font-medium text-blue-600 hover:text-blue-500"
-                  >Log in</a
-                >
+                Đã có tài khoản?
+                <a href="/auth/login" class="font-medium text-blue-600 hover:text-blue-500">Đăng nhập</a>
               </div>
             </div>
           </div>
@@ -154,7 +104,7 @@
   </div>
 </div>
 
-{{!-- Handle password visibility --}}
+{{!-- Xử lý hiển thị mật khẩu --}}
 <script>
   document.getElementById('signupForm').addEventListener('submit', async (e) => {
     e.preventDefault()
@@ -163,19 +113,19 @@
     try {
       const response = await axios.post('/auth/signup', Object.fromEntries(formData))
       if (response.data.success) {
-        // Display success message
-        displaySuccess('Signup successful! Redirecting to login page in 3 seconds.')
+        // Hiển thị thông báo thành công
+        displaySuccess('Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập trong 3 giây.')
         setTimeout(() => {
-          // Redirect after showing the success message
+          // Chuyển hướng sau khi hiển thị thông báo thành công
           window.location.href = response.data.redirectUrl
-        }, 3000) // Wait for 3 seconds before redirecting
+        }, 3000) // Đợi 3 giây trước khi chuyển hướng
       } else {
-        // Display error message if signup fails
-        displayError(response.data.message || 'An unexpected error occurred.')
+        // Hiển thị thông báo lỗi nếu đăng ký không thành công
+        displayError(response.data.message || 'Đã xảy ra lỗi không mong muốn.')
       }
     } catch (error) {
-      // Handle unexpected server errors
-      displayError(error.response?.data?.message || 'A server error occurred. Please try again.')
+      // Xử lý lỗi từ máy chủ
+      displayError(error.response?.data?.message || 'Đã xảy ra lỗi máy chủ. Vui lòng thử lại.')
     }
   })
 

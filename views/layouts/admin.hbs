@@ -1,162 +1,133 @@
-{{!-- views/layouts/admin.hbs --}}
 <!DOCTYPE html>
 <html lang="en" data-theme="emerald">
-  <head>
-    <meta charset="utf-8" />
-    <title>{{#if title}}{{title}} | {{/if}}Admin Panel - Paperly</title>
-    <link rel="stylesheet" href="/output.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Include Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div class="min-h-screen flex">
-      <!-- Sidebar -->
-      <aside class="w-64 bg-white shadow-lg">
-        <div class="p-6">
-          <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center space-x-2">
-            <i data-lucide="grid" class="text-accent"></i>
-            <span>Admin Dashboard</span>
-          </h2>
-          <ul class="space-y-4">
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a href="/" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
-                <i data-lucide="home"></i>
-                <span>Back to Home</span>
-              </a>
-            </li>
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a
-                href="/admin/dashboard"
-                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/dashboard'}}font-bold text-accent{{/ifActive}}"
-              >
-                <i data-lucide="bar-chart-2"></i>
-                <span>Dashboard</span>
-              </a>
-            </li>
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a
-                href="/admin/users"
-                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/users'}}font-bold text-accent{{/ifActive}}"
-              >
-                <i data-lucide="users"></i>
-                <span>Users</span>
-              </a>
-            </li>
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a
-                href="/admin/articles"
-                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/articles'}}font-bold text-accent{{/ifActive}}"
-              >
-                <i data-lucide="file-text"></i>
-                <span>Articles</span>
-              </a>
-            </li>
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a
-                href="/admin/categories"
-                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/categories'}}font-bold text-accent{{/ifActive}}"
-              >
-                <i data-lucide="layers"></i>
-                <span>Categories</span>
-              </a>
-            </li>
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a
-                href="/admin/tags"
-                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/tags'}}font-bold text-accent{{/ifActive}}"
-              >
-                <i data-lucide="tag"></i>
-                <span>Tags</span>
-              </a>
-            </li>
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a
-                href="/admin/editors"
-                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/editors'}}font-bold text-accent{{/ifActive}}"
-              >
-                <i data-lucide="edit"></i>
-                <span>Editors</span>
-              </a>
-            </li>
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a
-                href="/admin/subscriptions/requests"
-                class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/settings'}}font-bold text-accent{{/ifActive}}"
-              >
-                <i data-lucide="inbox"></i>
-                <span>Subscriptions</span>
-              </a>
-            </li>
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a href="/user/profile" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
-                <i data-lucide="user"></i>
-                <span>Profile</span>
-              </a>
-            </li>
-            <!-- Logout Button -->
-            <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
-              <a href="/auth/logout" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
-                <i data-lucide="log-out"></i>
-                <span>Logout</span>
-              </a>
-            </li>
-          </ul>
+<head>
+  <meta charset="utf-8" />
+  <title>{{#if title}}{{title}} | {{/if}}Bảng điều khiển quản trị - Paperly</title>
+  <link rel="stylesheet" href="/output.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Include Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <div class="min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg">
+      <div class="p-6">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center space-x-2">
+          <i data-lucide="grid" class="text-accent"></i>
+          <span>Bảng điều khiển quản trị</span>
+        </h2>
+        <ul class="space-y-4">
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
+              <i data-lucide="home"></i>
+              <span>Quay lại trang chủ</span>
+            </a>
+          </li>
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/admin/dashboard"
+              class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/dashboard'}}font-bold text-accent{{/ifActive}}">
+              <i data-lucide="bar-chart-2"></i>
+              <span>Bảng điều khiển</span>
+            </a>
+          </li>
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/admin/users"
+              class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/users'}}font-bold text-accent{{/ifActive}}">
+              <i data-lucide="users"></i>
+              <span>Người dùng</span>
+            </a>
+          </li>
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/admin/articles"
+              class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/articles'}}font-bold text-accent{{/ifActive}}">
+              <i data-lucide="file-text"></i>
+              <span>Bài viết</span>
+            </a>
+          </li>
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/admin/categories"
+              class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/categories'}}font-bold text-accent{{/ifActive}}">
+              <i data-lucide="layers"></i>
+              <span>Danh mục</span>
+            </a>
+          </li>
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/admin/tags"
+              class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/tags'}}font-bold text-accent{{/ifActive}}">
+              <i data-lucide="tag"></i>
+              <span>Thẻ</span>
+            </a>
+          </li>
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/admin/editors"
+              class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/editors'}}font-bold text-accent{{/ifActive}}">
+              <i data-lucide="edit"></i>
+              <span>Biên tập viên</span>
+            </a>
+          </li>
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/admin/subscriptions/requests"
+              class="px-4 py-2 flex items-center space-x-2 text-gray-700 {{#ifActive 'admin/settings'}}font-bold text-accent{{/ifActive}}">
+              <i data-lucide="inbox"></i>
+              <span>Đăng ký</span>
+            </a>
+          </li>
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/user/profile" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
+              <i data-lucide="user"></i>
+              <span>Hồ sơ</span>
+            </a>
+          </li>
+          <!-- Logout Button -->
+          <li class="hover:bg-accent hover:text-white transition duration-300 rounded-lg">
+            <a href="/auth/logout" class="px-4 py-2 flex items-center space-x-2 text-gray-700">
+              <i data-lucide="log-out"></i>
+              <span>Đăng xuất</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-8 bg-gray-50">
+      <!-- Success and Error Messages -->
+      {{#if successMessage}}
+      <div class="alert alert-success shadow-lg mb-6">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m2 5a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{{successMessage}}</span>
         </div>
-      </aside>
+      </div>
+      {{/if}} {{#if errorMessage}}
+      <div class="alert alert-error shadow-lg mb-6">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          <span>{{errorMessage}}</span>
+        </div>
+      </div>
+      {{/if}}
 
       <!-- Main Content -->
-      <main class="flex-grow p-8 bg-gray-50">
-        <!-- Success and Error Messages -->
-        {{#if successMessage}}
-        <div class="alert alert-success shadow-lg mb-6">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="stroke-current flex-shrink-0 h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m2 5a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>{{successMessage}}</span>
-          </div>
-        </div>
-        {{/if}} {{#if errorMessage}}
-        <div class="alert alert-error shadow-lg mb-6">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="stroke-current flex-shrink-0 h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-            <span>{{errorMessage}}</span>
-          </div>
-        </div>
-        {{/if}}
+      {{{body}}}
+    </main>
+  </div>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons()
+  </script>
+</body>
 
-        <!-- Main Content -->
-        {{{body}}}
-      </main>
-    </div>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-      lucide.createIcons()
-    </script>
-  </body>
 </html>

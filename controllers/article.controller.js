@@ -50,7 +50,7 @@ const getArticleById = async (req, res, next) => {
     // Restrict access to premium content
     if (article.is_premium && (!user || user.role !== 'subscriber')) {
       return res.status(403).render('errors/403', {
-        message: 'This content is only available to subscribers. Please subscribe to access.',
+        message: 'Nội dung này yêu cầu đăng nhập với tư cách độc giả để xem.',
       })
     }
 

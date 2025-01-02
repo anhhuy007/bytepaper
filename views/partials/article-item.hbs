@@ -20,7 +20,7 @@
         {{!-- Abstract --}}
         <p class="text-gray-700 text-base mt-5">{{abstract}}</p>
         <div class="flex gap-4 my-6">
-          <p>Các nhãn liên quan: </p>
+          <p>Các thẻ liên quan: </p>
           {{#each tags}}
           <a href="/articles/tags/{{id}}"
             class="z-10 bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded transition-all duration-300 ease-in-out hover:bg-blue-900 hover:text-white hover:scale-105 hover:shadow-md">
@@ -50,7 +50,7 @@
       <div></div>
 
       {{!-- Thumbnail --}}
-      <img src="{{default thumbnail '/images/default-thumbnail.jpg'}}" alt="{{default title 'Untitled Article'}}"
+      <img src="{{default thumbnail '/images/default-thumbnail.jpg'}}" alt="{{default title 'Không có tiêu đề'}}"
         class="w-full h-64 aspect-[16/9] object-cover rounded-lg border-2" />
     </div>
   </div>
