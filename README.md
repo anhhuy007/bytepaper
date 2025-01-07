@@ -1,5 +1,7 @@
 # **PTUDW - Đồ án cuối kỳ - Báo điện tử**
 
+![Paperpy](https://firebasestorage.googleapis.com/v0/b/tiktok-clone-f0b70.appspot.com/o/image%2Fpaperly.jpg?alt=media&token=4f524bb0-bd7f-44e0-b3bc-22e692bbb033)
+
 **Yêu cầu:** Xây dựng ứng dụng web **Báo điện tử** với các phân hệ và chức năng sau:
 
 ## 1. Phân hệ độc giả vãng lai (guest)
